@@ -312,10 +312,6 @@ namespace Prolog
             DefinePrimitive("close", CloseImplementation, "other predicates", "Closes an open file.", "*stream");
             DefinePrimitive("read", ReadImplementation, "other predicates", "Reads an expression from an open stream.",
                             "*stream", "-term");
-
-            DefinePrimitive("insert", InsertImplementation, "eremic logic",
-                            "Adds EXPRESSIONs to EL knowledgebase.",
-                            "*expression", "...");
             DefinePrimitive(ELProlog.NonExclusiveOperator, ELNonExclusiveQueryImplementation, "eremic logic",
                             "Succeeds if EXPRESSION can be matched against the EL knowledgebase.",
                             "*expression");
@@ -2349,13 +2345,6 @@ namespace Prolog
             //ISOPrologReader pr = new ISOPrologReader(s, context.Environment);
             object term = s.ReadTerm();
             return Term.UnifyAndReturnCutState(args[1], term);
-        }
-
-        private static IEnumerable<CutState> InsertImplementation(object[] args, PrologContext context)
-        {
-            foreach (var exp in args)
-                ELProlog.Update(exp, context);
-            yield return CutState.Continue;
         }
 
         private static IEnumerable<CutState> ELNonExclusiveQueryImplementation(object[] args, PrologContext context)
