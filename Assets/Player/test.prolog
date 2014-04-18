@@ -1,0 +1,2 @@
+cat(puck).
+cat(callie).

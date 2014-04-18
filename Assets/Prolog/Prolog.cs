@@ -1,0 +1,198 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using UnityEngine;
+
+namespace Prolog
+{
+    /// <summary>
+    /// Static class with utilities for interacting with Prolog.
+    /// </summary>
+    [Documentation("Static class with utilities for interacting with Prolog.")]
+    public static class Prolog
+    {
+        public static string CurrentSourceFile;
+
+        public static string CurrentSourceFileTrimmed
+        {
+            get
+            {
+                return TrimPath(CurrentSourceFile);
+            }
+        }
+
+        public static int CurrentSourceLineNumber;
+
+        public static TextWriter TraceOutput;
+
+        /// <summary>
+        /// File name extensions that are recognized as prolog source code.
+        /// </summary>
+        [Documentation("File name extensions that are recognized as prolog source code.")]
+        public static string[] SourceFileExtensions = {".pl", ".p", ".prolog", ".pro"};
+
+        #region Parsing
+        /// <summary>
+        /// Converts English text string to Prolog-format list of words (symbols).
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "WordList"), Documentation("Converts English text string to Prolog-format list of words (symbols).")]
+        public static Structure StringToWordList(string text)
+        {
+            if (text == null) throw new ArgumentNullException("text");
+            var syms = new List<object>();
+            foreach (var word in text.Split(WordDelimiters, StringSplitOptions.RemoveEmptyEntries))
+                syms.Add(Symbol.Intern(word));
+            return IListToPrologList(syms);
+        }
+
+        /// <summary>
+        /// Convert Prolog list of words into one text string.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "wordList"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "WordList"), Documentation("Convert Prolog list of words into one text string.")]
+        public static string WordListToString(Structure wordList)
+        {
+            var s = new StringBuilder();
+            bool firstOne = true;
+            foreach (var word in PrologListToIList(wordList))
+            {
+                string str = word.ToString();
+                if (!string.IsNullOrEmpty(str))
+                {
+                    if (firstOne || !char.IsLetterOrDigit(str[0]))  // don't generate a space for the first word or for punctuation.
+                        firstOne = false;
+                    else
+                        s.Append(' ');
+                    s.Append(str);
+                }
+            }
+            return s.ToString();
+        }
+
+        static readonly char[] WordDelimiters = { ' ', ',', '.', '?', '!', '\t', ':', '"', '-' };
+
+        public static string DefaultSourceFileExtension = ".prolog";
+
+        #endregion
+
+        #region List conversions
+        /// <summary>
+        /// Convert a scheme-format list (really a .NET IList) to a Prolog list.
+        /// </summary>
+        [Documentation("Convert a .NET IList to a Prolog list.")]
+        // ReSharper disable once InconsistentNaming
+        public static Structure IListToPrologList(IList schemeList)
+        {
+            if (schemeList == null) throw new ArgumentNullException("schemeList");
+            Structure listTail = null;
+            for (int i = schemeList.Count - 1; i >= 0; i--)
+                listTail = new Structure(Symbol.PrologListConstructor, schemeList[i], listTail);
+            return listTail;
+        }
+
+        /// <summary>
+        /// Convert a Prolog-format list into a Scheme list (really a .NET List[object]).
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists"), Documentation("Convert a Prolog-format list into a .NET IList.")]
+        public static List<object> PrologListToIList(object prologList)
+        {
+            object current = Term.Deref(prologList);
+            var schemeList = new List<object>(PrologListLength(prologList));
+            while (current != null)
+            {
+                var t = current as Structure;
+                if (t == null) throw new ArgumentException("List is not a proper list; it ends with: " + current);
+                schemeList.Add(t.Argument(0));
+                current = t.Argument(1);
+            }
+            return schemeList;
+        }
+
+        /// <summary>
+        /// Convert a Prolog-format list into an object[] array.
+        /// </summary>
+        [Documentation("Convert a Prolog-format list into an object[].")]
+        public static object[] PrologListToArray(object prologList)
+        {
+            object current = Term.Deref(prologList);
+            var array = new object[PrologListLength(prologList)];
+            int index = 0;
+            while (current != null)
+            {
+                var t = current as Structure;
+                if (t == null) throw new ArgumentException("List is not a proper list; it ends with: " + current);
+                array[index++] = t.Argument(0);
+                current = t.Argument(1);
+            }
+            return array;
+        }
+
+        /// <summary>
+        /// Converts an object[] array into a Prolog list.
+        /// </summary>
+        [Documentation("Converts an object[] array into a Prolog list.")]
+        public static Structure ArrayToPrologList<T>(T[] array)
+        {
+            if (array == null) throw new ArgumentNullException("array");
+            Structure result = null;
+            for (int i = array.Length - 1; i >= 0; i--)
+                result = new Structure(Symbol.PrologListConstructor, array[i], result);
+            return result;
+        }
+
+        /// <summary>
+        /// Computes the length of a prolog list.
+        /// </summary>
+        [Documentation("Finds the length of a prolog list.")]
+        public static int PrologListLength(object prologList)
+        {
+            object current = Term.Deref(prologList);
+            int index = 0;
+            while (current != null)
+            {
+                var t = current as Structure;
+                if (t == null)
+                {
+                    if (current is LogicVariable)
+                        throw new ArgumentException("List is incomplete (i.e. it ends in a logic variable).", "prologList");
+                    throw new ArgumentException("Argument is not a valid Prolog list", "prologList");
+                }
+                if (t.IsFunctor(Symbol.PrologListConstructor, 2))
+                {
+                    index++;
+                    current = t.Argument(1);
+                }
+                else
+                    throw new ArgumentException("Argument is not a valid Prolog list", "prologList");
+            }
+            return index;
+        }
+        #endregion
+
+        /// <summary>
+        /// Returns the full pathname of the specified file.
+        /// </summary>
+        /// <param name="path">Path within the application directory</param>
+        /// <returns>Full pathname</returns>
+        internal static string LoadFilePath(string path)
+        {
+            if (Path.GetExtension(path) == string.Empty)
+                path = path + DefaultSourceFileExtension;
+            return Path.Combine(Application.dataPath, path);
+        }
+
+        /// <summary>
+        /// Removes Applicaiton.dataPath from the beginning of path.
+        /// </summary>
+        /// <param name="path">Path to trim</param>
+        /// <returns>Trimmed version.</returns>
+        public static string TrimPath(string path)
+        {
+            var prefix = Application.dataPath+Path.DirectorySeparatorChar;
+            if (path.StartsWith(prefix))
+                return path.Substring(prefix.Length);
+            return path;
+        }
+    }
+}
