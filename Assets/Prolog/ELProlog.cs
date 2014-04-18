@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Prolog
 {
@@ -18,7 +19,30 @@ namespace Prolog
         #region Queries
         public static bool TryQuery(object term, PrologContext context, out ELNode foundNode, out ELNodeEnumerator enumerator)
         {
-            var s = Term.Deref(term) as Structure;
+            // Dereference any top-level variables.
+            var t = Term.Deref(term);
+
+            // Dereference indexicals
+            var i = t as Indexical;
+            if (i != null)
+                t = i.GetValue(context);
+
+            // A game object means the gameobject's EL KB.
+            var g = t as GameObject;
+            if (g != null)
+                t = g.KnowledgeBase().ELRoot;
+
+            // If it's already an ELNode, use that.
+            var n = t as ELNode;
+            if (n != null)
+            {
+                foundNode = n;
+                enumerator = null;
+                return true;
+            }
+
+            // Otherwise, it's an expression, so evaluate it.
+            var s = t as Structure;
             if (s != null)
                 return TryQueryStructure(s, context, out foundNode, out enumerator);
 
@@ -105,9 +129,11 @@ namespace Prolog
             // Non-deterministic parent path
             // NonUniqueParent:Something
             foundNode = null;
+
             enumerator = (v == null)
-                ? (ELNodeEnumerator)new ELNodeEnumeratorEnumerateParentAndLookupExclusiveKey(parentEnumerator, key)
-                : new ELNodeEnumeratorEnumerateParentAndBindVariable(parentEnumerator, v);
+                ? new ELNodeEnumeratorEnumerateParentAndLookupExclusiveKey(parentEnumerator, key)
+                : (parentEnumerator.BindsVar(v)? (ELNodeEnumerator)new ELNodeEnumeratorPreboundVariable(parentEnumerator, v, true)
+                                                 : new ELNodeEnumeratorEnumerateParentAndBindVariable(parentEnumerator, v));
             return true;
         }
 
@@ -175,6 +201,12 @@ namespace Prolog
                 enumerator = new ELNodeEnumeratorFixedChildFromParentEnumerator(parentEnumerator, key);
                 return true;
             }
+            if (parentEnumerator.BindsVar(v))
+            {
+                // We're doing a search for a variable that's aready bound.
+                enumerator = new ELNodeEnumeratorPreboundVariable(parentEnumerator, v, false);
+                return true;
+            }
             // NonUniqueParent/Variable
             // Enumerate both parent and child.
             enumerator = new ELNodeEnumeratorLogicVariableFromParentEnumerator(parentEnumerator, v);
@@ -222,6 +254,50 @@ namespace Prolog
             return context.KnowledgeBase.ELRoot.TryLookup(arg0, out foundNode);
         }
 
+        class ELNodeEnumeratorPreboundVariable : ELNodeEnumerator
+        {
+            public ELNodeEnumeratorPreboundVariable(ELNodeEnumerator parentEnumerator, LogicVariable variable, bool exclusive)
+            {
+                this.parentEnumerator = parentEnumerator;
+                this.variable = variable;
+                this.exclusive = exclusive;
+            }
+
+            private readonly ELNodeEnumerator parentEnumerator;
+
+            private readonly LogicVariable variable;
+
+            private readonly bool exclusive;
+
+            public override bool MoveNext()
+            {
+                while (parentEnumerator.MoveNext())
+                {
+                    if (exclusive)
+                    {
+                        if (parentEnumerator.Current.IsNonExclusive)
+                            throw new ELNodeExclusionException("Exclusive query of an non-exclusive node", parentEnumerator.Current, variable.Value);
+                    }
+                    else if (parentEnumerator.Current.IsExclusive)
+                        throw new ELNodeExclusionException("Non-exclusive query of an exclusive node", parentEnumerator.Current, variable.Value);
+                    foreach (var c in parentEnumerator.Current.Children)
+                    {
+                        if (c.Key.Equals(variable.Value))
+                        {
+                            Current = c;
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return parentEnumerator.BindsVar(v);
+            }
+        }
+
         class ELNodeEnumeratorLogicVariableFromNode : ELNodeEnumerator
         {
             public ELNodeEnumeratorLogicVariableFromNode(ELNode parentNode, LogicVariable v)
@@ -247,6 +323,11 @@ namespace Prolog
                 }
                 this.variable.ForciblyUnbind();
                 return false;
+            }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return v == this.variable;
             }
         }
 
@@ -275,6 +356,11 @@ namespace Prolog
                 }
                 return false;
             }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return parentEnumerator.BindsVar(v);
+            }
         }
 
         class ELNodeEnumeratorLogicVariableFromParentEnumerator : ELNodeEnumerator
@@ -282,13 +368,13 @@ namespace Prolog
             public ELNodeEnumeratorLogicVariableFromParentEnumerator(ELNodeEnumerator parentEnumerator, LogicVariable v)
             {
                 this.parentEnumerator = parentEnumerator;
-                this.v = v;
+                this.variable = v;
                 childIndex = -1;
             }
 
             private readonly ELNodeEnumerator parentEnumerator;
 
-            private readonly LogicVariable v;
+            private readonly LogicVariable variable;
 
             private int childIndex;
 
@@ -300,7 +386,7 @@ namespace Prolog
                 if (childIndex >= 0)
                 {
                     Current = parentEnumerator.Current.Children[childIndex--];
-                    v.Value = Current.Key;
+                    this.variable.Value = Current.Key;
                     return true;
                 }
 
@@ -312,14 +398,19 @@ namespace Prolog
                         throw new ELNodeExclusionException(
                             "Non-exclusive query of an exclusive node",
                             parentEnumerator.Current,
-                            v);
+                            this.variable);
 
                     childIndex = parentEnumerator.Current.Children.Count - 1;
 
                     goto retry;
                 }
-                v.ForciblyUnbind();
+                this.variable.ForciblyUnbind();
                 return false;
+            }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return v == this.variable || parentEnumerator.BindsVar(v);
             }
         }
 
@@ -333,25 +424,30 @@ namespace Prolog
             public ELNodeEnumeratorBindAndUnbindVariable(ELNode child, LogicVariable v)
             {
                 this.child = child;
-                this.v = v;
+                this.variable = v;
             }
 
             private readonly ELNode child;
-            private readonly LogicVariable v;
+            private readonly LogicVariable variable;
 
             public override bool MoveNext()
             {
-                if (v.IsBound)
+                if (this.variable.IsBound)
                 {
                     // We've already been through it once, so unbind the variable and fail.
-                    v.ForciblyUnbind();
+                    this.variable.ForciblyUnbind();
                     return false;
                 }
                 
                 // This is our first time through, so bind the variable and succeed.
                 Current = child;
-                v.Value = child.Key;
+                this.variable.Value = child.Key;
                 return true;
+            }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return v == this.variable;
             }
         }
 
@@ -380,19 +476,24 @@ namespace Prolog
                 }
                 return false;
             }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return parentEnumerator.BindsVar(v);
+            }
         }
 
         class ELNodeEnumeratorEnumerateParentAndBindVariable : ELNodeEnumerator
         {
-            public ELNodeEnumeratorEnumerateParentAndBindVariable(ELNodeEnumerator parentEnumerator, LogicVariable v)
+            public ELNodeEnumeratorEnumerateParentAndBindVariable(ELNodeEnumerator parentEnumerator, LogicVariable variable)
             {
                 this.parentEnumerator = parentEnumerator;
-                this.v = v;
+                this.variable = variable;
             }
 
             private readonly ELNodeEnumerator parentEnumerator;
 
-            private readonly LogicVariable v;
+            private readonly LogicVariable variable;
 
             public override bool MoveNext()
             {
@@ -400,17 +501,22 @@ namespace Prolog
                 {
                     if (parentEnumerator.Current.IsNonExclusive)
                     {
-                        throw new ELNodeExclusionException("Exclusive query of an non-exclusive node", parentEnumerator.Current, v);
+                        throw new ELNodeExclusionException("Exclusive query of an non-exclusive node", parentEnumerator.Current, this.variable);
                     }
                     if (parentEnumerator.Current.Children.Count > 0)
                     {
                         Current = parentEnumerator.Current.Children[0];
-                        v.Value = Current.Key;
+                        this.variable.Value = Current.Key;
                         return true;
                     }
                 }
-                v.ForciblyUnbind();
+                this.variable.ForciblyUnbind();
                 return false;
+            }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return v == this.variable || parentEnumerator.BindsVar(v);
             }
         }
         #endregion
