@@ -318,6 +318,9 @@ namespace Prolog
             DefinePrimitive(ELProlog.ExclusiveOperator, ELExclusiveQueryImplementation, "eremic logic",
                             "Succeeds if EXPRESSION can be matched against the EL knowledgebase.",
                             "*expression");
+            DefinePrimitive(">>", ELNodeQueryImplementation, "eremic logic",
+                            "Binds VARIABLE to the subtree of the EL KB matching EXPRESSION.",
+                            "*expression", "-variable");
         }
 
         #region Primitive table
@@ -2383,6 +2386,34 @@ namespace Prolog
                         yield return CutState.Continue;
                 }
             }
+        }
+
+        private static IEnumerable<CutState> ELNodeQueryImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException(">>", args, "parent_expression", "key");
+            ELNode node;
+            ELNodeEnumerator enumerator;
+            var tryQuery = ELProlog.TryQuery(Term.Deref(args[0]), context, out node, out enumerator);
+            if (tryQuery)
+            {
+                if (node != null)
+                    // Just one match, so unify it and be done.
+                    return Term.UnifyAndReturnCutState(args[1], node);
+                // Multiple matches; need to return an iterator.
+                return EnumerateAndBindNode(enumerator, args[1]);
+            }
+            // No matches.
+            return FailDriver();
+        }
+
+        private static IEnumerable<CutState> EnumerateAndBindNode(ELNodeEnumerator enumerator, object varToBindTo)
+        {
+            while (enumerator.MoveNext())
+#pragma warning disable 414, 168, 219
+                // ReSharper disable once UnusedVariable
+                foreach (var ignore in Term.Unify(varToBindTo, enumerator.Current))
+#pragma warning restore 414, 168, 219
+                    yield return CutState.Continue;
         } 
         #endregion
 
