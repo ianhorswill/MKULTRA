@@ -199,6 +199,7 @@ namespace Prolog
             return this;
         }
 
+        // ReSharper disable InconsistentNaming
         private Structure ExpandDCGRule()
         {
             var start = new LogicVariable(StartSym);

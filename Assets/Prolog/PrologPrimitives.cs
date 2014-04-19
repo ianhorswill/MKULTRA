@@ -2376,6 +2376,9 @@ namespace Prolog
                     yield return CutState.Continue;
                 else
                 {
+                    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                    // This may really be a UnityVS issue, but without the redundant TryQuery,
+                    // single stepping appears to run MoveNext even when tryQuery is false ?!?
                     while (tryQuery && enumerator.MoveNext())
                         yield return CutState.Continue;
                 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Prolog
+﻿namespace Prolog
 {
     public abstract class ELNodeEnumerator
     {

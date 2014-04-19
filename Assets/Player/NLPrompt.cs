@@ -1,6 +1,7 @@
 ﻿using Prolog;
 using UnityEngine;
 
+// ReSharper disable once InconsistentNaming
 public class NLPrompt : MonoBehaviour
 {
     private string input = "";

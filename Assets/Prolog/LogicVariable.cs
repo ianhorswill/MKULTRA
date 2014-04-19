@@ -38,6 +38,7 @@ namespace Prolog
         /// UID of the variable.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "UID")]
+        // ReSharper disable once InconsistentNaming
         public uint UID { get; private set; }
 
         /// <summary>

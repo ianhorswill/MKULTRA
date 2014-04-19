@@ -251,6 +251,7 @@ namespace Prolog
 
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        // ReSharper disable once InconsistentNaming
         private void WriteLanguageTOC(string language)
         {
             int currentLevel = 1;
@@ -286,6 +287,7 @@ namespace Prolog
                 output.WriteLine("</ul>");
         }
 
+        // ReSharper disable once InconsistentNaming
         private void WriteClassHierarchyTOC()
         {
             //WriteTOCEntry("Class hierarchy");
@@ -298,6 +300,7 @@ namespace Prolog
             output.Write("</ul>");
         }
 
+        // ReSharper disable once InconsistentNaming
         private void WriteTOCEntry(string sectionName)
         {
             Tag("li",
