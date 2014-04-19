@@ -85,7 +85,9 @@ namespace UnityTest
 				if (testResult.IsTestGroup ())
 				{
 					var childrenTestResult = testResult.gameObject.GetComponentsInChildren (typeof (TestComponent), true)
+#pragma warning disable 252,253
 						.Where (t=>t!=testResult)
+#pragma warning restore 252,253
 						.Cast<ITestComponent> ()
 						.ToArray ();
 					foreach (var result in childrenTestResult)
@@ -341,7 +343,9 @@ namespace UnityTest
 
 			startTime = Time.time;
 			currentTest = testsProvider.GetNextTest ();
+#pragma warning disable 252,253
 			var testResult = testToRun.Single (result => result.TestComponent == currentTest);
+#pragma warning restore 252,253
 			testResult.isRunning = true;
 			
 			if (currentTest.ShouldSucceedOnAssertions ())

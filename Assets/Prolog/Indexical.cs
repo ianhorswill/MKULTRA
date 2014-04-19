@@ -33,6 +33,7 @@ namespace Prolog
                         throw new Exception("Current KnowledgeBase has no parent.");
                     return context.KnowledgeBase.Parent;
                 });
+            DeclareIndexical("global", context => KnowledgeBase.Global);
             DeclareIndexical("now", context => Time.time);
         }
 
