@@ -43,6 +43,9 @@ namespace Prolog
             DefinePrimitive("\\+", NotPlusImplementation, "flow control", "True if GOAL is unprovable", ":goal");
             DefinePrimitive("once", OnceImplementation, "flow control,meta-logical predicates",
                             "Attempts to prove GOAL, but suppresses backtracking for a second solution.", ":goal");
+            DefinePrimitive("ignore", IgnoreImplementation, "flow control,meta-logical predicates",
+                            "Attempts to prove GOAL, but suppresses backtracking for a second solution.",
+                            ":goals", "...");
             DefinePrimitive(Symbol.Call, CallImplementation, "flow control,meta-logical predicates",
                             "Attempts to prove the specified GOAL, adding any additional arguments, if specified.",
                             ":goal", "?optionalArguments", "...");
@@ -104,6 +107,9 @@ namespace Prolog
                 "flow control",
                 "Declares that the predicate should be byte compiled rather than interpreted.",
                 ":predicateIndicator", "...");
+            DefinePrimitive("forall", ForAllImplementation, "all solutions predicates",
+                            "True if GOAL is true for all bindings of all solutions of GENERATOR.",
+                            ":generator", ":goal");
             DefinePrimitive("findall", FindallImplementation, "all solutions predicates",
                             "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.",
                             "=template", ":goal", "-solutions");
@@ -799,6 +805,13 @@ namespace Prolog
             }
         }
 
+        private static IEnumerable<CutState> IgnoreImplementation(object[] args, PrologContext context)
+        {
+            foreach (var goal in args)
+                context.Prove(goal, "Argument to ignore/n must be a valid subgoal.").GetEnumerator().MoveNext();
+                yield return CutState.Continue;
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static IEnumerable<CutState> MapListImplementation(object[] args, PrologContext context)
@@ -1053,6 +1066,19 @@ namespace Prolog
 #pragma warning restore 414, 168, 219
                     yield return CutState.Continue;
             // ReSharper restore UnusedVariable
+        }
+
+        private static IEnumerable<CutState> ForAllImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException("forall", args, ":generator", ":goal");
+#pragma warning disable 414, 168, 219
+            // ReSharper disable UnusedVariable
+            foreach (var ignore in context.Prove(args[0], "goal argument to findall must be a valid Prolog goal."))
+            // ReSharper restore UnusedVariable
+#pragma warning restore 414, 168, 219
+                if (!context.Prove(args[1], "Arguments for forall/2 must be valid goals.").GetEnumerator().MoveNext())
+                    yield break;
+            yield return CutState.Continue;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals",
