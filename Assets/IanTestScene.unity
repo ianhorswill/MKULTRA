@@ -13792,6 +13792,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SourceFiles:
   - Sims/sims
+  - Sims/activities
 --- !u!114 &1989881528
 MonoBehaviour:
   m_ObjectHideFlags: 0

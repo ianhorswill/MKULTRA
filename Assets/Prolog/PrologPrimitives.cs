@@ -1477,17 +1477,14 @@ namespace Prolog
         private static IEnumerable<CutState> AssertzImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 1) throw new ArgumentCountException("assertz", args, "term");
-            if (ELProlog.IsELTerm(args[0]))
-                ELProlog.Update(args[0], context);
-            else
-                context.KnowledgeBase.AssertZ(Term.CopyInstantiation(args[0]));
+            context.KnowledgeBase.AssertZ(ELProlog.IsELTerm(args[0])?args[0]:Term.CopyInstantiation(args[0]));
             return TrueImplementation(args, context);
         }
 
         private static IEnumerable<CutState> AssertaImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 1) throw new ArgumentCountException("asserta", args, "term");
-            context.KnowledgeBase.AssertA(Term.CopyInstantiation(args[0]));
+            context.KnowledgeBase.AssertA(ELProlog.IsELTerm(args[0]) ? args[0] : Term.CopyInstantiation(args[0]));
             return TrueImplementation(args, context);
         }
 
@@ -1505,7 +1502,13 @@ namespace Prolog
         private static IEnumerable<CutState> RetractImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 1) throw new ArgumentCountException("retract", args, "term");
-            var term = args[0];
+            var term = Term.Deref(args[0]);
+            var eln = term as ELNode;
+            if (eln != null)
+            {
+                eln.DeleteSelf();
+                return SucceedDriver();
+            }
             if (ELProlog.IsELTerm(term))
                 return ELProlog.Retract(term, context);
             return context.KnowledgeBase.Retract(term);

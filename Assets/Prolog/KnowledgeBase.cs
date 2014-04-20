@@ -190,6 +190,7 @@ namespace Prolog
         }
 
         internal static bool ErrorOnUndefined = true;
+        // ReSharper disable once InconsistentNaming
         IEnumerable<CutState> ProveFromDB(Symbol functor, object[] args, PrologContext context)
         {
             ushort myFrame = context.PushClause();
@@ -355,6 +356,9 @@ namespace Prolog
         {
             if (term == null)
                 throw new ArgumentNullException("term", "Term to assert in KB cannot be null.");
+            if (ELProlog.IsELTerm(term))
+                ELProlog.Update(term, this);
+            else
             Assert(Term.Structurify(term, "Assertion is not a valid proposition or predicate."), atEnd, checkSingletons);
         }
 
@@ -702,25 +706,31 @@ namespace Prolog
                 {
                     // Perform user-level macroexpansion.
                     object assertion = TermExpansion(unexpanded);
-                    var t = Term.Structurify(assertion, "Assertions in prolog files must be valid propositions or predicates.");
-
-                    // Perform built-in macroexpansion.
-                    t = t.Expand();
-
-                    if (t.IsFunctor(Symbol.Implication, 1))
-                    {
-                        context.Reset();
-                        var goal = Term.Structurify(
-                            t.Argument(0),
-                            "Argument to a :- directive must be an atom or structure.");
-                        // Run t once, but don't backtrack for a second solution (since it's presumably an imperative anyway).
-                        Prove(
-                            goal.Functor, goal.Arguments,
-                            context,
-                            0).GetEnumerator().MoveNext();
-                    }
+                    if (ELProlog.IsELTerm(assertion))
+                        // It's an EL term.
+                        ELProlog.Update(assertion, this);
                     else
-                        Assert(assertion, true, true);
+                    {
+                        // It's a normal Prolog term
+                        var t = Term.Structurify(
+                            assertion,
+                            "Assertions in prolog files must be valid propositions or predicates.");
+
+                        // Perform built-in macroexpansion.
+                        t = t.Expand();
+
+                        if (t.IsFunctor(Symbol.Implication, 1))
+                        {
+                            context.Reset();
+                            var goal = Term.Structurify(
+                                t.Argument(0),
+                                "Argument to a :- directive must be an atom or structure.");
+                            // Run t once, but don't backtrack for a second solution (since it's presumably an imperative anyway).
+                            Prove(goal.Functor, goal.Arguments, context, 0).GetEnumerator().MoveNext();
+                        }
+                        else
+                            Assert(assertion, true, true);
+                    }
                     reader.SkipLayout();
                     lastLine = reader.LineNumber;
                     Prolog.CurrentSourceLineNumber = lastLine;

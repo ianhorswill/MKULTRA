@@ -530,28 +530,32 @@ namespace Prolog
         /// Write TERM to EL KB, creating any nodes that need to be cerated.
         /// </summary>
         /// <param name="term">Prolog-format term to store into KB</param>
-        /// <param name="context">PrologContext (used for context.KnolwedgeBase.ELRoot.</param>
+        /// <param name="knowledgeBase">KB in which to assert the term.</param>
         /// <returns></returns>
-        public static ELNode Update(object term, PrologContext context)
+        public static ELNode Update(object term, KnowledgeBase knowledgeBase)
         {
+            term = Term.Deref(term);
             var s = term as Structure;
             if (s != null)
-                return UpdateStructure(s, context);
+                return UpdateStructure(s, knowledgeBase);
+            var n = term as ELNode;
+            if (n != null)
+                return n;
 
             throw new Exception("Malformed EL assertion: " + ISOPrologWriter.WriteToString(term));
         }
 
-        public static ELNode UpdateStructure(Structure term, PrologContext context)
+        public static ELNode UpdateStructure(Structure term, KnowledgeBase knowledgeBase)
         {
             if (term.Functor == Symbol.Slash)
             {
                 if (term.Arity == 1)
-                    return context.KnowledgeBase.ELRoot.StoreNonExclusive(term.Argument(0));
-                return Update(term.Argument(0), context).StoreNonExclusive(term.Argument(1));
+                    return knowledgeBase.ELRoot.StoreNonExclusive(term.Argument(0));
+                return Update(term.Argument(0), knowledgeBase).StoreNonExclusive(term.Argument(1));
             }
             if (term.Functor == Symbol.Colon)
             {
-                return Update(term.Argument(0), context).StoreExclusive(term.Argument(1), true); 
+                return Update(term.Argument(0), knowledgeBase).StoreExclusive(term.Argument(1), true); 
             }
             throw new Exception("Malformed EL assertion: "+ISOPrologWriter.WriteToString(term));
         }

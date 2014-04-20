@@ -34,6 +34,7 @@ namespace Prolog
                     return context.KnowledgeBase.Parent;
                 });
             DeclareIndexical("global", context => KnowledgeBase.Global);
+            DeclareIndexical("root", context => context.KnowledgeBase.ELRoot);
             DeclareIndexical("now", context => Time.time);
         }
 
