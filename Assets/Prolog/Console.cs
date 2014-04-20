@@ -1,6 +1,12 @@
 using UnityEngine;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
+
+//
+// Console window driver by Lee Fan.
+// Mods by Ian Horswill
+//
 
 namespace Northwestern.UnityUtils
 {
@@ -19,11 +25,18 @@ namespace Northwestern.UnityUtils
 
         public ConsoleWriter Out;
 
+        /// <summary>
+        /// Style in which to display text.
+        /// </summary>
+        public GUIStyle Style;
+
+        // ReSharper disable once InconsistentNaming
         protected static int IDCount = 0;
 
         // ReSharper disable once InconsistentNaming
         private int ID; //unique generated ID
 
+        // ReSharper disable once InconsistentNaming
         private string consoleID; //generated from ID
 
         private string consoleBuffer; //Tied to GUI.Label
@@ -31,6 +44,15 @@ namespace Northwestern.UnityUtils
         private Vector2 scrollPosition;
 
         private bool firstFocus; //Controls console input focus
+
+        /// <summary>
+        /// List of all the things the commands the user has typed
+        /// </summary>
+        private List<string> history;
+        /// <summary>
+        /// Position in the history list when recalling previous commands
+        /// </summary>
+        private int historyPosition;
 
         /// <summary>
         /// Initializes console properties and sets up environment.
@@ -47,6 +69,7 @@ namespace Northwestern.UnityUtils
             ID = IDCount++;
             this.consoleID = "window" + ID;
             firstFocus = true;
+            history = new List<string>();
         }
 
         // Update is called once per frame
@@ -61,6 +84,7 @@ namespace Northwestern.UnityUtils
         /// <param name='windowID'>
         /// unused parameter.
         /// </param>
+        // ReSharper disable once InconsistentNaming
         private void DoConsoleWindow(int windowID)
         {
             //Console Window
@@ -72,11 +96,11 @@ namespace Northwestern.UnityUtils
                 GUILayout.ExpandHeight(false),
                 GUILayout.Width(this.WindowRect.width - 15));
             //Console Buffer
-            GUILayout.Label(consoleBuffer, GUILayout.ExpandHeight(true));
+            GUILayout.Label(consoleBuffer, Style, GUILayout.ExpandHeight(true));
             GUILayout.EndScrollView();
             //Input Box
             GUI.SetNextControlName(this.consoleID);
-            In = GUI.TextField(new Rect(4, this.WindowRect.height - 24, this.WindowRect.width - 8, 20), In);
+            In = GUI.TextField(new Rect(4, this.WindowRect.height - 24, this.WindowRect.width - 8, 20), In, Style);
             if (firstFocus)
             {
                 GUI.FocusControl(this.consoleID);
@@ -90,18 +114,42 @@ namespace Northwestern.UnityUtils
             {
                 this.WindowRect = GUI.Window(ID, this.WindowRect, this.DoConsoleWindow, WindowTitle);
             }
-            if (Event.current.isKey && Event.current.keyCode == ActivationKey && Event.current.type == EventType.KeyUp)
+            if (Event.current.isKey && Event.current.type == EventType.KeyUp)
             {
-                this.ShowConsole = !this.ShowConsole;
-                firstFocus = true;
-            }
-            if (Event.current.isKey && Event.current.keyCode == KeyCode.Return
-                && GUI.GetNameOfFocusedControl() == this.consoleID && In != string.Empty)
-            {
-                scrollPosition = GUI.skin.label.CalcSize(new GUIContent(consoleBuffer));
-                string command = In;
-                In = string.Empty;
-                Run(command);
+                if (Event.current.keyCode == ActivationKey)
+                {
+                    this.ShowConsole = !this.ShowConsole;
+                    firstFocus = true;
+                }
+                switch (Event.current.keyCode)
+                {
+                    case KeyCode.Return:
+                        if (GUI.GetNameOfFocusedControl() == this.consoleID && In != string.Empty)
+                        {
+                            scrollPosition = GUI.skin.label.CalcSize(new GUIContent(consoleBuffer));
+                            string command = In;
+                            In = string.Empty;
+                            history.Add(command);
+                            historyPosition = history.Count;
+                            Run(command);
+                        }
+                        break;
+
+                    case KeyCode.UpArrow:
+                        if (historyPosition > 0)
+                        {
+                            In = history[--historyPosition];
+                        }
+                        break;
+
+                    case KeyCode.DownArrow:
+                        if (historyPosition < history.Count-1)
+                        {
+                            In = history[++historyPosition];
+                        }
+                        break;
+                }
+                
             }
             if (Out != null && Out.IsUpdated())
             {
