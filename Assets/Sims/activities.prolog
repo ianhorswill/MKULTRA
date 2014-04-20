@@ -2,9 +2,9 @@
 
 spawn_activity(Type, Child) :-
     Parent is $root,
-    spawn_activity(Parent, Type, Child).
+    spawn_child_activity(Parent, Type, Child).
 
-spawn_activity(Parent, Type, Child) :-
+spawn_child_activity(Parent, Type, Child) :-
     allocate_UID(ChildUID),
     assert(Parent/activities/ChildUID/type:Type),
     Parent/activities/ChildUID>>Child,
@@ -13,7 +13,12 @@ spawn_activity(Parent, Type, Child) :-
 kill_activity(Activity) :-
     Activity/type:Type,
     ignore(on_kill(Type, Activity)),
+    kill_children(Activity),
     retract(Activity).
+
+kill_children(Activity) :-
+    forall(Activity/activities/_>>Subactivity,
+	   kill_activity(Subactivity)).
 
 allocate_UID(ChildUID) :-
     /next_uid:ChildUID,
@@ -21,8 +26,18 @@ allocate_UID(ChildUID) :-
     assert(/next_uid:NextUID).
 
 kill_all_activities :-
-    forall(/activities/_>>Activity, 
-	   kill_activity(Activity)).
+    Root is $root,
+    kill_children(Root).
 
-%on_initiate(_,_).
-%on_kill(_,_).
+activity(Activity, Type) :-
+    activity(Activity),
+    Activity/type:Type.
+
+activity(A) :-
+       R is $root,
+       descendant_activity_of(R, A).
+descendant_activity_of(Ancestor, Descendant) :-
+    Ancestor/activities/_>>Child,
+    ( Descendant=Child 
+      ; descendant_activity_of(Child,Descendant) ).
+

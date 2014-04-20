@@ -2,12 +2,12 @@
 
 handle_event(next_action(null), Action) :-
     best_action(Action).
-handle_event(arrived_at(Place), Action) :-
-    on_arrived_at(Place),
-    best_action(Action).
-handle_event(collision(What), say("Sorry!")) :-
-    character(What).
-handle_event(collision(_What), say("oops!")).
+handle_event(Event, Action) :-
+    begin(notify_activities(Event),
+	  best_action(Action)).
+%% handle_event(collision(What), say("Sorry!")) :-
+%%     character(What).
+%% handle_event(collision(_What), say("oops!")).
 
 best_action(Action) :-
     arg_max(Action,
@@ -15,23 +15,19 @@ best_action(Action) :-
 	    (  available_action(Action),
 	       action_score(Action, Score)  )).
 
-action_score(Action, Score) :-
-    sumall(CScore, critique_action(Action, CScore), Score).
+notify_activities(Event) :-
+    activity(Activity, Type),
+    ignore(on_event(Type, Activity, Event)).
 
-available_action(goto(Prop)) :-
-    prop(Prop).
+available_action(Action) :-
+    activity(Activity, Type),
+    propose_action(Type, Activity, Action).
 
-critique_action(goto(Prop), Score) :-
-    Score is -distance(Prop, $game_object).
-critique_action(goto(Prop), Score) :-
-    time_since_visit(Prop, Score) -> true ; Score = 100.
-
-on_arrived_at(Prop) :-
-    Now is $now, assert(/visit_time/Prop:Now).
-
-time_since_visit(Prop, ElapsedTime) :-
-    /visit_time/Prop:VisitTime,
-    ElapsedTime is $now - VisitTime.
+action_score(Action, TotalScore) :-
+    sumall(Score,
+	   ( activity(Activity, Type),
+	     score_action(Type, Activity, Action, Score) ),
+	   TotalScore).
 
 prop(GameObject) :-
     % An object is a prop if it has a DockingRegion component.

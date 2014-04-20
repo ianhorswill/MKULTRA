@@ -2788,6 +2788,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SourceFiles:
   - Sims/sims
+  - Sims/activities
+  - Sims/patrol
 --- !u!1 &338932983
 GameObject:
   m_ObjectHideFlags: 0
@@ -13793,6 +13795,7 @@ MonoBehaviour:
   SourceFiles:
   - Sims/sims
   - Sims/activities
+  - Sims/patrol
 --- !u!114 &1989881528
 MonoBehaviour:
   m_ObjectHideFlags: 0

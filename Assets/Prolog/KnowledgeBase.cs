@@ -135,8 +135,22 @@ namespace Prolog
         {
             var t = Term.Structurify(goal, "Argument to IsTrue() should be a valid Prolog goal.");
             var prologContext = PrologContext.GetFreePrologContext(this, thisValue);
-            var result = Prove(t.Functor, t.Arguments, prologContext, 0).GetEnumerator().MoveNext();
-            PrologContext.ReleaseContext(prologContext);
+            var result = false;
+            try
+            {
+                result = Prove(t.Functor, t.Arguments, prologContext, 0).GetEnumerator().MoveNext();
+            }
+            catch (Exception e)
+            {
+                throw new PrologError(e,
+                                      prologContext.StackTrace(Prolog.CurrentSourceFile,
+                                                         Prolog.CurrentSourceLineNumber,
+                                                         "IsTrue()"));
+            }
+            finally
+            {
+                PrologContext.ReleaseContext(prologContext);
+            }
             return result;
         }
 
