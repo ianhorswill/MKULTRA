@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 
 namespace Prolog
 {
@@ -35,8 +37,16 @@ namespace Prolog
                 gameObject,
                 parentKB == null ? KnowledgeBase.Global : parentKB.KnowledgeBase
                 );
-            foreach (var file in SourceFiles)
-                kb.Consult(file);
+            try
+            {
+                foreach (var file in SourceFiles)
+                    kb.Consult(file);
+            }
+            catch (Exception)
+            {
+                Debug.Break();   // Pause the game
+                throw;
+            }
         }
     }
 }

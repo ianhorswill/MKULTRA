@@ -41,3 +41,11 @@ descendant_activity_of(Ancestor, Descendant) :-
     ( Descendant=Child 
       ; descendant_activity_of(Child,Descendant) ).
 
+activities :-
+    forall(activity(A, T),
+	   ( write(A), write("\t"), write(T), write("\t"),
+	     findall(Action,
+		     propose_action(T, A, Action),
+		     Actions),
+	     writeln(Actions) )).
+

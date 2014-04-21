@@ -16,8 +16,8 @@ best_action(Action) :-
 	       action_score(Action, Score)  )).
 
 notify_activities(Event) :-
-    activity(Activity, Type),
-    ignore(on_event(Type, Activity, Event)).
+    forall(activity(Activity, Type),
+	   ignore(on_event(Type, Activity, Event))).
 
 available_action(Action) :-
     activity(Activity, Type),
@@ -45,6 +45,11 @@ nearest(GameObject, Constraint) :-
     arg_min(GameObject,
 	    Distance,
 	    (Constraint, Distance is distance(GameObject, $game_object))).
+
+actions :-
+    forall( ( available_action(A), 
+	      action_score(A, S) ),
+	    ( write(A), write("\t"), writeln(S) )).
 
 initialize :-
     (prop(P), assert(/visit_time/P:0), fail) ; true.

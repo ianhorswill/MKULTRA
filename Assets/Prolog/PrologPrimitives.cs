@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 using UnityEngine;
 
@@ -310,6 +311,14 @@ namespace Prolog
             DefinePrimitive("writeln", WritelnImplementation, "other predicates",
                             "Prints the value of OBJECT to the console, along with a newline.", "?object");
             DefinePrimitive("nl", NLImplementation, "other predicates", "Prints a newline to the system console.");
+            DefinePrimitive("log", LogImplementation, "other predicates", "Prints TERMS as a line in the Unity console.",
+                "?Term", "...");
+            DefinePrimitive("log_warning", LogWarningImplementation, "other predicates", "Prints TERMS as a line in the Unity console.",
+                "?Term", "...");
+            DefinePrimitive("log_error", LogErrorImplementation, "other predicates", "Prints TERMS as a line in the Unity console.",
+                "?Term", "...");
+            DefinePrimitive("break", BreakImplementation, "flow control", "Pauses game within the Unity editor and prints TERMS as a line in the unity console.",
+                "?Term", "...");
             DefinePrimitive("op", DeclareOperator, "declarations",
                             "Declares the type and priority of an infix, prefix, or postfix operator.",
                             "*priority", "*type", "*operator");
@@ -2303,6 +2312,42 @@ namespace Prolog
                 throw new ArgumentCountException("nl", args);
             context.Output.WriteLine();
             yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> LogImplementation(object[] args, PrologContext context)
+        {
+            Debug.Log(FormatLogMessage(args));
+            yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> LogWarningImplementation(object[] args, PrologContext context)
+        {
+            Debug.LogWarning(FormatLogMessage(args));
+            yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> LogErrorImplementation(object[] args, PrologContext context)
+        {
+            Debug.LogError(FormatLogMessage(args));
+            yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> BreakImplementation(object[] args, PrologContext context)
+        {
+            Debug.LogWarning(args.Length == 0 ? "Break" : FormatLogMessage(args));
+            Debug.Break();
+            yield return CutState.Continue;
+        }
+
+        static string FormatLogMessage(params object[] args)
+        {
+            var b = new StringBuilder();
+            foreach (var t in args)
+                if (t is string)
+                    b.Append(t);
+                else
+                    b.Append(ISOPrologWriter.WriteToString(t));
+            return b.ToString();
         }
 
         private static IEnumerable<CutState> DeclareOperator(object[] args, PrologContext context)

@@ -2790,6 +2790,7 @@ MonoBehaviour:
   - Sims/sims
   - Sims/activities
   - Sims/patrol
+  - Sims/be_polite
 --- !u!1 &338932983
 GameObject:
   m_ObjectHideFlags: 0
@@ -13796,6 +13797,7 @@ MonoBehaviour:
   - Sims/sims
   - Sims/activities
   - Sims/patrol
+  - Sims/be_polite
 --- !u!114 &1989881528
 MonoBehaviour:
   m_ObjectHideFlags: 0
