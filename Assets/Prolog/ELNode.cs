@@ -132,6 +132,14 @@ namespace Prolog
         #endregion
 
         #region Mutators
+        /// <summary>
+        /// A do-nothing procedure used to make clear that a / % expression in C# is really intended to do a store.
+        /// </summary>
+        /// <param name="ignore">The ELNode that got stored.</param>
+        public static void Store(ELNode ignore)
+        {
+            // Does nothing
+        }
         ///// <summary>
         ///// Store an exclusive child inside this node.
         ///// </summary>
@@ -255,6 +263,21 @@ namespace Prolog
         {
             Parent.Children.Remove(this);
         }
+
+        /// <summary>
+        /// Deletes the first child matching KEY.
+        /// </summary>
+        /// <param name="key">Key to search for</param>
+        public void DeleteKey(object key)
+        {
+            for (int i = 0; i<Children.Count; i++)
+                if (key.Equals(Children[i].Key))
+                {
+                    Children.RemoveAt(i);
+                    return;
+                }
+
+        }
         #endregion
 
         #region Mutators overloaded as C# operators
@@ -277,7 +300,7 @@ namespace Prolog
         /// <param name="key">Key to write</param>
         /// <returns>The child node containing key.</returns>
         /// <exception cref="ELNodeExclusionException">If an exclusive child has already been written in this node.</exception>
-        public static ELNode operator +(ELNode e, object key)
+        public static ELNode operator /(ELNode e, object key)
         {
             return e.StoreNonExclusive(key);
         }
@@ -305,7 +328,7 @@ namespace Prolog
         /// <param name="key">Key to write</param>
         /// <returns>The child node containing key.</returns>
         /// <exception cref="ELNodeExclusionException">If a non-exclusive child has already been written in this node.</exception>
-        public static ELNode operator -(ELNode e, object key)
+        public static ELNode operator %(ELNode e, object key)
         {
             return e.StoreExclusive(key, true);
         }
