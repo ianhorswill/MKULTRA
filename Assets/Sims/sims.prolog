@@ -47,9 +47,14 @@ nearest(GameObject, Constraint) :-
 	    (Constraint, Distance is distance(GameObject, $game_object))).
 
 actions :-
-    forall( ( available_action(A), 
+    findall(S-A,
+	    ( available_action(A), 
 	      action_score(A, S) ),
-	    ( write(A), write("\t"), writeln(S) )).
+	    Unsorted),
+    keysort(Unsorted, Sorted),
+    reverse(Sorted, Reversed),
+    forall(member(Score-Action, Reversed),
+	   ( write(Action), write("\t"), writeln(Score) )).
 
 initialize :-
     (prop(P), assert(/visit_time/P:0), fail) ; true.

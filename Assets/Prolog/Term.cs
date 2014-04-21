@@ -137,6 +137,17 @@ namespace Prolog
             }
         }
 
+        static int CompareKeys(object o1, object o2)
+        {
+            var s1 = o1 as Structure;
+            var s2 = o2 as Structure;
+            if (s1 == null || s2 == null || !s1.IsFunctor(Symbol.Minus, 2) || !s2.IsFunctor(Symbol.Minus, 2))
+            {
+                throw new ArgumentException("Attempt to compare keys of objects that were not Prolog terms of the form KEY-VALUE");
+            }
+            return Compare(s1.Argument(0), s2.Argument(0));
+        }
+
         static int TypeNumber(object term)
         {
             if (term is LogicVariable)
@@ -159,7 +170,7 @@ namespace Prolog
         /// <summary>
         /// Sorts arbitrary list of Prolog terms
         /// </summary>
-        public void Sort(List<object> terms, bool deleteDuplicates)
+        public static void Sort(List<object> terms, bool deleteDuplicates)
         {
             if (terms.Count == 0)
                 return;
@@ -172,6 +183,38 @@ namespace Prolog
                 if (terms.Count>0 && Compare(terms[0], terms[1])==0)
                     terms.RemoveAt(1);
             }
+        }
+
+        /// <summary>
+        /// Sorts arbitrary list of Prolog terms
+        /// </summary>
+        public static void KeySort(List<object> terms, bool deleteDuplicates)
+        {
+            if (terms.Count == 0)
+                return;
+            terms.Sort(CompareKeys);
+            if (deleteDuplicates)
+            {
+                for (int i = terms.Count - 2; i > 0; i--)
+                    if (Compare(terms[i], terms[i + 1]) == 0)
+                        terms.RemoveAt(i + 1);
+                if (terms.Count > 0 && Compare(terms[0], terms[1]) == 0)
+                    terms.RemoveAt(1);
+            }
+        }
+
+        public static object SortPrologList(object list, bool deleteDuplicates)
+        {
+            var l = Prolog.PrologListToIList(list);
+            Sort(l, deleteDuplicates);
+            return Prolog.IListToPrologList(l);
+        }
+
+        public static object KeySortPrologList(object list, bool deleteDuplicates)
+        {
+            var l = Prolog.PrologListToIList(list);
+            KeySort(l, deleteDuplicates);
+            return Prolog.IListToPrologList(l);
         }
         #endregion
 

@@ -363,6 +363,12 @@ namespace Prolog
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly Symbol Global = Intern("global");
+
+        /// <summary>
+        /// The Prolog symbol '-'
+        /// </summary>
+        public static readonly Symbol Minus = Intern("-");
+
         #endregion
     }
 }

@@ -225,6 +225,15 @@ namespace Prolog
                             "?x", "?list_with", "?list_without");
             DefinePrimitive("delete", DeleteImplementation, "list predicates", "True if HasNoXs is LIST without X.",
                             "?list", "?x", "?HasNoXs");
+            DefinePrimitive("msort", MSortImplementation, "list predicates",
+                "True if RESULT is unifiable with a sorted version of LIST.  Does not remove duplicates.",
+                "+list", "-result");
+            DefinePrimitive("sort", SortImplementation, "list predicates",
+                "True if RESULT is unifiable with a sorted version of LIST.  Removes duplicates.",
+                "+list", "-result");
+            DefinePrimitive("keysort", KeySortImplementation, "list predicates",
+                "LIST should be of the format [KEY-VALUE, ...].  True if RESULT is unifiable with a version of LIST sorted by its KEYs.  Does not remove duplicates.",
+                "+list", "-result");
             DefinePrimitive("<", MakeComparisonPredicate("<", (a, b) => a < b), "comparisons",
                             "True if number X is less than Y.  Both must be ground.", "*x", "*y");
             DefinePrimitive(">", MakeComparisonPredicate(">", (a, b) => a > b), "comparisons",
@@ -1037,6 +1046,27 @@ namespace Prolog
             if (args.Length != 3)
                 throw new ArgumentCountException("delete", args, "list", "x", "has_no_xs");
             return DeleteInternal(args[0], args[1], args[2]);
+        }
+
+        private static IEnumerable<CutState> MSortImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("msort", args, "+list", "-result");
+            return Term.UnifyAndReturnCutState(args[1], Term.SortPrologList(args[0], false));
+        }
+
+        private static IEnumerable<CutState> SortImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("msort", args, "+list", "-result");
+            return Term.UnifyAndReturnCutState(args[1], Term.SortPrologList(args[0], true));
+        }
+
+        private static IEnumerable<CutState> KeySortImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("keysort", args, "+list", "-result");
+            return Term.UnifyAndReturnCutState(args[1], Term.KeySortPrologList(args[0], false));
         }
 
         private static IEnumerable<CutState> DeleteInternal(object list, object x, object hasNoX)
