@@ -104,6 +104,7 @@ namespace Prolog
             StepsRemaining = stepLimit;
             goalStackFunctor = new List<Symbol>();
             goalStackArguments = new List<object[]>();
+            goalStackRule = new List<KnowledgeBaseEntry>();
             goalStackParent = new List<ushort>();
             GoalStackDepth = 0;
             KnowledgeBase = kb;
@@ -201,7 +202,7 @@ namespace Prolog
         public ushort GoalStackDepth { get; private set; }
 
         /// <summary>
-        /// The stackaddress of the current stack frame.
+        /// The stackaddress of the stack frame for the currently running operation.
         /// </summary>
         public ushort CurrentFrame
         {
@@ -220,21 +221,13 @@ namespace Prolog
         /// </summary>
         readonly List<object[]> goalStackArguments;
         /// <summary>
+        /// Rule currently being considered for this goal.
+        /// </summary>
+        readonly List<KnowledgeBaseEntry> goalStackRule;
+        /// <summary>
         /// Stack pointers for parent goals of parents frames of goals.
         /// </summary>
         readonly List<ushort> goalStackParent;
-
-        ///// <summary>
-        ///// All the frames currently on the stack, starting at the bottom.
-        ///// </summary>
-        //public IEnumerable<Term> GoalStack
-        //{
-        //    get
-        //    {
-        //        for (int i = 0; i < GoalStackDepth; i++)
-        //            yield return (goalStackFunctor[i]==null)?null:new Term(goalStackFunctor[i], goalStackArguments[i]);
-        //    }
-        //}
 
         /// <summary>
         /// Returns the goal at the specified position on the stack
@@ -286,9 +279,10 @@ namespace Prolog
                     throw new InvalidOperationException("GoalStackTop: Goal stack is empty");
                 return null;
             }
-            if (goalStackFunctor[GoalStackDepth - 1] == null)
-                return new Structure(goalStackFunctor[GoalStackDepth - 2], goalStackArguments[GoalStackDepth - 2]);
-            return new Structure(goalStackFunctor[GoalStackDepth - 1], goalStackArguments[GoalStackDepth - 1]);
+            var index = CurrentFrame;
+            if (goalStackFunctor[index] == null)
+                return new Structure(goalStackFunctor[index-1], goalStackArguments[index-1]);
+            return new Structure(goalStackFunctor[index], goalStackArguments[index]);
         }
 
         public void Reset()
@@ -327,12 +321,14 @@ namespace Prolog
             {
                 goalStackFunctor.Add(functor);
                 goalStackArguments.Add(args);
+                goalStackRule.Add(null);
                 goalStackParent.Add(parentFrame);
             }
             else
             {
                 goalStackFunctor[GoalStackDepth] = functor;
                 goalStackArguments[GoalStackDepth] = args;
+                goalStackRule[GoalStackDepth] = null;
                 goalStackParent[GoalStackDepth] = parentFrame;
             }
             GoalStackDepth++;
@@ -363,6 +359,11 @@ namespace Prolog
             GoalStackDepth = depth;
         }
 
+        public void SetCurrentRule(KnowledgeBaseEntry rule)
+        {
+            goalStackRule[CurrentFrame] = rule;
+        }
+
         /// <summary>
         /// Generate a stack trace that's close enough to a normal mono stack dump that the Unity logger will understand it.
         /// </summary>
@@ -389,7 +390,9 @@ namespace Prolog
                         //Output.Write(' ');
                         //Output.Write("{0}<{1}: ", i, PrologContext.GoalStackParent(i));
                         result.Append(Term.ToStringInPrologFormat(g));
-                        result.AppendFormat(" (at {0}:{1})", sourcePath, lineNumber);
+                        var rule = goalStackRule[i];
+                        if (rule != null)
+                            result.AppendFormat(" (at {0}:{1})", rule.SourceFile, rule.SourceLineNumber);
                         result.AppendLine();
                     }
                 }

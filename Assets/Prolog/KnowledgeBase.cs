@@ -207,7 +207,6 @@ namespace Prolog
         // ReSharper disable once InconsistentNaming
         IEnumerable<CutState> ProveFromDB(Symbol functor, object[] args, PrologContext context)
         {
-            ushort myFrame = context.PushClause();
             PredicateInfo info = GetPredicateInfo(this, functor, args.Length);
             if (info == null)
             {
@@ -215,7 +214,7 @@ namespace Prolog
                     throw new UndefinedPredicateException(functor, args.Length);
                 return PrologPrimitives.FailImplementation;
             }
-            return info.Prove(args, context, myFrame);
+            return info.Prove(args, context);
         }
         #endregion
         

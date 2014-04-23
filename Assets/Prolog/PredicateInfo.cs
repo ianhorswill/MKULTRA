@@ -107,7 +107,7 @@ namespace Prolog
         {
             if (Compiled)
                 return TestCompiledClauses(context);
-            return Prove(context.GetCallArgumentsAsArray(Arity), context, context.CurrentFrame);
+            return Prove(context.GetCallArgumentsAsArray(Arity), context);
         }
 
         private IEnumerable<CutState> TestCompiledClauses(PrologContext context)
@@ -123,8 +123,9 @@ namespace Prolog
             }
         }
 
-        internal IEnumerable<CutState> Prove(object[] args, PrologContext context, ushort myFrame)
+        internal IEnumerable<CutState> Prove(object[] args, PrologContext context)
         {
+            var myFrame = context.CurrentFrame;
             if (KnowledgeBase.Trace || Trace)
                 context.TraceOutput("Goal: {0}", new Structure(Name, args));
             if (Compiled)
@@ -144,6 +145,8 @@ namespace Prolog
         {
             entriesListUsed = true;
             foreach (var entry in Entries)
+            {
+                context.SetCurrentRule(entry);
                 foreach (var cutState in entry.Prove(args, context, myFrame))
                 {
                     if (cutState == CutState.ForceFail)
@@ -158,6 +161,7 @@ namespace Prolog
                     if (KnowledgeBase.Trace || Trace)
                         context.TraceOutput("Retry: {0}", new Structure(Name, args));
                 }
+            }
         fail:
             if (KnowledgeBase.Trace || Trace)
                 context.TraceOutput("Fail: {0}", new Structure(Name, args));
@@ -176,7 +180,9 @@ namespace Prolog
             while (!shuffler.Done)
             {
                 var entry = Entries[shuffler.Next()];
-                context.PushGoalStack(Name, args, myFrame);
+                // This shouldn't be here...
+                //context.PushGoalStack(Name, args, myFrame);
+                context.SetCurrentRule(entry);
                 foreach (var cutState in entry.Prove(args, context, myFrame))
                 {
                     if (cutState == CutState.ForceFail)
