@@ -2459,7 +2459,7 @@ namespace Prolog
             if (args.Length != 2) throw new ArgumentCountException(ELProlog.NonExclusiveOperator, args, "parent_expression", "key");
             ELNode node;
             ELNodeEnumerator enumerator;
-            if (ELProlog.TryQuery(out node, out enumerator, Term.Deref(args[0]), Term.Deref(args[1]), false, context))
+            if (ELProlog.TryChildQuery(out node, out enumerator, Term.Deref(args[0]), Term.Deref(args[1]), false, context))
             {
                 if (node != null)
                     yield return CutState.Continue;
@@ -2476,7 +2476,7 @@ namespace Prolog
             if (args.Length != 2) throw new ArgumentCountException(ELProlog.ExclusiveOperator, args, "parent_expression", "key");
             ELNode node;
             ELNodeEnumerator enumerator;
-            var tryQuery = ELProlog.TryQuery(out node, out enumerator, Term.Deref(args[0]), Term.Deref(args[1]), true, context);
+            var tryQuery = ELProlog.TryChildQuery(out node, out enumerator, Term.Deref(args[0]), Term.Deref(args[1]), true, context);
             if (tryQuery)
             {
                 if (node != null)

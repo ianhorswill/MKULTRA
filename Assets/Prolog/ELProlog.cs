@@ -9,11 +9,17 @@ namespace Prolog
         public static readonly Symbol SNonExclusiveOperator = Symbol.Intern(NonExclusiveOperator);
         public const string ExclusiveOperator = ":";
         public static readonly Symbol SExclusiveOperator = Symbol.Intern(ExclusiveOperator);
+        public const string BindNodeOperator = ">>";
+        public static readonly Symbol SBindNodeOperator = Symbol.Intern(BindNodeOperator);
 
         public static bool IsELTerm(object term)
         {
             var s = term as Structure;
-            return s != null && (s.IsFunctor(SNonExclusiveOperator, 2) || s.IsFunctor(SExclusiveOperator, 2));
+            return s != null
+                && s.Arity==2
+                && (s.Functor == SBindNodeOperator 
+                    || s.Functor == SExclusiveOperator
+                    || s.Functor == SNonExclusiveOperator);
         }
 
         #region Queries
@@ -49,7 +55,11 @@ namespace Prolog
             throw new Exception("Malformed EL query: " + ISOPrologWriter.WriteToString(term));
         }
 
-        public static bool TryQueryStructure(Structure term, PrologContext context, out ELNode foundNode, out ELNodeEnumerator enumerator)
+        public static bool TryQueryStructure(
+            Structure term,
+            PrologContext context,
+            out ELNode foundNode,
+            out ELNodeEnumerator enumerator)
         {
             //
             // Dispatch based on the functor and arity.
@@ -59,10 +69,19 @@ namespace Prolog
             if (term.IsFunctor(Symbol.Slash, 1))
                 return TryRootQuery(term, context, out foundNode, out enumerator);
 
-            if (term.Arity != 2 || (term.Functor != Symbol.Slash && term.Functor != Symbol.Colon))
+            if (!IsELTerm(term))
                 throw new Exception("Malformed EL query: " + ISOPrologWriter.WriteToString(term));
 
-            return TryQuery(
+            if (term.IsFunctor(SBindNodeOperator, 2))
+            {
+                var variableToBind = term.Argument(1) as LogicVariable;
+                if (variableToBind == null)
+                    throw new ArgumentException("RHS of >> must be an uninstantiated variable: "+ ISOPrologWriter.WriteToString(term.Argument(1)));
+                foundNode = null;
+                return TryNodeBindingQuery(out enumerator, term.Argument(0), variableToBind, context);
+            }
+
+            return TryChildQuery(
                 out foundNode,
                 out enumerator,
                 term.Argument(0),
@@ -71,7 +90,89 @@ namespace Prolog
                 context);
         }
 
-        public static bool TryQuery(
+        public static bool TryNodeBindingQuery(
+            out ELNodeEnumerator enumerator,
+            object nodeExpression,
+            LogicVariable variableToBind,
+            PrologContext context)
+        {
+            // Decode the node expression
+            ELNode foundNode;
+            ELNodeEnumerator nodeEnumerator;
+            if (!TryQuery(nodeExpression, context, out foundNode, out nodeEnumerator))
+            {
+                // Parent failed, so we fail
+                enumerator = null;
+                return false;
+            }
+            enumerator = (foundNode != null)
+                ? (ELNodeEnumerator)new ELNodeEnumeratorBindFixedNodeToVariable(foundNode, variableToBind)
+                : new ELNodeEnumeratorBindEnumeratedNodesToVariable(nodeEnumerator, variableToBind);
+            return true;
+        }
+
+        class ELNodeEnumeratorBindFixedNodeToVariable : ELNodeEnumerator
+        {
+            private readonly ELNode node;
+            private readonly LogicVariable variableToBind;
+
+            public ELNodeEnumeratorBindFixedNodeToVariable(ELNode node, LogicVariable variableToBind)
+            {
+                this.node = node;
+                this.variableToBind = variableToBind;
+            }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return v == variableToBind;
+            }
+
+            public override bool MoveNext()
+            {
+                if (Current == null)
+                {
+                    // first time through
+                    variableToBind.Value = Current = node;
+                    return true;
+                }
+                variableToBind.ForciblyUnbind();
+                return false;
+            }
+        }
+
+        class ELNodeEnumeratorBindEnumeratedNodesToVariable : ELNodeEnumerator
+        {
+            readonly ELNodeEnumerator nodeEnumerator;
+
+            readonly LogicVariable variableToBind;
+
+            public ELNodeEnumeratorBindEnumeratedNodesToVariable(ELNodeEnumerator nodeEnumerator, LogicVariable variableToBind)
+            {
+                this.nodeEnumerator = nodeEnumerator;
+                this.variableToBind = variableToBind;
+                if (nodeEnumerator.BindsVar(variableToBind))
+                    throw new InvalidOperationException("Variable appears on both the LHS and RHS of >>: "+ variableToBind.Name);
+            }
+
+            public override bool BindsVar(LogicVariable v)
+            {
+                return v == variableToBind || nodeEnumerator.BindsVar(v);
+            }
+
+            public override bool MoveNext()
+            {
+                if (nodeEnumerator.MoveNext())
+                {
+                    Current = nodeEnumerator.Current;
+                    variableToBind.Value = Current;
+                    return true;
+                }
+                variableToBind.ForciblyUnbind();
+                return false;
+            }
+        }
+
+        public static bool TryChildQuery(
             out ELNode foundNode,
             out ELNodeEnumerator enumerator,
             object parentExpression,
