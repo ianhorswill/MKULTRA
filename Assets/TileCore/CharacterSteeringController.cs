@@ -110,13 +110,16 @@ public class CharacterSteeringController : BindingBehaviour
             return null;
 
         //collisionDetected = true;
-        Vector2 escapeDirection;
+        if (this.rigidbody2D.velocity == Vector2.zero)
+        {
+            return firstCollisionOffset.normalized.PerpCounterClockwise();
+        }
         var separation = firstCollisionOffset.magnitude;
+        var escapeDirection = firstCollisionOffset / separation;
         if (separation < 2)
-            escapeDirection = this.rigidbody2D.velocity.PerpClockwise().normalized;
-        else
-            escapeDirection = firstCollisionOffset / separation;
-        return 2000f * MaxForce * escapeDirection;
+            escapeDirection += escapeDirection.PerpClockwise().normalized;
+
+        return 0.5f * this.MaxForce * escapeDirection;
     }
 
     private Vector2 PredictedPosition(Component sprite, float time)
@@ -146,7 +149,8 @@ public class CharacterSteeringController : BindingBehaviour
         var seekSteering = this.SeekSteering();
         var collisionAvoidanceSteering = this.CollisionAvoidanceSteering();
 
-        var force = this.MaybeAdd(seekSteering, collisionAvoidanceSteering);
+        //var force = this.MaybeAdd(seekSteering, collisionAvoidanceSteering);
+        var force = seekSteering;
 
         // Throttle force at MaxForce
         var fMag = force.magnitude;
@@ -174,6 +178,8 @@ public class CharacterSteeringController : BindingBehaviour
         GreenVector = force*0.1f;
 
         rb.AddForce(force);
+        if (collisionAvoidanceSteering.HasValue)
+            rb.AddForce(collisionAvoidanceSteering.Value);
     }
 
     Vector2 MaybeAdd(Vector2 v1, Vector2? v2)
@@ -187,6 +193,7 @@ public class CharacterSteeringController : BindingBehaviour
     #region Animation control
     private string currentState = "";
     private Vector2 currentDirection;
+    private SpriteRenderer mySpriteRenderer;
 
     /// <summary>
     /// Connection to the animation system
@@ -196,7 +203,9 @@ public class CharacterSteeringController : BindingBehaviour
     public void Update()
     {
         this.UpdateWalkAnimation(this.rigidbody2D.velocity);
-        TileMap.UpdateSortingOrder(GetComponent<SpriteRenderer>());
+        if (mySpriteRenderer == null)
+             mySpriteRenderer = GetComponent<SpriteRenderer>();
+        TileMap.UpdateSortingOrder(mySpriteRenderer);
     }
 
     Vector3 NearestCardinalDirection(Vector2 direction)
@@ -211,7 +220,7 @@ public class CharacterSteeringController : BindingBehaviour
 
     private void UpdateWalkAnimation(Vector2 characterVelocity)
     {
-        this.animator.speed = characterVelocity.magnitude;
+        //this.animator.speed = characterVelocity.magnitude;
 
         if (characterVelocity.magnitude < 0.01)
         {

@@ -3,6 +3,7 @@
 %%
 
 propose_action(patrol, _, goto(Prop)) :-
+    not(/motor_state/walking_to),  % not already going somewhere
     prop(Prop).
 
 score_action(patrol, Activity, goto(Prop), Score) :-

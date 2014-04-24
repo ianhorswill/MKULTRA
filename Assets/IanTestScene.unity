@@ -2671,7 +2671,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Radius: .300000012
+  m_Radius: .200000003
   m_Center: {x: .00999999978, y: .180000007}
 --- !u!50 &338102931
 Rigidbody2D:
@@ -13878,7 +13878,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Radius: .300000012
+  m_Radius: .200000003
   m_Center: {x: 0, y: 0}
 --- !u!114 &1989881530
 MonoBehaviour:

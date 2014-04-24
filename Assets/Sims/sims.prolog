@@ -1,23 +1,16 @@
-:- dynamic visited/2.
+notify_event(Event) :-
+    forall(activity(Activity, Type),
+	   ignore(on_event(Type, Activity, Event))).
 
-handle_event(next_action(null), Action) :-
+next_action(Action) :-
     best_action(Action).
-handle_event(Event, Action) :-
-    begin(notify_activities(Event),
-	  best_action(Action)).
-%% handle_event(collision(What), say("Sorry!")) :-
-%%     character(What).
-%% handle_event(collision(_What), say("oops!")).
+next_action(sleep(1)).
 
 best_action(Action) :-
     arg_max(Action,
 	    Score,
 	    (  available_action(Action),
 	       action_score(Action, Score)  )).
-
-notify_activities(Event) :-
-    forall(activity(Activity, Type),
-	   ignore(on_event(Type, Activity, Event))).
 
 available_action(Action) :-
     activity(Activity, Type),

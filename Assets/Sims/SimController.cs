@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-
 using Prolog;
-
 using UnityEngine;
 
 [AddComponentMenu("Sims/Sim Controller")]
@@ -25,6 +23,14 @@ public class SimController : BindingBehaviour
 
     #region Private fields
 
+    private ELNode elRoot;
+
+    private ELNode perceptionRoot;
+
+    private ELNode conversationalSpace;
+
+    private ELNode motorRoot;
+
     readonly Queue<Structure> eventQueue = new Queue<Structure>();
 
     /// <summary>
@@ -43,10 +49,36 @@ public class SimController : BindingBehaviour
     /// </summary>
     private TilePath currentPath;
 
+    private GameObject currentDestination;
+
     /// <summary>
     /// Object being locomoted to, if any.
     /// </summary>
-    private GameObject currentDestination;
+    /// <summary>
+    /// Object being locomoted to, if any.
+    /// </summary>
+    public GameObject CurrentDestination
+    {
+        get
+        {
+            return this.currentDestination;
+        }
+        set
+        {
+            this.currentDestination = value;
+            if (currentDestination == null)
+            {
+                motorRoot.DeleteKey(SWalkingTo);
+            }
+            else
+                ELNode.Store(motorRoot/SWalkingTo%CurrentDestination);
+        }
+    }
+
+    /// <summary>
+    /// Time to wake character up and ask for an action.
+    /// </summary>
+    private float? sleepUntil;
     #endregion
 
     #region Event queue operations
@@ -97,49 +129,49 @@ public class SimController : BindingBehaviour
     /// </summary>
     private void HandleEvents()
     {
+        if (EventsPending)
+            this.sleepUntil = null;
         while (EventsPending)
-            this.InitiateAction(this.HandleEvent(this.GetNextEvent()));
+            this.NotifyEvent(this.GetNextEvent());
     }
 
     /// <summary>
     /// Call into Prolog to respond to EVENTDESCRIPTION
     /// </summary>
     /// <param name="eventDescription">Term representing the event</param>
-    /// <returns>Action to take or null.</returns>
-    private Structure HandleEvent(object eventDescription)
+    private void NotifyEvent(object eventDescription)
     {
-        // There really ought to be a better way to do this...
-        var answer = new LogicVariable("answer");
-        var goal = new Structure("handle_event", eventDescription, answer);
-        return (Structure)this.SolveFor(answer, goal);
+        if (!this.IsTrue(new Structure(SNotifyEvent, eventDescription)))
+            Debug.LogError("notify_event/1 failed: "+ISOPrologWriter.WriteToString(eventDescription));
     }
+
+    private static readonly Symbol SNotifyEvent = Symbol.Intern("notify_event");
     #endregion
 
     #region Unity hooks
+
+    internal void Start()
+    {
+        elRoot = this.KnowledgeBase().ELRoot;
+        this.perceptionRoot = elRoot / Symbol.Intern("perception");
+        this.conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
+        this.motorRoot = elRoot / Symbol.Intern("motor_state");
+
+    }
+
     internal void Update()
     {
-        // Clear speech bubble if it's time.
-        if (Time.time > this.clearSpeechTime)
-            this.currentSpeechBubbleText = null;
+        this.UpdateSpeechBubble();
 
-        if (this.currentPath != null)
-            // Update the steering
-            if (this.currentPath.UpdateSteering(this.steering))
-                // Finished the path
-                this.currentPath = null;
+        this.UpdateLocomotion();
 
-        // Query Prolog if we have nothing to do.
-        if (currentPath == null)
-        {
-            if (this.currentDestination == null)
-                this.QueueEvent("next_action", null);
-            else 
-                this.QueueEvent("arrived_at", this.currentDestination);
-            this.currentDestination = null;
-        }
+        //this.UpdateConversationalSpace();
 
         this.HandleEvents();
+
+        this.MaybeDoNextAction();
     }
+
 
     internal void OnCollisionEnter2D(Collision2D collision)
     {
@@ -148,6 +180,24 @@ public class SimController : BindingBehaviour
     #endregion
 
     #region Primitive actions handled by SimController
+    private void MaybeDoNextAction()
+    {
+        if (!this.sleepUntil.HasValue || this.sleepUntil.Value <= Time.time)
+        {
+            this.DoNextAction();
+        }
+    }
+
+    void DoNextAction()
+    {
+        var action = new LogicVariable("Action");
+        this.InitiateAction(this.SolveFor(action, new Structure(SNextAction, action)));
+    }
+
+    private static readonly Symbol SNextAction = Symbol.Intern("next_action");
+
+    private static readonly Symbol SWalkingTo = Symbol.Intern("walking_to");
+
     void InitiateAction(object action)
     {
         if (action == null)
@@ -158,11 +208,11 @@ public class SimController : BindingBehaviour
         switch (structure.Functor.Name)
         {
             case "goto":
-                currentDestination = structure.Argument<GameObject>(0);
-                if (currentDestination == null)
+                this.CurrentDestination = structure.Argument<GameObject>(0);
+                if (this.CurrentDestination == null)
                     steering.Stop();
                 else
-                    this.currentPath = planner.Plan(gameObject.TilePosition(), currentDestination.DockingTiles());
+                    this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
                 break;
 
             case "face":
@@ -171,13 +221,16 @@ public class SimController : BindingBehaviour
 
             case "say":
                 this.Say(structure.Argument<string>(0));
-                clearSpeechTime = Time.time + 2;
                 break;
 
             case "cons":
                 // It's a list of actions to initiate.
                 this.InitiateAction(structure.Argument(0));
                 this.InitiateAction(structure.Argument(1));
+                break;
+
+            case "sleep":
+                this.sleepUntil = Time.time + Convert.ToSingle(structure.Argument(0));
                 break;
 
             default:
@@ -201,6 +254,36 @@ public class SimController : BindingBehaviour
         }
     }
 
+    private void UpdateLocomotion()
+    {
+        if (this.currentPath != null)
+        {
+            // Update the steering
+            if (this.currentPath.UpdateSteering(this.steering))
+            {
+                // Finished the path
+                this.currentPath = null;
+            }
+        }
+
+        // Query Prolog if we have nothing to do.
+        if (this.currentPath == null && this.CurrentDestination != null)
+        {
+            this.QueueEvent("arrived_at", this.CurrentDestination);
+            this.CurrentDestination = null;
+        }
+    }
+
+    private void UpdateSpeechBubble()
+    {
+        // Clear speech bubble if it's time.
+        if (Time.time > this.clearSpeechTime)
+        {
+            this.currentSpeechBubbleText = null;
+            this.motorRoot.DeleteKey(SIAmSpeaking);
+        }
+    }
+
     /// <summary>
     /// Turns character to face the specified GameObject
     /// </summary>
@@ -217,7 +300,12 @@ public class SimController : BindingBehaviour
     public void Say(string speech)
     {
         this.currentSpeechBubbleText = speech;
+        ELNode.Store(motorRoot / SIAmSpeaking);
+        clearSpeechTime = Time.time + 2;
     }
+
+    // ReSharper disable once InconsistentNaming
+    private static readonly Symbol SIAmSpeaking = Symbol.Intern("i_am_speaking");
     #endregion
 
     #region Speech bubbles
