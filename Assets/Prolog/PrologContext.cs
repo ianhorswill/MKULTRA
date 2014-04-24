@@ -14,6 +14,7 @@ namespace Prolog
     [System.Diagnostics.DebuggerDisplay("Top={GoalStackTopSafe}")]
     public class PrologContext
     {
+        #region Static variables
         /// <summary>
         /// The last PrologContext that threw an exception.
         /// </summary>
@@ -23,15 +24,28 @@ namespace Prolog
         /// Default maximum number of steps the inference can run for
         /// </summary>
         public static int DefaultStepLimit { get; set; }
+        #endregion
 
-        private int stepLimit;
+        #region Instance variables
+        /// <summary>
+        /// The KB to use for inference.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "KnowledgeBase")]
+        public KnowledgeBase KnowledgeBase { get; internal set; }
 
-        private bool isFree;
-
+        /// <summary>
+        /// The defaultstream to write output to.
+        /// </summary>
         public TextWriter Output;
 
+        /// <summary>
+        /// The GameObject or Component responsible for initiating the current top-level goal.
+        /// </summary>
         public object This;
 
+        /// <summary>
+        /// The GameObject responsible for initiating the current top-level goal.
+        /// </summary>
         public GameObject GameObject
         {
             get
@@ -41,23 +55,12 @@ namespace Prolog
         }
 
         /// <summary>
-        /// Default maximum number of steps the inference can run for
+        /// Whether predicates should be randomized.
         /// </summary>
-        public int StepLimit
-        {
-            get { return stepLimit;  }
-            set { 
-                int delta = value - stepLimit;
-                stepLimit = value;
-                StepsRemaining += delta;
-            }
-        }
+        public bool Randomize { get; set; }
+        #endregion
 
-        static PrologContext()
-        {
-            DefaultStepLimit = 5000;
-        }
-
+        #region Constructors
         /// <summary>
         /// Creates a PrologContext with PrologContext.DefaultStepLimit
         /// </summary>
@@ -65,7 +68,37 @@ namespace Prolog
             : this(kb, DefaultStepLimit)
         { }
 
+        /// <summary>
+        /// Creates a PrologContext that can for at most the specified number of steps.
+        /// </summary>
+        public PrologContext(KnowledgeBase kb, int stepLimit)
+        {
+            StepsRemaining = stepLimit;
+            goalStack = new List<GoalStackFrame>();
+            goalStackCurrentRules = new List<KnowledgeBaseEntry>();
+            GoalStackDepth = 0;
+            KnowledgeBase = kb;
+            traceVariables = new LogicVariable[256];
+            traceValues = new object[256];
+            tracePointer = 0;
+        }
+
+        static PrologContext()
+        {
+            DefaultStepLimit = 5000;
+        }
+        #endregion
+
+        #region Management of the free context pool
+        /// <summary>
+        /// Pool of contexts available to be re-used.
+        /// </summary>
         static readonly Stack<PrologContext> FreeContexts = new Stack<PrologContext>();
+
+        /// <summary>
+        /// True if this context is NOT supposed to be in use.
+        /// </summary>
+        private bool isFree;
 
         /// <summary>
         /// Gets a context that is currently free to use.  Should be relased afterward using ReleaseContext().
@@ -96,32 +129,25 @@ namespace Prolog
             c.isFree = true;
             FreeContexts.Push(c);
         }
+        #endregion
+
+        #region Inference step counting
+        private int stepLimit;
 
         /// <summary>
-        /// Creates a PrologContext that can for at most the specified number of steps.
+        /// Default maximum number of steps the inference can run for
         /// </summary>
-        public PrologContext(KnowledgeBase kb, int stepLimit) {
-            StepsRemaining = stepLimit;
-            goalStackFunctor = new List<Symbol>();
-            goalStackArguments = new List<object[]>();
-            goalStackRule = new List<KnowledgeBaseEntry>();
-            goalStackParent = new List<ushort>();
-            GoalStackDepth = 0;
-            KnowledgeBase = kb;
-            traceVariables = new LogicVariable[256];
-            traceValues = new object[256];
-            tracePointer = 0;
+        public int StepLimit
+        {
+            get { return stepLimit; }
+            set
+            {
+                int delta = value - stepLimit;
+                stepLimit = value;
+                StepsRemaining += delta;
+            }
         }
-        
-        /// <summary>
-        /// Check whether the maximum number of steps has been exceeded.
-        /// Called when a new step is initiated.
-        /// </summary>
-        internal void NewStep() {
-            StepsRemaining -= 1;
-            if (StepsRemaining < 0)
-                throw new InferenceStepsExceededException();
-        }
+
 
         /// <summary>
         /// Number of further steps this inference is allowed to run for.
@@ -137,10 +163,17 @@ namespace Prolog
         }
 
         /// <summary>
-        /// Whether predicates should be randomized.
+        /// Check whether the maximum number of steps has been exceeded.
+        /// Called when a new step is initiated.
         /// </summary>
-        public bool Randomize { get; set; }
+        internal void NewStep() {
+            StepsRemaining -= 1;
+            if (StepsRemaining < 0)
+                throw new InferenceStepsExceededException();
+        }
+        #endregion
 
+        #region Proving goals
         /// <summary>
         /// Resets the context (clears stack, etc.) and starts a proof of the specified goal.
         /// </summary>
@@ -188,12 +221,23 @@ namespace Prolog
             Structure s = Term.Structurify(goal, badGoalErrorMessage);
             return KnowledgeBase.Prove(s.Functor, s.Arguments, this, CurrentFrame);
         }
+        #endregion
 
+        #region Tracing goals (not in the sense of the undo stack)
         /// <summary>
-        /// The KB to use for inference.
+        /// Prints trace information.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "KnowledgeBase")]
-        public KnowledgeBase KnowledgeBase { get; internal set; }
+        public void TraceOutput(string format, object arg)
+        {
+            ushort frame = CurrentFrame;
+            while (frame != 0)
+            {
+                Prolog.TraceOutput.Write(' ');
+                frame = goalStack[frame].Parent;
+            }
+            Prolog.TraceOutput.WriteLine(format, arg);
+        }
+        #endregion
 
         #region Goal stack operations
         /// <summary>
@@ -203,6 +247,7 @@ namespace Prolog
 
         /// <summary>
         /// The stackaddress of the stack frame for the currently running operation.
+        /// This should be GoalStackDepth-1.
         /// </summary>
         public ushort CurrentFrame
         {
@@ -212,31 +257,51 @@ namespace Prolog
             }
         }
 
+        private struct GoalStackFrame
+        {
+            /// <summary>
+            /// The frame of the caller of this goal.
+            /// </summary>
+            public readonly ushort Parent;
+
+            /// <summary>
+            /// The functor of this goal
+            /// </summary>
+            public readonly Symbol Functor;
+
+            /// <summary>
+            /// The arguments to this goal
+            /// </summary>
+            public readonly object[] Arguments;
+
+            public GoalStackFrame(Symbol functor, object[] args, ushort parentFrame)
+            {
+                this.Functor = functor;
+                this.Arguments = args;
+                this.Parent = parentFrame;
+            }
+        }
+
         /// <summary>
-        /// Functors of goals on stack. 
+        /// Stack frames for running goals.
+        /// Kept as a struct to keep the GC from having to copy a lot of objects.
+        /// Current rule for each stack frame is kept in a separate array because of issues with struct semantics.
         /// </summary>
-        readonly List<Symbol> goalStackFunctor;
+        private readonly List<GoalStackFrame> goalStack;
+
         /// <summary>
-        /// Arguments of goals on stack.
+        /// This has to be a separate parallel array to goalStack because while the rest of the stack frame
+        /// is immutable (within a given call), the rule changes during the call, and the CLR doesn't like
+        /// it when you try to mutate one field of one element of an array of structs.
         /// </summary>
-        readonly List<object[]> goalStackArguments;
-        /// <summary>
-        /// Rule currently being considered for this goal.
-        /// </summary>
-        readonly List<KnowledgeBaseEntry> goalStackRule;
-        /// <summary>
-        /// Stack pointers for parent goals of parents frames of goals.
-        /// </summary>
-        readonly List<ushort> goalStackParent;
+        private readonly List<KnowledgeBaseEntry> goalStackCurrentRules; 
 
         /// <summary>
         /// Returns the goal at the specified position on the stack
         /// </summary>
         public Structure GoalStackGoal(ushort frame)
         {
-            if (goalStackFunctor[frame] != null)
-                return new Structure(goalStackFunctor[frame], goalStackArguments[frame]);
-            return null;
+            return new Structure(goalStack[frame].Functor, goalStack[frame].Arguments);
         }
 
         /// <summary>
@@ -244,7 +309,7 @@ namespace Prolog
         /// </summary>
         public ushort GoalStackParent(ushort frame)
         {
-            return goalStackParent[frame];
+            return goalStack[frame].Parent;
         }
 
         /// <summary>
@@ -279,10 +344,11 @@ namespace Prolog
                     throw new InvalidOperationException("GoalStackTop: Goal stack is empty");
                 return null;
             }
-            var index = CurrentFrame;
-            if (goalStackFunctor[index] == null)
-                return new Structure(goalStackFunctor[index-1], goalStackArguments[index-1]);
-            return new Structure(goalStackFunctor[index], goalStackArguments[index]);
+            return this.GoalStackGoal(CurrentFrame);
+            //var index = CurrentFrame;
+            //if (goalStack[index].Functor == null)
+            //    return new Structure(goalStack[index-1].Functor, goalStackArguments[index-1]);
+            //return new Structure(goalStackFunctor[index], goalStackArguments[index]);
         }
 
         public void Reset()
@@ -317,31 +383,28 @@ namespace Prolog
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor")]
         public void PushGoalStack(Symbol functor, object[] args, ushort parentFrame)
         {
-            if (GoalStackDepth >= goalStackArguments.Count)
+            if (GoalStackDepth >= goalStack.Count)
             {
-                goalStackFunctor.Add(functor);
-                goalStackArguments.Add(args);
-                goalStackRule.Add(null);
-                goalStackParent.Add(parentFrame);
+                goalStack.Add(new GoalStackFrame(functor, args, parentFrame));
+                goalStackCurrentRules.Add(null);
             }
-            else
+        else
             {
-                goalStackFunctor[GoalStackDepth] = functor;
-                goalStackArguments[GoalStackDepth] = args;
-                goalStackRule[GoalStackDepth] = null;
-                goalStackParent[GoalStackDepth] = parentFrame;
+                goalStack[GoalStackDepth] = new GoalStackFrame(functor, args, parentFrame);
+                goalStackCurrentRules[GoalStackDepth] = null;
             }
+
             GoalStackDepth++;
         }
 
         /// <summary>
         /// Mark that this is the start of a new clause
         /// </summary>
-        public ushort PushClause()
-        {
-            PushGoalStack(null, null, 0);
-            return (ushort)(GoalStackDepth - 2);
-        }
+        //public ushort PushClause()
+        //{
+        //    PushGoalStack(null, null, 0);
+        //    return (ushort)(GoalStackDepth - 2);
+        //}
 
         /// <summary>
         /// Removes the top goal from the goal stack
@@ -359,9 +422,13 @@ namespace Prolog
             GoalStackDepth = depth;
         }
 
+        /// <summary>
+        /// Set the rule currently being tried by the goal at the top of the stack.
+        /// </summary>
+        /// <param name="rule">the new rule.</param>
         public void SetCurrentRule(KnowledgeBaseEntry rule)
         {
-            goalStackRule[CurrentFrame] = rule;
+            goalStackCurrentRules[CurrentFrame] = rule;
         }
 
         /// <summary>
@@ -375,12 +442,12 @@ namespace Prolog
         {
             var result = new StringBuilder();
             if (this.GoalStackDepth > 0)
-                for (ushort i = 0; i <= this.CurrentFrame; i++)
+                for (int i = this.CurrentFrame; i >= 0; i--)
                 {
-                    Structure g = this.GoalStackGoal(i);
+                    Structure g = this.GoalStackGoal((ushort)i);
                     if (g != null)
                     {
-                        ushort frame = i;
+                        var frame = (ushort)i;
                         while (frame != 0)
                         {
                             //Output.Write("{0}/", frame);
@@ -390,7 +457,7 @@ namespace Prolog
                         //Output.Write(' ');
                         //Output.Write("{0}<{1}: ", i, PrologContext.GoalStackParent(i));
                         result.Append(Term.ToStringInPrologFormat(g));
-                        var rule = goalStackRule[i];
+                        var rule = goalStackCurrentRules[i];
                         if (rule != null)
                             result.AppendFormat(" (at {0}:{1})", rule.SourceFile, rule.SourceLineNumber);
                         result.AppendLine();
@@ -602,19 +669,5 @@ namespace Prolog
                     yield return CutState.Continue;
         }
         #endregion
-
-        /// <summary>
-        /// Prints trace information.
-        /// </summary>
-        public void TraceOutput(string format, object arg)
-        {
-            ushort frame = CurrentFrame;
-            while (frame != 0)
-            {
-                Prolog.TraceOutput.Write(' ');
-                frame = goalStackParent[frame];
-            }
-            Prolog.TraceOutput.WriteLine(format, arg);
-        }
     }
 }
