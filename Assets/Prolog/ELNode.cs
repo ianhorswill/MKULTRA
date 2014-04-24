@@ -118,6 +118,25 @@ namespace Prolog
         #endregion
 
         #region Accessors
+        /// <summary>
+        /// Test if this node contains a child with a given key.
+        /// </summary>
+        /// <param name="key">Key to search for</param>
+        /// <returns>True if there is a child with the specified key.</returns>
+        public bool ContainsKey(object key)
+        {
+            foreach (var n in Children)
+                if (key.Equals(n.Key))
+                    return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Attempts to look up a child with the specified key.
+        /// </summary>
+        /// <param name="key">Key to search for</param>
+        /// <param name="child">Child with that key, if found, else null.</param>
+        /// <returns>True if child was found, else false and child is null.</returns>
         public bool TryLookup(object key, out ELNode child)
         {
             foreach (var c in Children)
@@ -277,6 +296,15 @@ namespace Prolog
                     return;
                 }
 
+        }
+
+        /// <summary>
+        /// Removes all the nodes satisfying the specified predicate
+        /// </summary>
+        /// <param name="predicate"></param>
+        public void DeleteAll(Predicate<ELNode> predicate)
+        {
+            Children.RemoveAll(predicate);
         }
         #endregion
 
