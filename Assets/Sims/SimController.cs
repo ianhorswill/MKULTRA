@@ -6,6 +6,20 @@ using UnityEngine;
 [AddComponentMenu("Sims/Sim Controller")]
 public class SimController : BindingBehaviour
 {
+    #region Constants
+    /// <summary>
+    /// The radius of the the circular region around the character that defines
+    /// its "conversational space".  Two characters having a conversation should
+    /// normally be within one anothers' conversational spaces.
+    /// </summary>
+    private const float ConversationalSpaceRadius = 2;
+
+    /// <summary>
+    /// Maximum number of characters that can be within a character's conversational space.
+    /// </summary>
+    private const int MaxConversationalSpaceColliders = 30;
+    #endregion
+
     /// <summary>
     /// Whether to log actions as they're taken.
     /// </summary>
@@ -149,7 +163,6 @@ public class SimController : BindingBehaviour
     #endregion
 
     #region Unity hooks
-
     internal void Start()
     {
         elRoot = this.KnowledgeBase().ELRoot;
@@ -165,17 +178,68 @@ public class SimController : BindingBehaviour
 
         this.UpdateLocomotion();
 
-        //this.UpdateConversationalSpace();
+        this.UpdateConversationalSpace();
 
         this.HandleEvents();
 
         this.MaybeDoNextAction();
     }
 
-
     internal void OnCollisionEnter2D(Collision2D collision)
     {
         this.QueueEvent("collision", collision.gameObject);
+    }
+    #endregion
+
+    #region Perception update
+    readonly Collider2D[] conversationalSpaceColliders = new Collider2D[MaxConversationalSpaceColliders];
+
+    /// <summary>
+    /// Update the set of character's within this characters' conversational space
+    /// and generate any necessary enter/leave events.
+    /// </summary>
+    private void UpdateConversationalSpace()
+    {
+        var characterCount = Physics2D.OverlapCircleNonAlloc(
+            transform.position,
+            ConversationalSpaceRadius,
+            conversationalSpaceColliders,
+            1 << gameObject.layer);
+        if (characterCount==MaxConversationalSpaceColliders)
+            throw new Exception("Too many colliders in conversational space!");
+
+        // Clean out entries that are no longer in the area
+        conversationalSpace.DeleteAll(
+            node =>
+            {
+                // Look to see if node's key (a character) appears in the colliders
+                for (var i = 0; i<characterCount;i++)
+                    if (ReferenceEquals(node.Key, this.conversationalSpaceColliders[i].gameObject))
+                        return false;
+                // It doesn't, so the character left this character's conversational space.
+
+                // Tell this character about it
+                QueueEvent("exit_conversational_space", node.Key);
+
+                // Remove the character
+                return true;
+            });
+
+        // Add new entries
+        for (var i = 0; i<characterCount;i++)
+        {
+            var character = conversationalSpaceColliders[i].gameObject;
+            if (character != gameObject && !this.conversationalSpace.ContainsKey(character))
+            {
+                // The character just arrived in this character's conversational space
+
+                // Tell this character
+                QueueEvent("enter_conversational_space", character);
+
+                // Update the KB
+                ELNode.Store(conversationalSpace/character);
+            }
+        }
     }
     #endregion
 
@@ -277,7 +341,7 @@ public class SimController : BindingBehaviour
     private void UpdateSpeechBubble()
     {
         // Clear speech bubble if it's time.
-        if (Time.time > this.clearSpeechTime)
+        if (this.currentSpeechBubbleText != null && Time.time > this.clearSpeechTime)
         {
             this.currentSpeechBubbleText = null;
             this.motorRoot.DeleteKey(SIAmSpeaking);
