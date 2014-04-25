@@ -31,7 +31,7 @@ namespace Northwestern.UnityUtils
         public GUIStyle Style;
 
         // ReSharper disable once InconsistentNaming
-        protected static int IDCount = 0;
+        protected static int IDCount = typeof(Console).GetHashCode();
 
         // ReSharper disable once InconsistentNaming
         private int ID; //unique generated ID
@@ -70,12 +70,6 @@ namespace Northwestern.UnityUtils
             this.consoleID = "window" + ID;
             firstFocus = true;
             history = new List<string>();
-        }
-
-        // Update is called once per frame
-        internal void Update()
-        {
-
         }
 
         /// <summary>

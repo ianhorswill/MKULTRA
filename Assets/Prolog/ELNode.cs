@@ -115,6 +115,26 @@ namespace Prolog
                 return mode == ExclusionMode.NonExclusive;
             }
         }
+
+        public string ModeString
+        {
+            get
+            {
+                switch (mode)
+                {
+                    case ExclusionMode.Empty:
+                        return "";
+
+                        case ExclusionMode.Exclusive:
+                        return ":";
+                        case ExclusionMode.NonExclusive:
+                        return "/";
+
+                    default:
+                        return "<invalid exclusion mode!>";
+                }
+            }
+        }
         #endregion
 
         #region Accessors

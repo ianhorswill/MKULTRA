@@ -30,9 +30,8 @@ kill_all_activities :-
     kill_children(Root).
 
 activity(Activity, Type) :-
-    /activities/_>>Activity/type:Type.
-%    activity(Activity),
-%    Activity/type:Type.
+    activity(Activity),
+    Activity/type:Type.
 
 activity(A) :-
        R is $root,
