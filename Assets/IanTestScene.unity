@@ -2607,6 +2607,7 @@ GameObject:
   - 58: {fileID: 338102930}
   - 114: {fileID: 338102933}
   - 114: {fileID: 338102934}
+  - 114: {fileID: 338102935}
   m_Layer: 9
   m_Name: Character2
   m_TagString: Untagged
@@ -2762,7 +2763,7 @@ MonoBehaviour:
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 3}
     m_FontSize: 50
     m_FontStyle: 0
     m_Alignment: 0
@@ -2786,11 +2787,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a4216bfab58207459df4beb86bd6c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SourceFiles:
-  - Sims/sims
-  - Sims/activities
-  - Sims/patrol
-  - Sims/be_polite
+  SourceFiles: []
+--- !u!114 &338102935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 338102926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71f23ec5c74af4184643b70f67aa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Concerns:
+  - be_polite
+  - patrol
 --- !u!1 &338932983
 GameObject:
   m_ObjectHideFlags: 0
@@ -13776,6 +13787,7 @@ GameObject:
   - 114: {fileID: 1989881528}
   - 114: {fileID: 1989881527}
   - 114: {fileID: 1989881526}
+  - 114: {fileID: 1989881535}
   m_Layer: 9
   m_Name: Character
   m_TagString: Untagged
@@ -13871,11 +13883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a4216bfab58207459df4beb86bd6c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SourceFiles:
-  - Sims/sims
-  - Sims/activities
-  - Sims/patrol
-  - Sims/be_polite
+  SourceFiles: []
 --- !u!114 &1989881528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13934,7 +13942,7 @@ MonoBehaviour:
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 3}
     m_FontSize: 50
     m_FontStyle: 0
     m_Alignment: 0
@@ -14037,6 +14045,20 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 167612177}
+--- !u!114 &1989881535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1989881525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac71f23ec5c74af4184643b70f67aa49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Concerns:
+  - be_polite
+  - patrol
 --- !u!1 &1992297667
 GameObject:
   m_ObjectHideFlags: 0
@@ -14617,6 +14639,49 @@ SpriteRenderer:
   m_SortingLayerID: 2435480685
   m_Sprite: {fileID: 21300078, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &2049103804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2049103805}
+  - 114: {fileID: 2049103806}
+  m_Layer: 0
+  m_Name: GlobalKB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2049103805
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2049103804}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .513728261, y: .271809101, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!114 &2049103806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2049103804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a4216bfab58207459df4beb86bd6c6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SourceFiles:
+  - Sims/sims
+  - Concerns/concerns
+  - Concerns/patrol
+  - Concerns/be_polite
 --- !u!1 &2049919187
 GameObject:
   m_ObjectHideFlags: 0

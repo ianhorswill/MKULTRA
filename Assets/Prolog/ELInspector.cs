@@ -19,13 +19,14 @@ namespace Prolog
         protected static int IDCount = typeof(ELInspector).GetHashCode();
 
         // Total height of the dumped EL database
-        private float viewHeight = 10;
+        private float viewHeight;
 
         internal void Start()
         {
             root = this.KnowledgeBase().ELRoot;
             ID = IDCount++;
             WindowTitle = "EL";
+            viewHeight = WindowRect.height;
         }
 
         internal void OnGUI()
@@ -56,7 +57,11 @@ namespace Prolog
         private float RenderAt(ELNode node, float x, float y)
         {
             var go = node.Key as GameObject;
-            var description = go != null ? go.name : node.Key.ToString();
+            var description = go != null ? 
+                go.name 
+                : (node.Key == null? 
+                    "null"
+                    : node.Key.ToString());
             var key = new GUIContent(description+node.ModeString);
             var size = Style.CalcSize(key);
             GUI.Label(new Rect(x, y, size.x, size.y), key, Style);

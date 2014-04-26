@@ -9,7 +9,8 @@ namespace Prolog
     /// </summary>
     class KB : MonoBehaviour
     {
-        public string[] SourceFiles=new string[0];
+        public string[] SourceFiles = new string[0];
+
         private KnowledgeBase kb;
 
         private static bool globalKBInitialized;
@@ -32,7 +33,7 @@ namespace Prolog
         {
             get
             {
-                return name == "Global";
+                return name == "GlobalKB";
             }
         }
 
@@ -56,15 +57,23 @@ namespace Prolog
 
         private void MakeKB()
         {
+            var parent = transform.parent;
+            KB parentKB = null;
+            if (parent != null)
+            {
+                parentKB = parent.GetComponent<KB>();
+            }
 
-            var parentGameObject = transform.parent.gameObject;
-            var parentKB = parentGameObject.GetComponent<KB>();
             kb = IsGlobal?
                 KnowledgeBase.Global
                 : new KnowledgeBase(
                     gameObject.name,
                     gameObject,
-                    parentKB == null ? KnowledgeBase.Global : parentKB.KnowledgeBase);
+                    parentKB == null ? GameObject.Find("GlobalKB").KnowledgeBase() : parentKB.KnowledgeBase);
+
+            // Add UID counter.
+            ELNode.Store(kb.ELRoot/Symbol.Intern("next_uid")%0);
+
             try
             {
                 foreach (var file in SourceFiles)

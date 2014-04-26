@@ -43,6 +43,10 @@ public class SimController : BindingBehaviour
 
     private ELNode conversationalSpace;
 
+    private ELNode lastDestination;
+
+    private ELNode eventHistory;
+
     private ELNode motorRoot;
 
     readonly Queue<Structure> eventQueue = new Queue<Structure>();
@@ -155,6 +159,7 @@ public class SimController : BindingBehaviour
     /// <param name="eventDescription">Term representing the event</param>
     private void NotifyEvent(object eventDescription)
     {
+        ELNode.Store(eventHistory/Term.CopyInstantiation(eventDescription));
         if (!this.IsTrue(new Structure(SNotifyEvent, eventDescription)))
             Debug.LogError("notify_event/1 failed: "+ISOPrologWriter.WriteToString(eventDescription));
     }
@@ -169,7 +174,9 @@ public class SimController : BindingBehaviour
         this.perceptionRoot = elRoot / Symbol.Intern("perception");
         this.conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
         this.motorRoot = elRoot / Symbol.Intern("motor_state");
-
+        this.eventHistory = elRoot / Symbol.Intern("event_history");
+        this.lastDestination = elRoot / Symbol.Intern("last_destination");
+        ELNode.Store(lastDestination % null);  // Need a placeholder last destination so that /last_destination/X doesn't fail.
     }
 
     internal void Update()
@@ -262,50 +269,62 @@ public class SimController : BindingBehaviour
 
     private static readonly Symbol SWalkingTo = Symbol.Intern("walking_to");
 
-    void InitiateAction(object action)
+    private static readonly Symbol SLastAction = Symbol.Intern("last_action");
+
+    private void InitiateAction(object action)
     {
         if (action == null)
             return;
 
+        var actionCopy = Term.CopyInstantiation(action);
+        ELNode.Store(motorRoot / SLastAction % actionCopy);
+
         var structure = action as Structure;
         if (structure != null)
-        switch (structure.Functor.Name)
         {
-            case "goto":
-                this.CurrentDestination = structure.Argument<GameObject>(0);
-                if (this.CurrentDestination == null)
-                    steering.Stop();
-                else
-                    this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
-                break;
+            if (structure.Functor.Name != "sleep")
+                ELNode.Store(eventHistory / actionCopy);
 
-            case "face":
-                this.Face(structure.Argument<GameObject>(0));
-                break;
+            switch (structure.Functor.Name)
+            {
+                case "goto":
+                    this.CurrentDestination = structure.Argument<GameObject>(0);
+                    if (this.CurrentDestination == null)
+                        steering.Stop();
+                    else
+                        this.currentPath = planner.Plan(
+                            gameObject.TilePosition(),
+                            this.CurrentDestination.DockingTiles());
+                    break;
 
-            case "say":
-                this.Say(structure.Argument<string>(0));
-                break;
+                case "face":
+                    this.Face(structure.Argument<GameObject>(0));
+                    break;
 
-            case "cons":
-                // It's a list of actions to initiate.
-                this.InitiateAction(structure.Argument(0));
-                this.InitiateAction(structure.Argument(1));
-                break;
+                case "say":
+                    this.Say(structure.Argument<string>(0));
+                    break;
 
-            case "sleep":
-                this.sleepUntil = Time.time + Convert.ToSingle(structure.Argument(0));
-                break;
+                case "cons":
+                    // It's a list of actions to initiate.
+                    this.InitiateAction(structure.Argument(0));
+                    this.InitiateAction(structure.Argument(1));
+                    break;
 
-            default:
-                Debug.LogError("Bad structure: "+ISOPrologWriter.WriteToString(structure));
-                break;
+                case "sleep":
+                    this.sleepUntil = Time.time + Convert.ToSingle(structure.Argument(0));
+                    break;
+
+                default:
+                    Debug.LogError("Bad structure: " + ISOPrologWriter.WriteToString(structure));
+                    break;
+            }
         }
         else
         {
             var sym = action as Symbol;
             if (sym == null)
-                throw new InvalidOperationException("Unknown action: "+ISOPrologWriter.WriteToString(action));
+                throw new InvalidOperationException("Unknown action: " + ISOPrologWriter.WriteToString(action));
             switch (sym.Name)
             {
                 case "stop":
@@ -333,6 +352,7 @@ public class SimController : BindingBehaviour
         // Query Prolog if we have nothing to do.
         if (this.currentPath == null && this.CurrentDestination != null)
         {
+            ELNode.Store(lastDestination % this.CurrentDestination);
             this.QueueEvent("arrived_at", this.CurrentDestination);
             this.CurrentDestination = null;
         }

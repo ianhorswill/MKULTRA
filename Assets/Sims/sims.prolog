@@ -1,26 +1,35 @@
 notify_event(Event) :-
-    forall(activity(Activity, Type),
-	   ignore(on_event(Type, Activity, Event))).
+    forall(concern(Concern, Type),
+	   ignore(on_event(Type, Concern, Event))).
 
 next_action(Action) :-
     best_action(Action).
 next_action(sleep(1)).
 
 best_action(Action) :-
+    ignore(retract(/action_state/candidates)),
     arg_max(Action,
 	    Score,
 	    (  available_action(Action),
-	       action_score(Action, Score)  )).
+	       action_score(Action, Score),
+	       copy_term(Action,Copy),
+	       assert(/action_state/candidates/Copy:Score) )).
 
 available_action(Action) :-
-    activity(Activity, Type),
-    propose_action(Type, Activity, Action).
+    /action_state/propose_once/Stored, copy_term(Stored, Action).
+available_action(Action) :-
+    ignore(retract(/action_state/propose_once)),
+    concern(Concern, Type),
+    propose_action(Type, Concern, Action).
 
 action_score(Action, TotalScore) :-
     sumall(Score,
-	   ( activity(Activity, Type),
-	     score_action(Type, Activity, Action, Score) ),
+	   ( concern(Concern, Type),
+	     score_action(Type, Concern, Action, Score) ),
 	   TotalScore).
+
+propose_once(Action) :-
+    copy_term(Action, Copy), assert(/action_state/propose_once/Copy).
 
 prop(GameObject) :-
     % An object is a prop if it has a DockingRegion component.
@@ -48,10 +57,5 @@ actions :-
     reverse(Sorted, Reversed),
     forall(member(Score-Action, Reversed),
 	   ( write(Action), write("\t"), writeln(Score) )).
-
-initialize :-
-    (prop(P), assert(/visit_time/P:0), fail) ; true.
-
-:- initialize.
 
 
