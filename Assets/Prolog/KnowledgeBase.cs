@@ -135,7 +135,7 @@ namespace Prolog
         {
             var t = Term.Structurify(goal, "Argument to IsTrue() should be a valid Prolog goal.");
             var prologContext = PrologContext.GetFreePrologContext(this, thisValue);
-            var result = false;
+            bool result;
             try
             {
                 result = Prove(t.Functor, t.Arguments, prologContext, 0).GetEnumerator().MoveNext();
@@ -742,7 +742,7 @@ namespace Prolog
                             Prove(goal.Functor, goal.Arguments, context, 0).GetEnumerator().MoveNext();
                         }
                         else
-                            Assert(assertion, true, true);
+                            Assert(t, true, true);
                     }
                     reader.SkipLayout();
                     lastLine = reader.LineNumber;
