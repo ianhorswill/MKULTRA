@@ -171,5 +171,13 @@ namespace Prolog
             return component.SolveFor((LogicVariable)colonExpression.Argument(0), colonExpression.Argument(1));
 
         }
+
+        public static void QueueEvent(this GameObject character, Structure ev)
+        {
+            var sim = character.GetComponent<SimController>();
+            if (sim == null)
+                throw new Exception("Attempt to queue event on a game object that is not a character: "+character.name);
+            sim.QueueEvent(ev);
+        }
     }
 }
