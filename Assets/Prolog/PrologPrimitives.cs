@@ -144,7 +144,8 @@ namespace Prolog
             DefinePrimitive("multifile", TrueImplementation, "declarations",
                             "Declares that the specified predicate is allowed to be scattered through multiple files.  Currently unused but provided for compatibility with other Prolog implementation.",
                             ":predicateIndicator", "..."); // noop
-            DefinePrimitive("dynamic", TrueImplementation, "declarations",
+            DefinePrimitive("dynamic", MakeDeclarationPredicate( (s, arity, context) => context.KnowledgeBase.DeclareExternal(s, arity)),
+                            "declarations",
                             "Declares that the specified predicate is allowed be dynamically modified using assert.  Currently unused but provided for compatibility with other Prolog implementation.",
                             ":predicateIndicator", "..."); // noop
             DefinePrimitive("trace", MakeDeclarationPredicate((s, arity, context) => context.KnowledgeBase.DeclareTraced(s, arity)),
