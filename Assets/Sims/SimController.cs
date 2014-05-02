@@ -13,6 +13,7 @@ public class SimController : BindingBehaviour
     /// normally be within one anothers' conversational spaces.
     /// </summary>
     private const float ConversationalSpaceRadius = 2;
+    private const float SocialSpaceRadius = 4;
 
     /// <summary>
     /// Maximum number of characters that can be within a character's conversational space.
@@ -24,6 +25,17 @@ public class SimController : BindingBehaviour
     /// Whether to log actions as they're taken.
     /// </summary>
     public bool LogActions;
+
+    /// <summary>
+    /// Is this character currently talking?
+    /// </summary>
+    public bool IsSpeaking
+    {
+        get
+        {
+            return currentSpeechBubbleText != null;
+        }
+    }
 
     #region Bindings to other components
 #pragma warning disable 649
@@ -42,6 +54,8 @@ public class SimController : BindingBehaviour
     private ELNode perceptionRoot;
 
     private ELNode conversationalSpace;
+
+    private ELNode socialSpace;
 
     private ELNode lastDestination;
 
@@ -173,6 +187,7 @@ public class SimController : BindingBehaviour
         elRoot = this.KnowledgeBase().ELRoot;
         this.perceptionRoot = elRoot / Symbol.Intern("perception");
         this.conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
+        this.socialSpace = perceptionRoot / Symbol.Intern("social_space");
         this.motorRoot = elRoot / Symbol.Intern("motor_state");
         this.eventHistory = elRoot / Symbol.Intern("event_history");
         this.lastDestination = elRoot / Symbol.Intern("last_destination");
@@ -185,7 +200,10 @@ public class SimController : BindingBehaviour
 
         this.UpdateLocomotion();
 
-        this.UpdateConversationalSpace();
+        this.UpdateSpace(conversationalSpaceColliders, ConversationalSpaceRadius, conversationalSpace,
+                         "enter_conversational_space", "exit_conversational_space", true);
+        this.UpdateSpace(socialSpaceColliders, SocialSpaceRadius, socialSpace,
+                         "enter_social_space", "exit_social_space", false);
 
         this.HandleEvents();
 
@@ -200,33 +218,37 @@ public class SimController : BindingBehaviour
 
     #region Perception update
     readonly Collider2D[] conversationalSpaceColliders = new Collider2D[MaxConversationalSpaceColliders];
+    readonly Collider2D[] socialSpaceColliders = new Collider2D[MaxConversationalSpaceColliders];
 
+    // ReSharper disable once InconsistentNaming
+    private readonly Symbol SNobodySpeaking = Symbol.Intern("nobody_speaking");
+    
     /// <summary>
     /// Update the set of character's within this characters' conversational space
     /// and generate any necessary enter/leave events.
     /// </summary>
-    private void UpdateConversationalSpace()
+    private void UpdateSpace(Collider2D[] colliders, float radius, ELNode statusNode, string enterEvent, string exitEvent, bool updateNobodySpeaking)
     {
         var characterCount = Physics2D.OverlapCircleNonAlloc(
             transform.position,
-            ConversationalSpaceRadius,
-            conversationalSpaceColliders,
+            radius,
+            colliders,
             1 << gameObject.layer);
         if (characterCount==MaxConversationalSpaceColliders)
             throw new Exception("Too many colliders in conversational space!");
 
         // Clean out entries that are no longer in the area
-        conversationalSpace.DeleteAll(
+        statusNode.DeleteAll(
             node =>
             {
                 // Look to see if node's key (a character) appears in the colliders
                 for (var i = 0; i<characterCount;i++)
-                    if (ReferenceEquals(node.Key, this.conversationalSpaceColliders[i].gameObject))
+                    if (ReferenceEquals(node.Key, colliders[i].gameObject))
                         return false;
                 // It doesn't, so the character left this character's conversational space.
 
                 // Tell this character about it
-                QueueEvent("exit_conversational_space", node.Key);
+                QueueEvent(exitEvent, node.Key);
 
                 // Remove the character
                 return true;
@@ -235,16 +257,30 @@ public class SimController : BindingBehaviour
         // Add new entries
         for (var i = 0; i<characterCount;i++)
         {
-            var character = conversationalSpaceColliders[i].gameObject;
-            if (character != gameObject && !this.conversationalSpace.ContainsKey(character))
+            var character = colliders[i].gameObject;
+            if (character != gameObject && !statusNode.ContainsKey(character))
             {
                 // The character just arrived in this character's conversational space
 
                 // Tell this character
-                QueueEvent("enter_conversational_space", character);
+                QueueEvent(enterEvent, character);
 
                 // Update the KB
-                ELNode.Store(conversationalSpace/character);
+                ELNode.Store(statusNode/character);
+            }
+        }
+
+        if (updateNobodySpeaking)
+        {
+            bool nobodySpeaking = true;
+            for (var i = 0; i<characterCount; i++)
+                if (colliders[i].GetComponent<SimController>().IsSpeaking)
+                    nobodySpeaking = false;
+            if (nobodySpeaking)
+                ELNode.Store(perceptionRoot/SNobodySpeaking);
+            else
+            {
+                perceptionRoot.DeleteKey(SNobodySpeaking);
             }
         }
     }
