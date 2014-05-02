@@ -419,7 +419,7 @@ namespace Prolog
                 if (this.childIndex >= 0)
                 {
                     Current = parentNode.Children[this.childIndex--];
-                    this.variable.Value = Current.Key;
+                    this.variable.Value = Term.CopyInstantiation(Current.Key);
                     return true;
                 }
                 this.variable.ForciblyUnbind();
@@ -487,7 +487,7 @@ namespace Prolog
                 if (childIndex >= 0)
                 {
                     Current = parentEnumerator.Current.Children[childIndex--];
-                    this.variable.Value = Current.Key;
+                    this.variable.Value = Term.CopyInstantiation(Current.Key);
                     return true;
                 }
 
@@ -542,7 +542,7 @@ namespace Prolog
                 
                 // This is our first time through, so bind the variable and succeed.
                 Current = child;
-                this.variable.Value = child.Key;
+                this.variable.Value = Term.CopyInstantiation(child.Key);
                 return true;
             }
 
@@ -607,7 +607,7 @@ namespace Prolog
                     if (parentEnumerator.Current.Children.Count > 0)
                     {
                         Current = parentEnumerator.Current.Children[0];
-                        this.variable.Value = Current.Key;
+                        this.variable.Value = Term.CopyInstantiation(Current.Key);
                         return true;
                     }
                 }
@@ -651,12 +651,12 @@ namespace Prolog
             if (term.Functor == Symbol.Slash)
             {
                 if (term.Arity == 1)
-                    return knowledgeBase.ELRoot.StoreNonExclusive(term.Argument(0));
-                return Update(term.Argument(0), knowledgeBase).StoreNonExclusive(term.Argument(1));
+                    return knowledgeBase.ELRoot.StoreNonExclusive(Term.CopyInstantiation(term.Argument(0)));
+                return Update(term.Argument(0), knowledgeBase).StoreNonExclusive(Term.CopyInstantiation(term.Argument(1)));
             }
             if (term.Functor == Symbol.Colon)
             {
-                return Update(term.Argument(0), knowledgeBase).StoreExclusive(term.Argument(1), true); 
+                return Update(term.Argument(0), knowledgeBase).StoreExclusive(Term.CopyInstantiation(term.Argument(1)), true); 
             }
             throw new Exception("Malformed EL assertion: "+ISOPrologWriter.WriteToString(term));
         }
