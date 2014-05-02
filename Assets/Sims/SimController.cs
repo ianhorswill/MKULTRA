@@ -146,7 +146,7 @@ public class SimController : BindingBehaviour
     /// WARNING: does not copy the term, so it must either be ground or not used elsewhere.</param>
     public void QueueEvent(Structure eventDescription)
     {
-        this.eventQueue.Enqueue(eventDescription);
+        this.eventQueue.Enqueue((Structure)Term.CopyInstantiation(eventDescription));
     }
 
     Structure GetNextEvent()
@@ -165,6 +165,14 @@ public class SimController : BindingBehaviour
             this.sleepUntil = null;
         while (EventsPending)
             this.NotifyEvent(this.GetNextEvent());
+    }
+
+    private static readonly Symbol SSleep = Symbol.Intern("sleep");
+
+    private static bool IsSleep(object eventDescription)
+    {
+        var s = eventDescription as Structure;
+        return (s != null && s.IsFunctor(SSleep, 1));
     }
 
     /// <summary>
@@ -318,9 +326,6 @@ public class SimController : BindingBehaviour
         var structure = action as Structure;
         if (structure != null)
         {
-            if (structure.Functor.Name != "sleep")
-                ELNode.Store(eventHistory / actionCopy);
-
             switch (structure.Functor.Name)
             {
                 case "goto":
@@ -338,7 +343,28 @@ public class SimController : BindingBehaviour
                     break;
 
                 case "say":
+                    // Say a fixed string
                     this.Say(structure.Argument<string>(0));
+                    break;
+
+                case "dialog":
+                    // Perform a general dialog action
+                    var recipient = (GameObject)structure.Argument(1);
+                    var dialogAct = structure.Argument(2);
+                    var textVar = new LogicVariable("DialogText");
+                    var text = gameObject.SolveFor(textVar, "generate_text", dialogAct, recipient, textVar);
+                    var textString = text as string;
+                    if (textString == null)
+                        throw new Exception("generate_text returned "+ISOPrologWriter.WriteToString(text)+" for "+ISOPrologWriter.WriteToString(dialogAct));
+                    this.Say(textString);
+
+                    // Tell the other characters
+                    foreach (var node in socialSpace.Children)
+                    {
+                        var character = (GameObject)(node.Key);
+                        if (character != this.gameObject)
+                            character.QueueEvent((Structure)Term.CopyInstantiation(structure));
+                    }
                     break;
 
                 case "cons":
@@ -371,6 +397,8 @@ public class SimController : BindingBehaviour
                     throw new InvalidOperationException("Unknown action: " + ISOPrologWriter.WriteToString(action));
             }
         }
+        if (!IsSleep(action))
+            QueueEvent("begin", action);
     }
 
     private void UpdateLocomotion()
