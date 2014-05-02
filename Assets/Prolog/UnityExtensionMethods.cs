@@ -105,6 +105,19 @@ namespace Prolog
         }
 
         /// <summary>
+        /// Finds the value of result in the first solution when proving goal within this Component's GameObject's knowledge base.
+        /// </summary>
+        /// <param name="gameObject">GameObject whose KB should be queried.</param>
+        /// <param name="result">Value of the variable to solve for</param>
+        /// <param name="functor">Functor of the goal.</param>
+        /// <param name="args">Arguments for the goal.</param>
+        /// <returns>Value found for the variable.</returns>
+        public static object SolveFor(this GameObject gameObject, LogicVariable result, string functor, params object[] args)
+        {
+            return gameObject.SolveFor(result, new Structure(functor, args));
+        }
+
+        /// <summary>
         /// Given argument Variable:Constraint, finds the value of Variable in the first solution to Constraint when proved against this GameObject's knowledge base.
         /// </summary>
         /// <param name="gameObject">GameObject whose KB should be queried.</param>
@@ -122,7 +135,7 @@ namespace Prolog
         /// <summary>
         /// Finds the value of result in the first solution when proving goal within this Component's GameObject's knowledge base.
         /// </summary>
-        /// <param name="component">GameObject whose KB should be queried.</param>
+        /// <param name="component">Component whose KB should be queried.</param>
         /// <param name="result">Value of the variable to solve for</param>
         /// <param name="goal">Constraint on the value of the variable</param>
         /// <returns>Value found for the variable.</returns>
@@ -132,9 +145,22 @@ namespace Prolog
         }
 
         /// <summary>
+        /// Finds the value of result in the first solution when proving goal within this Component's GameObject's knowledge base.
+        /// </summary>
+        /// <param name="component">Component whose KB should be queried.</param>
+        /// <param name="result">Value of the variable to solve for</param>
+        /// <param name="functor">Functor of the goal.</param>
+        /// <param name="args">Arguments for the goal.</param>
+        /// <returns>Value found for the variable.</returns>
+        public static object SolveFor(this Component component, LogicVariable result, string functor, params object[] args)
+        {
+            return component.SolveFor(result, new Structure(functor, args));
+        }
+
+        /// <summary>
         /// Given argument Variable:Constraint, finds the value of Variable in the first solution to Constraint when proved against this Component's GameObject's knowledge base.
         /// </summary>
-        /// <param name="component">GameObject whose KB should be queried.</param>
+        /// <param name="component">Component whose KB should be queried.</param>
         /// <param name="variableAndConstraint">String of the form "Variable:Constraint"</param>
         /// <returns>Value found for the variable.</returns>
         public static object SolveForParsed(this Component component, string variableAndConstraint)
