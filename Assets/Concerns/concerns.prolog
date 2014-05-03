@@ -1,3 +1,12 @@
+:- external on_enter_state/2, on_exit_state/2.
+
+character_initialization :-
+    forall(standard_concern(Type),
+	   begin_concern(Type)).
+
+standard_concern(be_polite).
+standard_concern(social_interaction).
+
 begin_concern(Type) :-
     begin_concern(Type, _).
 
@@ -5,11 +14,20 @@ begin_concern(Type, Child) :-
     Parent is $root,
     begin_child_concern(Parent, Type, Child).
 
-begin_child_concern(Parent, Type, Child) :-
+begin_child_concern(Parent, Type, Child, Assertions) :-
     allocate_UID(ChildUID),
     assert(Parent/concerns/ChildUID/type:Type),
     Parent/concerns/ChildUID>>Child,
-    ignore(on_initiate(Type, Child)).
+    forall(member(A, Assertions), assert(Child/A)),
+    goto_state(Child, start).
+
+goto_state(Concern, State) :-
+    ignore(Concern/state:OldState, on_exit_state(Concern, OldState)),
+    assert(Concern/state:State),
+    ignore(on_enter_state(Concern, State)).
+
+begin_child_concern(Parent, Type, Child) :-
+    begin_child_concern(Parent, Type, Child, [ ]).
 
 kill_concern(Concern) :-
     Concern/type:Type,

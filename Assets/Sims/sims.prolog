@@ -12,11 +12,10 @@ best_action(Action) :-
 	    Score,
 	    (  available_action(Action),
 	       action_score(Action, Score),
-	       copy_term(Action,Copy),
-	       assert(/action_state/candidates/Copy:Score) )).
+	       assert(/action_state/candidates/Action:Score) )).
 
 available_action(Action) :-
-    /action_state/propose_once/Stored, copy_term(Stored, Action).
+    /action_state/propose_once/Action.
 available_action(Action) :-
     ignore(retract(/action_state/propose_once)),
     concern(Concern, Type),
@@ -29,7 +28,7 @@ action_score(Action, TotalScore) :-
 	   TotalScore).
 
 propose_once(Action) :-
-    copy_term(Action, Copy), assert(/action_state/propose_once/Copy).
+    assert(/action_state/propose_once/Action).
 
 prop(GameObject) :-
     % An object is a prop if it has a DockingRegion component.
@@ -57,5 +56,9 @@ actions :-
     reverse(Sorted, Reversed),
     forall(member(Score-Action, Reversed),
 	   ( write(Action), write("\t"), writeln(Score) )).
+
+% Called once by SimController.Start()
+do_all_character_initializations :-
+    ignore(character_initialization, fail).
 
 

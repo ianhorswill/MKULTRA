@@ -2800,7 +2800,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Concerns:
-  - be_polite
   - patrol
 --- !u!1 &338932983
 GameObject:
@@ -14057,7 +14056,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Concerns:
-  - be_polite
   - patrol
 --- !u!1 &1992297667
 GameObject:
@@ -14682,6 +14680,9 @@ MonoBehaviour:
   - Concerns/concerns
   - Concerns/patrol
   - Concerns/be_polite
+  - NL/grammar
+  - NL/interface
+  - Utilities/why
 --- !u!1 &2049919187
 GameObject:
   m_ObjectHideFlags: 0
