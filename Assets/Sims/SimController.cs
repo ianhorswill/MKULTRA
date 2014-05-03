@@ -200,6 +200,7 @@ public class SimController : BindingBehaviour
         this.eventHistory = elRoot / Symbol.Intern("event_history");
         this.lastDestination = elRoot / Symbol.Intern("last_destination");
         ELNode.Store(lastDestination % null);  // Need a placeholder last destination so that /last_destination/X doesn't fail.
+        gameObject.IsTrue(Symbol.Intern("do_all_character_initializations"));
     }
 
     internal void Update()
