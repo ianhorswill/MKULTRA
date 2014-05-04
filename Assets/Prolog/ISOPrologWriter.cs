@@ -518,7 +518,14 @@ namespace Prolog
 
         void LowLevelWrite(object x)
         {
-            output.Write(x ?? "null");
+            var g = x as UnityEngine.GameObject;
+            if (g != null)
+            {
+                output.Write('$');
+                output.Write(g.name);
+            }
+            else
+                output.Write(x ?? "null");
             lastChar = '1';
         }
     }

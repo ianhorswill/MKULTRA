@@ -86,7 +86,7 @@ namespace Prolog
             stringBuilder.Length = 0;
             var go = node.Key as GameObject;
             stringBuilder.Append(go != null ? 
-                go.name 
+                ('$'+go.name) 
                 : (node.Key == null? 
                     "null"
                     : node.Key.ToString()));
