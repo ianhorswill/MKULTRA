@@ -14683,6 +14683,8 @@ MonoBehaviour:
   - NL/grammar
   - NL/interface
   - Utilities/why
+  - Concerns/social_interaction
+  - Concerns/conversation
 --- !u!1 &2049919187
 GameObject:
   m_ObjectHideFlags: 0

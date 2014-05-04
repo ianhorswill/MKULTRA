@@ -1,11 +1,8 @@
-:- external on_enter_state/2, on_exit_state/2.
+:- external on_enter_state/2, on_exit_state/2, on_kill/2.
 
 character_initialization :-
     forall(standard_concern(Type),
 	   begin_concern(Type)).
-
-standard_concern(be_polite).
-standard_concern(social_interaction).
 
 begin_concern(Type) :-
     begin_concern(Type, _).
@@ -15,14 +12,26 @@ begin_concern(Type, Child) :-
     begin_child_concern(Parent, Type, Child).
 
 begin_child_concern(Parent, Type, Child, Assertions) :-
-    allocate_UID(ChildUID),
-    assert(Parent/concerns/ChildUID/type:Type),
-    Parent/concerns/ChildUID>>Child,
-    forall(member(A, Assertions), assert(Child/A)),
-    goto_state(Child, start).
+    begin(allocate_UID(ChildUID),
+	  assert(Parent/concerns/ChildUID/type:Type),
+	  Parent/concerns/ChildUID>>Child,
+	  forall(member(A, Assertions),
+		 assert_into(Child, A)),
+	  goto_state(Child, start)).
+
+assert_into(Root, Assertion) :-
+    reassociate(Root, Assertion, Rewritten),
+    assert(Rewritten).
+
+reassociate(Root, A/B, C/B) :-
+    !, reassociate(Root, A, C).
+reassociate(Root, A:B, C:B) :-
+    !, reassociate(Root, A, C).
+reassociate(Root, A, Root/A).
 
 goto_state(Concern, State) :-
-    ignore(Concern/state:OldState, on_exit_state(Concern, OldState)),
+    ignore(Concern/state:OldState,
+	   on_exit_state(Concern, OldState)),
     assert(Concern/state:State),
     ignore(on_enter_state(Concern, State)).
 
@@ -30,19 +39,19 @@ begin_child_concern(Parent, Type, Child) :-
     begin_child_concern(Parent, Type, Child, [ ]).
 
 kill_concern(Concern) :-
-    Concern/type:Type,
-    ignore(on_kill(Type, Concern)),
-    kill_children(Concern),
-    retract(Concern).
+    begin(Concern/type:Type,
+	  ignore(on_kill(Type, Concern)),
+	  kill_children(Concern),
+	  retract(Concern)).
 
 kill_children(Concern) :-
     forall(Concern/concerns/_>>Subconcern,
 	   kill_concern(Subconcern)).
 
 allocate_UID(ChildUID) :-
-    /next_uid:ChildUID,
-    NextUID is ChildUID+1,
-    assert(/next_uid:NextUID).
+    begin(/next_uid:ChildUID,
+	  NextUID is ChildUID+1,
+	  assert(/next_uid:NextUID)).
 
 kill_all_concerns :-
     Root is $root,
@@ -55,6 +64,7 @@ concern(Concern, Type) :-
 concern(A) :-
        R is $root,
        descendant_concern_of(R, A).
+
 descendant_concern_of(Ancestor, Descendant) :-
     Ancestor/concerns/_>>Child,
     ( Descendant=Child 
