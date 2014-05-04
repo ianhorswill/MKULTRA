@@ -16,18 +16,8 @@ begin_child_concern(Parent, Type, Child, Assertions) :-
 	  assert(Parent/concerns/ChildUID/type:Type),
 	  Parent/concerns/ChildUID>>Child,
 	  forall(member(A, Assertions),
-		 assert_into(Child, A)),
+		 assert(A)),
 	  goto_state(Child, start)).
-
-assert_into(Root, Assertion) :-
-    reassociate(Root, Assertion, Rewritten),
-    assert(Rewritten).
-
-reassociate(Root, A/B, C/B) :-
-    !, reassociate(Root, A, C).
-reassociate(Root, A:B, C:B) :-
-    !, reassociate(Root, A, C).
-reassociate(Root, A, Root/A).
 
 goto_state(Concern, State) :-
     ignore(Concern/state:OldState,
