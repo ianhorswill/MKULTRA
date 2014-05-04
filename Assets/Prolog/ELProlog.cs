@@ -111,6 +111,9 @@ namespace Prolog
             return true;
         }
 
+        /// <summary>
+        /// Binds a specific node rather than a key (i.e. >> rather than / or :) to a variable
+        /// </summary>
         class ELNodeEnumeratorBindFixedNodeToVariable : ELNodeEnumerator
         {
             private readonly ELNode node;
@@ -140,6 +143,9 @@ namespace Prolog
             }
         }
 
+        /// <summary>
+        /// Binds a set of nodes rather than keys (i.e. >> rather than / or :) to a variable
+        /// </summary>
         class ELNodeEnumeratorBindEnumeratedNodesToVariable : ELNodeEnumerator
         {
             readonly ELNodeEnumerator nodeEnumerator;
@@ -355,6 +361,9 @@ namespace Prolog
             return context.KnowledgeBase.ELRoot.TryLookup(arg0, out foundNode);
         }
 
+        /// <summary>
+        /// Enumerate the nodes whose keys are the same as the value in a (prebound) variable.
+        /// </summary>
         class ELNodeEnumeratorPreboundVariable : ELNodeEnumerator
         {
             public ELNodeEnumeratorPreboundVariable(ELNodeEnumerator parentEnumerator, LogicVariable variable, bool exclusive)
@@ -399,6 +408,9 @@ namespace Prolog
             }
         }
 
+        /// <summary>
+        /// Enumerate the (non-exclusive) children of a node and bind their keys to a logic variable.
+        /// </summary>
         class ELNodeEnumeratorLogicVariableFromNode : ELNodeEnumerator
         {
             public ELNodeEnumeratorLogicVariableFromNode(ELNode parentNode, LogicVariable v)
@@ -432,6 +444,9 @@ namespace Prolog
             }
         }
 
+        /// <summary>
+        /// For each node enumerated by the parent, find its unique child with the specified key, if any.
+        /// </summary>
         class ELNodeEnumeratorFixedChildFromParentEnumerator : ELNodeEnumerator
         {
             public ELNodeEnumeratorFixedChildFromParentEnumerator(ELNodeEnumerator parentEnumerator, object childKey)
@@ -464,6 +479,10 @@ namespace Prolog
             }
         }
 
+        /// <summary>
+        /// For each node enumerated by the parent, enumerate all its child nodes,
+        /// and bind a LogicVariable to their keys.
+        /// </summary>
         class ELNodeEnumeratorLogicVariableFromParentEnumerator : ELNodeEnumerator
         {
             public ELNodeEnumeratorLogicVariableFromParentEnumerator(ELNodeEnumerator parentEnumerator, LogicVariable v)
@@ -552,6 +571,9 @@ namespace Prolog
             }
         }
 
+        /// <summary>
+        /// For each node enumerated by parent, check if it has a specific key.
+        /// </summary>
         class ELNodeEnumeratorEnumerateParentAndLookupExclusiveKey : ELNodeEnumerator
         {
             public ELNodeEnumeratorEnumerateParentAndLookupExclusiveKey(ELNodeEnumerator parentEnumerator, object key)
@@ -584,6 +606,9 @@ namespace Prolog
             }
         }
 
+        /// <summary>
+        /// For each node enumerated by parent, bind LogicVariable to its unique child
+        /// </summary>
         class ELNodeEnumeratorEnumerateParentAndBindVariable : ELNodeEnumerator
         {
             public ELNodeEnumeratorEnumerateParentAndBindVariable(ELNodeEnumerator parentEnumerator, LogicVariable variable)
