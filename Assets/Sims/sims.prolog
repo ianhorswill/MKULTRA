@@ -1,6 +1,10 @@
 notify_event(Event) :-
-    forall(concern(Concern, Type),
-	   ignore(on_event(Type, Concern, Event))).
+    findall(Handler,
+	    (concern(Concern, Type),
+	     on_event(Type, Concern, Event, Handler)),
+	    Handlers),
+    forall(member(Handler, Handlers),
+	   (Handler -> true ; log(handler_failed(Handler)))).
 
 next_action(Action) :-
     best_action(Action).
