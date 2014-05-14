@@ -157,6 +157,15 @@ namespace Prolog
                             "flow control,declarations",
                             "Declares that the specified predicate should be traced when executing.",
                             ":predicateIndicator", "...");
+            DefinePrimitive("pause_game", PauseImplementation,
+                            "flow control",
+                            "Pauses the game, leaving GUI, etc. running.",
+                            ":predicateIndicator", "...");
+            DefinePrimitive("unpause_game",
+                            UnpauseImplementation,
+                            "flow control",
+                            "Restores normal flow of time in game.",
+                            ":predicateIndicator", "...");
             DefinePrimitive("set_prolog_flag", SetPrologFlagImplementation, "declarations", "Sets/gets value of the specified control parameter for the prolog system.",
                             "*flag", "?value");
             DefinePrimitive("check", CheckImplementation, "other predicates",
@@ -2519,6 +2528,22 @@ namespace Prolog
                 foreach (var ignore in Term.Unify(varToBindTo, enumerator.Current))
 #pragma warning restore 414, 168, 219
                     yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> PauseImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 0)
+                throw new ArgumentCountException("pause_game", args, 0);
+            PauseManager.Paused = true;
+            return SucceedDriver();
+        }
+
+        private static IEnumerable<CutState> UnpauseImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 0)
+                throw new ArgumentCountException("unpause_game", args, 0);
+            PauseManager.Paused = false;
+            return SucceedDriver();
         } 
         #endregion
 

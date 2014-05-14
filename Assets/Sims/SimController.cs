@@ -205,18 +205,31 @@ public class SimController : BindingBehaviour
 
     internal void Update()
     {
-        this.UpdateSpeechBubble();
+        if (!PauseManager.Paused)
+        {
+            this.UpdateSpeechBubble();
 
-        this.UpdateLocomotion();
+            this.UpdateLocomotion();
 
-        this.UpdateSpace(conversationalSpaceColliders, ConversationalSpaceRadius, conversationalSpace,
-                         "enter_conversational_space", "exit_conversational_space", true);
-        this.UpdateSpace(socialSpaceColliders, SocialSpaceRadius, socialSpace,
-                         "enter_social_space", "exit_social_space", false);
+            this.UpdateSpace(
+                conversationalSpaceColliders,
+                ConversationalSpaceRadius,
+                conversationalSpace,
+                "enter_conversational_space",
+                "exit_conversational_space",
+                true);
+            this.UpdateSpace(
+                socialSpaceColliders,
+                SocialSpaceRadius,
+                socialSpace,
+                "enter_social_space",
+                "exit_social_space",
+                false);
 
-        this.HandleEvents();
+            this.HandleEvents();
 
-        this.MaybeDoNextAction();
+            this.MaybeDoNextAction();
+        }
     }
 
     internal void OnCollisionEnter2D(Collision2D collision)
