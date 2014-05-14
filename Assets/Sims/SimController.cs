@@ -470,6 +470,39 @@ public class SimController : BindingBehaviour
     private static readonly Symbol SIAmSpeaking = Symbol.Intern("i_am_speaking");
     #endregion
 
+    #region Locomotion control
+
+    readonly Dictionary<GameObject, float> bidTotals = new Dictionary<GameObject, float>();
+
+    void UpdateLocomotionBids()
+    {
+        foreach (var pair in bidTotals)
+            bidTotals[pair.Key] = 0;
+        elRoot.WalkTree();
+    }
+
+    private static readonly Symbol SLocationBids = Symbol.Intern("location_bids");
+    void UpdateConcernBids(ELNode concern)
+    {
+        // Make sure this isn't the EL root (it's not an actual concern node).
+        if (concern.Key != null)
+        {
+            ELNode bids;
+            if (concern.TryLookup(SLocationBids, out bids))
+            {
+                // Add its bids in
+                foreach (var bid in bids.Children)
+                {
+                    var destination = bid.Key as GameObject;
+                    if (destination == null)
+                        throw new Exception("Location bid is not a GameObject: "+bid.Key);
+                    bidTotals[destination] += Convert.ToSingle(bid.ExclusiveKeyValue<object>());
+                }
+            }
+        }
+    }
+    #endregion
+
     #region Speech bubbles
     public GUIStyle SpeechBubbleStyle;
 

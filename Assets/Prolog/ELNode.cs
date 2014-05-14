@@ -168,6 +168,22 @@ namespace Prolog
             child = null;
             return false;
         }
+
+        /// <summary>
+        /// Return the value of this node's exclusive child's key.
+        /// Throw exception if its not exclusive, doesn't have a child, or the key has the wrong type.
+        /// </summary>
+        /// <typeparam name="T">Type expected for the key</typeparam>
+        /// <returns>Value of the child key.</returns>
+        public T ExclusiveKeyValue<T>()
+        {
+            if (!IsExclusive)
+                throw new ArgumentException("ExclusiveKeyValue called on non-exclusive or empty node: "+this.ToString());
+            var child = Children[0];
+            if (!(child.Key is T))
+                throw new ArgumentException(string.Format("Node {0} has wrong type; should be {1}.", child, typeof(T).Name));
+            return (T)child.Key;
+        }
         #endregion
 
         #region Mutators
@@ -325,6 +341,26 @@ namespace Prolog
         public void DeleteAll(Predicate<ELNode> predicate)
         {
             Children.RemoveAll(predicate);
+        }
+        #endregion
+
+        #region Tree walk
+        /// <summary>
+        /// Run VISITOR on all the nodes in a subtree rooted at this node and whose
+        /// children are stored in nodes with the key CHILDKEY
+        /// </summary>
+        /// <param name="childKey">Key to look up to get node containing children of this node</param>
+        /// <param name="visitor">Procedure to call on each node.</param>
+        public void WalkTree(object childKey, Action<ELNode> visitor)
+        {
+            visitor(this);
+            ELNode childrenNode;
+            if (this.TryLookup(childKey, out childrenNode))
+            {
+                // It has children
+                foreach (var child in childrenNode.Children)
+                    child.WalkTree(childKey, visitor);
+            }
         }
         #endregion
 
