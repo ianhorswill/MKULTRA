@@ -1,3 +1,7 @@
+on_enter_state(conversation, C, start) :-
+    C/interlocutor/You,
+    assert(C/location_bids/You:100).
+
 my_turn(C) :-
     /perception/nobody_speaking,
     C/last_dialog:dialog(_, $this, _).

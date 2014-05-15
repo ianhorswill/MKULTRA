@@ -23,7 +23,8 @@ goto_state(Concern, State) :-
     ignore(Concern/state:OldState,
 	   on_exit_state(Concern, OldState)),
     assert(Concern/state:State),
-    ignore(on_enter_state(Concern, State)).
+    Concern/type:Type,
+    ignore(on_enter_state(Type, Concern, State)).
 
 begin_child_concern(Parent, Type, Child) :-
     begin_child_concern(Parent, Type, Child, [ ]).

@@ -2,19 +2,18 @@
 %% The Patrol activity
 %%
 
-propose_action(patrol, _, goto(Prop)) :-
-    not(/motor_state/walking_to),  % not already going somewhere
-    /last_destination:Last,
-    prop(Prop),
-    Prop \= Last.
+rebid_patrol(Concern) :-
+    forall(Concern/visited/Location,
+	   ( Concern/visited/Prop:Time,
+	     Score is ($now-Time)-distance(Prop, $game_object),
+	     assert(Concern/location_bids/Location:Score) )).
 
-score_action(patrol, Concern, goto(Prop), Score) :-
-    Concern/visited/Prop:Time,
-    Score is ($now-Time)-distance(Prop, $game_object).
-
-on_event(patrol, Concern, arrived_at(Place),
-	 assert(Concern/visited/Place:Time)) :-
+on_event(patrol, Concern,
+	 arrived_at(Place),
+	 ( assert(Concern/visited/Place:Time),
+	   rebid_patrol(Concern) )) :-
     Time is $now.
 
-on_initiate(patrol, Concern) :-
-    forall(prop(P), assert(Concern/visited/P:0)).
+on_enter_state(patrol, Concern, start) :-
+    forall(prop(P), assert(Concern/visited/P:(-100))),
+    rebid_patrol(Concern).

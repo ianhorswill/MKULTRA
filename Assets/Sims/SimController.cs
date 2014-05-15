@@ -192,6 +192,7 @@ public class SimController : BindingBehaviour
     #region Unity hooks
     internal void Start()
     {
+        updateConcernBids = this.UpdateConcernBids;
         elRoot = this.KnowledgeBase().ELRoot;
         this.perceptionRoot = elRoot / Symbol.Intern("perception");
         this.conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
@@ -342,16 +343,6 @@ public class SimController : BindingBehaviour
         {
             switch (structure.Functor.Name)
             {
-                case "goto":
-                    this.CurrentDestination = structure.Argument<GameObject>(0);
-                    if (this.CurrentDestination == null)
-                        steering.Stop();
-                    else
-                        this.currentPath = planner.Plan(
-                            gameObject.TilePosition(),
-                            this.CurrentDestination.DockingTiles());
-                    break;
-
                 case "face":
                     this.Face(structure.Argument<GameObject>(0));
                     break;
@@ -415,27 +406,6 @@ public class SimController : BindingBehaviour
             QueueEvent("begin", action);
     }
 
-    private void UpdateLocomotion()
-    {
-        if (this.currentPath != null)
-        {
-            // Update the steering
-            if (this.currentPath.UpdateSteering(this.steering))
-            {
-                // Finished the path
-                this.currentPath = null;
-            }
-        }
-
-        // Query Prolog if we have nothing to do.
-        if (this.currentPath == null && this.CurrentDestination != null)
-        {
-            ELNode.Store(lastDestination % this.CurrentDestination);
-            this.QueueEvent("arrived_at", this.CurrentDestination);
-            this.CurrentDestination = null;
-        }
-    }
-
     private void UpdateSpeechBubble()
     {
         // Clear speech bubble if it's time.
@@ -471,16 +441,59 @@ public class SimController : BindingBehaviour
     #endregion
 
     #region Locomotion control
+    private void UpdateLocomotion()
+    {
+        this.UpdateLocomotionBidsAndPath();
+
+        if (this.currentPath != null)
+        {
+            // Update the steering
+            if (this.currentPath.UpdateSteering(this.steering))
+            {
+                // Finished the path
+                this.currentPath = null;
+            }
+        }
+
+        // Query Prolog if we have nothing to do.
+        if (this.currentPath == null && this.CurrentDestination != null)
+        {
+            ELNode.Store(lastDestination % this.CurrentDestination);
+            this.QueueEvent("arrived_at", this.CurrentDestination);
+            this.CurrentDestination = null;
+        }
+    }
+
 
     readonly Dictionary<GameObject, float> bidTotals = new Dictionary<GameObject, float>();
 
-    void UpdateLocomotionBids()
+    // ReSharper disable once InconsistentNaming
+    private readonly Symbol SConcerns = Symbol.Intern("concerns");
+
+    void UpdateLocomotionBidsAndPath()
     {
+        //foreach (var pair in bidTotals)
+        //    bidTotals[pair.Key] = 0;
+        bidTotals.Clear();
+        elRoot.WalkTree(SConcerns, this.updateConcernBids);
+
+        GameObject winner = null;
+        float winningBid = 0;
         foreach (var pair in bidTotals)
-            bidTotals[pair.Key] = 0;
-        elRoot.WalkTree();
+            if (pair.Value > winningBid)
+            {
+                winningBid = pair.Value;
+                winner = pair.Key;
+            }
+
+        if (winner != CurrentDestination)
+        {
+            this.CurrentDestination = winner;
+            this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
+        }
     }
 
+    private Action<ELNode> updateConcernBids;
     private static readonly Symbol SLocationBids = Symbol.Intern("location_bids");
     void UpdateConcernBids(ELNode concern)
     {
@@ -496,7 +509,11 @@ public class SimController : BindingBehaviour
                     var destination = bid.Key as GameObject;
                     if (destination == null)
                         throw new Exception("Location bid is not a GameObject: "+bid.Key);
-                    bidTotals[destination] += Convert.ToSingle(bid.ExclusiveKeyValue<object>());
+                    var bidValue = Convert.ToSingle(bid.ExclusiveKeyValue<object>());
+                    if (bidTotals.ContainsKey(destination))
+                        bidTotals[destination] += bidValue;
+                    else
+                        bidTotals[destination] = bidValue;
                 }
             }
         }
