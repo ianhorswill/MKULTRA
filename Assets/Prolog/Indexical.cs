@@ -69,5 +69,10 @@ namespace Prolog
         {
             return this.valueFunc(context);
         }
+
+        public override string ToString()
+        {
+            return "$"+Name;
+        }
     }
 }
