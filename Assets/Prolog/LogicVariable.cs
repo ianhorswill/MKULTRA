@@ -256,14 +256,20 @@ namespace Prolog
         IEnumerable<bool> UnifyMetaTerm(Metastructure m, object value)
         {
             Value = value;
+            try
+            {
 #pragma warning disable 414, 168, 219
-            // ReSharper disable UnusedVariable
-            foreach (var ignore in m.MetaTermUnify(value))
-                // ReSharper restore UnusedVariable
+                // ReSharper disable UnusedVariable
+                foreach (var ignore in m.MetaTermUnify(value))
+                    // ReSharper restore UnusedVariable
 #pragma warning restore 414, 168, 219
-                yield return false;
-            mValue = m;
-            //IsBound = false;
+                    yield return false;
+            }
+            finally
+            {
+                mValue = m;
+                //IsBound = false;
+            }
         }
 
         IEnumerable<bool> UnifyMetaMeta(Metastructure myMetaStructure, Metastructure theirMetaStructure, LogicVariable them)
@@ -288,17 +294,23 @@ namespace Prolog
             l.Value = this;
             IEnumerable<CutState> goal;
             mValue = m.MetaVarUnify(l, out goal);
+            try
+            {
 #pragma warning disable 414, 168, 219
-            // ReSharper disable UnusedVariable
-            foreach (var ignore in goal)
-                // ReSharper restore UnusedVariable
+                // ReSharper disable UnusedVariable
+                foreach (var ignore in goal)
+                    // ReSharper restore UnusedVariable
 #pragma warning restore 414, 168, 219
-                yield return false;
-            // Reset our own binding to its previous binding
-            mValue = m;
-            // Reset binding of l
-            l.mValue = l;
-            //l.IsBound = false;
+                    yield return false;
+            }
+            finally
+            {
+                // Reset our own binding to its previous binding
+                mValue = m;
+                // Reset binding of l
+                l.mValue = l;
+                //l.IsBound = false;
+            }
         }
 
         internal override IEnumerable<bool> UnifyWithStructure(Structure value)
@@ -326,9 +338,15 @@ namespace Prolog
 
         IEnumerable<bool> SucceedOnceAndThenUnBind()
         {
-            yield return false;
-            //IsBound = false;
-            this.ForciblyUnbind();
+            try
+            {
+                yield return false;
+            }
+            finally
+            {
+                //IsBound = false;
+                this.ForciblyUnbind();
+            }
         }
 
         internal void ForciblyUnbind()
@@ -342,16 +360,22 @@ namespace Prolog
             Metastructure old = MetaBinding;
             IEnumerable<CutState> filter = null;
             mValue = old != null ? old.MetaMetaUnify(m, out filter) : m;
-            if (filter != null)
+            try
+            {
+                if (filter != null)
 #pragma warning disable 414, 168, 219
-                // ReSharper disable UnusedVariable
-                foreach (var ignore in filter)
-                    // ReSharper restore UnusedVariable
+                    // ReSharper disable UnusedVariable
+                    foreach (var ignore in filter)
+                        // ReSharper restore UnusedVariable
 #pragma warning restore 414, 168, 219
+                        yield return CutState.Continue;
+                else
                     yield return CutState.Continue;
-            else
-                yield return CutState.Continue;
-            mValue = old;
+            }
+            finally
+            {
+                mValue = old;
+            }
         }
         #endregion
 

@@ -440,19 +440,31 @@ namespace Prolog
 
         private static IEnumerable<CutState> BeginImplementation(object[] args, PrologContext context)
         {
-            foreach (var goal in args)
+            var enumerators = new IEnumerator<CutState>[args.Length];
+            int i=0;
+            try
             {
-                var goalStructure = Term.Structurify(goal, "Argument to begin is not a valid goal.");
-                if (goalStructure.IsFunctor(Symbol.Dot, 2))
-                    FunctionalExpression.Eval(goalStructure, context);
-                else
+                for (; i<args.Length; i++)
                 {
-                    var enumerator = context.Prove(goalStructure).GetEnumerator();
-                    if (!enumerator.MoveNext() || enumerator.Current == CutState.ForceFail)
-                        throw new GoalException(goal, "Goal failed");
+                    var goal = args[i];
+                    var goalStructure = Term.Structurify(goal, "Argument to begin is not a valid goal.");
+                    if (goalStructure.IsFunctor(Symbol.Dot, 2))
+                        FunctionalExpression.Eval(goalStructure, context);
+                    else
+                    {
+                        var enumerator = context.Prove(goalStructure).GetEnumerator();
+                        enumerators[i] = enumerator;
+                        if (!enumerator.MoveNext() || enumerator.Current == CutState.ForceFail)
+                            throw new GoalException(goal, "Goal failed");
+                    }
                 }
+                yield return CutState.Continue;
             }
-            yield return CutState.Continue;
+            finally
+            {
+                while ((--i)>=0)
+                    enumerators[i].Dispose();
+            }
         }
 
         private static IEnumerable<CutState> MethodCallImplementation(object[] args, PrologContext context)
@@ -567,25 +579,26 @@ namespace Prolog
         private static IEnumerable<CutState> CatchImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 3) throw new ArgumentCountException("catch", args, "goal", "exception", "recover");
+            Exception exception = null;
             Structure goal = Term.Structurify(args[0], "Goal argument must be a valid goal.");
             Structure recover = Term.Structurify(args[2], "Recover argument must be a valid goal.");
-            IEnumerator<CutState> prover =
-                context.KnowledgeBase.Prove(goal.Functor, goal.Arguments, context, context.CurrentFrame).GetEnumerator();
-            bool alive = true;
-            Exception exception = null;
-            while (alive)
+            using (var prover = context.KnowledgeBase.Prove(goal.Functor, goal.Arguments, context, context.CurrentFrame).GetEnumerator())
             {
-                try
+                bool alive = true;
+                while (alive)
                 {
-                    alive = prover.MoveNext();
+                    try
+                    {
+                        alive = prover.MoveNext();
+                    }
+                    catch (Exception e)
+                    {
+                        exception = e;
+                        alive = false;
+                    }
+                    if (alive)
+                        yield return CutState.Continue;
                 }
-                catch (Exception e)
-                {
-                    exception = e;
-                    alive = false;
-                }
-                if (alive)
-                    yield return CutState.Continue;
             }
             if (exception != null)
             {
@@ -804,19 +817,21 @@ namespace Prolog
             LogicVariable v = Term.FindUninstantiatedVariable(args[0]);
             if (v != null)
                 throw new InstantiationException(v, "Argument to not must be a ground literal (i.e. contain no unbound variables).");
-            IEnumerator<CutState> e =
-                context.Prove(args[0], "Argument to not must be a valid term to prove.").GetEnumerator();
-            if (!e.MoveNext() || e.Current == CutState.ForceFail)
-                yield return CutState.Continue;
+            using (var e = context.Prove(args[0], "Argument to not must be a valid term to prove.").GetEnumerator())
+            {
+                if (!e.MoveNext() || e.Current == CutState.ForceFail)
+                    yield return CutState.Continue;
+            }
         }
 
         private static IEnumerable<CutState> NotPlusImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 1) throw new ArgumentCountException("\\+", args, "goal");
-            IEnumerator<CutState> e =
-                context.Prove(args[0], "Argument to \\+ must be a valid term to prove.").GetEnumerator();
-            if (!e.MoveNext() || e.Current == CutState.ForceFail)
-                yield return CutState.Continue;
+            using (var e = context.Prove(args[0], "Argument to \\+ must be a valid term to prove.").GetEnumerator())
+            {
+                if (!e.MoveNext() || e.Current == CutState.ForceFail)
+                    yield return CutState.Continue;
+            }
         }
 
         private static IEnumerable<CutState> OnceImplementation(object[] args, PrologContext context)
@@ -835,9 +850,12 @@ namespace Prolog
 
         private static IEnumerable<CutState> IgnoreImplementation(object[] args, PrologContext context)
         {
-            foreach (var goal in args)
-                context.Prove(goal, "Argument to ignore/n must be a valid subgoal.").GetEnumerator().MoveNext();
+            if (args.Length != 1) throw new ArgumentCountException("ignore", args, "goal");
+            using (var e = context.Prove(args[0], "Argument to ignore/n must be a valid subgoal.").GetEnumerator())
+            {
+                e.MoveNext();  // Ignore whether it succeeded.
                 yield return CutState.Continue;
+            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
@@ -1123,10 +1141,15 @@ namespace Prolog
 #pragma warning disable 414, 168, 219
             // ReSharper disable UnusedVariable
             foreach (var ignore in context.Prove(args[0], "goal argument to findall must be a valid Prolog goal."))
-            // ReSharper restore UnusedVariable
+            {
+                var gotOne = false;
+                foreach (var ignore2 in context.Prove(args[1], "Arguments for forall/2 must be valid goals."))
+                    // ReSharper restore UnusedVariable
 #pragma warning restore 414, 168, 219
-                if (!context.Prove(args[1], "Arguments for forall/2 must be valid goals.").GetEnumerator().MoveNext())
+                    gotOne = true;
+                if (!gotOne)
                     yield break;
+            }
             yield return CutState.Continue;
         }
 
@@ -1445,10 +1468,13 @@ namespace Prolog
         {
             if (args.Length != 1)
                 throw new ArgumentCountException("check", args, "goal");
-            if (context.Prove(args[0], "Goal to check is not a valid Prolog goal.").GetEnumerator().MoveNext())
-                yield return CutState.Continue;
-            else
-                throw new InvalidOperationException("Check failed: "+ ISOPrologWriter.WriteToString(args[0]));
+            using (var e = context.Prove(args[0], "Goal to check is not a valid Prolog goal.").GetEnumerator())
+            {
+                if (e.MoveNext())
+                    yield return CutState.Continue;
+                else
+                    throw new InvalidOperationException("Check failed: " + ISOPrologWriter.WriteToString(args[0]));
+            }
         }
 
         private static IEnumerable<CutState> RandomizeInternal(KnowledgeBase kb, PrologContext context, Structure t)
