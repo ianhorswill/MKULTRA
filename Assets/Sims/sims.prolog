@@ -63,6 +63,6 @@ actions :-
 
 % Called once by SimController.Start()
 do_all_character_initializations :-
-    ignore(character_initialization, fail).
+    (character_initialization, fail) ; true.
 
 
