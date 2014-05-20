@@ -144,7 +144,7 @@ public class PathPlanner : BindingBehaviour
     private TilePath MakePath(TileHeap.Node endNode)
     {
         // Reconstruct the path to from the start to the end.
-        var path = new TilePath();
+        var path = new TilePath(endNode.Position);
         while (endNode != null)
         {
             path.AddBefore(endNode.Position.TileCenter);

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class TilePath
 {
+    public TilePath(TilePosition finalTile)
+    {
+        this.FinalTile = finalTile;
+    }
+
     /// <summary>
     /// The distance (in pixels) the character can be from
     /// the waypoint tile before it is considered to have
@@ -76,6 +81,7 @@ public class TilePath
     /// Stores the actual tiles to pass through in the path.
     /// </summary>
     readonly Stack<Vector2> waypoints = new Stack<Vector2>();
+    public readonly TilePosition FinalTile;
 
     /// <summary>
     /// Remove all waypoints from the path.
