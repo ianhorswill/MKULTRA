@@ -3,6 +3,28 @@ using System.Collections.Generic;
 using Prolog;
 using UnityEngine;
 
+/*
+ * WORKING MEMORY INTERFACE
+ * 
+ * /perception/conversational_space/*
+ * /perception/social_space/*
+ * /perception/nobody_speaking
+ * /perception/docked_with:OBJECT
+ * 
+ * /motor_root/walking_to:Destination
+ * /motor_root/last_action:Action
+ * /motor_root/i_am_speaking
+ * 
+ * /event_history/*
+ */
+
+
+/// <summary>
+/// Mediates between Prolog code and Unity
+/// - Controls locomotion
+/// - Updates percepts and efference information in working memory (EL KB)
+/// </summary>
+
 [AddComponentMenu("Sims/Sim Controller")]
 public class SimController : BindingBehaviour
 {
@@ -106,6 +128,11 @@ public class SimController : BindingBehaviour
                 ELNode.Store(motorRoot/SWalkingTo%CurrentDestination);
         }
     }
+
+    /// <summary>
+    /// Object with which we're currently docked.
+    /// </summary>
+    public GameObject CurrentlyDockedWith { get; private set; }
 
     /// <summary>
     /// Time to wake character up and ask for an action.
@@ -441,9 +468,17 @@ public class SimController : BindingBehaviour
     #endregion
 
     #region Locomotion control
+    private static readonly Symbol SDockedWith = Symbol.Intern("docked_with");
     private void UpdateLocomotion()
     {
         this.UpdateLocomotionBidsAndPath();
+
+        if (CurrentlyDockedWith != null && !CurrentlyDockedWith.DockingTiles().Contains(this.transform.position))
+        {
+            // We were docked with an object, but are not anymore.
+            perceptionRoot.DeleteKey(SDockedWith);
+            CurrentlyDockedWith = null;
+        }
 
         if (this.currentPath != null)
         {
@@ -451,19 +486,15 @@ public class SimController : BindingBehaviour
             if (this.currentPath.UpdateSteering(this.steering))
             {
                 // Finished the path
+                this.CurrentlyDockedWith = CurrentDestination;
+                ELNode.Store(perceptionRoot/SDockedWith%CurrentlyDockedWith);
+                ELNode.Store(lastDestination % this.CurrentDestination);
+                this.QueueEvent("arrived_at", this.CurrentDestination);
                 this.currentPath = null;
+                this.currentDestination = null;
             }
         }
-
-        // Query Prolog if we have nothing to do.
-        if (this.currentPath == null && this.CurrentDestination != null)
-        {
-            ELNode.Store(lastDestination % this.CurrentDestination);
-            this.QueueEvent("arrived_at", this.CurrentDestination);
-            this.CurrentDestination = null;
-        }
     }
-
 
     readonly Dictionary<GameObject, float> bidTotals = new Dictionary<GameObject, float>();
 
@@ -486,10 +517,15 @@ public class SimController : BindingBehaviour
                 winner = pair.Key;
             }
 
-        if (winner != CurrentDestination)
+        if (winner != null)
         {
-            this.CurrentDestination = winner;
-            this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
+            // Replan if destination has changed or if destination has moved away from current path.
+            if ((winner != CurrentDestination && winner != CurrentlyDockedWith)
+                || (currentDestination != null && currentPath != null && !CurrentDestination.DockingTiles().Contains(currentPath.FinalTile)))
+            {
+                this.CurrentDestination = winner;
+                this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
+            }
         }
     }
 
