@@ -1,6 +1,6 @@
 on_enter_state(conversation, C, start) :-
     C/interlocutor/You,
-    assert(C/location_bids/You:100).
+    assert(C/location_bids/You:200).
 
 my_turn(C) :-
     /perception/nobody_speaking,
@@ -25,7 +25,6 @@ on_event(conversation, C, dialog(X,Y, Act),
 
 conversational_move(C, dialog(X, Y, Act),
 		    ignore(handle_transition(C, Act))) :-
-    pause_game,
     assert(C/last_dialog:dialog(X, Y, Act)).
 
 handle_transition(C, Act) :-
@@ -35,8 +34,9 @@ handle_transition(C, Act) :-
 
 dialog_transition(start, ack(greeting), normal, 100).
 dialog_transition(start, greeting, normal, 0).
-dialog_transition(normal, parting, closing, 0).
-dialog_transition(closing, ack(parting), end, 100).
+dialog_transition(normal, parting, closing, 100).
+%dialog_transition(closing, ack(parting), end, 100).
+%dialog_transition(closing, parting, end, 0).
 
 %% CONVERSATION BODY
 
