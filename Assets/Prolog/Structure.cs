@@ -58,6 +58,17 @@ namespace Prolog
 
         #region Instance fields and properties
         /// <summary>
+        /// Returns the predicate indicator for this structure.
+        /// </summary>
+        public PredicateIndicator PredicateIndicator
+        {
+            get
+            {
+                return new PredicateIndicator(this);
+            }
+        }
+
+        /// <summary>
         /// The name of the function or predicate.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Functor")]

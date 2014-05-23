@@ -849,12 +849,12 @@ namespace Prolog
         }
         #endregion
 
-        internal static Structure PredicateIndicator(Structure term)
+        internal static Structure PredicateIndicatorExpression(Structure term)
         {
             return new Structure(Symbol.Slash, term.Functor, term.Arguments.Length);
         }
 
-        internal static Structure PredicateIndicator(Symbol functor, int arity)
+        internal static Structure PredicateIndicatorExpression(Symbol functor, int arity)
         {
             return new Structure(Symbol.Slash, functor, arity);
         }

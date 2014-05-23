@@ -345,7 +345,7 @@ namespace Prolog
                 throw new PrologException(new Structure("error",
                                                         new Structure("permission_error", Symbol.Intern("modify"),
                                                                       Symbol.Intern("static_procedure"),
-                                                                      Term.PredicateIndicator(head))));
+                                                                      Term.PredicateIndicatorExpression(head))));
 
             KnowledgeBaseRule assertion = KnowledgeBaseRule.FromTerm(structure, checkSingletons, Prolog.CurrentSourceFile, Prolog.CurrentSourceLineNumber);
             PredicateInfo info = EntryForStoring(head.Functor, head.Arguments.Length);
@@ -357,7 +357,7 @@ namespace Prolog
                 throw new PrologException(new Structure("error",
                                                         new Structure("permission_error",
                                                                       Symbol.Intern("shadow"),
-                                                                      Term.PredicateIndicator(head))));
+                                                                      Term.PredicateIndicatorExpression(head))));
 
             info.Assert(assertion, atEnd);
         }
