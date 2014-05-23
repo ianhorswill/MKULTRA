@@ -114,6 +114,9 @@ namespace Prolog
             DefinePrimitive("findall", FindallImplementation, "all solutions predicates",
                             "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.",
                             "=template", ":goal", "-solutions");
+            DefinePrimitive("all", AllImplementation, "all solutions predicates",
+                            "Unifies SOLUTIONS with a list of every unique value of TEMPLATE for every possible solution of GOAL.",
+                            "=template", ":goal", "-solutions");
             DefinePrimitive("sumall", SumallImplementation, "all solutions predicates",
                             "Unifies SUM with sum of the values of NUMBERVAR in every possible solution of GOAL.",
                             "-numberVar", ":goal", "-sum");
@@ -1158,24 +1161,38 @@ namespace Prolog
         private static IEnumerable<CutState> FindallImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 3) throw new ArgumentCountException("findall", args, "template", "goal", "bag");
-            object template = Term.Deref(args[0]);
-            //object bag = null;
+            return Term.UnifyAndReturnCutState(args[2],
+                                                Prolog.IListToPrologList(SolutionList(context,
+                                                                                      Term.Deref(args[0]), 
+                                                                                      Term.Deref(args[1]),
+                                                                                      false)));
+        }
+
+        private static IEnumerable<CutState> AllImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 3) throw new ArgumentCountException("all", args, "template", "goal", "bag");
+            return Term.UnifyAndReturnCutState(args[2],
+                                                Prolog.IListToPrologList(SolutionList(context,
+                                                                                      Term.Deref(args[0]),
+                                                                                      Term.Deref(args[1]),
+                                                                                      true)));
+        }
+
+        private static List<object> SolutionList(PrologContext context, object template, object goal, bool deleteDuplicates)
+        {
             var bag = new List<object>();
 #pragma warning disable 414, 168, 219
             // ReSharper disable UnusedVariable
-            foreach (var ignore in context.Prove(args[1], "goal argument to findall must be a valid Prolog goal."))
-            // ReSharper restore UnusedVariable
+            foreach (var ignore in context.Prove(goal, "goal argument to findall must be a valid Prolog goal."))
+                // ReSharper restore UnusedVariable
 #pragma warning restore 414, 168, 219
             {
                 object instance = Term.CopyInstantiation(template);
-                // It's more efficient to build the list here
-                // But it returns the answers in the reverse order of an Assert-based implementation
-                // Since the ISO compliance suite assumes that order, we'll use it here on the
-                // assumption that legacy code might also assume it.
-                //bag = new Structure(Symbol.PrologListConstructor, instance, bag);
                 bag.Add(instance);
             }
-            return Term.UnifyAndReturnCutState(args[2], Prolog.IListToPrologList(bag));
+            if (deleteDuplicates)
+                Term.Sort(bag, true);
+            return bag;
         }
 
         private static IEnumerable<CutState> SumallImplementation(object[] args, PrologContext context)
