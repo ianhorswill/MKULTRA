@@ -97,6 +97,7 @@ namespace Prolog
             head = ruleHead;
             if (ruleHead == null) throw new ArgumentNullException("ruleHead");
             HeadArgs = ruleHead.Arguments;
+            headIndexers = PredicateArgumentIndexer.ArglistIndexers(HeadArgs);
             BodyGoals = ruleBody;
             FreeVariables = new List<LogicVariable>();
             var singletons = new List<LogicVariable>();
@@ -159,6 +160,8 @@ namespace Prolog
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         internal Structure[] BodyGoals;
 
+        private PredicateArgumentIndexer[] headIndexers;
+
         private readonly object head;
 
         /// <summary>
@@ -195,6 +198,11 @@ namespace Prolog
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         protected List<LogicVariable> FreeVariables;
+
+        public override bool Prematch(PredicateArgumentIndexer[] argIndexers)
+        {
+            return PredicateArgumentIndexer.PotentiallyMatchable(argIndexers, headIndexers);
+        }
 
         internal void PrintWarning(string formatString, params object[] formatArgs)
         {

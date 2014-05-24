@@ -81,5 +81,10 @@ namespace Prolog
         /// Location in source file from which this entry (e.g. rule) was loaded, or 0 if it wasn't consulted from a file (e.g. it was created using assert or reading from a string).
         /// </summary>
         public int SourceLineNumber { get; set; }
+
+        public virtual bool Prematch(PredicateArgumentIndexer[] argIndexers)
+        {
+            return true;
+        }
     }
 }

@@ -143,23 +143,27 @@ namespace Prolog
         /// </summary>
         IEnumerable<CutState> TestClausesInOrder(object[] args, PrologContext context, ushort myFrame)
         {
+            var argIndexers = PredicateArgumentIndexer.ArglistIndexers(args);
             entriesListUsed = true;
             foreach (var entry in Entries)
             {
-                context.SetCurrentRule(entry);
-                foreach (var cutState in entry.Prove(args, context, myFrame))
+                if (entry.Prematch(argIndexers))
                 {
-                    if (cutState == CutState.ForceFail)
+                    context.SetCurrentRule(entry);
+                    foreach (var cutState in entry.Prove(args, context, myFrame))
                     {
+                        if (cutState == CutState.ForceFail)
+                        {
+                            if (KnowledgeBase.Trace || Trace)
+                                context.TraceOutput("Cut: {0}", new Structure(Name, args));
+                            goto fail;
+                        }
                         if (KnowledgeBase.Trace || Trace)
-                            context.TraceOutput("Cut: {0}", new Structure(Name, args));
-                        goto fail;
+                            context.TraceOutput("Succeed: {0}", new Structure(Name, args));
+                        yield return CutState.Continue;
+                        if (KnowledgeBase.Trace || Trace)
+                            context.TraceOutput("Retry: {0}", new Structure(Name, args));
                     }
-                    if (KnowledgeBase.Trace || Trace)
-                        context.TraceOutput("Succeed: {0}", new Structure(Name, args));
-                    yield return CutState.Continue;
-                    if (KnowledgeBase.Trace || Trace)
-                        context.TraceOutput("Retry: {0}", new Structure(Name, args));
                 }
             }
         fail:
@@ -177,25 +181,29 @@ namespace Prolog
         {
             entriesListUsed = true;
             var shuffler = new Shuffler((ushort)Entries.Count);
+            var argIndexers = PredicateArgumentIndexer.ArglistIndexers(args);
             while (!shuffler.Done)
             {
                 var entry = Entries[shuffler.Next()];
-                // This shouldn't be here...
-                //context.PushGoalStack(Name, args, myFrame);
-                context.SetCurrentRule(entry);
-                foreach (var cutState in entry.Prove(args, context, myFrame))
+                if (entry.Prematch(argIndexers))
                 {
-                    if (cutState == CutState.ForceFail)
+                    // This shouldn't be here...
+                    //context.PushGoalStack(Name, args, myFrame);
+                    context.SetCurrentRule(entry);
+                    foreach (var cutState in entry.Prove(args, context, myFrame))
                     {
+                        if (cutState == CutState.ForceFail)
+                        {
+                            if (KnowledgeBase.Trace || Trace)
+                                context.TraceOutput("Cut: {0}", new Structure(Name, args));
+                            goto fail;
+                        }
                         if (KnowledgeBase.Trace || Trace)
-                            context.TraceOutput("Cut: {0}", new Structure(Name, args));
-                        goto fail;
+                            context.TraceOutput("Succeed: {0}", new Structure(Name, args));
+                        yield return CutState.Continue;
+                        if (KnowledgeBase.Trace || Trace)
+                            context.TraceOutput("Retry: {0}", new Structure(Name, args));
                     }
-                    if (KnowledgeBase.Trace || Trace)
-                        context.TraceOutput("Succeed: {0}", new Structure(Name, args));
-                    yield return CutState.Continue;
-                    if (KnowledgeBase.Trace || Trace)
-                        context.TraceOutput("Retry: {0}", new Structure(Name, args));
                 }
             }
         fail:
