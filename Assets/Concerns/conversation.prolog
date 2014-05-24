@@ -2,9 +2,9 @@ on_enter_state(conversation, C, start) :-
     C/interlocutor/You,
     assert(C/location_bids/You:200).
 
-my_turn(C) :-
-    /perception/nobody_speaking,
-    C/last_dialog:dialog(_, $this, _).
+%% my_turn(C) :-
+%%     /perception/nobody_speaking,
+%%     C/last_dialog:dialog(_, $this, _).
 
 %% OPENINGS AND CLOSINGS
 
@@ -23,10 +23,13 @@ on_event(conversation, C, dialog(X,Y, Act),
     Y is $this,
     conversational_move(C, dialog(X,Y, Act), Handler).
 
+:- higher_order conversational_move(0, 0, 1).
+
 conversational_move(C, dialog(X, Y, Act),
 		    ignore(handle_transition(C, Act))) :-
     assert(C/last_dialog:dialog(X, Y, Act)).
 
+:- public handle_transition/2.
 handle_transition(C, Act) :-
     C/state:CurrentState,
     dialog_transition(CurrentState, Act, NewState, _),

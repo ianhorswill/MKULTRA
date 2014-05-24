@@ -55,6 +55,9 @@ namespace Prolog
                                 firstOne = false;
                             }
                             WalkRule(kb, rule);
+                            if (predicate.HigherOrderArguments != null)
+                                foreach (var arg in predicate.HigherOrderArguments)
+                                    WalkGoal(kb, rule, rule.HeadArgs[arg]);
                         }
                     }
                 }
