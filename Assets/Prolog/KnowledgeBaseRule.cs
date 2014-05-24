@@ -214,6 +214,11 @@ namespace Prolog
             //Console.Write(" in predicate {0}:{1}/{2}.", kb.Name, HeadFunctor, HeadArity);
             
         }
+
+        public override string ToString()
+        {
+            return ISOPrologWriter.WriteToString(new Structure(":-", head, Body));
+        }
     }
 
     sealed class KnowledgeBaseRule0 : KnowledgeBaseRule

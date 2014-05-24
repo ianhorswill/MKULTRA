@@ -299,5 +299,10 @@ namespace Prolog
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("PredicateInfo({0}/{1})", this.Name, this.Arity);
+        }
     }
 }

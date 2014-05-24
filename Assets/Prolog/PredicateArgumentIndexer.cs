@@ -1,4 +1,6 @@
-﻿namespace Prolog
+﻿using System;
+
+namespace Prolog
 {
     public struct PredicateArgumentIndexer
     {
@@ -11,27 +13,36 @@
 
         public PredicateArgumentIndexer(object argument)
         {
-            argument = Term.Deref(argument);
-            if (argument is LogicVariable)
+            if (argument == null)
             {
-                this.Type = IndexerType.Variable;
+                this.Type = IndexerType.Null;
                 this.Functor = null;
                 this.Arity = 0;
             }
             else
             {
-                var s = argument as Structure;
-                if (s != null)
+                argument = Term.Deref(argument);
+                if (argument is LogicVariable)
                 {
-                    this.Type = IndexerType.Structure;
-                    this.Functor = s.Functor;
-                    this.Arity = (byte)s.Arity;
+                    this.Type = IndexerType.Variable;
+                    this.Functor = null;
+                    this.Arity = 0;
                 }
                 else
                 {
-                    this.Type = IndexerType.Atom;
-                    this.Functor = argument;
-                    this.Arity = 0;
+                    var s = argument as Structure;
+                    if (s != null)
+                    {
+                        this.Type = IndexerType.Structure;
+                        this.Functor = s.Functor;
+                        this.Arity = (byte)s.Arity;
+                    }
+                    else
+                    {
+                        this.Type = IndexerType.Atom;
+                        this.Functor = argument;
+                        this.Arity = 0;
+                    }
                 }
             }
         }
@@ -46,7 +57,25 @@
 
         public static bool PotentiallyMatchable(PredicateArgumentIndexer a, PredicateArgumentIndexer b)
         {
-            return a.Type == IndexerType.Variable || b.Type == IndexerType.Variable || a == b;
+            if (b.Type == IndexerType.Variable)
+                return true;
+            switch (a.Type)
+            {
+                case IndexerType.Variable:
+                    return true;
+
+                case IndexerType.Null:
+                    return b.Type == IndexerType.Null;
+
+                case IndexerType.Atom:
+                    return b.Type == IndexerType.Atom && a.Functor.Equals(b.Functor);
+
+                case IndexerType.Structure:
+                    return b.Type == IndexerType.Structure && a.Functor == b.Functor && a.Arity == b.Arity;
+
+                default:
+                    throw new NotImplementedException("Invalid PredicateArgumentIndexerType");
+            }
         }
 
         public static bool PotentiallyMatchable(object a, PredicateArgumentIndexer b)
@@ -64,7 +93,10 @@
 
         public enum IndexerType : byte
         {
-            Variable, Atom, Structure
+            Variable,
+            Null,
+            Atom,
+            Structure
         }
 
         public readonly IndexerType Type;
@@ -73,12 +105,26 @@
 
         public static bool operator ==(PredicateArgumentIndexer a, PredicateArgumentIndexer b)
         {
-            return a.Type == b.Type && a.Functor.Equals(b.Functor) && a.Arity == b.Arity;
+            switch (a.Type)
+            {
+                case IndexerType.Variable:
+                    case IndexerType.Null:
+                    return a.Type == b.Type;
+
+                    case IndexerType.Atom:
+                    return b.Type == IndexerType.Atom && a.Functor.Equals(b.Functor);
+
+                    case IndexerType.Structure:
+                    return b.Type == IndexerType.Structure && a.Functor == b.Functor && a.Arity == b.Arity;
+
+                default:
+                    throw new NotImplementedException("Invalid PredicateArgumentIndexer type");
+            }
         }
 
         public static bool operator !=(PredicateArgumentIndexer a, PredicateArgumentIndexer b)
         {
-            return a.Type != b.Type || !a.Functor.Equals(b.Functor) || a.Arity != b.Arity;
+            return !(a==b);
         }
 
         public override int GetHashCode()
@@ -90,8 +136,7 @@
         {
             if (obj is PredicateArgumentIndexer)
             {
-                var o = (PredicateArgumentIndexer)obj;
-                return this.Type == o.Type && this.Functor.Equals(o.Functor) && this.Arity == o.Arity;
+                return this == (PredicateArgumentIndexer)obj;
             }
             return false;
         }
