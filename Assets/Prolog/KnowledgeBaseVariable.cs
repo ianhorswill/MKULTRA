@@ -44,7 +44,7 @@ namespace Prolog
             var functor = Term.Deref(args[0]) as Symbol;
             if (functor == null) throw new ArgumentTypeException("set", "functor", args[0], typeof (Symbol));
 
-            List<KnowledgeBaseEntry> entries = context.KnowledgeBase.EntryListForStoring(functor, 1);
+            List<KnowledgeBaseEntry> entries = context.KnowledgeBase.EntryListForStoring(new PredicateIndicator(functor, 1));
 
             switch (entries.Count)
             {

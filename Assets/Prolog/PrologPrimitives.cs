@@ -74,22 +74,22 @@ namespace Prolog
                             "True if PREDICATE is true of all successive pairs of elements from LIST1 and LIST2.",
                             ":predicate", "?list1", "?list2");
             DefinePrimitive("randomizable",
-                            MakeDeclarationPredicate((s, a, context) => context.KnowledgeBase.DeclareRandomizable(s, a)),
+                            MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareRandomizable(p)),
                             "flow control,declarations",
                             "Declares that the specified predicate is allowed to have its clauses explored in random order, when clause randomization is enabled.",
                             ":predicateIndicator", "...");
             DefinePrimitive("shadow",
-                            MakeDeclarationPredicate((s, a, context) => context.KnowledgeBase.DeclareShadow(s, a)),
+                            MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareShadow(p)),
                             "flow control,declarations",
                             "Declares that declarations for the specified predicate are allowed in this knowledgebase and override any declarations in the parent.",
                             ":predicateIndicator", "...");
             DefinePrimitive("external",
-                            MakeDeclarationPredicate((s, a, context) => context.KnowledgeBase.DeclareExternal(s, a)),
+                            MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareExternal(p)),
                             "flow control,declarations",
                             "Declares that the specified predicate is optional to define and/or defined elsewhere; thus, it should not generate undefined predicate warnings.",
                             ":predicateIndicator", "...");
             DefinePrimitive("public",
-                            MakeDeclarationPredicate((s, a, context) => context.KnowledgeBase.DeclarePublic(s, a)),
+                            MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclarePublic(p)),
                             "flow control,declarations",
                             "Declares that the specified predicate is expected to be called from elsewhere.  It should not generate unreferenced predicate warnings.",
                             ":predicateIndicator", "...");
@@ -99,12 +99,12 @@ namespace Prolog
                             "Declares that the specified predicate is may call its arguments as subgoals.  For example, higher_order(find_all(0,1,0)) means find_all/3 calls its second argument.  Used by the static checker to weed out unreferenced predicates.",
                             ":predicateIndicator", "...");
             DefinePrimitive("disassemble",
-                MakeDeclarationPredicate((s, a, context) => context.KnowledgeBase.Disassemble(s, a)),
+                MakeDeclarationPredicate((p, context) => context.KnowledgeBase.Disassemble(p)),
                 "flow control",
                 "Prints bytecode for a compiled predicate.",
                 ":predicateIndicator", "...");
             DefinePrimitive("compile",
-                MakeDeclarationPredicate((s, a, context) => context.KnowledgeBase.Compile(s, a)),
+                MakeDeclarationPredicate((p, context) => context.KnowledgeBase.Compile(p)),
                 "flow control",
                 "Declares that the predicate should be byte compiled rather than interpreted.",
                 ":predicateIndicator", "...");
@@ -147,16 +147,16 @@ namespace Prolog
             DefinePrimitive("multifile", TrueImplementation, "declarations",
                             "Declares that the specified predicate is allowed to be scattered through multiple files.  Currently unused but provided for compatibility with other Prolog implementation.",
                             ":predicateIndicator", "..."); // noop
-            DefinePrimitive("dynamic", MakeDeclarationPredicate( (s, arity, context) => context.KnowledgeBase.DeclareExternal(s, arity)),
+            DefinePrimitive("dynamic", MakeDeclarationPredicate( (p, context) => context.KnowledgeBase.DeclareExternal(p)),
                             "declarations",
                             "Declares that the specified predicate is allowed be dynamically modified using assert.  Currently unused but provided for compatibility with other Prolog implementation.",
                             ":predicateIndicator", "..."); // noop
-            DefinePrimitive("trace", MakeDeclarationPredicate((s, arity, context) => context.KnowledgeBase.DeclareTraced(s, arity)),
+            DefinePrimitive("trace", MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareTraced(p)),
                             "flow control,declarations",
                             "Declares that the specified predicate should be traced when executing.",
                             ":predicateIndicator", "...");
             DefinePrimitive("notrace",
-                            MakeDeclarationPredicate((s, arity, context) => context.KnowledgeBase.DeclareUntraced(s, arity)),
+                            MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareUntraced(p)),
                             "flow control,declarations",
                             "Declares that the specified predicate should be traced when executing.",
                             ":predicateIndicator", "...");
@@ -409,11 +409,11 @@ namespace Prolog
         /// <summary>
         /// True if there is a primitive with this functor and arity.
         /// </summary>
-        internal static bool IsDefined(Symbol functor, int arity)
+        internal static bool IsDefined(PredicateIndicator p)
         {
             int min;
-            return MinimumArity.TryGetValue(functor, out min)
-                   && arity >= min && arity <= MaximumArity[functor];
+            return MinimumArity.TryGetValue(p.Functor, out min)
+                   && p.Arity >= min && p.Arity <= MaximumArity[p.Functor];
         }
 
         #endregion
@@ -1380,7 +1380,7 @@ namespace Prolog
                 if (indicator > 0)
                     higherOrderArguments.Add(argumentIndex);
             }
-            context.KnowledgeBase.DeclareHigherOrderArguments(predicate.Functor, predicate.Arity, higherOrderArguments.ToArray());
+            context.KnowledgeBase.DeclareHigherOrderArguments(predicate.PredicateIndicator, higherOrderArguments.ToArray());
             yield return CutState.Continue;
         }
 
@@ -1389,7 +1389,7 @@ namespace Prolog
             return (args, context) => DeclarationDriver(handler, args, context);
         }
 
-        private delegate void DeclarationHandler(Symbol functor, int arity, PrologContext context);
+        private delegate void DeclarationHandler(PredicateIndicator p, PrologContext context);
 
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private static IEnumerable<CutState> DeclarationDriver(DeclarationHandler handler, object[] args,
@@ -1414,13 +1414,7 @@ namespace Prolog
                     // List argument
                     while (t != null)
                     {
-                        indicator = t.Argument(0);
-                        Symbol s = Term.PredicateIndicatorFunctor(indicator);
-                        int arity = Term.PredicateIndicatorArity(indicator); 
-                        if (s != null)
-                            handler(s, arity, context);
-                        else
-                            throw new ArgumentException("Argument must be a symbol or list of symbols.");
+                        handler(PredicateIndicator.FromExpression(t.Argument(0)), context);
                         object rest = t.Argument(1);
                         if (rest == null)
                             t = null;
@@ -1434,15 +1428,8 @@ namespace Prolog
                 }
                 else
                 {
-                    Symbol s = Term.PredicateIndicatorFunctor(indicator);
-                    int arity = Term.PredicateIndicatorArity(indicator);
-                    if (s != null)
-                    {
-                        handler(s, arity, context);
-                        yield return CutState.Continue;
-                    }
-                    else
-                        throw new ArgumentException("Argument must be a symbol or list of symbols.");
+                    handler(PredicateIndicator.FromExpression(indicator), context);
+                    yield return CutState.Continue;
                 }
             }
         }
@@ -1552,12 +1539,8 @@ namespace Prolog
                     context.Output.Write(context.KnowledgeBase.Source);
                     break;
                 case 1:
-                    object indicator = Term.Deref(args[0]);
-                    Symbol s = Term.PredicateIndicatorFunctor(indicator);
-                    int arity = Term.PredicateIndicatorArity(indicator);
-                    if (s == null)
-                        throw new ArgumentTypeException("listing", "name", args[0], typeof (Symbol));
-                    context.Output.Write(context.KnowledgeBase.SourceFor(s, arity));
+                    var p = PredicateIndicator.FromExpression(args[0]);
+                    context.Output.Write(context.KnowledgeBase.SourceFor(p));
                     break;
 
                 default:

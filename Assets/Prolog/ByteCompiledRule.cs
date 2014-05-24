@@ -33,7 +33,7 @@ namespace Prolog
                 head = Term.Structurify(term, "Bad rule head");
                 body = new Structure[0];
             }
-            return new ByteCompiledRule(KnowledgeBase.Global.EntryForStoring(head.Functor, head.Arity), head, body, "none", 1);
+            return new ByteCompiledRule(KnowledgeBase.Global.EntryForStoring(head.PredicateIndicator), head, body, "none", 1);
         }
 
         /// <summary>
@@ -686,7 +686,7 @@ namespace Prolog
                 }
                 else
                 {
-                    EmitUShort(PredicateTable.IndexOf(this.knowledgeBase.EntryForStoring(goal.Functor, goal.Arity)));
+                    EmitUShort(PredicateTable.IndexOf(this.knowledgeBase.EntryForStoring(goal.PredicateIndicator)));
                 }
                 // Call arguments
                 for (int i = 0; i < goal.Arity; i++)

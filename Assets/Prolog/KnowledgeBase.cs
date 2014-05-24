@@ -75,7 +75,7 @@ namespace Prolog
         /// <summary>
         /// The actual database of KnowledgeBaseEntry objects, indexed by functor
         /// </summary>
-        readonly Dictionary<Symbol, PredicateInfo[]> db = new Dictionary<Symbol, PredicateInfo[]>();
+        readonly Dictionary<PredicateIndicator, PredicateInfo> db = new Dictionary<PredicateIndicator, PredicateInfo>();
 
         /// <summary>
         /// List of other knowledge bases this KB should consult when trying to prove goals
@@ -207,7 +207,7 @@ namespace Prolog
         // ReSharper disable once InconsistentNaming
         IEnumerable<CutState> ProveFromDB(Symbol functor, object[] args, PrologContext context)
         {
-            PredicateInfo info = GetPredicateInfo(this, functor, args.Length);
+            PredicateInfo info = GetPredicateInfo(this, new PredicateIndicator(functor, args.Length));
             if (info == null)
             {
                 if (ErrorOnUndefined)
@@ -222,74 +222,72 @@ namespace Prolog
         /// <summary>
         /// True if the specified functor/arity is undefined.
         /// </summary>
-        public bool Undefined(Symbol functor, int arity)
+        public bool Undefined(PredicateIndicator p)
         {
-            if (PrologPrimitives.IsDefined(functor, arity))
+            if (PrologPrimitives.IsDefined(p))
                 return false;
-            if (CheckForPredicateInfoInThisKB(functor, arity) != null)
+            if (CheckForPredicateInfoInThisKB(p) != null)
                 return false;
             foreach (KnowledgeBase import in imports)
-                if (!import.Undefined(functor, arity))
+                if (!import.Undefined(p))
                     return false;
             return true;
         }
 
-        static PredicateInfo GetPredicateInfo(KnowledgeBase kb, Symbol functor, int arity)
+        static PredicateInfo GetPredicateInfo(KnowledgeBase kb, PredicateIndicator p)
         {
             PredicateInfo result;
-            if ((result = kb.CheckForPredicateInfoInThisKB(functor, arity)) != null)
+            if ((result = kb.CheckForPredicateInfoInThisKB(p)) != null)
                 return result;
             foreach (KnowledgeBase import in kb.imports)
-                if ((result = GetPredicateInfo(import, functor, arity)) != null)
+                if ((result = GetPredicateInfo(import, p)) != null)
                     return result;
             return null;
         }
 
         PredicateInfo CheckForPredicateInfoInThisKB(Symbol functor, int arity)
         {
-            PredicateInfo[] entries;
-            if (!db.TryGetValue(functor, out entries))
-                return null;
-            if (arity+1 > entries.Length)
-                return null;
-            return entries[arity];
+            return CheckForPredicateInfoInThisKB(new PredicateIndicator(functor, arity));
         }
 
-        internal PredicateInfo CheckForPredicateInfo(Symbol functor, int arity)
+        PredicateInfo CheckForPredicateInfoInThisKB(PredicateIndicator p)
         {
-            PredicateInfo info = CheckForPredicateInfoInThisKB(functor, arity);
+            PredicateInfo entry;
+            if (!db.TryGetValue(p, out entry))
+                return null;
+
+            return entry;
+        }
+
+        internal PredicateInfo CheckForPredicateInfo(PredicateIndicator p)
+        {
+            PredicateInfo info = CheckForPredicateInfoInThisKB(p);
             if (info != null)
                 return info;
             foreach (KnowledgeBase import in imports)
-                if ((info = import.CheckForPredicateInfo(functor, arity)) != null)
+                if ((info = import.CheckForPredicateInfo(p)) != null)
                     return info;
             return null;
         }
 
-        internal PredicateInfo EntryForStoring(Symbol functor, int arity)
+        internal PredicateInfo EntryForStoring(PredicateIndicator p)
         {
-            PredicateInfo[] entries;
-            if (!db.TryGetValue(functor, out entries))
+            PredicateInfo entry;
+            if (!db.TryGetValue(p, out entry))
             {
-                db[functor] = entries = new PredicateInfo[arity+1];
+                db[p] = entry = new PredicateInfo(p.Functor, p.Arity, this);
             }
-            else if (arity+1>entries.Length)
-            {
-                var newEntries = new PredicateInfo[arity+1];
-                entries.CopyTo(newEntries, 0);
-                db[functor] = entries = newEntries;
-            }
-            return entries[arity] ?? (entries[arity] = new PredicateInfo(functor, arity, this));
+            return entry;
         }
 
-        internal List<KnowledgeBaseEntry> EntryListForStoring(Symbol functor, int arity)
+        internal List<KnowledgeBaseEntry> EntryListForStoring(PredicateIndicator p)
         {
-            return EntryForStoring(functor, arity).Entries;
+            return EntryForStoring(p).Entries;
         }
 
         internal IEnumerable<CutState> FindClauses(Structure head, object body)
         {
-            PredicateInfo i = CheckForPredicateInfo(head.Functor, head.Arguments.Length);
+            PredicateInfo i = CheckForPredicateInfo(head.PredicateIndicator);
             return (i==null)?PrologPrimitives.FailDriver():i.FindClauses(head, body);
         }
 
@@ -301,14 +299,16 @@ namespace Prolog
             get
             {
                 foreach (var pair in db)
-                    foreach (PredicateInfo info in pair.Value)
-                        if (info != null && info.Entries != null)
-                            foreach (var kbEntry in info.Entries)
-                            {
-                                var rule = kbEntry as KnowledgeBaseRule;
-                                if (rule != null)
-                                    yield return rule;
-                            }
+                {
+                    PredicateInfo info = pair.Value;
+                    if (info != null && info.Entries != null)
+                        foreach (var kbEntry in info.Entries)
+                        {
+                            var rule = kbEntry as KnowledgeBaseRule;
+                            if (rule != null)
+                                yield return rule;
+                        }
+                }
             }
         }
 
@@ -320,8 +320,7 @@ namespace Prolog
             get
             {
                 foreach (var pair in db)
-                    foreach (PredicateInfo info in pair.Value)
-                        yield return info;
+                    yield return pair.Value;
             }
         }
 
@@ -348,11 +347,11 @@ namespace Prolog
                                                                       Term.PredicateIndicatorExpression(head))));
 
             KnowledgeBaseRule assertion = KnowledgeBaseRule.FromTerm(structure, checkSingletons, Prolog.CurrentSourceFile, Prolog.CurrentSourceLineNumber);
-            PredicateInfo info = EntryForStoring(head.Functor, head.Arguments.Length);
+            PredicateInfo info = EntryForStoring(head.PredicateIndicator);
             PredicateInfo parentInfo;
             if (!info.Shadow
                 && this.Parent != null
-                && (parentInfo = this.Parent.CheckForPredicateInfoInThisKB(head.Functor, head.Arguments.Length)) != null
+                && (parentInfo = this.Parent.CheckForPredicateInfoInThisKB(head.PredicateIndicator)) != null
                 && !parentInfo.External)
                 throw new PrologException(new Structure("error",
                                                         new Structure("permission_error",
@@ -413,7 +412,7 @@ namespace Prolog
         /// </summary>
         public void RetractAll(Structure head)
         {
-            EntryForStoring(head.Functor, head.Arguments.Length).RetractAll(head);
+            EntryForStoring(head.PredicateIndicator).RetractAll(head);
         }
 
         /// <summary>
@@ -428,7 +427,7 @@ namespace Prolog
 
         internal IEnumerable<CutState> Retract(Structure head, object body)
         {
-            return EntryForStoring(head.Functor, head.Arguments.Length).Retract(head, body);
+            return EntryForStoring(head.PredicateIndicator).Retract(head, body);
         }
 
         internal IEnumerable<CutState> Retract(object term)
@@ -456,85 +455,85 @@ namespace Prolog
         /// Erases all entries for the specified predicate.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor")]
-        public void Forget(Symbol functor, int arity)
+        public void Forget(PredicateIndicator p)
         {
-            EntryListForStoring(functor, arity).Clear();
+            EntryListForStoring(p).Clear();
         }
 
         /// <summary>
         /// Declares that this predicate is randomizable.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Randomizable")]
-        public void DeclareRandomizable(Symbol functor, int arity)
+        public void DeclareRandomizable(PredicateIndicator p)
         {
-            EntryForStoring(functor, arity).Randomizable = true;
+            EntryForStoring(p).Randomizable = true;
         }
 
         /// <summary>
         /// Declares that rules for this predicate within this KB are allowed and override those in the parent KB.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Randomizable")]
-        public void DeclareShadow(Symbol functor, int arity)
+        public void DeclareShadow(PredicateIndicator p)
         {
-            EntryForStoring(functor, arity).Shadow = true;
+            EntryForStoring(p).Shadow = true;
         }
 
         /// <summary>
         /// Declares that this predicate is either optional or is defined in another KB.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Randomizable")]
-        public void DeclareExternal(Symbol functor, int arity)
+        public void DeclareExternal(PredicateIndicator p)
         {
-            EntryForStoring(functor, arity).External = true;
+            EntryForStoring(p).External = true;
         }
 
         /// <summary>
         /// Declares that this predicate is called from outside, so don't generate unreferenced predicate warnings.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Randomizable")]
-        public void DeclarePublic(Symbol functor, int arity)
+        public void DeclarePublic(PredicateIndicator p)
         {
-            EntryForStoring(functor, arity).Public = true;
+            EntryForStoring(p).Public = true;
         }
 
         /// <summary>
         /// Declares that this predicate may call its arguments.  Used by the static checker to help filter out unreferenced predicates.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Randomizable")]
-        public void DeclareHigherOrderArguments(Symbol functor, int arity, int[] arguments)
+        public void DeclareHigherOrderArguments(PredicateIndicator p, int[] arguments)
         {
             foreach (var i in arguments)
-                if (i>=arity)
+                if (i>=p.Arity)
                     throw new ArgumentException("Argument index larger than arity of predicate: "+i);
                 else if (i < 0)
                     throw new ArgumentException("Argument index cannot be less than zero: " + i);
-            EntryForStoring(functor, arity).HigherOrderArguments = arguments;
+            EntryForStoring(p).HigherOrderArguments = arguments;
         }
 
         /// <summary>
         /// Declares that this predicate is randomizable.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor")]
-        public void DeclareTraced(Symbol functor, int arity)
+        public void DeclareTraced(PredicateIndicator p)
         {
-            if (CheckForPredicateInfoInThisKB(functor, arity) != null)
-                EntryForStoring(functor, arity).Trace = true;
+            if (CheckForPredicateInfoInThisKB(p) != null)
+                EntryForStoring(p).Trace = true;
             else if (this.Parent != null)
-                this.Parent.DeclareTraced(functor, arity);
+                this.Parent.DeclareTraced(p);
             else
-                throw new UndefinedPredicateException(functor, arity);
+                throw new UndefinedPredicateException(p);
         }
 
         /// <summary>
         /// Declares that this predicate is randomizable.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor")]
-        public void DeclareUntraced(Symbol functor, int arity)
+        public void DeclareUntraced(PredicateIndicator p)
         {
-            if (CheckForPredicateInfoInThisKB(functor, arity) != null)
-                EntryForStoring(functor, arity).Trace = false;
+            if (CheckForPredicateInfoInThisKB(p) != null)
+                EntryForStoring(p).Trace = false;
             else if (this.Parent != null)
-                throw new UndefinedPredicateException(functor, arity);
+                throw new UndefinedPredicateException(p);
         }
         #endregion
 
@@ -543,18 +542,18 @@ namespace Prolog
         /// Compiles the predicate
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Randomizable")]
-        public void Compile(Symbol functor, int arity)
+        public void Compile(PredicateIndicator p)
         {
-            EntryForStoring(functor, arity).Compile();
+            EntryForStoring(p).Compile();
         }
 
         /// <summary>
         /// Disassembles the copmiled code of the predicate
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Randomizable")]
-        public void Disassemble(Symbol functor, int arity)
+        public void Disassemble(PredicateIndicator p)
         {
-            EntryForStoring(functor, arity).Disassemble();
+            EntryForStoring(p).Disassemble();
         }
         #endregion
 
@@ -628,9 +627,11 @@ namespace Prolog
                 // Remove any clauses asserted previously by this file.
                 if (Prolog.CurrentSourceFile != null)
                     foreach (var pair in db)
-                        foreach (var info in pair.Value)
-                            if (info != null)
-                                info.Entries.RemoveAll(kbe => kbe.SourceFile == Prolog.CurrentSourceFile);
+                    {
+                        var info = pair.Value;
+                        if (info != null)
+                            info.Entries.RemoveAll(kbe => kbe.SourceFile == Prolog.CurrentSourceFile);
+                    }
             }
 
             Consult(inStream);
@@ -824,20 +825,20 @@ namespace Prolog
                 var terms = new List<Structure>();
                 foreach (var pair in db)
                 {
-                    foreach (var info in pair.Value)
-                        if (info != null)
-                            foreach (var entry in info.Entries)
+                    var info = pair.Value;
+                    if (info != null)
+                        foreach (var entry in info.Entries)
+                        {
+                            var rule = entry as KnowledgeBaseRule;
+                            if (rule != null)
                             {
-                                var rule = entry as KnowledgeBaseRule;
-                                if (rule != null)
-                                {
-                                    var head = new Structure(pair.Key, rule.HeadArgs);
-                                    if (rule.BodyGoals == null || rule.BodyGoals.Length == 0)
-                                        terms.Add(head);
-                                    else
-                                        terms.Add(new Structure(Symbol.Implication, head, Commafy(rule.BodyGoals)));
-                                }
+                                var head = new Structure(pair.Key.Functor, rule.HeadArgs);
+                                if (rule.BodyGoals == null || rule.BodyGoals.Length == 0)
+                                    terms.Add(head);
+                                else
+                                    terms.Add(new Structure(Symbol.Implication, head, Commafy(rule.BodyGoals)));
                             }
+                        }
                 }
                 return terms;
             }
@@ -875,18 +876,19 @@ namespace Prolog
         /// Returns the source code for the current definition of functor.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "functor")]
-        public string SourceFor(Symbol functor, int arity)
+        public string SourceFor(PredicateIndicator p)
         {
-            if (functor == null) throw new ArgumentNullException("functor");
+            // ReSharper disable once NotResolvedInText
+            if (p.Functor == null) throw new ArgumentNullException("functor");
             var s = new StringWriter();
             var writer = new ISOPrologWriter(s);
-            var predicateInfo = CheckForPredicateInfoInThisKB(functor, arity);
+            var predicateInfo = CheckForPredicateInfoInThisKB(p);
             if (predicateInfo == null)
-                throw new ArgumentException(string.Format("Unknown predicate: {0}/{1}.",functor.Name, arity));
+                throw new ArgumentException(string.Format("Unknown predicate: {0}.", p));
             foreach (var knowledgeBaseEntry in predicateInfo.Entries)
             {
                 var rule = (KnowledgeBaseRule)knowledgeBaseEntry;
-                var head = new Structure(functor, rule.HeadArgs);
+                var head = new Structure(p.Functor, rule.HeadArgs);
                 Structure structure;
                 if (rule.BodyGoals == null || rule.BodyGoals.Length == 0)
                     structure = head;

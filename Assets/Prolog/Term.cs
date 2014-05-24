@@ -858,21 +858,5 @@ namespace Prolog
         {
             return new Structure(Symbol.Slash, functor, arity);
         }
-
-        internal static Symbol PredicateIndicatorFunctor(object expression)
-        {
-            var s = expression as Structure;
-            if (s == null || (!s.IsFunctor(Symbol.Slash, 2) && !s.IsFunctor(Symbol.SlashSlash, 2)) || !(s.Argument(0) is Symbol))
-                throw new ArgumentException("Predicate indicator should be of the form functor/arity, but got "+ISOPrologWriter.WriteToString(expression));
-            return (Symbol) s.Argument(0);
-        }
-
-        internal static int PredicateIndicatorArity(object expression)
-        {
-            var s = expression as Structure;
-            if (s == null || (!s.IsFunctor(Symbol.Slash, 2) && !s.IsFunctor(Symbol.SlashSlash, 2)) || !(s.Argument(1) is int))
-                throw new ArgumentException("Predicate indicator should be of the form functor/arity, but got " + ISOPrologWriter.WriteToString(expression));
-            return s.Functor == Symbol.Slash ? (int)s.Argument(1) : 2+(int)s.Argument(1);
-        }
     }
 }

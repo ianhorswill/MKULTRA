@@ -10,14 +10,21 @@ namespace Prolog
         /// <summary>
         /// The offending predicate in question
         /// </summary>
-        public Structure Predicate { get; private set; }
+        public PredicateIndicator Predicate { get; private set; }
         /// <summary>
         /// Thrown to signal that a predicate used as a goal does not appear in the database.
         /// </summary>
-        public UndefinedPredicateException(Symbol functor, int arity)
+        public UndefinedPredicateException(PredicateIndicator p)
         {
-            Predicate = new Structure(Symbol.Intern("/"), functor, arity);
+            Predicate = p;
         }
+
+        /// <summary>
+        /// Thrown to signal that a predicate used as a goal does not appear in the database.
+        /// </summary>
+        public UndefinedPredicateException(Symbol functor, int arity) 
+            : this(new PredicateIndicator(functor, arity))
+        { }
 
         /// <summary>
         /// Human-readable message describing the exception
@@ -26,7 +33,7 @@ namespace Prolog
         {
             get
             {
-                return String.Format("Undefined predicate: {0}/{1}", Predicate.Arguments[0], Predicate.Arguments[1]);
+                return String.Format("Undefined predicate: {0}", Predicate);
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace Prolog
+﻿using System;
+
+namespace Prolog
 {
     public struct PredicateIndicator
     {
@@ -9,6 +11,17 @@
         {
             this.Functor = functor;
             this.Arity = arity;
+        }
+
+        public static PredicateIndicator FromExpression(object expression)
+        {
+            var s = Term.Deref(expression) as Structure;
+            if (s == null
+                || (!s.IsFunctor(Symbol.Slash, 2) && !s.IsFunctor(Symbol.SlashSlash, 2))
+                || !(s.Argument(0) is Symbol)
+                || !(s.Argument(1) is int))
+                throw new ArgumentException("Predicate indicator should be of the form functor/arity, but got "+ISOPrologWriter.WriteToString(expression));
+            return new PredicateIndicator((Symbol)s.Argument(0), (int)s.Argument(1));
         }
 
         public PredicateIndicator(Structure s) : this(s.Functor, s.Arity) { }
