@@ -392,6 +392,11 @@ namespace Prolog
             DelegateUtils.Docstrings[implementationDelegate] = docstring;
         }
 
+        public static IList<object> Arglist(Symbol functor)
+        {
+            return Implementations[functor].Arglist();
+        }
+
         /// <summary>
         /// Table of implementations of different Prolog primitive predicates.
         /// </summary>

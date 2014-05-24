@@ -51,7 +51,7 @@ namespace Prolog
         /// The arguments of the specified procedure.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "d"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Arglist")]
-        public static IEnumerable<object> Arglist(this Delegate d)
+        public static IList<object> Arglist(this Delegate d)
         {
             return Arglists[d];
         }
@@ -65,7 +65,7 @@ namespace Prolog
             return Docstrings[d];
         }
 
-        internal static Dictionary<Delegate, IEnumerable<object>> Arglists = new Dictionary<Delegate, IEnumerable<object>>();
+        internal static Dictionary<Delegate, IList<object>> Arglists = new Dictionary<Delegate, IList<object>>();
         internal static Dictionary<Delegate, string> Docstrings = new Dictionary<Delegate, string>();
         internal static Dictionary<Delegate, string> NamedProcedureTable = new Dictionary<Delegate, string>();
     }

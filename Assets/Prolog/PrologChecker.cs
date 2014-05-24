@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Prolog
 {
@@ -168,16 +169,37 @@ namespace Prolog
 
                 default:
                     if (PrologPrimitives.IsDefined(predicateIndicator))
-                        return;
-                    var predicate = kb.CheckForPredicateInfo(predicateIndicator);
-                    if (predicate == null)
-                        WarnUndefined(rule, functor, arity);
+                    {
+                        var arglist = PrologPrimitives.Arglist(predicateIndicator.Functor);
+                        for (int i = 0; i < Math.Min(predicateIndicator.Arity,arglist.Count); i++)
+                        {
+                            var argSym = arglist[i] as Symbol;
+                            if (argSym != null)
+                            {
+                                var arg = argSym.Name;
+                                if (arg[0] == ':')
+                                    WalkGoal(kb, rule, goal.Argument(i));
+                                else if (arg == "..." && arglist[i - 1] is string && ((string)arglist[i - 1])[0] == ':')
+                                {
+                                    // Predicate accepts a rest arg of goals
+                                    for (int j = i; j < predicateIndicator.Arity; j++)
+                                        WalkGoal(kb, rule, goal.Argument(j));
+                                }
+                            }
+                        }
+                    }
                     else
                     {
-                        MarkReferenced(predicate);
-                        if (predicate.HigherOrderArguments != null)
-                            foreach (int argIndex in predicate.HigherOrderArguments)
-                                WalkGoal(kb, rule, goal.Argument(argIndex));
+                        var predicate = kb.CheckForPredicateInfo(predicateIndicator);
+                        if (predicate == null)
+                            WarnUndefined(rule, functor, arity);
+                        else
+                        {
+                            MarkReferenced(predicate);
+                            if (predicate.HigherOrderArguments != null)
+                                foreach (int argIndex in predicate.HigherOrderArguments)
+                                    WalkGoal(kb, rule, goal.Argument(argIndex));
+                        }
                     }
                     break;
             }
