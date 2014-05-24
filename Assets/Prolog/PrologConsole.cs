@@ -20,6 +20,7 @@ namespace Prolog
                        CurrentGameObject = DefaultGameObject??gameObject
                    };
             Prolog.TraceOutput = Out;
+            PrologChecker.Check();
         }
 
         protected override void Run(string command)

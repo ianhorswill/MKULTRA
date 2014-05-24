@@ -350,11 +350,11 @@ namespace Prolog
             DefinePrimitive("read", ReadImplementation, "other predicates", "Reads an expression from an open stream.",
                             "*stream", "-term");
             DefinePrimitive(ELProlog.NonExclusiveOperator, ELNonExclusiveQueryImplementation, "eremic logic",
-                            "Succeeds if EXPRESSION can be matched against the EL knowledgebase.",
-                            "*expression");
+                            "Succeeds if expression can be matched against the EL knowledgebase.",
+                            "parent", "key");
             DefinePrimitive(ELProlog.ExclusiveOperator, ELExclusiveQueryImplementation, "eremic logic",
-                            "Succeeds if EXPRESSION can be matched against the EL knowledgebase.",
-                            "*expression");
+                            "Succeeds if expression can be matched against the EL knowledgebase.",
+                            "parent", "key");
             DefinePrimitive(">>", ELNodeQueryImplementation, "eremic logic",
                             "Binds VARIABLE to the subtree of the EL KB matching EXPRESSION.",
                             "*expression", "-variable");

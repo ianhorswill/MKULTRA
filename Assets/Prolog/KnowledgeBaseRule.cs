@@ -107,7 +107,7 @@ namespace Prolog
             if (checkSingletons && singletons.Count > 0)
             {
                 foreach (var v in singletons)
-                    PrintWarning(ruleHead, source, line, "singleton variable: {0}", v.Name);
+                    PrintWarning("singleton variable: {0}", v.Name);
             }
             Functor = ruleHead.Functor;
         }
@@ -196,12 +196,12 @@ namespace Prolog
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         protected List<LogicVariable> FreeVariables;
 
-        internal void PrintWarning(Structure ruleHead, string source, int line, string formatString, params object[] formatArgs)
+        internal void PrintWarning(string formatString, params object[] formatArgs)
         {
             //Repl.StartWarnings();
             Debug.LogException(
                 new PrologWarning(string.Format(formatString, formatArgs),
-                string.Format("{0} (at {1}:{2})\n", ISOPrologWriter.WriteToString(ruleHead), source, line))
+                string.Format("{0} (at {1}:{2})\n", ISOPrologWriter.WriteToString(this.Head), this.SourceFile, this.SourceLineNumber))
                 );
             //Console.Write(" in predicate {0}:{1}/{2}.", kb.Name, HeadFunctor, HeadArity);
             
