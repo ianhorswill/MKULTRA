@@ -83,43 +83,44 @@ public class CharacterSteeringController : BindingBehaviour
     //private bool collisionDetected;
     Vector2? CollisionAvoidanceSteering()
     {
-        float firstCollisionTime = 4;
-        Vector2 firstCollisionOffset = Vector2.zero;
-        foreach (var otherCharacter in Registry<CharacterSteeringController>())
-        {
-            if (otherCharacter != this)
-            {
-                var time = TimeOfClosestApproach(this, otherCharacter);
-                //collisionTime = time;
-                if (time > 0 && time < firstCollisionTime)
-                {
-                    var myPosition = PredictedPosition(this, time);
-                    var theirPosition = this.PredictedPosition(otherCharacter, time);
-                    var offset = myPosition - theirPosition;
-                    if (offset.magnitude < 1.5)
-                    {
-                        firstCollisionTime = time;
-                        firstCollisionOffset = offset;
-                    }
-                }
-            }
-        }
+        return null;
+        //float firstCollisionTime = 4;
+        //Vector2 firstCollisionOffset = Vector2.zero;
+        //foreach (var otherCharacter in Registry<CharacterSteeringController>())
+        //{
+        //    if (otherCharacter != this)
+        //    {
+        //        var time = TimeOfClosestApproach(this, otherCharacter);
+        //        //collisionTime = time;
+        //        if (time > 0 && time < firstCollisionTime)
+        //        {
+        //            var myPosition = PredictedPosition(this, time);
+        //            var theirPosition = this.PredictedPosition(otherCharacter, time);
+        //            var offset = myPosition - theirPosition;
+        //            if (offset.magnitude < 1.5)
+        //            {
+        //                firstCollisionTime = time;
+        //                firstCollisionOffset = offset;
+        //            }
+        //        }
+        //    }
+        //}
 
-        //collisionDetected = false;
-        if (firstCollisionTime > 3)
-            return null;
+        ////collisionDetected = false;
+        //if (firstCollisionTime > 3)
+        //    return null;
 
-        //collisionDetected = true;
-        if (this.rigidbody2D.velocity == Vector2.zero)
-        {
-            return firstCollisionOffset.normalized.PerpCounterClockwise();
-        }
-        var separation = firstCollisionOffset.magnitude;
-        var escapeDirection = firstCollisionOffset / separation;
-        if (separation < 2)
-            escapeDirection += escapeDirection.PerpClockwise().normalized;
+        ////collisionDetected = true;
+        //if (this.rigidbody2D.velocity == Vector2.zero)
+        //{
+        //    return firstCollisionOffset.normalized.PerpCounterClockwise();
+        //}
+        //var separation = firstCollisionOffset.magnitude;
+        //var escapeDirection = firstCollisionOffset / separation;
+        //if (separation < 2)
+        //    escapeDirection += escapeDirection.PerpClockwise().normalized;
 
-        return 0.5f * this.MaxForce * escapeDirection;
+        //return 0.5f * this.MaxForce * escapeDirection;
     }
 
     private Vector2 PredictedPosition(Component sprite, float time)
