@@ -2624,7 +2624,7 @@ Animator:
   m_GameObject: {fileID: 338102926}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1e7e47278a86d1f46816bac20dec6812, type: 2}
+  m_Controller: {fileID: 9100000, guid: ea4669a642a59924e87f7c883a4c72c6, type: 2}
   m_CullingMode: 0
   m_ApplyRootMotion: 1
   m_AnimatePhysics: 0
@@ -2650,7 +2650,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortingLayerID: 0
-  m_Sprite: {fileID: 21300000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &338102929
 Transform:
@@ -2717,6 +2717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LogActions: 0
+  dnaCount: 0
   SpeechBubbleStyle:
     m_Name: 
     m_Normal:
@@ -13324,7 +13325,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1924982940}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: -4, z: -10}
+  m_LocalPosition: {x: 7, y: -4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -13933,6 +13934,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LogActions: 0
+  dnaCount: 0
   SpeechBubbleStyle:
     m_Name: 
     m_Normal:
