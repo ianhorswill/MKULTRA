@@ -29,7 +29,6 @@ conversational_move(C, dialog(X, Y, Act),
 		    ignore(handle_transition(C, Act))) :-
     assert(C/last_dialog:dialog(X, Y, Act)).
 
-:- public handle_transition/2.
 handle_transition(C, Act) :-
     C/state:CurrentState,
     dialog_transition(CurrentState, Act, NewState, _),
@@ -42,9 +41,3 @@ dialog_transition(normal, parting, closing, 100).
 %dialog_transition(closing, parting, end, 0).
 
 %% CONVERSATION BODY
-
-propose_action(conversation, C, stop) :-
-    /motor_state/walking_to,
-    C/state:normal.
-
-score_action(conversation, _, stop, 200).

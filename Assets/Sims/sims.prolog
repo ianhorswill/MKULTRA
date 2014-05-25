@@ -1,3 +1,10 @@
+:- public notify_event/1, 
+    world_object/1, nearest/2,
+	actions/0, next_action/1, propose_once/1,
+    do_all_character_initializations/0. 
+:- external propose_action/3.
+:- higher_order on_event(0, 0, 0, 1).
+
 notify_event(Event) :-
     findall(Handler,
 	    (concern(Concern, Type),

@@ -1,3 +1,5 @@
+:- public begin_concern/1, begin_concern/2, begin_child_concern/4,
+    kill_concern/1, kill_children/1.
 :- external on_enter_state/2, on_exit_state/2, on_kill/2.
 
 character_initialization :-
@@ -43,10 +45,6 @@ allocate_UID(ChildUID) :-
     begin(/next_uid:ChildUID,
 	  NextUID is ChildUID+1,
 	  assert(/next_uid:NextUID)).
-
-kill_all_concerns :-
-    Root is $root,
-    kill_children(Root).
 
 concern(Concern, Type) :-
     concern(Concern),
