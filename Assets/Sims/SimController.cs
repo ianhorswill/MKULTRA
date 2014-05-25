@@ -342,8 +342,11 @@ public class SimController : BindingBehaviour
         if (!this.sleepUntil.HasValue || this.sleepUntil.Value <= Time.time)
         {
             this.DoNextAction();
+            this.DecisionCycleCount++;
         }
     }
+
+    public int DecisionCycleCount;
 
     void DoNextAction()
     {
@@ -421,9 +424,9 @@ public class SimController : BindingBehaviour
                 throw new InvalidOperationException("Unknown action: " + ISOPrologWriter.WriteToString(action));
             switch (sym.Name)
             {
-                case "stop":
-                    steering.Stop();
-                    break;
+                //case "stop":
+                //    steering.Stop();
+                //    break;
 
                 default:
                     throw new InvalidOperationException("Unknown action: " + ISOPrologWriter.WriteToString(action));
@@ -483,15 +486,19 @@ public class SimController : BindingBehaviour
         if (this.currentPath != null)
         {
             // Update the steering
-            if (this.currentPath.UpdateSteering(this.steering))
+            if (this.currentPath.UpdateSteering(this.steering)
+                || Vector2.Distance(this.transform.position, currentDestination.transform.position) <1)
             {
                 // Finished the path
                 this.CurrentlyDockedWith = CurrentDestination;
                 ELNode.Store(perceptionRoot/SDockedWith%CurrentlyDockedWith);
                 ELNode.Store(lastDestination % this.CurrentDestination);
-                this.QueueEvent("arrived_at", this.CurrentDestination);
                 this.currentPath = null;
                 this.currentDestination = null;
+                (motorRoot / SWalkingTo).DeleteSelf();
+                this.Face(CurrentlyDockedWith);
+                this.steering.Stop();
+                this.QueueEvent("arrived_at", this.CurrentlyDockedWith);
             }
         }
     }

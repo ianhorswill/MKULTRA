@@ -227,7 +227,7 @@ public class CharacterSteeringController : BindingBehaviour
             if (!this.currentState.StartsWith("Face"))
             {
                 this.currentState = "Face" + this.currentState;
-                this.animator.Play(this.currentState);
+                this.animator.CrossFade(this.currentState, 0f);
             }
         }
         else
@@ -246,7 +246,7 @@ public class CharacterSteeringController : BindingBehaviour
                 currentState = "North";
             else
                 currentState = "South";
-            this.animator.Play(currentState);
+            this.animator.CrossFade(currentState, 0);
         }
     }
 
@@ -261,7 +261,7 @@ public class CharacterSteeringController : BindingBehaviour
             currentState = "FaceNorth";
         else
             currentState = "FaceSouth";
-        this.animator.Play(currentState);
+        this.animator.CrossFade(currentState,0);
     }
     #endregion
 
