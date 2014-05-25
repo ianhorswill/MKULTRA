@@ -1,3 +1,5 @@
+:- public why/1, why_not/1.
+
 why(P) :-
 	clause(P,B),
 	copy_term((P:-B), Rule),

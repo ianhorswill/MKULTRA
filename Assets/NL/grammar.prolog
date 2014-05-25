@@ -4,7 +4,7 @@
 :- randomizable utterance//1, stock_phrase//1, sentence//1.
 
 utterance(DialogAct) --> stock_phrase(DialogAct).
-utterance(DialogAct) --> sentence(DialogAct).
+%utterance(DialogAct) --> sentence(DialogAct).
 %utterance(DialogAct) --> answer_fragment(DialogAct).
 
 stock_phrase(interruption) --> [excuse, me].
