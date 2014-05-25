@@ -7,11 +7,23 @@
 
 notify_event(Event) :-
     findall(Handler,
-	    (concern(Concern, Type),
-	     on_event(Type, Concern, Event, Handler)),
+	    event_handler(_, _, Event, Handler), 
 	    Handlers),
+    maybe_log_event(Event, Handlers),
     forall(member(Handler, Handlers),
 	   (Handler -> true ; log(handler_failed(Handler)))).
+
+event_handler(Type, Concern, Event, Handler) :-
+    concern(Concern, Type),
+    on_event(Type, Concern, Event, Handler).
+
+maybe_log_event(Event, Handlers) :-
+    log_events(Event),
+    Me is $game_object,
+    log(event(Me, Event, Handlers)).
+maybe_log_event(_, _).
+
+log_events(begin(X)) :- log_events(X).
 
 next_action(Action) :-
     best_action(Action).

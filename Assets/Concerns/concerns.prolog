@@ -1,5 +1,5 @@
 :- public begin_concern/1, begin_concern/2, begin_child_concern/4,
-    kill_concern/1, kill_children/1.
+    kill_concern/1, kill_children/1, goto_state/2.
 :- external on_enter_state/2, on_exit_state/2, on_kill/2.
 
 character_initialization :-
@@ -24,7 +24,8 @@ begin_child_concern(Parent, Type, Child, Assertions) :-
 goto_state(Concern, State) :-
     ignore(( Concern/state:OldState,
 	     on_exit_state(Concern, OldState) )),
-    assert(Concern/state:State),
+    Time is $now,
+    assert(Concern/state:State/enter_time:Time),
     Concern/type:Type,
     ignore(on_enter_state(Type, Concern, State)).
 
