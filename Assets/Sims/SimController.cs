@@ -348,10 +348,17 @@ public class SimController : BindingBehaviour
 
     public int DecisionCycleCount;
 
+    public int DecisionCycleAlloc;
     void DoNextAction()
     {
-        var action = new LogicVariable("Action");
-        this.InitiateAction(this.SolveFor(action, new Structure(SNextAction, action)));
+        var actionVar = new LogicVariable("Action");
+
+        var beforeBytes = GC.GetTotalMemory(false);
+        var action = this.SolveFor(actionVar, new Structure(SNextAction, actionVar));
+        var allocBytes = GC.GetTotalMemory(false) - beforeBytes;
+        if (allocBytes > 0)
+            DecisionCycleAlloc = (int)allocBytes;
+        this.InitiateAction(action);
     }
 
     private static readonly Symbol SNextAction = Symbol.Intern("next_action");
