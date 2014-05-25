@@ -36,11 +36,16 @@ namespace Prolog
 
         internal void Start()
         {
-            root = this.KnowledgeBase().ELRoot;
-            displayChildren.Add(root);
+            this.SetKB(this.KnowledgeBase());
             ID = IDCount++;
             WindowTitle = name+" KB";
             viewHeight = WindowRect.height;
+        }
+
+        public void SetKB(KnowledgeBase kb)
+        {
+            root = kb.ELRoot;
+            displayChildren.Add(root);
         }
 
         private bool mouseClicked;

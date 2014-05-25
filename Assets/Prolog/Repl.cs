@@ -185,6 +185,9 @@ namespace Prolog
             CurrentGameObject = newGameObject;
             PrologContext.KnowledgeBase = kb.KnowledgeBase;
             PrologContext.Reset(CurrentGameObject);
+            var eli = UnityEngine.Object.FindObjectOfType<ELInspector>();
+            if (eli != null)
+                eli.SetKB(kb.KnowledgeBase);
             Output.WriteLine("Now using the KB of {0}", gameObjectName);
         }
 
