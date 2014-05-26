@@ -114,6 +114,9 @@ namespace Prolog
             DefinePrimitive("for_all_unique", ForAllUniqueImplementation, "all solutions predicates",
                             "True if GOAL is true given variable bindings of each unique value of TEMPLATE produced by GENERATOR.",
                             "-Template", ":generator", ":goal");
+            DefinePrimitive("generate_unique", GenerateUniqueImplementation, "all solutions predicates",
+                            "Succeeds once for each unique value of TEMPLATE produced by GENERATOR.",
+                            "-Template", ":generator", ":goal");
             DefinePrimitive("findall", FindallImplementation, "all solutions predicates",
                             "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.",
                             "=template", ":goal", "-solutions");
@@ -1183,6 +1186,21 @@ namespace Prolog
                         yield break;
                 }
             yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> GenerateUniqueImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("generate_unique", args, "-Template", ":generator");
+            var template = Term.Deref(args[0]);
+            foreach (var templateValue in SolutionList(context, template, Term.Deref(args[1]), true))
+#pragma warning disable 414, 168, 219
+                // ReSharper disable UnusedVariable
+                foreach (var ignore in Term.Unify(template, templateValue))
+
+                    // ReSharper restore UnusedVariable
+#pragma warning restore 414, 168, 219
+                    yield return CutState.Continue;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals",
