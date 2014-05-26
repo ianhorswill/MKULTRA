@@ -1,5 +1,5 @@
-:- public generate_text/3.
+:- public generate_text/2.
 
-generate_text(DialogAct, _Recipient, Text) :-
+generate_text(DialogAct, Text) :-
     randomize(utterance(DialogAct, Words, [ ])),
     word_list(Text, Words).

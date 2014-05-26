@@ -7,20 +7,12 @@ utterance(DialogAct) --> stock_phrase(DialogAct).
 %utterance(DialogAct) --> sentence(DialogAct).
 %utterance(DialogAct) --> answer_fragment(DialogAct).
 
-stock_phrase(interruption) --> [excuse, me].
-stock_phrase(ack(interruption)) --> [yes, '?'].
+stock_phrase(greet(_,_)) --> [X], { member(X, [hey, hello, hi]) }.
+stock_phrase(greet(_,_)) --> [hi, there].
 
-utterance(ack(greeting)) --> [ack], utterance(greeting).
+stock_phrase(apology(_,_)) --> [sorry].
 
-stock_phrase(greeting) --> [X], { member(X, [hey, hello, hi]) }.
-stock_phrase(greeting) --> [hi, there].
-
-stock_phrase(apology) --> [sorry].
-stock_phrase(ack(greeting)) --> [no, problem].
-stock_phrase(ack(greeting)) --> [quite, alright].
-
-stock_phrase(parting) --> [X], { member(X, [bye, byebye, goodbye]) }.
-stock_phrase(parting) --> [see, you].
-stock_phrase(parting) --> [be, seeing, you].
-utterance(ack(parting)) --> utterance(parting).
+stock_phrase(parting(_,_)) --> [X], { member(X, [bye, byebye, goodbye]) }.
+stock_phrase(parting(_,_)) --> [see, you].
+stock_phrase(parting(_,_)) --> [be, seeing, you].
 

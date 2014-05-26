@@ -1,14 +1,17 @@
 standard_concern(be_polite).
 
-score_action(be_polite, _, dialog(_, _, apology), 100).
-score_action(be_polite, _, dialog(_, _, greeting), 50).
+score_action(greet(_, _), be_polite, _, 50).
 
-on_event(be_polite, _, collision(X),
-	 propose_once(dialog(Me, X, apology))) :-
-    character(X),
+on_event(enter_social_space(Character),
+	 be_polite, C, 
+	 assert(C/should_greet/Character)).
+
+on_event(greet(Me, Character),
+	 be_polite, C,
+	 ignore(retract(C/should_greet/Character))) :-
     Me is $game_object.
 
-on_event(be_polite, _, enter_social_space(Character),
-	 propose_once(dialog(Me, Character, greeting))) :-
+propose_action(greet(Me, Character),
+	       be_polite, C) :-
+    C/should_greet/Character,
     Me is $game_object.
-    

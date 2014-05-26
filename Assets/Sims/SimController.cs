@@ -194,14 +194,6 @@ public class SimController : BindingBehaviour
             this.NotifyEvent(this.GetNextEvent());
     }
 
-    private static readonly Symbol SSleep = Symbol.Intern("sleep");
-
-    private static bool IsSleep(object eventDescription)
-    {
-        var s = eventDescription as Structure;
-        return (s != null && s.IsFunctor(SSleep, 1));
-    }
-
     /// <summary>
     /// Call into Prolog to respond to EVENTDESCRIPTION
     /// </summary>
@@ -389,26 +381,6 @@ public class SimController : BindingBehaviour
                     this.Say(structure.Argument<string>(0));
                     break;
 
-                case "dialog":
-                    // Perform a general dialog action
-                    var recipient = (GameObject)structure.Argument(1);
-                    var dialogAct = structure.Argument(2);
-                    var textVar = new LogicVariable("DialogText");
-                    var text = gameObject.SolveFor(textVar, "generate_text", dialogAct, recipient, textVar);
-                    var textString = text as string;
-                    if (textString == null)
-                        throw new Exception("generate_text returned "+ISOPrologWriter.WriteToString(text)+" for "+ISOPrologWriter.WriteToString(dialogAct));
-                    this.Say(textString);
-
-                    // Tell the other characters
-                    foreach (var node in socialSpace.Children)
-                    {
-                        var character = (GameObject)(node.Key);
-                        if (character != this.gameObject)
-                            character.QueueEvent((Structure)Term.CopyInstantiation(structure));
-                    }
-                    break;
-
                 case "cons":
                     // It's a list of actions to initiate.
                     this.InitiateAction(structure.Argument(0));
@@ -420,27 +392,32 @@ public class SimController : BindingBehaviour
                     break;
 
                 default:
-                    Debug.LogError("Bad structure: " + ISOPrologWriter.WriteToString(structure));
+                    // Assume it's dialog
+                    var textVar = new LogicVariable("DialogText");
+                    var text = gameObject.SolveFor(textVar, "generate_text", structure, textVar);
+                    var textString = text as string;
+                    if (textString == null)
+                        throw new Exception(
+                            "generate_text returned " + ISOPrologWriter.WriteToString(text) + " for "
+                            + ISOPrologWriter.WriteToString(structure));
+
+                    this.Say(textString);
+
+                    // Tell the other characters
+                    foreach (var node in this.socialSpace.Children)
+                    {
+                        var character = (GameObject)(node.Key);
+                        if (character != this.gameObject)
+                            character.QueueEvent((Structure)Term.CopyInstantiation(structure));
+                    }
                     break;
             }
+            if (structure.Functor.Name != "sleep")
+                // Report back to the character that the action has occurred.
+                QueueEvent(structure);
         }
         else
-        {
-            var sym = action as Symbol;
-            if (sym == null)
-                throw new InvalidOperationException("Unknown action: " + ISOPrologWriter.WriteToString(action));
-            switch (sym.Name)
-            {
-                //case "stop":
-                //    steering.Stop();
-                //    break;
-
-                default:
-                    throw new InvalidOperationException("Unknown action: " + ISOPrologWriter.WriteToString(action));
-            }
-        }
-        if (!IsSleep(action))
-            QueueEvent("begin", action);
+            throw new InvalidOperationException("Unknown action: " + ISOPrologWriter.WriteToString(action));
     }
 
     private void UpdateSpeechBubble()
@@ -494,7 +471,8 @@ public class SimController : BindingBehaviour
         {
             // Update the steering
             if (this.currentPath.UpdateSteering(this.steering)
-                || Vector2.Distance(this.transform.position, currentDestination.transform.position) <1)
+                || (Vector2.Distance(this.transform.position, currentDestination.transform.position) < 0.75
+                     && currentDestination.IsCharacter()))
             {
                 // Finished the path
                 this.CurrentlyDockedWith = CurrentDestination;
@@ -534,9 +512,12 @@ public class SimController : BindingBehaviour
         if (winner != null)
         {
             // Replan if destination has changed or if destination has moved away from current path.
-            if ((winner != CurrentDestination && winner != CurrentlyDockedWith)
+            var newDestination = (winner != CurrentDestination && winner != CurrentlyDockedWith);
+            if (newDestination
                 || (currentDestination != null && currentPath != null && !CurrentDestination.DockingTiles().Contains(currentPath.FinalTile)))
             {
+                if (newDestination)
+                    ELNode.Store(eventHistory / new Structure("goto", winner)); // Log change for debugging purposes.
                 this.CurrentDestination = winner;
                 this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
             }
