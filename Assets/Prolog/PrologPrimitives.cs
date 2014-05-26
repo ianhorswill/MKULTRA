@@ -116,7 +116,7 @@ namespace Prolog
                             "-Template", ":generator", ":goal");
             DefinePrimitive("generate_unique", GenerateUniqueImplementation, "all solutions predicates",
                             "Succeeds once for each unique value of TEMPLATE produced by GENERATOR.",
-                            "-Template", ":generator", ":goal");
+                            "-Template", ":generator");
             DefinePrimitive("findall", FindallImplementation, "all solutions predicates",
                             "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.",
                             "=template", ":goal", "-solutions");
