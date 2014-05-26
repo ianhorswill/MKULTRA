@@ -111,6 +111,9 @@ namespace Prolog
             DefinePrimitive("forall", ForAllImplementation, "all solutions predicates",
                             "True if GOAL is true for all bindings of all solutions of GENERATOR.",
                             ":generator", ":goal");
+            DefinePrimitive("for_all_unique", ForAllUniqueImplementation, "all solutions predicates",
+                            "True if GOAL is true given variable bindings of each unique value of TEMPLATE produced by GENERATOR.",
+                            "-Template", ":generator", ":goal");
             DefinePrimitive("findall", FindallImplementation, "all solutions predicates",
                             "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.",
                             "=template", ":goal", "-solutions");
@@ -1158,6 +1161,27 @@ namespace Prolog
                 if (!gotOne)
                     yield break;
             }
+            yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> ForAllUniqueImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 3)
+                throw new ArgumentCountException("for_all_unique", args, "-Template", ":generator", ":goal");
+            var template = Term.Deref(args[0]);
+            foreach (var templateValue in SolutionList(context, template, Term.Deref(args[1]), true))
+#pragma warning disable 414, 168, 219
+                // ReSharper disable UnusedVariable
+                foreach (var ignore in Term.Unify(template, templateValue))
+                {
+                    var gotOne = false;
+                    foreach (var ignore2 in context.Prove(args[2], "Arguments for forall/2 must be valid goals."))
+                        // ReSharper restore UnusedVariable
+#pragma warning restore 414, 168, 219
+                        gotOne = true;
+                    if (!gotOne)
+                        yield break;
+                }
             yield return CutState.Continue;
         }
 
