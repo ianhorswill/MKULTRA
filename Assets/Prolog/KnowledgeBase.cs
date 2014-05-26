@@ -145,7 +145,8 @@ namespace Prolog
                 throw new PrologError(e,
                                       prologContext.StackTrace(Prolog.CurrentSourceFile,
                                                          Prolog.CurrentSourceLineNumber,
-                                                         "IsTrue()"));
+                                                         "IsTrue()")
+                                                         + e.StackTrace);
             }
             finally
             {
