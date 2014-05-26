@@ -180,7 +180,7 @@ namespace Prolog
                 for (int i=terms.Count-2; i>0; i--)
                     if (Compare(terms[i], terms[i+1])==0)
                         terms.RemoveAt(i+1);
-                if (terms.Count>0 && Compare(terms[0], terms[1])==0)
+                if (terms.Count>1 && Compare(terms[0], terms[1])==0)
                     terms.RemoveAt(1);
             }
         }
@@ -198,7 +198,7 @@ namespace Prolog
                 for (int i = terms.Count - 2; i > 0; i--)
                     if (Compare(terms[i], terms[i + 1]) == 0)
                         terms.RemoveAt(i + 1);
-                if (terms.Count > 0 && Compare(terms[0], terms[1]) == 0)
+                if (terms.Count > 1 && Compare(terms[0], terms[1]) == 0)
                     terms.RemoveAt(1);
             }
         }
