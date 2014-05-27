@@ -73,14 +73,12 @@ public class NLPrompt : MonoBehaviour
         {
             this.formatted = null;
             var lastSpace = this.input.LastIndexOf(' ');
-            if (lastSpace >= 0 && lastSpace < this.input.Length)
+            var lastWord = lastSpace < 0 ? input : this.input.Substring(lastSpace + 1);
+            if (Symbol.IsInterned(lastWord))
             {
-                var lastWord = this.input.Substring(lastSpace + 1);
-                if (Symbol.IsInterned(lastWord))
-                {
-                    this.TryCompletion();
-                }
+                this.TryCompletion();
             }
+
             if (this.formatted == null)
             {
                 this.formatted = this.input;
@@ -96,7 +94,12 @@ public class NLPrompt : MonoBehaviour
         {
             this.completion = (string)completionVar.Value;
             this.commentary = ISOPrologWriter.WriteToString(commentaryVar.Value);
-            this.formatted = string.Format("{0}<i>{1}</i>", this.input, this.completion);
+            this.formatted = this.completion=="" ?
+                                string.Format("<b><color=lime>{0}</color></b>", this.input)
+                                : string.Format("{0}{1}<color=silver><i>{2}</i></color>",
+                                                this.input,
+                                                this.input.EndsWith(" ")?"":" ",
+                                                this.completion);
         }
         else
         {
