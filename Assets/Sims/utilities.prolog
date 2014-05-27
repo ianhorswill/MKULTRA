@@ -24,7 +24,7 @@ world_object(WorldObject) :-
 nearest(GameObject, Constraint) :-
     arg_min(GameObject,
 	    Distance,
-	    (Constraint, Distance is distance(GameObject, $game_object))).
+	    (Constraint, Distance is distance(GameObject, $me))).
 
 %%%
 %%% Character initialization.

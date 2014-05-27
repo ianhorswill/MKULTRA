@@ -9,39 +9,36 @@ on_enter_state(start,
 
 %% OPENINGS
 
-propose_action(greet(Me, You), 
+propose_action(greet($me, You), 
 	       conversation, C) :-
     \+ C/said_greeting,
-    C/partner/You,
-    Me is $game_object.
+    C/partner/You.
 
-score_action(greet(_Me, _You),
+score_action(greet($me, _You),
 	     conversation, _,
 	     100).
 
-on_event(greet(_Me, You),
+on_event(greet($me, You),
 	 conversation, C,
 	 assert(C/said_greeting)) :-
     C/partner/You.
 
-on_event(greeting(You, Me),
+on_event(greeting(You, $me),
 	 conversation, C,
 	 assert(C/heard_greeting)) :-
-    C/partner/You,
-    Me is $game_object.
+    C/partner/You.
 
 % CLOSINGS
 
-on_event(parting(_Me, You),
+on_event(parting($me, You),
 	 conversation, C,
 	 (assert(C/said_parting), maybe_end_conversation(C))) :-
     C/partner/You.
 
-on_event(parting(You, Me),
+on_event(parting(You, $me),
 	 conversation, C,
 	 (assert(C/heard_parting), maybe_end_conversation(C))) :-
-    C/partner/You,
-    Me is $game_object.
+    C/partner/You.
 
 maybe_end_conversation(C) :-
     C/said_parting,
@@ -49,14 +46,13 @@ maybe_end_conversation(C) :-
     kill_concern(C).
 maybe_end_conversation(_).
 
-propose_action(parting(Me, You),
+propose_action(parting($me, You),
 	       conversation, C) :-
     want_to_end_conversation(C),
     \+ C/said_parting,
-    Me is $game_object,
     C/partner/You.
 
-score_action(parting(_,You),
+score_action(parting($me,You),
 	     conversation, C,
 	     100) :-
     C/partner/You.

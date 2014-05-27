@@ -6,12 +6,10 @@ on_event(enter_social_space(Character),
 	 be_polite, C, 
 	 assert(C/should_greet/Character)).
 
-on_event(greet(Me, Character),
+on_event(greet($me, Character),
 	 be_polite, C,
-	 ignore(retract(C/should_greet/Character))) :-
-    Me is $game_object.
+	 ignore(retract(C/should_greet/Character))).
 
-propose_action(greet(Me, Character),
+propose_action(greet($me, Character),
 	       be_polite, C) :-
-    C/should_greet/Character,
-    Me is $game_object.
+    C/should_greet/Character.

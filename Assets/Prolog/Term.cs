@@ -616,44 +616,23 @@ namespace Prolog
         /// Returns new array, if substitutions were made, the original array if not.
         /// Original array is not modified
         /// </summary>
-        internal static object[] AlphaConvert(object[] argList, List<LogicVariable> oldVars, LogicVariable[] newVars)
+        internal static object[] AlphaConvertArglist(object[] argList, List<LogicVariable> oldVars, LogicVariable[] newVars, PrologContext context, bool evalIndexicals)
         {
             object[] newArgs = null;
             for (int i = 0; i < argList.Length; i++)
             {
-                object arg = argList[i];
-                var v = arg as LogicVariable;
-                if (v != null)
+                var term = argList[i] as AlphaConvertibleTerm;
+                if (term != null)
                 {
-                    int index = oldVars.IndexOf(v);
-                    if (index >= 0)
+                    object converted = term.AlphaConvert(oldVars, newVars, context, evalIndexicals);
+                    if (converted != argList[i])
                     {
-                        // It's one of the variables that needs to be renamed.
                         if (newArgs == null)
                         {
                             newArgs = new object[argList.Length];
                             argList.CopyTo(newArgs, 0);
                         }
-                        if (newVars[index] == null)
-                            newVars[index] = new LogicVariable(v.Name);
-                        newArgs[i] = newVars[index];
-                    }
-                }
-                else
-                {
-                    var t = arg as Structure;
-                    if (t != null)
-                    {
-                        Structure newStructure = t.AlphaConvert(oldVars, newVars);
-                        if (newStructure != t)
-                        {
-                            if (newArgs == null)
-                            {
-                                newArgs = new object[argList.Length];
-                                argList.CopyTo(newArgs, 0);
-                            }
-                            newArgs[i] = newStructure;
-                        }
+                        newArgs[i] = converted;
                     }
                 }
             }

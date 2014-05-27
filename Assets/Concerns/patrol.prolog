@@ -4,7 +4,7 @@
 
 rebid_patrol(Concern) :-
     forall(Concern/visited/Prop:Time,
-	   begin(Score is ($now-Time)-distance(Prop, $game_object),
+	   begin(Score is ($now-Time)-distance(Prop, $me),
 		 assert(Concern/location_bids/Prop:Score))).
 
 on_event(arrived_at(Place),

@@ -8,8 +8,9 @@ namespace Prolog
     /// <summary>
     /// Represents a time-varying value such as this or now.
     /// </summary>
-    public class Indexical
+    public class Indexical : AlphaConvertibleTerm
     {
+        #region Standard Indexicals
         static Indexical()
         {
             DeclareIndexical("this",
@@ -19,7 +20,7 @@ namespace Prolog
                         throw new Exception("Indexical $this has not been given a value");
                     return context.This;
                 });
-            DeclareIndexical("game_object",
+            DeclareIndexical("me",
                 context =>
                 {
                     if (context.KnowledgeBase.GameObject == null)
@@ -55,6 +56,7 @@ namespace Prolog
         {
             IndexicalTable[name] = new Indexical(name, valueFunc);
         }
+        #endregion
 
         public readonly Symbol Name;
         readonly Func<PrologContext, object> valueFunc;
@@ -70,9 +72,28 @@ namespace Prolog
             return this.valueFunc(context);
         }
 
+        /// <summary>
+        /// Replace self with value if evalIndexicals is true, otherwise return self unchanged.
+        /// </summary>
+        public override object AlphaConvert(List<LogicVariable> oldVars, LogicVariable[] newVars, PrologContext context, bool evalIndexicals)
+        {
+            return evalIndexicals ? this.GetValue(context) : this;
+        }
+
         public override string ToString()
         {
             return "$"+Name;
         }
+
+        #region Unification
+        internal override IEnumerable<bool> UnifyWithTerm(Term value)
+        {
+            return value.UnifyWithAtomicConstant(this);
+        }
+        internal override bool UnifyWithTerm(Term value, PrologContext context)
+        {
+            return value.UnifyWithAtomicConstant(this, context);
+        }
+        #endregion
     }
 }

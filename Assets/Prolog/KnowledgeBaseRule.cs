@@ -160,7 +160,7 @@ namespace Prolog
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         internal Structure[] BodyGoals;
 
-        private PredicateArgumentIndexer[] headIndexers;
+        private readonly PredicateArgumentIndexer[] headIndexers;
 
         private readonly object head;
 
@@ -231,7 +231,7 @@ namespace Prolog
         internal override IEnumerable<CutState> Prove(object[] args, PrologContext context, ushort parentFrame)
         {
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
             // ReSharper disable UnusedVariable
 #pragma warning disable 414, 168, 219
             foreach (bool ignore in Term.UnifyArrays(args, newArgs))
@@ -252,14 +252,14 @@ namespace Prolog
         {
             object[] goal1Args = null;
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
             // ReSharper disable UnusedVariable
 #pragma warning disable 414, 168, 219
             foreach (bool ignore in Term.UnifyArraysFast(args, newArgs, context))
 #pragma warning restore 414, 168, 219
             {
                 if (goal1Args == null)
-                    goal1Args = Term.AlphaConvert(BodyGoals[0].Arguments, FreeVariables, newVars);
+                    goal1Args = Term.AlphaConvertArglist(BodyGoals[0].Arguments, FreeVariables, newVars, context, false);
 
 #pragma warning disable 414, 168, 219
                 foreach (CutState ignoreFreeze in context.ProveAllWokenGoals())
@@ -283,14 +283,14 @@ namespace Prolog
             object[] goal1Args = null;
             object[] goal2Args = null;
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
             // ReSharper disable UnusedVariable
 #pragma warning disable 414, 168, 219
             foreach (bool ignore in Term.UnifyArraysFast(args, newArgs, context))
 #pragma warning restore 414, 168, 219
             {
                 if (goal1Args == null)
-                    goal1Args = Term.AlphaConvert(BodyGoals[0].Arguments, FreeVariables, newVars);
+                    goal1Args = Term.AlphaConvertArglist(BodyGoals[0].Arguments, FreeVariables, newVars, context, false);
 
 #pragma warning disable 414, 168, 219
                 foreach (CutState ignoreFreeze in context.ProveAllWokenGoals())
@@ -300,7 +300,7 @@ namespace Prolog
                     {
                     if (state1 == CutState.ForceFail) yield return CutState.ForceFail;
                     if (goal2Args == null)
-                        goal2Args = Term.AlphaConvert(BodyGoals[1].Arguments, FreeVariables, newVars);
+                        goal2Args = Term.AlphaConvertArglist(BodyGoals[1].Arguments, FreeVariables, newVars, context, false);
 
                     foreach (CutState state2 in context.KnowledgeBase.Prove(BodyGoals[1].Functor, goal2Args, context, parentFrame))
                         yield return state2;
@@ -322,14 +322,14 @@ namespace Prolog
             object[] goal2Args = null;
             object[] goal3Args = null;
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
             // ReSharper disable UnusedVariable
 #pragma warning disable 414, 168, 219
             foreach (bool ignore in Term.UnifyArraysFast(args, newArgs, context))
 #pragma warning restore 414, 168, 219
             {
                 if (goal1Args == null)
-                    goal1Args = Term.AlphaConvert(BodyGoals[0].Arguments, FreeVariables, newVars);
+                    goal1Args = Term.AlphaConvertArglist(BodyGoals[0].Arguments, FreeVariables, newVars, context, false);
 
 #pragma warning disable 414, 168, 219
                 foreach (CutState ignoreFreeze in context.ProveAllWokenGoals())
@@ -339,7 +339,7 @@ namespace Prolog
                     {
                     if (state1 == CutState.ForceFail) yield return CutState.ForceFail;
                     if (goal2Args == null)
-                        goal2Args = Term.AlphaConvert(BodyGoals[1].Arguments, FreeVariables, newVars);
+                        goal2Args = Term.AlphaConvertArglist(BodyGoals[1].Arguments, FreeVariables, newVars, context, false);
 
 #pragma warning disable 414, 168, 219
                     foreach (CutState state2 in context.KnowledgeBase.Prove(BodyGoals[1].Functor, goal2Args, context, parentFrame))
@@ -347,7 +347,7 @@ namespace Prolog
                     {
                         if (state2 == CutState.ForceFail) yield return CutState.ForceFail;
                         if (goal3Args == null)
-                            goal3Args = Term.AlphaConvert(BodyGoals[2].Arguments, FreeVariables, newVars);
+                            goal3Args = Term.AlphaConvertArglist(BodyGoals[2].Arguments, FreeVariables, newVars, context, false);
 
                         foreach (CutState state3 in context.KnowledgeBase.Prove(BodyGoals[2].Functor, goal3Args, context, parentFrame))
                             yield return state3;
@@ -370,13 +370,13 @@ namespace Prolog
             object[] goal3Args = null;
             object[] goal4Args = null;
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
             // ReSharper disable UnusedVariable
 #pragma warning disable 414, 168, 219
             foreach (bool ignore in Term.UnifyArraysFast(args, newArgs, context))
             {
                 if (goal1Args == null)
-                    goal1Args = Term.AlphaConvert(BodyGoals[0].Arguments, FreeVariables, newVars);
+                    goal1Args = Term.AlphaConvertArglist(BodyGoals[0].Arguments, FreeVariables, newVars, context, false);
 
                 foreach (CutState ignoreFreeze in context.ProveAllWokenGoals())
                     // ReSharper restore UnusedVariable
@@ -384,19 +384,19 @@ namespace Prolog
                 {
                     if (state1 == CutState.ForceFail) yield return CutState.ForceFail;
                     if (goal2Args == null)
-                        goal2Args = Term.AlphaConvert(BodyGoals[1].Arguments, FreeVariables, newVars);
+                        goal2Args = Term.AlphaConvertArglist(BodyGoals[1].Arguments, FreeVariables, newVars, context, false);
 
                     foreach (CutState state2 in context.KnowledgeBase.Prove(BodyGoals[1].Functor, goal2Args, context, parentFrame))
                     {
                         if (state2 == CutState.ForceFail) yield return CutState.ForceFail;
                         if (goal3Args == null)
-                            goal3Args = Term.AlphaConvert(BodyGoals[2].Arguments, FreeVariables, newVars);
+                            goal3Args = Term.AlphaConvertArglist(BodyGoals[2].Arguments, FreeVariables, newVars, context, false);
 
                         foreach (CutState state3 in context.KnowledgeBase.Prove(BodyGoals[2].Functor, goal3Args, context, parentFrame))
                         {
                             if (state3 == CutState.ForceFail) yield return CutState.ForceFail;
                             if (goal4Args == null)
-                                goal4Args = Term.AlphaConvert(BodyGoals[3].Arguments, FreeVariables, newVars);
+                                goal4Args = Term.AlphaConvertArglist(BodyGoals[3].Arguments, FreeVariables, newVars, context, false);
 
                             foreach (CutState state4 in context.KnowledgeBase.Prove(BodyGoals[3].Functor, goal4Args, context, parentFrame))
                             {
@@ -424,12 +424,12 @@ namespace Prolog
             object[] goal4Args = null;
             object[] goal5Args = null;
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
 // ReSharper disable UnusedVariable
             foreach (bool ignore in Term.UnifyArraysFast(args, newArgs, context))
             {
                 if (goal1Args == null)
-                    goal1Args = Term.AlphaConvert(BodyGoals[0].Arguments, FreeVariables, newVars);
+                    goal1Args = Term.AlphaConvertArglist(BodyGoals[0].Arguments, FreeVariables, newVars, context, false);
 
                 foreach (CutState ignoreFreeze in context.ProveAllWokenGoals())
                     // ReSharper restore UnusedVariable
@@ -437,25 +437,25 @@ namespace Prolog
                 {
                     if (state1 == CutState.ForceFail) yield return CutState.ForceFail;
                     if (goal2Args == null)
-                        goal2Args = Term.AlphaConvert(BodyGoals[1].Arguments, FreeVariables, newVars);
+                        goal2Args = Term.AlphaConvertArglist(BodyGoals[1].Arguments, FreeVariables, newVars, context, false);
 
                     foreach (CutState state2 in context.KnowledgeBase.Prove(BodyGoals[1].Functor, goal2Args, context, parentFrame))
                     {
                         if (state2 == CutState.ForceFail) yield return CutState.ForceFail;
                         if (goal3Args == null)
-                            goal3Args = Term.AlphaConvert(BodyGoals[2].Arguments, FreeVariables, newVars);
+                            goal3Args = Term.AlphaConvertArglist(BodyGoals[2].Arguments, FreeVariables, newVars, context, false);
 
                         foreach (CutState state3 in context.KnowledgeBase.Prove(BodyGoals[2].Functor, goal3Args, context, parentFrame))
                         {
                             if (state3 == CutState.ForceFail) yield return CutState.ForceFail;
                             if (goal4Args == null)
-                                goal4Args = Term.AlphaConvert(BodyGoals[3].Arguments, FreeVariables, newVars);
+                                goal4Args = Term.AlphaConvertArglist(BodyGoals[3].Arguments, FreeVariables, newVars, context, false);
 
                             foreach (CutState state4 in context.KnowledgeBase.Prove(BodyGoals[3].Functor, goal4Args, context, parentFrame))
                             {
                                 if (state4 == CutState.ForceFail) yield return CutState.ForceFail;
                                 if (goal5Args == null)
-                                    goal5Args = Term.AlphaConvert(BodyGoals[4].Arguments, FreeVariables, newVars);
+                                    goal5Args = Term.AlphaConvertArglist(BodyGoals[4].Arguments, FreeVariables, newVars, context, false);
 
                                 foreach (CutState state5 in context.KnowledgeBase.Prove(BodyGoals[4].Functor, goal5Args, context, parentFrame))
                                     yield return state5;
@@ -482,12 +482,12 @@ namespace Prolog
             object[] goal5Args = null;
             object[] goal6Args = null;
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
 // ReSharper disable UnusedVariable
             foreach (bool ignore in Term.UnifyArraysFast(args, newArgs, context))
             {
                 if (goal1Args == null)
-                    goal1Args = Term.AlphaConvert(BodyGoals[0].Arguments, FreeVariables, newVars);
+                    goal1Args = Term.AlphaConvertArglist(BodyGoals[0].Arguments, FreeVariables, newVars, context, false);
 
                 foreach (CutState ignoreFreeze in context.ProveAllWokenGoals())
                     // ReSharper restore UnusedVariable
@@ -495,31 +495,31 @@ namespace Prolog
                 {
                     if (state1 == CutState.ForceFail) yield return CutState.ForceFail;
                     if (goal2Args == null)
-                        goal2Args = Term.AlphaConvert(BodyGoals[1].Arguments, FreeVariables, newVars);
+                        goal2Args = Term.AlphaConvertArglist(BodyGoals[1].Arguments, FreeVariables, newVars, context, false);
 
                     foreach (CutState state2 in context.KnowledgeBase.Prove(BodyGoals[1].Functor, goal2Args, context, parentFrame))
                     {
                         if (state2 == CutState.ForceFail) yield return CutState.ForceFail;
                         if (goal3Args == null)
-                            goal3Args = Term.AlphaConvert(BodyGoals[2].Arguments, FreeVariables, newVars);
+                            goal3Args = Term.AlphaConvertArglist(BodyGoals[2].Arguments, FreeVariables, newVars, context, false);
 
                         foreach (CutState state3 in context.KnowledgeBase.Prove(BodyGoals[2].Functor, goal3Args, context, parentFrame))
                         {
                             if (state3 == CutState.ForceFail) yield return CutState.ForceFail;
                             if (goal4Args == null)
-                                goal4Args = Term.AlphaConvert(BodyGoals[3].Arguments, FreeVariables, newVars);
+                                goal4Args = Term.AlphaConvertArglist(BodyGoals[3].Arguments, FreeVariables, newVars, context, false);
 
                             foreach (CutState state4 in context.KnowledgeBase.Prove(BodyGoals[3].Functor, goal4Args, context, parentFrame))
                             {
                                 if (state4 == CutState.ForceFail) yield return CutState.ForceFail;
                                 if (goal5Args == null)
-                                    goal5Args = Term.AlphaConvert(BodyGoals[4].Arguments, FreeVariables, newVars);
+                                    goal5Args = Term.AlphaConvertArglist(BodyGoals[4].Arguments, FreeVariables, newVars, context, false);
 
                                 foreach (CutState state5 in context.KnowledgeBase.Prove(BodyGoals[4].Functor, goal5Args, context, parentFrame))
                                 {
                                     if (state5 == CutState.ForceFail) yield return CutState.ForceFail;
                                     if (goal6Args == null)
-                                        goal6Args = Term.AlphaConvert(BodyGoals[5].Arguments, FreeVariables, newVars);
+                                        goal6Args = Term.AlphaConvertArglist(BodyGoals[5].Arguments, FreeVariables, newVars, context, false);
 
                                     foreach (CutState state6 in context.KnowledgeBase.Prove(BodyGoals[5].Functor, goal6Args, context, parentFrame))
                                         yield return state6;
@@ -548,12 +548,12 @@ namespace Prolog
             object[] goal6Args = null;
             object[] goal7Args = null;
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
 // ReSharper disable UnusedVariable
             foreach (bool ignore in Term.UnifyArraysFast(args, newArgs, context))
             {
                 if (goal1Args == null)
-                    goal1Args = Term.AlphaConvert(BodyGoals[0].Arguments, FreeVariables, newVars);
+                    goal1Args = Term.AlphaConvertArglist(BodyGoals[0].Arguments, FreeVariables, newVars, context, false);
 
                 foreach (CutState ignoreFreeze in context.ProveAllWokenGoals())
                     // ReSharper restore UnusedVariable
@@ -561,37 +561,37 @@ namespace Prolog
                 {
                     if (state1 == CutState.ForceFail) yield return CutState.ForceFail;
                     if (goal2Args == null)
-                        goal2Args = Term.AlphaConvert(BodyGoals[1].Arguments, FreeVariables, newVars);
+                        goal2Args = Term.AlphaConvertArglist(BodyGoals[1].Arguments, FreeVariables, newVars, context, false);
 
                     foreach (CutState state2 in context.KnowledgeBase.Prove(BodyGoals[1].Functor, goal2Args, context, parentFrame))
                     {
                         if (state2 == CutState.ForceFail) yield return CutState.ForceFail;
                         if (goal3Args == null)
-                            goal3Args = Term.AlphaConvert(BodyGoals[2].Arguments, FreeVariables, newVars);
+                            goal3Args = Term.AlphaConvertArglist(BodyGoals[2].Arguments, FreeVariables, newVars, context, false);
 
                         foreach (CutState state3 in context.KnowledgeBase.Prove(BodyGoals[2].Functor, goal3Args, context, parentFrame))
                         {
                             if (state3 == CutState.ForceFail) yield return CutState.ForceFail;
                             if (goal4Args == null)
-                                goal4Args = Term.AlphaConvert(BodyGoals[3].Arguments, FreeVariables, newVars);
+                                goal4Args = Term.AlphaConvertArglist(BodyGoals[3].Arguments, FreeVariables, newVars, context, false);
 
                             foreach (CutState state4 in context.KnowledgeBase.Prove(BodyGoals[3].Functor, goal4Args, context, parentFrame))
                             {
                                 if (state4 == CutState.ForceFail) yield return CutState.ForceFail;
                                 if (goal5Args == null)
-                                    goal5Args = Term.AlphaConvert(BodyGoals[4].Arguments, FreeVariables, newVars);
+                                    goal5Args = Term.AlphaConvertArglist(BodyGoals[4].Arguments, FreeVariables, newVars, context, false);
 
                                 foreach (CutState state5 in context.KnowledgeBase.Prove(BodyGoals[4].Functor, goal5Args, context, parentFrame))
                                 {
                                     if (state5 == CutState.ForceFail) yield return CutState.ForceFail;
                                     if (goal6Args == null)
-                                        goal6Args = Term.AlphaConvert(BodyGoals[5].Arguments, FreeVariables, newVars);
+                                        goal6Args = Term.AlphaConvertArglist(BodyGoals[5].Arguments, FreeVariables, newVars, context, false);
 
                                     foreach (CutState state6 in context.KnowledgeBase.Prove(BodyGoals[5].Functor, goal6Args, context, parentFrame))
                                     {
                                         if (state6 == CutState.ForceFail) yield return CutState.ForceFail;
                                         if (goal7Args == null)
-                                            goal7Args = Term.AlphaConvert(BodyGoals[6].Arguments, FreeVariables, newVars);
+                                            goal7Args = Term.AlphaConvertArglist(BodyGoals[6].Arguments, FreeVariables, newVars, context, false);
 
                                         foreach (CutState state7 in context.KnowledgeBase.Prove(BodyGoals[6].Functor, goal7Args, context, parentFrame))
                                         {
@@ -625,12 +625,12 @@ namespace Prolog
             object[] goal8Args = null;
             
             var newVars = new LogicVariable[FreeVariables.Count];
-            object[] newArgs = Term.AlphaConvert(HeadArgs, FreeVariables, newVars);
+            object[] newArgs = Term.AlphaConvertArglist(HeadArgs, FreeVariables, newVars, context, true);
 // ReSharper disable UnusedVariable
             foreach (bool ignore in Term.UnifyArraysFast(args, newArgs, context))
             {
                 if (goal1Args == null)
-                    goal1Args = Term.AlphaConvert(BodyGoals[0].Arguments, FreeVariables, newVars);
+                    goal1Args = Term.AlphaConvertArglist(BodyGoals[0].Arguments, FreeVariables, newVars, context, false);
 
                 foreach (CutState ignoreFreeze in context.ProveAllWokenGoals())
                     // ReSharper restore UnusedVariable
@@ -638,43 +638,43 @@ namespace Prolog
                 {
                     if (state1 == CutState.ForceFail) yield return CutState.ForceFail;
                     if (goal2Args == null)
-                        goal2Args = Term.AlphaConvert(BodyGoals[1].Arguments, FreeVariables, newVars);
+                        goal2Args = Term.AlphaConvertArglist(BodyGoals[1].Arguments, FreeVariables, newVars, context, false);
 
                     foreach (CutState state2 in context.KnowledgeBase.Prove(BodyGoals[1].Functor, goal2Args, context, parentFrame))
                     {
                         if (state2 == CutState.ForceFail) yield return CutState.ForceFail;
                         if (goal3Args == null)
-                            goal3Args = Term.AlphaConvert(BodyGoals[2].Arguments, FreeVariables, newVars);
+                            goal3Args = Term.AlphaConvertArglist(BodyGoals[2].Arguments, FreeVariables, newVars, context, false);
 
                         foreach (CutState state3 in context.KnowledgeBase.Prove(BodyGoals[2].Functor, goal3Args, context, parentFrame))
                         {
                             if (state3 == CutState.ForceFail) yield return CutState.ForceFail;
                             if (goal4Args == null)
-                                goal4Args = Term.AlphaConvert(BodyGoals[3].Arguments, FreeVariables, newVars);
+                                goal4Args = Term.AlphaConvertArglist(BodyGoals[3].Arguments, FreeVariables, newVars, context, false);
 
                             foreach (CutState state4 in context.KnowledgeBase.Prove(BodyGoals[3].Functor, goal4Args, context, parentFrame))
                             {
                                 if (state4 == CutState.ForceFail) yield return CutState.ForceFail;
                                 if (goal5Args == null)
-                                    goal5Args = Term.AlphaConvert(BodyGoals[4].Arguments, FreeVariables, newVars);
+                                    goal5Args = Term.AlphaConvertArglist(BodyGoals[4].Arguments, FreeVariables, newVars, context, false);
 
                                 foreach (CutState state5 in context.KnowledgeBase.Prove(BodyGoals[4].Functor, goal5Args, context, parentFrame))
                                 {
                                     if (state5 == CutState.ForceFail) yield return CutState.ForceFail;
                                     if (goal6Args == null)
-                                        goal6Args = Term.AlphaConvert(BodyGoals[5].Arguments, FreeVariables, newVars);
+                                        goal6Args = Term.AlphaConvertArglist(BodyGoals[5].Arguments, FreeVariables, newVars, context, false);
 
                                     foreach (CutState state6 in context.KnowledgeBase.Prove(BodyGoals[5].Functor, goal6Args, context, parentFrame))
                                     {
                                         if (state6 == CutState.ForceFail) yield return CutState.ForceFail;
                                         if (goal7Args == null)
-                                            goal7Args = Term.AlphaConvert(BodyGoals[6].Arguments, FreeVariables, newVars);
+                                            goal7Args = Term.AlphaConvertArglist(BodyGoals[6].Arguments, FreeVariables, newVars, context, false);
 
                                         foreach (CutState state7 in context.KnowledgeBase.Prove(BodyGoals[6].Functor, goal7Args, context, parentFrame))
                                         {
                                             if (state7 == CutState.ForceFail) yield return CutState.ForceFail;
                                             if (goal8Args == null)
-                                                goal8Args = Term.AlphaConvert(BodyGoals[7].Arguments, FreeVariables, newVars);
+                                                goal8Args = Term.AlphaConvertArglist(BodyGoals[7].Arguments, FreeVariables, newVars, context, false);
 
                                             foreach (CutState state8 in context.KnowledgeBase.Prove(BodyGoals[7].Functor, goal8Args, context, parentFrame))
                                             {

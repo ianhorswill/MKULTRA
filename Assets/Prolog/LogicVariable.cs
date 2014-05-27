@@ -7,7 +7,7 @@ namespace Prolog
     /// Prolog-like logic variable
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{DebuggerName}")]
-    public sealed class LogicVariable : Term
+    public sealed class LogicVariable : AlphaConvertibleTerm
     {
         #region Constructor
         /// <summary>
@@ -380,6 +380,16 @@ namespace Prolog
         #endregion
 
         #region Other methods
+        /// <summary>
+        /// All we have to do here is check whether this is one of the variables we're looking for.
+        /// </summary>
+        public override object AlphaConvert(List<LogicVariable> oldVars, LogicVariable[] newVars, PrologContext context, bool evalIndexicals)
+        {
+            var index = oldVars.IndexOf(this);
+            if (index < 0)
+                return this;
+            return newVars[index] ?? (newVars[index] = new LogicVariable(this.Name));
+        }
 
         /// <summary>
         /// The name and UID of the object

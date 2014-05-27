@@ -42,7 +42,7 @@ event_handler(Event, Type, Concern, Handler) :-
 %  Always succeeds.
 maybe_log_event(Event, Handlers) :-
     log_events(Event),
-    Me is $game_object,
+    Me is $me,
     log(event(Me, Event, Handlers)).
 maybe_log_event(_, _).
 

@@ -8,7 +8,7 @@ namespace Prolog
     /// Represents a function or predicate expression in the logic programming system.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Structure")]
-    public sealed class Structure : Term
+    public sealed class Structure : AlphaConvertibleTerm
     {
         #region Constructor
         /// <summary>
@@ -187,14 +187,10 @@ namespace Prolog
         /// appear within it (e.g. if it's a ground instance).
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
-        public Structure AlphaConvert(List<LogicVariable> oldVars, LogicVariable[] newVars)
+        public override object AlphaConvert(List<LogicVariable> oldVars, LogicVariable[] newVars, PrologContext context, bool evalIndexicals)
         {
-            object[] newArgs = AlphaConvert(Arguments, oldVars, newVars);
-
-            if (newArgs != null)
-                // We had to change something
-                return new Structure(Functor, newArgs);
-            return this;
+            var newArgs = AlphaConvertArglist(Arguments, oldVars, newVars, context, evalIndexicals);
+            return newArgs == this.Arguments ? this : new Structure(this.Functor, newArgs);
         }
         #endregion
 
