@@ -1,2 +1,0 @@
-cat(puck).
-cat(callie).
