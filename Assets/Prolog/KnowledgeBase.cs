@@ -673,7 +673,7 @@ namespace Prolog
         /// </summary>
         public void Consult(string path)
         {
-            path = DefaultExtension(Prolog.LoadFilePath(path), ".pl");
+            path = DefaultExtension(Prolog.LoadFilePath(path), ".prolog");
 
             using (var stream = File.OpenText(path))
             {
