@@ -77,7 +77,9 @@ namespace Prolog
         /// </summary>
         public override object AlphaConvert(List<LogicVariable> oldVars, LogicVariable[] newVars, PrologContext context, bool evalIndexicals)
         {
-            return evalIndexicals ? this.GetValue(context) : this;
+            // Temporarily ignoring evalIndexicals to try out programming here rule bodies expand indexicals, not just rule heads.
+            //return evalIndexicals ? this.GetValue(context) : this;
+            return this.GetValue(context);
         }
 
         public override string ToString()
