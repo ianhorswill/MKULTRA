@@ -42,8 +42,7 @@ event_handler(Event, Type, Concern, Handler) :-
 %  Always succeeds.
 maybe_log_event(Event, Handlers) :-
     log_events(Event),
-    Me is $me,
-    log(event(Me, Event, Handlers)).
+    log(event($me, Event, Handlers)).
 maybe_log_event(_, _).
 
 %%%
