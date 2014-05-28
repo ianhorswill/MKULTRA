@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 using UnityEngine;
 
@@ -683,7 +684,13 @@ namespace Prolog
                 {
                     Prolog.CurrentSourceFile = path;
                     Prolog.CurrentSourceLineNumber = 0;
-                    Consult(new PositionTrackingTextReader(stream, path));
+                    var textReader = new PositionTrackingTextReader(stream, path);
+                    if (Path.GetExtension(path) == ".csv")
+                        ConsultCSV(Symbol.Intern(Path.GetFileNameWithoutExtension(path)),
+                                    ',',
+                                    textReader);
+                    else
+                        Consult(textReader);
                 }
                 finally
                 {
@@ -691,6 +698,119 @@ namespace Prolog
                     Prolog.CurrentSourceLineNumber = savedLineNumber;
                 }
             }
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private void ConsultCSV(Symbol functor, char delimiter, PositionTrackingTextReader r)
+        {
+            int row = 1;
+            var currentRow = new List<object>();
+            var arity = -1;
+            var b = new StringBuilder();
+            int peek = r.Peek();
+            while (peek >= 0)
+            {
+                if (peek == delimiter)
+                {
+                    r.Read(); // Skip over delimiter
+                    var item = ReadItem(r, delimiter, b);
+                    currentRow.Add(arity<0?item:(IsObviouslySymbol(item) ? Symbol.Intern(item) : ISOPrologReader.Read(item+".")));
+                }
+                else if (peek == '\r' || peek == '\n')
+                {
+                    // end of line - swallow cr and/or lf
+                    r.Read();
+                    if (peek == '\r')
+                    {
+                        // Swallow LF if CRLF
+                        peek = r.Peek();
+                        if (peek == '\n')
+                            r.Read();
+                    }
+                    if (arity < 0)
+                        // This is the header row
+                        arity = currentRow.Count;
+                    else if (currentRow.Count == arity)
+                        AssertZ(new Structure(functor, currentRow.ToArray()));
+                    else
+                    {
+                        throw new SyntaxErrorException(
+                            new Structure(functor, currentRow.ToArray()),
+                            string.Format("Wrong number of arguments in row {0}.  Should be {1}", row, arity));
+                    }
+                    currentRow.Clear();
+                    row++;
+                }
+                else
+                {
+                    var item = ReadItem(r, delimiter, b);
+                    currentRow.Add(arity<0?item:(IsObviouslySymbol(item) ? Symbol.Intern(item) : ISOPrologReader.Read(item+".")));
+                }
+                peek = r.Peek();
+            }
+            if (currentRow.Count > 0)
+            {
+                if (currentRow.Count == arity)
+                    AssertZ(new Structure(functor, currentRow.ToArray()));
+                else
+                {
+                    throw new SyntaxErrorException(new Structure(functor, currentRow.ToArray()),
+                                                    string.Format("Wrong number of arguments in row {0}.  Should be {1}", row, arity));
+                }
+            }
+        }
+
+        private static bool IsObviouslySymbol(string item)
+        {
+            foreach (var c in item)
+            {
+                if (!char.IsLetter(c) && c != '_')
+                    return false;
+            }
+            return true;
+        }
+
+        static string ReadItem(TextReader input, char delimiter, StringBuilder b)
+        {
+            bool quoted = false;
+            b.Length = 0;
+            int peek = (char)input.Peek();
+            if (peek == delimiter)
+                return "";
+            if (peek == '\"')
+            {
+                quoted = true;
+                input.Read();
+            }
+        getNextChar:
+            peek = input.Peek();
+            if (peek < 0)
+                goto done;
+            if (quoted && peek == '\"')
+            {
+                input.Read();  // Swallow quote
+                if ((char)input.Peek() == '\"')
+                {
+                    // It was an escaped quote
+                    input.Read();
+                    b.Append('\"');
+                    goto getNextChar;
+                }
+                // It was the end of the item
+                // ReSharper disable RedundantJumpStatement
+                goto done;
+                // ReSharper restore RedundantJumpStatement
+            }
+            if (!quoted && (peek == delimiter || peek == '\r' || peek == '\n'))
+                // ReSharper disable RedundantJumpStatement
+                goto done;
+                // ReSharper restore RedundantJumpStatement
+            b.Append((char)peek);
+            input.Read();
+            goto getNextChar;
+            //System.Diagnostics.Debug.Assert(false, "Line should not be reachable.");
+        done:
+            return b.ToString();
         }
 
         /// <summary>
