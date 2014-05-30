@@ -97,5 +97,47 @@ namespace Prolog
             return value.UnifyWithAtomicConstant(this, context);
         }
         #endregion
+
+        internal static void DeclareUserBindableIndexical(object declaration)
+        {
+            var s = declaration as Structure;
+            if (s==null || !s.IsFunctor(Symbol.EqualSign, 2))
+                throw new ArgumentException("Indexical declaration should be of the form Name=DefaultValue.");
+            var name = s.Argument(0) as Symbol;
+            if (name == null)
+                throw new ArgumentException("Indexical declaration should be of the form Name=DefaultValue.");
+            MakeUserBindableIndexical(name, s.Argument(1));
+        }
+
+        private static void MakeUserBindableIndexical(Symbol name, object defaultValue)
+        {
+            if (!Term.IsGround(defaultValue))
+                throw new ArgumentException("Initial value of an indexical must be a ground term.");
+            // We do CopyInstantiation out of paranoia that there might be some variables buried in defaultValue
+            // that might get unbound in the future.
+            DeclareIndexical(name, MakeLookup(name, CopyInstantiation(defaultValue)));
+        }
+
+        private static Func<PrologContext, object> MakeLookup(Symbol name, object defaultValue)
+        {
+            return context =>
+            {
+                var bindingStack = context.IndexicalBindingStack;
+                for (int i=bindingStack.Count-1; i>=0; i--)
+                    if (bindingStack[i].Key == name)
+                        return bindingStack[i].Value;
+                return defaultValue;
+            };
+        }
+
+        public static void PushIndexicalBinding(Symbol name, object value, PrologContext context)
+        {
+            context.IndexicalBindingStack.Add(new KeyValuePair<Symbol, object>(name, value));
+        }
+
+        public static void PopIndexicalBinding(PrologContext context)
+        {
+            context.IndexicalBindingStack.RemoveAt(context.IndexicalBindingStack.Count-1);
+        }
     }
 }

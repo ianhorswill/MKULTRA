@@ -54,6 +54,8 @@ namespace Prolog
             }
         }
 
+        public readonly List<KeyValuePair<Symbol, object>> IndexicalBindingStack; 
+
         /// <summary>
         /// Whether predicates should be randomized.
         /// </summary>
@@ -81,6 +83,7 @@ namespace Prolog
             traceVariables = new LogicVariable[256];
             traceValues = new object[256];
             tracePointer = 0;
+            IndexicalBindingStack = new List<KeyValuePair<Symbol, object>>();
         }
 
         static PrologContext()
@@ -367,6 +370,7 @@ namespace Prolog
                 wokenStack.Clear();
             StepsRemaining = StepLimit = DefaultStepLimit;
             this.This = thisValue;
+            IndexicalBindingStack.Clear();
         }
 
         /// <summary>

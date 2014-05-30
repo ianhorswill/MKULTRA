@@ -193,6 +193,7 @@ namespace Prolog
             DeclareOperator(1150, FX, "external");
             DeclareOperator(1150, FX, "shadow");
             DeclareOperator(1150, FX, "higher_order");
+            DeclareOperator(1150, FX, "indexical");
         }
         #endregion
 

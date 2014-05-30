@@ -73,6 +73,16 @@ namespace Prolog
             DefinePrimitive("maplist", MapListImplementation, "list predicates,meta-logical predicates",
                             "True if PREDICATE is true of all successive pairs of elements from LIST1 and LIST2.",
                             ":predicate", "?list1", "?list2");
+            DefinePrimitive("bind",
+                            BindImplementation,
+                            "declarations",
+                            "Dynamically binds IndexicalName to Value until this goal is backtracked.",
+                            "*IndexicalName", "=Value");
+            DefinePrimitive("indexical",
+                            IndexicalImplementation,
+                            "declarations",
+                            "Declares that the specified name is an indexical name that can be bound using bind.",
+                            "*Name=*DefaultValue");
             DefinePrimitive("randomizable",
                             MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareRandomizable(p)),
                             "flow control,declarations",
@@ -1429,6 +1439,38 @@ namespace Prolog
             }
             context.KnowledgeBase.DeclareHigherOrderArguments(predicate.PredicateIndicator, higherOrderArguments.ToArray());
             yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> BindImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException("bind", args, "IndexicalName", "Value");
+            var name = Term.Deref(args[0]) as Symbol;
+            if (name == null)
+                throw new ArgumentTypeException("bind", "IndexicalName", args[0], typeof(Symbol));
+            Indexical.PushIndexicalBinding(name, Term.Deref(args[1]), context);
+            try
+            {
+                yield return CutState.Continue;
+            }
+            finally
+            {
+                Indexical.PopIndexicalBinding(context);
+            }
+        }
+
+        private static IEnumerable<CutState> IndexicalImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 1) throw new ArgumentCountException("indexical", args, "Name=DefaultValue");
+            var arg = Term.Deref(args[0]) as Structure;
+            while (arg != null && arg.IsFunctor(Symbol.Comma, 2))
+            {
+                Indexical.DeclareUserBindableIndexical(arg.Argument(0));
+                arg = arg.Argument(1) as Structure;
+            }
+            if (arg == null)
+                throw new ArgumentException("Indexical declaration should be of the form Name=DefaultValue.");
+            Indexical.DeclareUserBindableIndexical(arg);
+            return SucceedDriver();
         }
 
         private static PrimitiveImplementation MakeDeclarationPredicate(DeclarationHandler handler)
