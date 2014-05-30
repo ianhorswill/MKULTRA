@@ -64,7 +64,8 @@ public class NLPrompt : MonoBehaviour
 
     private void AddToInput(char c)
     {
-        this.input = this.input + c;
+        if (c != ' ' || (this.input != "" && !this.input.EndsWith(" ")))  // don't let them type redundant spaces
+            this.input = this.input + c;
         if (c == ' ')
         {
             this.TryCompletion();
@@ -96,7 +97,7 @@ public class NLPrompt : MonoBehaviour
             this.commentary = ISOPrologWriter.WriteToString(commentaryVar.Value);
             this.formatted = this.completion=="" ?
                                 string.Format("<b><color=lime>{0}</color></b>", this.input)
-                                : string.Format("{0}{1}<color=silver><i>{2}</i></color>",
+                                : string.Format("<color=lime>{0}{1}<i>{2}</i></color>",
                                                 this.input,
                                                 this.input.EndsWith(" ")?"":" ",
                                                 this.completion);

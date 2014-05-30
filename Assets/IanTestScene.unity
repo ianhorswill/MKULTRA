@@ -14883,6 +14883,8 @@ MonoBehaviour:
   - Concerns/conversation
   - Sims/action_selection
   - Sims/utilities
+  - NL/intransitive_verb.csv
+  - NL/base_grammar
 --- !u!1 &2049919187
 GameObject:
   m_ObjectHideFlags: 0
