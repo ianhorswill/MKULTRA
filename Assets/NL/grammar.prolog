@@ -7,7 +7,8 @@
 
 utterance(DialogAct) --> stock_phrase(DialogAct).
 %utterance(question(Generator, Answer)) --> q(Generator, Answer).
-utterance(assertion(LF, T, A)) --> s(LF, indicative, positive, T, A).
+utterance(assertion(LF, T, A)) --> s(LF, indicative, affirmative, T, A).
+utterance(assertion(not(LF), T, A)) --> s(LF, indicative, negative, T, A).
 %utterance(DialogAct) --> sentence(DialogAct).
 %utterance(DialogAct) --> answer_fragment(DialogAct).
 

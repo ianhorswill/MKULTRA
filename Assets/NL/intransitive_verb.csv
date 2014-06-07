@@ -1,1 +1,1 @@
-Base form,TPSP,Semanticshalt,halts,X^halt(X)
+Base,TPS,Past,PastP,PresP,LFhalt,halts,halted,halted,halting,A^halt(A)go,goes,went,went,going,"A^go(A,_Dest)"talk,talks,talked,talked,talking,"A^talk(A,_Conversant)"

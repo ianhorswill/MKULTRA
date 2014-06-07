@@ -14873,18 +14873,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SourceFiles:
   - Sims/events
+  - Sims/action_selection
+  - Sims/utilities
   - Concerns/concerns
   - Concerns/patrol
   - Concerns/be_polite
-  - NL/grammar
-  - NL/interface
-  - Utilities/why
   - Concerns/social_interaction
   - Concerns/conversation
-  - Sims/action_selection
-  - Sims/utilities
-  - NL/intransitive_verb.csv
+  - NL/interface
+  - NL/grammar
   - NL/base_grammar
+  - NL/aux
+  - NL/lexicon
+  - NL/intransitive_verb.csv
+  - NL/transitive_verb.csv
+  - Utilities/why
 --- !u!1 &2049919187
 GameObject:
   m_ObjectHideFlags: 0
