@@ -5,6 +5,8 @@
 s(S, indicative, Polarity, Tense, Aspect) -->
    np(VP^S, subject, Agreement, nogap),
    aux_vp(VP, Polarity, Agreement, Tense, Aspect, nogap).
+s(S, imperative, Polarity, present, simple) -->
+   aux_vp($addressee^S, Polarity, second:singular, present, simple, nogap).
 
 %%%                  Noun Phrases
 

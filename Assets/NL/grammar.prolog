@@ -9,6 +9,8 @@ utterance(DialogAct) --> stock_phrase(DialogAct).
 %utterance(question(Generator, Answer)) --> q(Generator, Answer).
 utterance(assertion(LF, T, A)) --> s(LF, indicative, affirmative, T, A).
 utterance(assertion(not(LF), T, A)) --> s(LF, indicative, negative, T, A).
+utterance(command(LF)) --> s(LF, imperative, affirmative, _, _).
+utterance(injunction(LF)) --> s(LF, imperative, negative, _, _).
 %utterance(DialogAct) --> sentence(DialogAct).
 %utterance(DialogAct) --> answer_fragment(DialogAct).
 
