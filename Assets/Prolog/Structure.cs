@@ -299,7 +299,7 @@ namespace Prolog
                 rest = new LogicVariable(RestSym);
                 return new Structure(s, start, rest);
             }
-            throw new ArgumentException("Invalid expression in grammar rule", "expression");
+            throw new ArgumentException("Invalid expression in grammar rule: "+ToStringInPrologFormat(expression), "expression");
         }
 
         private static Structure ExpandDCGRuleGoal(object expression, LogicVariable start, LogicVariable rest)
@@ -314,7 +314,7 @@ namespace Prolog
             }
             if (s != null)
                 return new Structure(s, start, rest);
-            throw new ArgumentException("Invalid expression in grammar rule", "expression");
+            throw new ArgumentException("Invalid expression in grammar rule: " + ToStringInPrologFormat(expression), "expression");
         }
 
         private static Structure ExpandDCGRuleHead(object expression, LogicVariable start, LogicVariable rest)
@@ -325,7 +325,7 @@ namespace Prolog
                 return t.AddArguments(start, rest);
             if (s != null)
                 return new Structure(s, start, rest);
-            throw new ArgumentException("Invalid expression in grammar rule", "expression");
+            throw new ArgumentException("Invalid expression in grammar rule: " + ToStringInPrologFormat(expression), "expression");
         }
         #endregion
 
