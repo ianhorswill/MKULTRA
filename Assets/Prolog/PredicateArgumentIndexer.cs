@@ -13,6 +13,7 @@ namespace Prolog
 
         public PredicateArgumentIndexer(object argument)
         {
+            argument = Term.Deref(argument);
             if (argument == null)
             {
                 this.Type = IndexerType.Null;
@@ -21,7 +22,6 @@ namespace Prolog
             }
             else
             {
-                argument = Term.Deref(argument);
                 if (argument is LogicVariable)
                 {
                     this.Type = IndexerType.Variable;
@@ -153,6 +153,9 @@ namespace Prolog
 
                 case IndexerType.Variable:
                     return "Var";
+
+                case IndexerType.Null:
+                    return "NullIndexer";
             }
             return "<PredicateArgumentIndexer with invalid type>";
         }
