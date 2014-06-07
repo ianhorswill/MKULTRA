@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Prolog
 {
     abstract class Metastructure
     {
+        #region Iterator-based unification
         public abstract Metastructure MetaMetaUnify(Metastructure value, out IEnumerable<CutState> filter);
         public abstract Metastructure MetaVarUnify(LogicVariable them, out IEnumerable<CutState> filter);
         public abstract IEnumerable<CutState> MetaTermUnify(object value);
         public abstract void MetaTermUnify(object value, PrologContext context);
+        #endregion
 
+        #region Trail-based unification
         internal object MetaMetaUnify(Metastructure theirMetaStructure, PrologContext context)
         {
             throw new NotImplementedException();
@@ -19,8 +23,10 @@ namespace Prolog
         {
             throw new NotImplementedException();
         }
+        #endregion
     }
 
+    [DebuggerDisplay("{DebuggerDisplay}")]
     sealed class Suspension : Metastructure
     {
         public Suspension(Structure delayedGoal, Structure frozenGoal, PrologContext prologContext)
@@ -88,6 +94,17 @@ namespace Prolog
         {
             System.Diagnostics.Debug.Assert(contextOfBinding==context, "Delayed goal woken in a different context than it was created in.");
             contextOfBinding.WakeUpGoal(CombineGoals(DelayedGoal, FrozenGoal));
+        }
+
+        internal string DebuggerDisplay
+        {
+            get
+            {
+                return string.Format(
+                    "Suspension(delayed={0}, frozen={1})",
+                    Term.ToStringInPrologFormat(DelayedGoal),
+                    Term.ToStringInPrologFormat(FrozenGoal));
+            }
         }
     }
 }

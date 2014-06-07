@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Prolog
@@ -9,6 +10,7 @@ namespace Prolog
     /// Currently includes Structures (not structs), Symbols (what Prolog calls Atoms), and LogicVariables.
     /// Will likely be extended in the future to include boxed constants.
     /// </summary>
+    [DebuggerDisplay("{DebuggerDisplay}")]
     public abstract class Term
     {
         #region Canonicalization
@@ -227,6 +229,9 @@ namespace Prolog
         {
             object o1 = Deref(v1);
             object o2 = Deref(v2);
+            if (o1 == o2)
+                // Fast path
+                return true;
             var t1 = o1 as Term;
             var t2 = o2 as Term;
             if (t1 != null)
@@ -804,6 +809,14 @@ namespace Prolog
             return false;
         }
 #endif
+
+        internal string DebuggerDisplay
+        {
+            get
+            {
+                return ToStringInPrologFormat(this);
+            }
+        }
         #endregion
 
         #region Utilities
