@@ -6,7 +6,7 @@
 :- randomizable utterance//1, stock_phrase//1.
 
 utterance(DialogAct) --> stock_phrase(DialogAct).
-%utterance(question(Generator, Answer)) --> q(Generator, Answer).
+utterance(question(LF, Polarity, T, A)) --> s(LF, interrogative, Polarity, T, A).
 utterance(assertion(LF, T, A)) --> s(LF, indicative, affirmative, T, A).
 utterance(assertion(not(LF), T, A)) --> s(LF, indicative, negative, T, A).
 utterance(command(LF)) --> s(LF, imperative, affirmative, _, _).
