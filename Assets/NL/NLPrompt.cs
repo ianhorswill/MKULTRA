@@ -97,7 +97,7 @@ public class NLPrompt : MonoBehaviour
             this.commentary = ISOPrologWriter.WriteToString(commentaryVar.Value);
             this.formatted = this.completion=="" ?
                                 string.Format("<b><color=lime>{0}</color></b>", this.input)
-                                : string.Format("<color=lime>{0}{1}<i>{2}</i></color>",
+                                : string.Format("<color=lime>{0}{1}</color><color=grey><i>{2}</i></color>",
                                                 this.input,
                                                 this.input.EndsWith(" ")?"":" ",
                                                 this.completion);
