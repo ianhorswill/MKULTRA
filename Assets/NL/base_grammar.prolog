@@ -1,104 +1,110 @@
-%
-% Base grammar for sentences
-% Based on the TALK grammar from Pereira and Sheiber.
-%
- 
-/*=====================================================
-                        Grammar
 
-Nonterminal names:
+%% s(?S, ?Mood, ?Polarity, ?Tense, ?Aspect)
 
-        q        Question
-        sinv     INVerted Sentence
-        s        noninverted Sentence
-        np       Noun Phrase
-        vp       Verb Phrase
-        iv       Intransitive Verb
-        tv       Transitive Verb
-	dv	 Ditransitive Verb
-        aux      AUXiliary verb
-        rov      subject-Object Raising Verb
-        optrel   OPTional RELative clause
-        relpron  RELative PRONoun
-        whpron   WH PRONoun
-        det      DETerminer
-        n        Noun
-        pn       Proper Noun
+:- randomizable s//6.
 
-Typical order of and values for arguments:
-
-   1. verb form:
-
-      (main verbs)  finite, nonfinite, etc.
-      (auxiliaries and raising verbs)  Form1-Form2 
-          where Form1 is form of embedded VP
-                Form2 is form of verb itself)
-
-   2. FOL logical form
-
-   3. gap information:  
-
-      nogap or gap(Nonterm, Var)
-          where Nonterm is nonterminal for gap
-                    Var is the LF variable that
-                           the filler will bind
-=====================================================*/
-
-%%%                    Questions
-
-:- randomizable q//2.
-
-q(S, X) --> 
-   whpron, vp(finite, X^S, nogap).
-q(S, X) --> 
-   whpron, sinv(S, gap(np, X)).
-q(S, yes) --> 
-   sinv(S, nogap).
-q(S, yes) -->
-   copula(Person, Number), 
-   np((X^S0)^S, subject, Person, Number, nogap), 
-   np((X^true)^exists(X,S0,true), object, _, _, nogap).
-
-%%%              Declarative Sentences
-
-s(S, GapInfo) --> 
-   np(VP^S, subject, Person, Number, nogap), 
-   vp(finite, VP, Person, Number, GapInfo).
+s(S, indicative, positive, Tense, Aspect) -->
+   np(VP^S, subject, Agreement, nogap),
+   aux_vp(VP, Agreement, Tense, Aspect, nogap).
+%s(S, imperative, positive, present, simple) -->
+%   vp(finite, $addressee^S, second:singular).
+% s(X:S, interrogative) --> 
+%    whpron, vp(finite, X^S, nogap).
+% s(X:S, interrogative) --> 
+%    whpron, sinv(S, gap(np, X)).
+% s(S, interrogative) --> 
+%    sinv(S, nogap).
+% s(S, interrogative) -->
+%    copula(Person, Number), 
+%    np((X^S0)^S, subject, Person, Number, nogap), 
+%    np((X^true)^exists(X,S0,true), object, _, _, nogap).
 
 %%%               Inverted Sentences
 
-sinv(S, GapInfo) --> 
-   aux(finite/Form, VP1^VP2), 
-   np(VP2^S, subject, Person, Number, nogap), 
-   vp(Form, VP1, Person, Number, GapInfo).
+% sinv(S, GapInfo) --> 
+%    aux(finite/Form, VP1^VP2), 
+%    np(VP2^S, subject, Person, Number, nogap), 
+%    vp(Form, VP1, Person, Number, GapInfo).
 
 %%%                  Noun Phrases
 
 %% np(?Meaning, ?Case, ?Person, ?Number, ?Gap)
 
-:- randomizable np//5.
+:- randomizable np//4.
 
-np(NP, _C, third, Number, nogap) --> 
+np(NP, _C, third:Number, nogap) --> 
    det(N1^NP), n(Number, N1).
-%   det(N2^NP), n(Number, N1), optrel(N1^N2).
-np(NP, _C, third, Number, nogap) --> proper_noun(Number, NP).
-np(NP, Case, Person, Number, nogap) --> pronoun(Case, Person, Number, NP).
-np((X^S)^S, _C, _P, _Number, gap(np, X)) --> [].
+np(NP, _C, third:Number, nogap) --> proper_noun(Number, NP).
+np(NP, Case, Agreement, nogap) --> pronoun(Case, Agreement, NP).
+np((X^S)^S, _C, _Agreement, np(X)) --> [].
 
 %%%                  Verb Phrases
 
-%% vp(?Form, ?Meaning, ?Person, ?Number, ?Gap)
+%% aux_vp(LF, Person, Number, Tense, Progressive, Perfect, Gap)
 
-:- randomizable vp//5.
+aux_vp(LF, Agreement, Tense, Aspect, Gap) -->
+	aux(Agreement, Tense, Aspect, Form),
+	vp(Form, LF, Tense, Agreement, Gap).
 
-vp(Form, X^S, Person, Number, GapInfo) -->
-   tv(Form, Person, Number, X^VP), 
-   np(VP^S, object, _, _, GapInfo).
-vp(Form, VP, Person, Number, nogap) --> 
-   iv(Form, Person, Number, VP).
-vp(Form1, VP2, Person, Number, GapInfo) -->
-   aux(Form1/Form2, VP1^VP2), 
-   vp(Form2, VP1, Person, Number, GapInfo).
+aux(_Agreement, present, simple, simple) --> [ ].
+aux(Agreement, Tense, Aspect, Form) -->
+	opt_will(Tense),
+	aux_aspect(Tense, Aspect, Agreement, Form).
+
+aux_aspect(_, simple, _, simple) --> [ ].
+
+aux_aspect(Tense, progressive, Agreement, present_participle) -->
+	aux_be(Tense, Agreement).
+aux_aspect(Tense, Aspect, Agreement, Form) -->
+	aux_have(Tense, Agreement),
+	aux_perfect(Aspect, Agreement, Form).
+aux_perfect(perfect, _Agreement, past_participle) -->
+	[ ].
+aux_perfect(perfect_progressive, Agreement, present_participle) -->
+	aux_be(past, Agreement).
+
+opt_will(future) --> [ will ].
+opt_will(past, X, X).
+opt_will(present, X, X).
+
+aux_have(present, Agreement) -->
+	[ have ],
+	{ Agreement \= third:singular }.
+aux_have(present, third:singular) -->
+	[ has ].
+aux_have(past, _Agreement) --> [had].
+aux_have(future, _Agreement) --> [have].
+
+aux_be(present, first:singular) -->
+	[ am ].
+aux_be(present, second:singular) -->
+	[ are ].
+aux_be(present, third:singular) -->
+	[ is ].
+aux_be(present, _:plural) -->
+	[ are ].
+aux_be(past, first:singular) -->
+	[ was ].
+aux_be(past, second:singular) -->
+	[ were ].
+aux_be(past, third:singular) -->
+	[ was ].
+aux_be(past, _:plural) -->
+	[ were ].
+aux_be(future, _Agreement) --> [be].
+
+%% vp(?Form, ?Meaning, ?Tense, ?Agreement ?Gap)
+
+% :- randomizable vp//4.
+
+% vp(Form, X^S, Person, Number, GapInfo) -->
+%    tv(Form, Person, Number, X^VP), 
+%    np(VP^S, object, _, _, GapInfo).
+vp(Form, VP, Tense, Agreement, nogap) --> 
+    iv(Form, Agreement, VP, Tense).
+% vp(Form1, VP2, Person, Number, GapInfo) -->
+%    aux(Form1/Form2, VP1^VP2), 
+%    vp(Form2, VP1, Person, Number, GapInfo).
 %% vp(Form1, VP2, Person, Number, GapInfo) -->
 %%    rov(Form1/Form2, Person, Number, NP^VP1^VP2), 
 %%    np(NP, subject, Person, Number, GapInfo), 
@@ -119,18 +125,6 @@ vp(Form1, VP2, Person, Number, GapInfo) -->
 %%   np((X^P)^exists(X,S,P), object, Person, Number, GapInfo).
 
 
-%%%                 Relative Clauses
-
-%% :- randomizable optrel//1.
-
-%% optrel(N^N) --> [].
-%% optrel((X^S1)^(X^(S1,S2))) -->
-%%    relpron, vp(finite,X^S2, nogap).
-%% optrel((X^S1)^(X^(S1,S2))) -->
-%%    relpron, s(S2, gap(np, X)).
-
-
-
 /*=====================================================
                       Dictionary
 =====================================================*/
@@ -147,34 +141,22 @@ n(plural, LF)   --> [N], {n(_, N, LF)}.
 
 proper_noun(singular, (E^S)^S) --> [PN], {proper_noun(PN, E)}.
 
-pronoun(Case, Person, Number, (E^S)^S) --> [PN], {pronoun(PN, Case, Person, Number, E)}.
+pronoun(Case, Person:Number, (E^S)^S) --> [PN], {pronoun(PN, Case, Person, Number, E)}.
 
-aux(Form, LF) --> [Aux], {aux(Aux, Form, LF)}.
 %relpron --> [RP], {relpron(RP)}.
 whpron --> [WH], {whpron(WH)}.
 
-% Verb entry arguments:
-%   1. base form
-%   2. third person singular present tense form of the verb
-%   3. logical form of the verb
-
 :- randomizable iv//4.
 
-iv(finite, third, singular, LF) --> [IV], {iv(_,  IV, LF)}.
-iv(F,      P,     N,        LF) --> [IV], {iv(IV, _,  LF), dif(inflection(F,P,N), inflection(finite, third,singular)) }.
+%                                                      Base TPS Past PastP PresP LF
+iv(simple, third:singular, LF, present) --> [IV], { intransitive_verb(_,   IV, _,   _,    _,    LF) }.
+iv(simple, Agreement,      LF, present) --> [IV], { intransitive_verb(IV,  _,  _,   _,    _,    LF),
+						    Agreement \= third:singular }.
+iv(simple, _Agreement,      LF, past)   -->  [IV], { intransitive_verb(_,  _,  IV,  _,    _,    LF) }.
+iv(simple, _Agreement,      LF, future) -->  [IV], { intransitive_verb(IV, _,  _,   _,    _,    LF) }.
+iv(past_participle, _Agreement,      LF, _Tense) -->  [IV], { intransitive_verb(_,  _,  _,   IV,   _,    LF) }.
+iv(present_participle, _Agreement,   LF, _Tense) -->  [IV], { intransitive_verb(_,  _,  _,   _,    IV,   LF) }.
 
-tv(finite, third, singular, LF) --> [TV], {tv(_,  TV, LF)}.
-tv(F,      P,     N,        LF) --> [TV], {tv(TV, _,  LF), dif(inflection(F,P,N), inflection(finite, third,singular)) }.
-
-%% rov(finite/Requires, third, singular, LF) --> [ROV], {raising_verb(_,   ROV, LF, Requires)}.
-%% rov(_     /Requires, _,     _,        LF) --> [ROV], {raising_verb(ROV, _,   LF, Requires)}.
-
-:- randomizable copula//2.
-
-copula(first,  singular) --> [is].
-copula(second, singular) --> [are].
-copula(third,  singular) --> [is].
-copula(_,      plural)   --> [are].
 
 pronoun('I', subject, first, singular, $speaker).
 pronoun(me, object, first, singular, $speaker).
@@ -216,22 +198,5 @@ proper_noun( principia,       principia       ).
 proper_noun( shrdlu,          shrdlu          ).
 proper_noun( terry,           terry           ).
 
-:- randomizable iv/3, tv/3.
-iv( halt,      halts,      X^halt(X)         ).
-
-tv( write,     writes,     X^Y^writes(X,Y)   ).
-tv( meet,      meets,      X^Y^meets(X,Y)    ).
-tv( concern,   concerns,   X^Y^concerns(X,Y) ).
-tv( run,       runs,       X^Y^runs(X,Y)     ).
-
-%% raising_verb( want,     wants,
-%%      % semantics is partial execution of
-%%      % NP ^ VP ^ Y ^ NP( X^want(Y,X,VP(X)) )
-%%      ((X^want(Y,X,Comp))^S) ^ (X^Comp) ^ Y ^ S,
-%%      % form of VP required:
-%%      infinitival).
-
-:- randomizable aux/3.
-aux( to,   infinitival/nonfinite, VP^ VP       ).
-aux( does, finite/nonfinite,      VP^ VP       ).
-aux( did,  finite/nonfinite,      VP^ VP       ).
+:- randomizable intransitive_verb/6.
+intransitive_verb(verb, verbs, verbed, verbed, verbing, X^verb(X)).

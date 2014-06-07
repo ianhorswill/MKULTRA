@@ -6,8 +6,8 @@
 :- randomizable utterance//1, stock_phrase//1.
 
 utterance(DialogAct) --> stock_phrase(DialogAct).
-utterance(question(Generator, Answer)) --> q(Generator, Answer).
-utterance(assertion(A)) --> s(A, nogap).
+%utterance(question(Generator, Answer)) --> q(Generator, Answer).
+utterance(assertion(LF, T, A)) --> s(LF, indicative, positive, T, A).
 %utterance(DialogAct) --> sentence(DialogAct).
 %utterance(DialogAct) --> answer_fragment(DialogAct).
 
