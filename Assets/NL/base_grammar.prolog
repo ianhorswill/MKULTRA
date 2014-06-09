@@ -128,8 +128,8 @@ vp(Form, VP, Tense, Agreement, nogap) -->
 det(LF) --> [D], {det(D, LF)}.
 
 :- randomizable n//2.
-n(singular, LF)   --> [N], {n(N, _, LF)}.
-n(plural, LF)   --> [N], {n(_, N, LF)}.
+n(singular, LF)   --> [N], {noun(N, _, LF)}.
+n(plural, LF)   --> [N], {noun(_, N, LF)}.
 
 proper_noun(singular, (E^S)^S) --> [PN], {proper_noun(PN, E)}.
 
