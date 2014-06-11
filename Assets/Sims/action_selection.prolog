@@ -10,9 +10,26 @@
 %%%
 
 :- public actions/0, next_action/1, score_action/4.
+
+%% propose_action(-Action, +Type, +Concern)
+%  Concern, which is of type Type, proposes Action.
 :- external propose_action/3.
 
-%% next_action(-Action)
+%% blocked(+Action) is det
+%  True if action is unrunnable, either because of an unsatisfied
+% precondition or because it's not a user-runnable action in the first place.
+:- external blocked/1.
+
+blocked(_) :-
+   % Kluge: don't do *anything* if someone else is speaking.
+   \+ /perception/nobody_speaking.
+blocked(exit_social_space(_)).
+
+%% action_score(+Action, +Type, +Concern, -Score) is nondet
+%  Concern (of type Type) assigns Score to Action.
+:- external propose_action/3.
+
+%% next_action(-Action) is det
 %  Action is the highest rated action available, or sleep if no available actions.
 %  Called by SimController component's Update routine.
 next_action(Action) :-
@@ -24,8 +41,14 @@ best_action(Action) :-
     arg_max(Action,
 	    Score,
 	    (  generate_unique(Action, available_action(Action)),
+	       runnable(Action),
 	       action_score(Action, Score),
 	       assert(/action_state/candidates/Action:Score) )).
+
+%% runnable(+Action) is det
+%  True if Action can be executed now.
+runnable(Action) :-
+   \+ blocked(Action).
 
 available_action(Action) :-
     concern(Concern, Type),
@@ -47,4 +70,3 @@ actions :-
     reverse(Sorted, Reversed),
     forall(member(Score-Action, Reversed),
 	   ( write(Action), write("\t"), writeln(Score) )).
-

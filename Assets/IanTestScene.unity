@@ -14876,10 +14876,13 @@ MonoBehaviour:
   - Sims/action_selection
   - Sims/utilities
   - Concerns/concerns
+  - Concerns/event_grammar
+  - Concerns/script
   - Concerns/patrol
   - Concerns/be_polite
   - Concerns/social_interaction
   - Concerns/conversation
+  - Concerns/roles
   - NL/interface
   - NL/grammar
   - NL/base_grammar
