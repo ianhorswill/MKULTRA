@@ -52,6 +52,9 @@ namespace Prolog
             if (s != null)
                 return TryQueryStructure(s, context, out foundNode, out enumerator);
 
+            var v = t as LogicVariable;
+            if (v != null && !v.IsBound)
+                throw new Exception("EL query root is an unbound variable: " + v);
             throw new Exception("Malformed EL query: " + ISOPrologWriter.WriteToString(term));
         }
 
