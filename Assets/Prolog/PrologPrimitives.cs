@@ -2003,8 +2003,8 @@ namespace Prolog
                     throw new InstantiationException(v, "Argument number must be an integer.");
                 throw new ArgumentTypeException("arg", "argument_number", args[0], typeof(int));
             }
-            var argNumber = (int) args[0];
-            var s = args[1] as Structure;
+            var argNumber = (int) Term.Deref(args[0]);
+            var s = Term.Deref(args[1]) as Structure;
             if (s == null)
             {
                 var v = args[1] as LogicVariable;
