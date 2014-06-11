@@ -41,6 +41,10 @@ public class SimController : BindingBehaviour
     /// Maximum number of characters that can be within a character's conversational space.
     /// </summary>
     private const int MaxConversationalSpaceColliders = 30;
+
+    private const float SpeechDelaySecondsPerChar = 0.075f;
+    private const float SpeechDelayMinimum = 0.5f;
+    private const float SpeechDelayMaximum = 4f;
     #endregion
 
     /// <summary>
@@ -322,17 +326,25 @@ public class SimController : BindingBehaviour
                 ELNode.Store(perceptionRoot/SNobodySpeaking);
             else
             {
-                perceptionRoot.DeleteKey(SNobodySpeaking);
+                if (perceptionRoot.ContainsKey(SNobodySpeaking))
+                {
+                    perceptionRoot.DeleteKey(SNobodySpeaking);
+                    pollActions = true;
+                }
             }
         }
     }
     #endregion
 
     #region Primitive actions handled by SimController
+
+    private bool pollActions;
     private void MaybeDoNextAction()
     {
-        if (!this.sleepUntil.HasValue || this.sleepUntil.Value <= Time.time)
+        if (pollActions || !this.sleepUntil.HasValue || this.sleepUntil.Value <= Time.time)
         {
+            pollActions = false;
+            sleepUntil = null;
             this.DoNextAction();
             this.DecisionCycleCount++;
         }
@@ -447,7 +459,11 @@ public class SimController : BindingBehaviour
     {
         this.currentSpeechBubbleText = speech;
         ELNode.Store(motorRoot / SIAmSpeaking);
-        clearSpeechTime = Time.time + 2;
+        clearSpeechTime = Time.time +
+            Math.Max(
+                SpeechDelayMinimum,
+                Math.Min(SpeechDelayMaximum,
+                         speech.Length * SpeechDelaySecondsPerChar));
     }
 
     // ReSharper disable once InconsistentNaming
