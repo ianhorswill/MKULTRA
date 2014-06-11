@@ -40,11 +40,11 @@ proper_noun(Name, WorldObject) :-
 	String is Name.'Name',
 	world_object(WorldObject),
 	String is WorldObject.name .
-proper_noun(Name, WorldObject) :-
-	var(Name),
-	world_object(WorldObject),
-	String is WorldObject.name,
-	Name is $'Symbol'.'Intern'(String).
+% proper_noun(Name, WorldObject) :-
+% 	var(Name),
+% 	world_object(WorldObject),
+% 	String is WorldObject.name,
+% 	Name is $'Symbol'.'Intern'(String).
 
 :- randomizable intransitive_verb/6.
 :- randomizable transitive_verb/6.
