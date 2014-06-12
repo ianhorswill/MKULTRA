@@ -341,6 +341,8 @@ namespace Prolog
                             "Parses/unparses STRING into a LIST of word.", "?string", "?list");
             DefinePrimitive("string_representation", StringRepresentationImplementation, "other predicates",
                             "Parses/unparses between TERM and STRING.", "?term", "?string");
+            DefinePrimitive("game_object_name", GameObjectNameImplementation, "other predicates",
+                            "True when name_symbol is the name of game_object.", "?game_object", "?name_symbol");
             DefinePrimitive("set", KnowledgeBaseVariable.SetImplementation, "other predicates,meta-logical predicates",
                             "Forcibly asserts PREDICATE(VALUE) and retracts all other clauses for PREDICATE.",
                             "*predicate", "*value");
@@ -2443,6 +2445,46 @@ namespace Prolog
             }
             return Term.UnifyAndReturnCutState(Term.ToStringInPrologFormat(objectArg), stringArg);
         }
+
+        private static IEnumerable<CutState> GameObjectNameImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("game_object_name", args, "game_object", "symbol");
+            object objectArg = Term.Deref(args[0]);
+            object symbolArg = Term.Deref(args[1]);
+            LogicVariable objectVar = (objectArg != null) ? (objectArg as LogicVariable) : null;
+            var symbolVar = symbolArg as LogicVariable;
+            if (objectVar != null)
+            {
+                // Object arg is unbound
+                if (symbolVar == null)
+                {
+                    // Symbol arg is bound - need to find the object with this name
+                    var name = symbolArg as Symbol;
+                    if (name == null)
+                        throw new ArgumentTypeException("game_object_name", "name", symbolArg, typeof(Symbol));
+                    var foundGameObject = GameObject.Find(name.Name);
+                    return foundGameObject == null ? FailDriver():Term.UnifyAndReturnCutState(objectVar, foundGameObject);
+                }
+                // Both are unbound
+                return EnumerateGameObjectsAndNames(objectArg, symbolArg);
+            }
+            // Object arg is bound
+            var gameObject = objectArg as GameObject;
+            if (gameObject == null)
+                throw new ArgumentTypeException("game_object_name", "game_object", objectArg, typeof(GameObject));
+            return Term.UnifyAndReturnCutState(Symbol.Intern(gameObject.name), symbolArg);
+        }
+
+        static IEnumerable<CutState> EnumerateGameObjectsAndNames(object objectArg, object symbolArg)
+        {
+            foreach (var go in UnityEngine.Object.FindObjectsOfType<GameObject>())
+                // ReSharper disable UnusedVariable
+                foreach (var ignore1 in Term.Unify(go, objectArg))
+                    foreach (var ignore2 in Term.Unify(Symbol.Intern(go.name), symbolArg))
+                        // ReSharper restore UnusedVariable
+                        yield return CutState.Continue;
+        } 
 
         private static IEnumerable<CutState> WriteImplementation(object[] args, PrologContext context)
         {
