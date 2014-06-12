@@ -36,15 +36,8 @@ proper_noun( shrdlu,          shrdlu          ).
 proper_noun( terry,           terry           ).
 
 proper_noun(Name, WorldObject) :-
-	nonvar(Name),
-	String is Name.'Name',
-	world_object(WorldObject),
-	String is WorldObject.name .
-% proper_noun(Name, WorldObject) :-
-% 	var(Name),
-% 	world_object(WorldObject),
-% 	String is WorldObject.name,
-% 	Name is $'Symbol'.'Intern'(String).
+   game_object_name(WorldObject,Name),
+   world_object(WorldObject).
 
 :- randomizable intransitive_verb/6.
 :- randomizable transitive_verb/6.
