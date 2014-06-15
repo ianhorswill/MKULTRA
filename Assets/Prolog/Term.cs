@@ -427,6 +427,12 @@ namespace Prolog
                     case 8:
                         return UnifyArrays8(a1, a2);
 
+                    case 9:
+                        return UnifyArrays9(a1, a2);
+
+                    case 10:
+                        return UnifyArrays10(a1, a2);
+
                     default:
                         throw new ArgumentException("Attempting to unify arrays that are too long.");
                 }
@@ -521,6 +527,39 @@ namespace Prolog
                                     foreach (var i86 in Unify(a1[6], a2[6]))
                                         foreach (var i87 in Unify(a1[7], a2[7]))
                                             yield return false;
+            // ReSharper restore UnusedVariable
+        }
+
+        private static IEnumerable<bool> UnifyArrays9(object[] a1, object[] a2)
+        {
+            // ReSharper disable UnusedVariable
+            foreach (var i80 in Unify(a1[0], a2[0]))
+                foreach (var i81 in Unify(a1[1], a2[1]))
+                    foreach (var i82 in Unify(a1[2], a2[2]))
+                        foreach (var i83 in Unify(a1[3], a2[3]))
+                            foreach (var i84 in Unify(a1[4], a2[4]))
+                                foreach (var i85 in Unify(a1[5], a2[5]))
+                                    foreach (var i86 in Unify(a1[6], a2[6]))
+                                        foreach (var i87 in Unify(a1[7], a2[7]))
+                                            foreach (var i88 in Unify(a1[8], a2[8]))
+                                                yield return false;
+            // ReSharper restore UnusedVariable
+        }
+
+        private static IEnumerable<bool> UnifyArrays10(object[] a1, object[] a2)
+        {
+            // ReSharper disable UnusedVariable
+            foreach (var i80 in Unify(a1[0], a2[0]))
+                foreach (var i81 in Unify(a1[1], a2[1]))
+                    foreach (var i82 in Unify(a1[2], a2[2]))
+                        foreach (var i83 in Unify(a1[3], a2[3]))
+                            foreach (var i84 in Unify(a1[4], a2[4]))
+                                foreach (var i85 in Unify(a1[5], a2[5]))
+                                    foreach (var i86 in Unify(a1[6], a2[6]))
+                                        foreach (var i87 in Unify(a1[7], a2[7]))
+                                            foreach (var i88 in Unify(a1[8], a2[8]))
+                                                foreach (var i89 in Unify(a1[9], a2[9]))
+                                                yield return false;
             // ReSharper restore UnusedVariable
         }
 #pragma warning restore 414, 168, 219
