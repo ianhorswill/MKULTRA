@@ -27,6 +27,7 @@ public class NLPrompt : MonoBehaviour
         {
             case EventType.KeyDown:
                 this.HandleKeyDown(e);
+                this.TryCompletionIfCompleteWord();
                 break;
 
             case EventType.Repaint:
@@ -64,26 +65,30 @@ public class NLPrompt : MonoBehaviour
 
     private void AddToInput(char c)
     {
-        if (c != ' ' || (this.input != "" && !this.input.EndsWith(" ")))  // don't let them type redundant spaces
+        if (c != ' ' || (this.input != "" && !this.input.EndsWith(" "))) // don't let them type redundant spaces
             this.input = this.input + c;
-        if (c == ' ')
-        {
+
+        this.TryCompletionIfCompleteWord();
+    }
+
+    private void TryCompletionIfCompleteWord()
+    {
+        this.formatted = null;
+        if (this.input.EndsWith(" "))
             this.TryCompletion();
-        }
         else
         {
-            this.formatted = null;
             var lastSpace = this.input.LastIndexOf(' ');
-            var lastWord = lastSpace < 0 ? input : this.input.Substring(lastSpace + 1);
+            var lastWord = lastSpace < 0 ? this.input : this.input.Substring(lastSpace + 1);
             if (Symbol.IsInterned(lastWord))
             {
                 this.TryCompletion();
             }
+        }
 
-            if (this.formatted == null)
-            {
-                this.formatted = this.input;
-            }
+        if (this.formatted == null)
+        {
+            this.formatted = this.input;
         }
     }
 
