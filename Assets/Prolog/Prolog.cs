@@ -70,7 +70,7 @@ namespace Prolog
             return s.ToString();
         }
 
-        static readonly char[] WordDelimiters = { ' ', ',', '.', '?', '!', '\t', ':', '"', '-' };
+        static readonly char[] WordDelimiters = { ' ', ',', '\t', ':', '"', '-' };
 
         public static string DefaultSourceFileExtension = ".prolog";
 
