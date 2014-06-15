@@ -14887,10 +14887,15 @@ MonoBehaviour:
   - NL/grammar
   - NL/base_grammar
   - NL/aux
+  - NL/vp
+  - NL/np
+  - NL/pp
+  - NL/preterminals
   - NL/lexicon
   - NL/contractions
   - NL/intransitive_verb.csv
   - NL/transitive_verb.csv
+  - NL/ditransitive_verb.csv
   - Utilities/why
 --- !u!1 &2049919187
 GameObject:
