@@ -20,12 +20,17 @@ s(S, indicative, Polarity, Tense, Aspect) -->
    np(VP^S, subject, Agreement, nogap),
    aux_vp(VP, Polarity, Agreement, Tense, Aspect).
 
+s(S, indicative, Polarity, present, simple) -->
+   np((Noun^_)^_, subject, Agreement, nogap),
+   aux_be(present, Agreement),
+   opt_not(Polarity),
+   ap(Noun^S).
+
 %%%
 %%% Imperative mood
 %%%
 s(S, imperative, Polarity, present, simple) -->
    aux_vp($addressee^S, Polarity, second:singular, present, simple).
-
 
 %%%
 %%% Interrogative mood
@@ -58,4 +63,22 @@ s(Object:be(Subject, Object), interrogative, affirmative, present, simple) -->
 s(Manner:manner(be(Subject), Manner), interrogative, affirmative, present, simple) -->
    [ how ],
    aux_be(present, Agreement),
-   np((Subject^S)^S, subject, Agreement, nogap). 
+   np((Subject^S)^S, subject, Agreement, nogap).
+
+% Is he Adjective?
+s(S, interrogative, Polarity, present, simple) -->
+   aux_be(present, Agreement),
+   opt_not(Polarity),
+   np((Noun^_)^_, subject, Agreement, nogap),
+   ap(Noun^S).
+
+
+
+%%%
+%%% Adjectival phrases
+%%% Seems silly to make a whole new file for one clause...
+%%%
+
+ap(Meaning) -->
+   [ Adjective ],
+   { adjective(Adjective, Meaning) }.
