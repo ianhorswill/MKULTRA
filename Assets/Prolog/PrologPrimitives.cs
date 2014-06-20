@@ -335,6 +335,8 @@ namespace Prolog
             DefinePrimitive("clause", ClauseImplementation, "database manipulation", "Unifies HEAD and BODY with entries in the database.", "+head", "?body");
             DefinePrimitive("step_limit", StepLimitImplementation, "other predicates",
                             "Gets/sets the maximum number of inference steps allowed.", "*maximum_steps");
+            DefinePrimitive("call_with_step_limit", CallWithStepLimitImplementation, "other predicates",
+                            "Runs GOAL, using at most MAXIMUM_STEPS.", "*maximum_steps", ":Goal");
             DefinePrimitive("benchmark", BenchmarkImplementation, "other predicates",
                             "Runs GOAL repeatedly, COUNT times.", "+goal", "*count");
             DefinePrimitive("word_list", WordListImplementation, "definite clause grammars",
@@ -1711,8 +1713,41 @@ namespace Prolog
             var v = arg as LogicVariable;
             if (v != null)
                 return Term.UnifyAndReturnCutState(v, context.StepLimit);
+
             context.StepLimit = Convert.ToInt32(arg);
             return TrueImplementation(args, context);
+        }
+
+        private static IEnumerable<CutState> CallWithStepLimitImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException("call_with_step_limit", args, "max_steps", ":goal");
+            object arg = Term.Deref(args[0]);
+            var v = arg as LogicVariable;
+            if (v != null)
+                throw new InstantiationException(v, "first argument to call_with_step_limit/2 must be instantiated to an integer.");
+
+            int newStepLimit = Convert.ToInt32(arg);
+            int previousLimit = context.StepLimit;
+            int previousRemaining = context.StepsRemaining;
+            context.StepLimit = newStepLimit;
+            context.StepsRemaining = newStepLimit;
+            var success = false;
+            try
+            {
+                // ReSharper disable once UnusedVariable
+                foreach (var ignore in context.Prove(args[1], "Argument to step_limit/2 must be a valid goal"))
+                {
+                    success = true;
+                    break;
+                }
+            }
+            catch (InferenceStepsExceededException)
+            {
+                
+            }
+            context.StepLimit = previousLimit;
+            context.StepsRemaining = previousRemaining;
+            return success ? SucceedDriver() : FailDriver();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals",
