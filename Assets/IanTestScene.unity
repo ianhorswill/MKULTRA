@@ -14897,6 +14897,8 @@ MonoBehaviour:
   - NL/transitive_verb.csv
   - NL/ditransitive_verb.csv
   - NL/adjective.csv
+  - NL/pdebug
+  - NL/parser_tests.csv
   - Utilities/why
 --- !u!1 &2049919187
 GameObject:
