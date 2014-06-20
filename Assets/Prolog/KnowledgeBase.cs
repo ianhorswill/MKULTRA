@@ -703,6 +703,7 @@ namespace Prolog
         // ReSharper disable once InconsistentNaming
         private void ConsultCSV(Symbol functor, char delimiter, PositionTrackingTextReader r)
         {
+            string[] format = null;
             int row = 1;
             var currentRow = new List<object>();
             var arity = -1;
@@ -713,8 +714,9 @@ namespace Prolog
                 if (peek == delimiter)
                 {
                     r.Read(); // Skip over delimiter
-                    var item = ReadItem(r, delimiter, b);
-                    currentRow.Add(arity<0?item:(IsObviouslySymbol(item) ? Symbol.Intern(item) : ISOPrologReader.Read(item+".")));
+                    var itemString = ReadItem(r, delimiter, b);
+                    // ReSharper disable once PossibleNullReferenceException
+                    currentRow.Add(arity<0?itemString:(DecodeItem(itemString, format[currentRow.Count])));
                 }
                 else if (peek == '\r' || peek == '\n')
                 {
@@ -728,8 +730,16 @@ namespace Prolog
                             r.Read();
                     }
                     if (arity < 0)
+                    {
                         // This is the header row
                         arity = currentRow.Count;
+                        format = new string[arity];
+                        for (var i = 0; i < arity; i++)
+                        {
+                            var itemFormat = (string)currentRow[i];
+                            format[i] = itemFormat.EndsWith("(string)")?"string" : null;
+                        }
+                    }
                     else if (currentRow.Count == arity)
                         AssertZ(new Structure(functor, currentRow.ToArray()));
                     else
@@ -758,6 +768,22 @@ namespace Prolog
                                                     string.Format("Wrong number of arguments in row {0}.  Should be {1}", row, arity));
                 }
             }
+        }
+
+        private static object DecodeItem(string itemString, string format)
+        {
+            switch (format)
+            {
+                case null:
+                    return IsObviouslySymbol(itemString) ? Symbol.Intern(itemString) : ISOPrologReader.Read(itemString + ".");
+
+                case "string":
+                    return itemString;
+
+                default:
+                    throw new Exception("Bad format for CSV item: "+format);
+            }
+            
         }
 
         private static bool IsObviouslySymbol(string item)
