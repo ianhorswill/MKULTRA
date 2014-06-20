@@ -5,14 +5,11 @@
 %% aux(+Gap, ?Polarity, ?Agreement, ?Tense, ?Aspect, ?Form, ?ModalLF)
 %  An optional string of auxilliaries and/or negative particle.
 
-%test_aux :-
-%   aux(nogap, _, _, _, _, _, _, [can], []).
-
 :- randomizable aux//7.
 aux(nogap, affirmative, _Agreement, present, simple, simple, X^X) --> [ ].
 aux(np(NP, Case, Agreement), affirmative, Agreement, Tense, simple, base, X^X) -->
    aux_do(Tense, Agreement),
-   np(NP, Case, Agreement, nogap).
+   np(NP, Case, Agreement, nogap, nogap).
 aux(Gap, negative, Agreement, Tense, simple, base, X^X) -->
    aux_do(Tense, Agreement),
    [ not ],
@@ -62,7 +59,7 @@ aux_aspect(Gap, Polarity, Tense, Aspect, Agreement, Form) -->
 %  Inserts NP for Gap here if need be
 aux_gap(nogap) --> [ ].
 aux_gap(np(LF, Case, Agreement)) -->
-   np(LF, Case, Agreement, nogap).
+   np(LF, Case, Agreement, nogap, nogap).
 
 :- randomizable aux_perfect//3.
 aux_perfect(perfect, _Agreement, past_participle) -->
@@ -87,7 +84,7 @@ modal_aux(must).
 :- randomizable aux_do//2.
 aux_do(present, Agreement) -->
 	[ do ],
-	{ Agreement \= third:singular }.
+	{ Agreement \== third:singular }.
 aux_do(present, third:singular) -->
 	[ does ].
 aux_do(past, _Agreement) --> [did].
@@ -95,7 +92,7 @@ aux_do(past, _Agreement) --> [did].
 :- randomizable aux_have//2.
 aux_have(present, Agreement) -->
 	[ have ],
-	{ Agreement \= third:singular }.
+	{ Agreement \== third:singular }.
 aux_have(present, third:singular) -->
 	[ has ].
 aux_have(past, _Agreement) --> [had].

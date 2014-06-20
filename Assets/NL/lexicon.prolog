@@ -35,9 +35,8 @@ proper_noun( principia,       principia       ).
 proper_noun( shrdlu,          shrdlu          ).
 proper_noun( terry,           terry           ).
 
-proper_noun(Name, WorldObject) :-
-   game_object_name(WorldObject,Name),
-   world_object(WorldObject).
+proper_noun('Kavi', $'Kavi').
+proper_noun(bed, $bed).
 
 :- randomizable intransitive_verb/6.
 :- randomizable transitive_verb/6.

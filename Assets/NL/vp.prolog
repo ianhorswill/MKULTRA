@@ -17,20 +17,20 @@ aux_vp(VP, Polarity, Agreement, Tense, Aspect) -->
 %test_modal_vp(LF) :-
 %   vp(_, X^can(X), LF, _, _, nogap, [halt], [ ]).
 
-vp(Form, Predication^S1, Subject^S2, Tense, Agreement, nogap) --> 
+vp(Form, Predication^S1, Subject^S2, Tense, Agreement, Gap) --> 
    iv(Form, Agreement, Subject^Predication, Tense),
-   opt_pp(Predication, S1, S2).
+   opt_pp(Predication, Gap, S1, S2).
 
 vp(Form, Predication^Modal, Subject^S2, Tense, Agreement, GapInfo) -->
    tv(Form, Agreement, Subject^Object^Predication, Tense), 
-   np((Object^Modal)^S1, object, _, GapInfo),
-   opt_pp(Predication, S1, S2).
+   np((Object^Modal)^S1, object, _, GapInfo, GapOut),
+   opt_pp(Predication, GapOut, S1, S2).
 
 vp(Form, Predication^Modal, Subject^S3, Tense, Agreement, GapInfo) -->
    dtv(Form, Agreement,
        Subject^IndirectObject^DirectObject^Predication,
        Tense), 
-   np((IndirectObject^Modal)^S1, object, _, nogap),
-   np((DirectObject^S1)^S2, object, _, GapInfo),
-   opt_pp(Predication, S2, S3).
+   np((IndirectObject^Modal)^S1, object, _, nogap, nogap),
+   np((DirectObject^S1)^S2, object, _, GapInfo, GapOut),
+   opt_pp(Predication, GapOut, S2, S3).
 

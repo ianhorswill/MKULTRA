@@ -1,3 +1,5 @@
+:- public det/3, n/4.
+
 det(LF) --> [D], {det(D, LF)}.
 
 :- randomizable n//2.
@@ -24,6 +26,7 @@ iv(simple, _Agreement,      LF, past)   -->  [IV], { intransitive_verb(_,  _,  I
 iv(simple, _Agreement,      LF, future) -->  [IV], { intransitive_verb(IV, _,  _,   _,    _,    LF) }.
 % Used only in the construction X does not BASEFORM.
 iv(base, _Agreement,      LF, present) -->  [IV], { intransitive_verb(IV, _,  _,   _,    _,    LF) }.
+iv(base, _Agreement,      LF, past) -->  [IV], { intransitive_verb(IV, _,  _,   _,    _,    LF) }.
 iv(past_participle, _Agreement,      LF, _Tense) -->  [IV], { intransitive_verb(_,  _,  _,   IV,   _,    LF) }.
 iv(present_participle, _Agreement,   LF, _Tense) -->  [IV], { intransitive_verb(_,  _,  _,   _,    IV,   LF) }.
 
@@ -36,6 +39,7 @@ tv(simple, _Agreement,      LF, past)   -->  [TV], { transitive_verb(_,  _,  TV,
 tv(simple, _Agreement,      LF, future) -->  [TV], { transitive_verb(TV, _,  _,   _,    _,    LF) }.
 % Used only in the construction X does not BASEFORM.
 tv(base, _Agreement,      LF, present) -->  [TV], { transitive_verb(TV, _,  _,   _,    _,    LF) }.
+tv(base, _Agreement,      LF, past) -->  [TV], { transitive_verb(TV, _,  _,   _,    _,    LF) }.
 tv(past_participle, _Agreement,      LF, _Tense) -->  [TV], { transitive_verb(_,  _,  _,   TV,   _,    LF) }.
 tv(present_participle, _Agreement,   LF, _Tense) -->  [TV], { transitive_verb(_,  _,  _,   _,    TV,   LF) }.
 
@@ -48,6 +52,7 @@ dtv(simple, _Agreement,      LF, past)   -->  [DTV], { ditransitive_verb(_,  _, 
 dtv(simple, _Agreement,      LF, future) -->  [DTV], { ditransitive_verb(DTV, _,  _,   _,    _,    LF) }.
 % Used only in the construction X does not BASEFORM.
 dtv(base, _Agreement,      LF, present) -->  [DTV], { ditransitive_verb(DTV, _,  _,   _,    _,    LF) }.
+dtv(base, _Agreement,      LF, past) -->  [DTV], { ditransitive_verb(DTV, _,  _,   _,    _,    LF) }.
 dtv(past_participle, _Agreement,      LF, _Tense) -->  [DTV], { ditransitive_verb(_,  _,  _,   DTV,   _,    LF) }.
 dtv(present_participle, _Agreement,   LF, _Tense) -->  [DTV], { ditransitive_verb(_,  _,  _,   _,    DTV,   LF) }.
 

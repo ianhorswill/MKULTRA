@@ -14,18 +14,19 @@
 %  in any further quantifiers from the NPs of the PPs, to produce SentenceLFOut
 :- randomizable opt_pp//3.
 
-opt_pp(_, S, S) --> [ ].
-opt_pp(Predication, S1, S3) -->
+opt_pp(_, nogap, S, S) --> [ ].
+opt_pp(Predication, Gap, S1, S3) -->
    [ Preposition ],
    { preposition(Preposition),
      prepositional_slot(Preposition, X, Predication) },
-   np((X^S1)^S2, object, _, nogap),
-   opt_pp(Predication, S2, S3).
+   np((X^S1)^S2, object, _, nogap, GapOut),
+   opt_pp(Predication, nogap, S2, S3).
 
 %% preposition(?Word)
 %  Word is a preposition
 :- randomizable preposition/1.
 preposition(to).
+preposition(about).
 
 %% prepositional_slot(?Preposition, ?Referrent, ?Predication
 %  True when the slot of Predication corresponding to Preposition
@@ -33,4 +34,6 @@ preposition(to).
 :- randomizable prepositional_slot/3.
 prepositional_slot(to, Destination, go(_Agent, Destination)).
 prepositional_slot(to, Recipient, give(_Agent, Recipient, _Patient)).
+prepositional_slot(about, Topic, talk(_Speaker, _Addressee, Topic)).
+prepositional_slot(to, Addressee, talk(_Speaker, Addressee, _Topic)).
    
