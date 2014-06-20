@@ -43,6 +43,9 @@ namespace Northwestern.UnityUtils
 
         private Vector2 scrollPosition;
 
+        // Set when written to output; forces scroll to bottom left.
+        private bool forceScrollToEnd;
+
         private bool firstFocus; //Controls console input focus
 
         /// <summary>
@@ -68,7 +71,6 @@ namespace Northwestern.UnityUtils
             scrollPosition = Vector2.zero;
             ID = IDCount++;
             this.consoleID = "window" + ID;
-            firstFocus = true;
             history = new List<string>();
         }
 
@@ -92,6 +94,11 @@ namespace Northwestern.UnityUtils
             //Console Buffer
             GUILayout.Label(consoleBuffer, Style, GUILayout.ExpandHeight(true));
             GUILayout.EndScrollView();
+            if (forceScrollToEnd)
+            {
+                scrollPosition = new Vector2(0, Mathf.Infinity);
+                forceScrollToEnd = false;
+            }
             //Input Box
             GUI.SetNextControlName(this.consoleID);
             In = GUI.TextField(new Rect(4, this.WindowRect.height - 24, this.WindowRect.width - 8, 20), In, Style);
@@ -148,6 +155,7 @@ namespace Northwestern.UnityUtils
             if (Out != null && Out.IsUpdated())
             {
                 consoleBuffer = Out.GetTextUpdate();
+                forceScrollToEnd = true;
             }
         }
 
