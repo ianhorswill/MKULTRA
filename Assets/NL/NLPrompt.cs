@@ -41,6 +41,10 @@ public class NLPrompt : MonoBehaviour
     {
         switch (e.keyCode)
         {
+            case KeyCode.Escape:
+                this.input = this.formatted = this.commentary = "";
+                break;
+
             case KeyCode.Delete:
             case KeyCode.Backspace:
                 if (this.input != "")
@@ -96,7 +100,14 @@ public class NLPrompt : MonoBehaviour
     {
         var completionVar = new LogicVariable("Output");
         var commentaryVar = new LogicVariable("Commentary");
-        if (this.IsTrue("input_completion", this.input, completionVar, commentaryVar))
+        bool completionSuccess = false;
+        try
+        {
+            completionSuccess = this.IsTrue("input_completion", this.input, completionVar, commentaryVar);
+        }
+        catch (InferenceStepsExceededException)
+        { }
+        if (completionSuccess)
         {
             this.completion = (string)completionVar.Value;
             this.commentary = ISOPrologWriter.WriteToString(commentaryVar.Value);
