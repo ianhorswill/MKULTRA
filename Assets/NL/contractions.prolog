@@ -10,12 +10,18 @@ contracted_form([A | UncontractedTail], [A | ContractedTail]) :-
 	
 %% contraction(?First, ?Second, ?Contraction)
 %  Contraction is the single-word contraction of [First, Second].
+contraction(will, not, 'won''t').
+contraction(can, not, 'can''t').
+contraction(should, not, 'shouldn''t').
+contraction(must, not, 'mustn''t').
+
 contraction(do, not, 'don''t').
 contraction(does, not, 'doesn''t').
-contraction(will, not, 'won''t').
+
 contraction(have, not, 'haven''t').
 contraction(has, not, 'hasn''t').
 contraction(had, not, 'hadn''t').
+
 contraction(is, not, 'isn''t').
 contraction(are, not, 'aren''t').
 
@@ -25,3 +31,6 @@ contraction(he, is, 'he''s').
 contraction(she, is, 'she''s').
 contraction(we, are, 'we''re').
 contraction(they, are, 'they''re').
+
+contraction('I', will, 'I''ll').
+contraction(let, us, 'let''s').
