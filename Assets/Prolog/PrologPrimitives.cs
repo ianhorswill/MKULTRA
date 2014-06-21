@@ -1734,8 +1734,10 @@ namespace Prolog
             var success = false;
             try
             {
+#pragma warning disable 0168
                 // ReSharper disable once UnusedVariable
                 foreach (var ignore in context.Prove(args[1], "Argument to step_limit/2 must be a valid goal"))
+#pragma warning restore 0168
                 {
                     success = true;
                     break;
@@ -2514,10 +2516,12 @@ namespace Prolog
         static IEnumerable<CutState> EnumerateGameObjectsAndNames(object objectArg, object symbolArg)
         {
             foreach (var go in UnityEngine.Object.FindObjectsOfType<GameObject>())
+#pragma warning disable 0168
                 // ReSharper disable UnusedVariable
                 foreach (var ignore1 in Term.Unify(go, objectArg))
                     foreach (var ignore2 in Term.Unify(Symbol.Intern(go.name), symbolArg))
                         // ReSharper restore UnusedVariable
+#pragma warning restore 0168
                         yield return CutState.Continue;
         } 
 
