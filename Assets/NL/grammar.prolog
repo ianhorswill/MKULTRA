@@ -1,7 +1,8 @@
 % To do:
 % Vocative: "TOM, ..."
 
-:- indexical speaker=unknown_speaker, addressee=unknown_addressee, anaphore_context=[ ].
+:- indexical speaker=unknown_speaker, addressee=unknown_addressee, dialog_group=unknown_dialog_group.
+:- indexical anaphore_context=[ ].
 
 :- randomizable utterance//1, stock_phrase//1.
 

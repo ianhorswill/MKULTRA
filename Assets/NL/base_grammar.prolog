@@ -1,4 +1,12 @@
 sentence(S, Mood, Polarity, Tense, Aspect) -->
+   ['('],
+   { bind(addressee, $me), bind(dialog_group, $me) },
+   stopped_s(S, Mood, Polarity, Tense, Aspect),
+   [')']. 
+sentence(S, Mood, Polarity, Tense, Aspect) -->
+   stopped_s(S, Mood, Polarity, Tense, Aspect).
+
+stopped_s(S, Mood, Polarity, Tense, Aspect) -->
    s(S, Mood, Polarity, Tense, Aspect),
    opt_stop(Mood).
 
@@ -31,6 +39,9 @@ s(S, indicative, Polarity, Tense, simple) -->
 %%%
 s(S, imperative, Polarity, present, simple) -->
    aux_vp($addressee^S, Polarity, second:singular, present, simple).
+s(S, imperative, Polarity, present, simple) -->
+   [let, us],
+   aux_vp($dialog_group^S, Polarity, first:singular, present, simple).
 
 %%%
 %%% Interrogative mood
