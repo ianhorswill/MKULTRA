@@ -4,15 +4,26 @@
 
 :- public prop/1, character/1, world_object/1, nearest/2.
 
-%% prop(?GameObject)
-%  GameObject is a GameObject loaded in the current level that has a dockingregion component.
-prop(GameObject) :-
-    component_of_gameobject_with_type(_Component, GameObject, $dockingregion).
+:- public register_prop/3, register_character/2.
 
-%% character(?GameObject)
-%  GameObject is a GameObject loaded into the current level that has a SimController component.
-character(GameObject) :-
-    component_of_gameobject_with_type(_Component, GameObject, $simcontroller).
+register_prop(Prop, CommonNoun, Plural) :-
+   ensure(prop(Prop)),
+   ensure([CommonNoun, Prop]),
+   Predication =.. [CommonNoun, X],
+   ensure(noun(CommonNoun, Plural, X^Predication)).
+
+register_character(Character, Name) :-
+   ensure(character(Character)),
+   ensure(proper_noun(Name, Character)).
+
+ensure([Functor | Arguments]) :-
+   !,
+   Predication =.. [Functor | Arguments],
+   ensure(Predication).
+ensure(Assertion) :-
+   functor(Assertion, F, A),
+   external(F/A),
+   Assertion ; assertz(Assertion).
 
 %% world_object(?GameObject)
 %  GameObject is a prop or character.

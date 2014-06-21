@@ -2717,6 +2717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d1a7a89e2e80443b203945ce6fa384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CharacterName: Kavi
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -7551,6 +7552,7 @@ GameObject:
   - 212: {fileID: 1030119509}
   - 61: {fileID: 1030119508}
   - 114: {fileID: 1030119506}
+  - 114: {fileID: 1030119507}
   m_Layer: 10
   m_Name: bed
   m_TagString: Untagged
@@ -7575,6 +7577,19 @@ MonoBehaviour:
     y: 1
     width: 1
     height: 1
+--- !u!114 &1030119507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1030119505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: bed
+  Plural: beds
 --- !u!61 &1030119508
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13946,6 +13961,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d1a7a89e2e80443b203945ce6fa384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CharacterName: Bruce
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -14896,6 +14912,7 @@ MonoBehaviour:
   - NL/intransitive_verb.csv
   - NL/transitive_verb.csv
   - NL/ditransitive_verb.csv
+  - NL/prepositional_slot.csv
   - NL/adjective.csv
   - NL/pdebug
   - NL/parser_tests.csv

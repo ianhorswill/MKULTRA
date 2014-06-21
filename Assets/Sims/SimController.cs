@@ -28,6 +28,14 @@ using UnityEngine;
 [AddComponentMenu("Sims/Sim Controller")]
 public class SimController : BindingBehaviour
 {
+    #region Public fields
+    /// <summary>
+    /// Name the character will go by.
+    /// Should be a single word.
+    /// </summary>
+    public string CharacterName;
+    #endregion
+
     #region Constants
     /// <summary>
     /// The radius of the the circular region around the character that defines
@@ -224,6 +232,10 @@ public class SimController : BindingBehaviour
         this.eventHistory = elRoot / Symbol.Intern("event_history");
         this.lastDestination = elRoot / Symbol.Intern("last_destination");
         ELNode.Store(lastDestination % null);  // Need a placeholder last destination so that /last_destination/X doesn't fail.
+        if (string.IsNullOrEmpty(CharacterName))
+            CharacterName = name;
+        if (!KB.Global.IsTrue("register_character", gameObject, Symbol.Intern(CharacterName)))
+            throw new Exception("Can't register prop " + name);
         gameObject.IsTrue(Symbol.Intern("do_all_character_initializations"));
     }
 
