@@ -22,4 +22,5 @@ input_completion(InputText, CompletionText, SpeechAct) :-
     word_list(CompletionText, CompletionWords).
 
 bind_dialog_indexicals :-
-    bind(speaker, $me).
+    bind(speaker, $me),
+    bind(dialog_group, $me).
