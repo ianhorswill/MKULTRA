@@ -9,7 +9,7 @@
 %% look like: quantifiers(modal(predication(args...))).
 %%
 
-%% opt_pp(Predication, SentenceLFIn, SentenceLFOut)
+%% opt_pp(Predication, +Gap, SentenceLFIn, SentenceLFOut)
 %  Fills in slots of Predication, specified by PPs, and wrapping SentenceLFIn
 %  in any further quantifiers from the NPs of the PPs, to produce SentenceLFOut
 :- randomizable opt_pp//3.
@@ -19,7 +19,7 @@ opt_pp(Predication, Gap, S1, S3) -->
    [ Preposition ],
    { preposition(Preposition),
      prepositional_slot(Preposition, X, Predication) },
-   np((X^S1)^S2, object, _, nogap, GapOut),
+   np((X^S1)^S2, object, _, Gap, nogap),
    opt_pp(Predication, nogap, S2, S3).
 
 %% preposition(?Word)
@@ -27,13 +27,9 @@ opt_pp(Predication, Gap, S1, S3) -->
 :- randomizable preposition/1.
 preposition(to).
 preposition(about).
+preposition(with).
 
 %% prepositional_slot(?Preposition, ?Referrent, ?Predication
 %  True when the slot of Predication corresponding to Preposition
 %  has the value Referrent.
 :- randomizable prepositional_slot/3.
-prepositional_slot(to, Destination, go(_Agent, Destination)).
-prepositional_slot(to, Recipient, give(_Agent, Recipient, _Patient)).
-prepositional_slot(about, Topic, talk(_Speaker, _Addressee, Topic)).
-prepositional_slot(to, Addressee, talk(_Speaker, Addressee, _Topic)).
-   
