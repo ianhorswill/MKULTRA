@@ -37,14 +37,47 @@ namespace Prolog
         /// <summary>
         /// Converts English text string to Prolog-format list of words (symbols).
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "WordList"), Documentation("Converts English text string to Prolog-format list of words (symbols).")]
         public static Structure StringToWordList(string text)
         {
-            if (text == null) throw new ArgumentNullException("text");
-            var syms = new List<object>();
-            foreach (var word in text.Split(WordDelimiters, StringSplitOptions.RemoveEmptyEntries))
-                syms.Add(Symbol.Intern(word));
-            return IListToPrologList(syms);
+            var b = new StringBuilder();
+            var words = new List<object>();
+
+            foreach (var c in text)
+            {
+                switch (c)
+                {
+                    case ' ':
+                    case '\t':
+                        if (b.Length > 0)
+                        {
+                            words.Add(Symbol.Intern(b.ToString()));
+                            b.Length = 0;
+                        }
+                        break;
+
+                    case '.':
+                    case '!':
+                    case ',':
+                    case '?':
+                    case '(':
+                    case ')':
+                    case '\'':
+                    case '"':
+                        if (b.Length > 0)
+                        {
+                            words.Add(Symbol.Intern(b.ToString()));
+                            b.Length = 0;
+                        }
+                        words.Add(Symbol.Intern(new string(c, 1)));
+                        break;
+
+                    default:
+                        b.Append(c);
+                        break;
+                }
+            }
+
+            return IListToPrologList(words);
         }
 
         /// <summary>
@@ -69,8 +102,6 @@ namespace Prolog
             }
             return s.ToString();
         }
-
-        static readonly char[] WordDelimiters = { ' ', ',', '\t', ':', '"', '-' };
 
         public static string DefaultSourceFileExtension = ".prolog";
 
