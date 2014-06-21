@@ -2,7 +2,7 @@
 using UnityEngine;
 
 // ReSharper disable once InconsistentNaming
-public class NLPrompt : MonoBehaviour
+public class NLPrompt : BindingBehaviour
 {
     private string input = "";
 
@@ -12,6 +12,8 @@ public class NLPrompt : MonoBehaviour
 
     private string formatted = "";
 
+    private object dialogAct;
+
     public Rect InputRect = new Rect(0, 0, 1000, 100);
 
     public Rect CommentaryRect = new Rect(0, 100, 1000, 100);
@@ -19,6 +21,11 @@ public class NLPrompt : MonoBehaviour
     public GUIStyle InputGUIStyle = new GUIStyle();
 
     public GUIStyle CommentaryGUIStyle = new GUIStyle();
+
+    [Bind]
+#pragma warning disable 649
+    private SimController simController;
+#pragma warning restore 649
 
     internal void OnGUI()
     {
@@ -43,6 +50,7 @@ public class NLPrompt : MonoBehaviour
         {
             case KeyCode.Escape:
                 this.input = this.formatted = this.commentary = "";
+                this.dialogAct = null;
                 break;
 
             case KeyCode.Delete:
@@ -50,12 +58,19 @@ public class NLPrompt : MonoBehaviour
                 if (this.input != "")
                 {
                     this.formatted = this.input = this.input.Substring(0, this.input.Length - 1);
+                    this.TryCompletionIfCompleteWord();
                 }
                 break;
 
             case KeyCode.Return:
             case KeyCode.KeypadEnter:
-                this.formatted = this.input = "";
+                if (this.dialogAct != null)
+                {
+                    simController.QueueEvent("player_input", dialogAct);
+                    this.formatted = this.input = this.completion = this.commentary = "";
+                    this.dialogAct = null;
+                }
+                Event.current.Use();
                 break;
 
             default:
@@ -84,6 +99,7 @@ public class NLPrompt : MonoBehaviour
         {
             var lastSpace = this.input.LastIndexOf(' ');
             var lastWord = lastSpace < 0 ? this.input : this.input.Substring(lastSpace + 1);
+            lastWord = lastWord.Trim('(', ')', '.', ',', '?', '!', ';', ':', '\'', '"');
             if (Symbol.IsInterned(lastWord))
             {
                 this.TryCompletion();
@@ -93,6 +109,7 @@ public class NLPrompt : MonoBehaviour
         if (this.formatted == null)
         {
             this.formatted = this.input;
+            this.dialogAct = null;
         }
     }
 
@@ -110,6 +127,7 @@ public class NLPrompt : MonoBehaviour
         if (completionSuccess)
         {
             this.completion = (string)completionVar.Value;
+            this.dialogAct = Term.CopyInstantiation(commentaryVar.Value);
             this.commentary = ISOPrologWriter.WriteToString(commentaryVar.Value);
             this.formatted = this.completion=="" ?
                                 string.Format("<b><color=lime>{0}</color></b>", this.input)
