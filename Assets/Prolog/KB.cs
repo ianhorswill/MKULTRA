@@ -9,6 +9,8 @@ namespace Prolog
     /// </summary>
     class KB : MonoBehaviour
     {
+        private const string GlobalKBGameObjectName = "GlobalKB";
+
         public string[] SourceFiles = new string[0];
 
         private KnowledgeBase kb;
@@ -33,7 +35,15 @@ namespace Prolog
         {
             get
             {
-                return name == "GlobalKB";
+                return name == GlobalKBGameObjectName;
+            }
+        }
+
+        public static KB Global
+        {
+            get
+            {
+                return GameObject.Find(GlobalKBGameObjectName).GetComponent<KB>();
             }
         }
 
@@ -69,7 +79,7 @@ namespace Prolog
                 : new KnowledgeBase(
                     gameObject.name,
                     gameObject,
-                    parentKB == null ? GameObject.Find("GlobalKB").KnowledgeBase() : parentKB.KnowledgeBase);
+                    parentKB == null ? GameObject.Find(GlobalKBGameObjectName).KnowledgeBase() : parentKB.KnowledgeBase);
 
             // Add UID counter.
             ELNode.Store(kb.ELRoot/Symbol.Intern("next_uid")%0);
