@@ -700,9 +700,12 @@ namespace Prolog
             }
         }
 
+        const string PrefixHeader = "(prefix: ";
+
         // ReSharper disable once InconsistentNaming
         private void ConsultCSV(Symbol functor, char delimiter, PositionTrackingTextReader r)
         {
+            string prefix = "";
             string[] format = null;
             int row = 1;
             var currentRow = new List<object>();
@@ -716,7 +719,7 @@ namespace Prolog
                     r.Read(); // Skip over delimiter
                     var itemString = ReadItem(r, delimiter, b);
                     // ReSharper disable once PossibleNullReferenceException
-                    currentRow.Add(arity<0?itemString:(DecodeItem(itemString, format[currentRow.Count])));
+                    currentRow.Add(arity<0?itemString:(DecodeItem(itemString, format[currentRow.Count], prefix)));
                 }
                 else if (peek == '\r' || peek == '\n')
                 {
@@ -737,7 +740,23 @@ namespace Prolog
                         for (var i = 0; i < arity; i++)
                         {
                             var itemFormat = (string)currentRow[i];
-                            format[i] = itemFormat.EndsWith("(string)")?"string" : null;
+                            if (itemFormat.EndsWith(")"))
+                            {
+                                if (itemFormat.EndsWith("(string)"))
+                                    format[i] = "string";
+                                else
+                                {
+                                    // ReSharper disable once StringIndexOfIsCultureSpecific.1
+                                    var prefixSpec = itemFormat.IndexOf(PrefixHeader);
+                                    if (prefixSpec >= 0)
+                                    {
+                                        var prefixStart = prefixSpec + PrefixHeader.Length;
+                                        prefix = itemFormat.Substring(
+                                            prefixStart,
+                                            itemFormat.Length - (prefixStart + 1));
+                                    }
+                                }
+                            }
                         }
                     }
                     else if (currentRow.Count == arity)
@@ -754,7 +773,8 @@ namespace Prolog
                 else
                 {
                     var item = ReadItem(r, delimiter, b);
-                    currentRow.Add(arity<0?item:(IsObviouslySymbol(item) ? Symbol.Intern(item) : ISOPrologReader.Read(item+".")));
+                    // ReSharper disable once PossibleNullReferenceException
+                    currentRow.Add(arity<0?item:DecodeItem(item, format[currentRow.Count], prefix));
                 }
                 peek = r.Peek();
             }
@@ -770,12 +790,12 @@ namespace Prolog
             }
         }
 
-        private static object DecodeItem(string itemString, string format)
+        private static object DecodeItem(string itemString, string format, string prefix)
         {
             switch (format)
             {
                 case null:
-                    return IsObviouslySymbol(itemString) ? Symbol.Intern(itemString) : ISOPrologReader.Read(itemString + ".");
+                    return IsObviouslySymbol(itemString) ? Symbol.Intern(itemString) : ISOPrologReader.Read(prefix+itemString + ".");
 
                 case "string":
                     return itemString;

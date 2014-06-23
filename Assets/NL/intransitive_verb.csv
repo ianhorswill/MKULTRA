@@ -1,1 +1,1 @@
-Base,TPS,Past,PastP,PresP,LFhalt,halts,halted,halted,halting,A^halt(A)go,goes,went,went,going,"A^go(A,_Dest)"talk,talks,talked,talked,talking,"A^talk(A,_Conversant, _Topic)"
+Base,TPS,Past,PastP,PresP,LF (prefix: Agent^)halt,halts,halted,halted,halting,halt(Agent)go,goes,went,went,going,"go(Agent, _Dest)"talk,talks,talked,talked,talking,"talk(Agent, _Conversant, _Topic)"

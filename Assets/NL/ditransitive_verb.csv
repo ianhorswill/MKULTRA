@@ -1,1 +1,1 @@
-Base,TPS,Past,PastP,PresP,LFgive,gives,gave,gave,giving,"S^D^I^give(S,D,I)"
+Base,TPS,Past,PastP,PresP,LF (prefix: S^D^I^)give,gives,gave,gave,giving,"give(S,D,I)"
