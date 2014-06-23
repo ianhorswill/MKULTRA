@@ -77,6 +77,11 @@ namespace Prolog
                 }
             }
 
+            if (b.Length > 0)
+            {
+                words.Add(Symbol.Intern(b.ToString()));
+            }
+
             return IListToPrologList(words);
         }
 
