@@ -76,6 +76,9 @@ public class SimController : BindingBehaviour
     [Bind]
     private CharacterSteeringController steering;
 
+    [Bind(BindingScope.GameObject, BindingDefault.Ignore)]
+    private NLPrompt nlPrompt;
+
     [Bind(BindingScope.Global, BindingDefault.Create)]
     private PathPlanner planner;
 #pragma warning restore 649
@@ -424,8 +427,16 @@ public class SimController : BindingBehaviour
                         throw new Exception(
                             "generate_text returned " + ISOPrologWriter.WriteToString(text) + " for "
                             + ISOPrologWriter.WriteToString(structure));
-
-                    this.Say(textString);
+                    if (structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), gameObject))
+                        // Character is talking to zhimself
+                    {
+                        if (nlPrompt != null)
+                            nlPrompt.OutputToPlayer(textString);
+                        else
+                            this.Say(string.Format("({0})", textString));
+                    }
+                    else
+                        this.Say(textString);
 
                     // Tell the other characters
                     foreach (var node in this.socialSpace.Children)

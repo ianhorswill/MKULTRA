@@ -4,28 +4,70 @@ using UnityEngine;
 // ReSharper disable once InconsistentNaming
 public class NLPrompt : BindingBehaviour
 {
-    private string input = "";
-
-    private string completion = "";
-
-    private string commentary = "";
-
-    private string formatted = "";
-
-    private object dialogAct;
-
+    #region Public fields editable within the editor
+    /// <summary>
+    /// Location where user input is displayed
+    /// </summary>
     public Rect InputRect = new Rect(0, 0, 1000, 100);
-
+    /// <summary>
+    /// Location where the decoded dialog act is displayed
+    /// </summary>
     public Rect CommentaryRect = new Rect(0, 100, 1000, 100);
+    /// <summary>
+    /// Location where output from the character to the player is displayed
+    /// </summary>
+    public Rect ResponseRect = new Rect(0, 100, 1000, 100);
 
+    /// <summary>
+    /// Font, color, etc. for displaying the player's input.
+    /// </summary>
     public GUIStyle InputGUIStyle = new GUIStyle();
-
+    /// <summary>
+    /// Font, color, etc. for displaying the decoded dialog act
+    /// </summary>
     public GUIStyle CommentaryGUIStyle = new GUIStyle();
+    #endregion
+
+    #region Private fields
+    /// <summary>
+    /// What the user has typed so far.
+    /// </summary>
+    private string input = "";
+    /// <summary>
+    /// Text that completes the input to be a valid utterance of the grammar (if any)
+    /// </summary>
+    private string completion = "";
+    /// <summary>
+    /// Text describing the decoded dialog act
+    /// </summary>
+    private string commentary = "";
+    /// <summary>
+    /// Combined input+completion with colorization
+    /// </summary>
+    private string formatted = "";
+    /// <summary>
+    /// The dialog act as a Prolog term.
+    /// </summary>
+    private object dialogAct;
+    /// <summary>
+    /// Output form player character to player, if any.
+    /// </summary>
+    private string characterResponse = "";
 
     [Bind]
 #pragma warning disable 649
     private SimController simController;
 #pragma warning restore 649
+    #endregion
+
+    /// <summary>
+    /// Display output from the player character to the player.
+    /// </summary>
+    /// <param name="formattedText">Text to display</param>
+    public void OutputToPlayer(string formattedText)
+    {
+        characterResponse = formattedText;
+    }
 
     internal void OnGUI()
     {
@@ -40,6 +82,7 @@ public class NLPrompt : BindingBehaviour
             case EventType.Repaint:
                 GUI.Label(InputRect, formatted, InputGUIStyle);
                 GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
+                GUI.Label(ResponseRect, characterResponse, InputGUIStyle);
                 break;
         }
     }
@@ -84,6 +127,10 @@ public class NLPrompt : BindingBehaviour
 
     private void AddToInput(char c)
     {
+        if (c == '\n')
+            return;
+
+        characterResponse = "";
         if (c != ' ' || (this.input != "" && !this.input.EndsWith(" "))) // don't let them type redundant spaces
             this.input = this.input + c;
 
@@ -133,7 +180,7 @@ public class NLPrompt : BindingBehaviour
                                 string.Format("<b><color=lime>{0}</color></b>", this.input)
                                 : string.Format("<color=lime>{0}{1}</color><color=grey><i>{2}</i></color>",
                                                 this.input,
-                                                this.input.EndsWith(" ")?"":" ",
+                                                (this.input.EndsWith(" ") || !char.IsLetterOrDigit(completion[0]))?"":" ",
                                                 this.completion);
         }
         else
