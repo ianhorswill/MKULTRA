@@ -3,6 +3,9 @@
 %% agent(+Event, ?Who) is det
 %  True is Who is the agent of Event.
 %  Assumes agent is first argument.
+agent(player_input(_), _) :-
+   !,
+   fail.
 agent(Event, Who) :-
     arg(1, Event, Who).
 

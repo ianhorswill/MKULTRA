@@ -14126,7 +14126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Concerns:
-  - patrol
+  - player_interaction
 --- !u!114 &1989881536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14145,6 +14145,12 @@ MonoBehaviour:
     width: 1000
     height: 100
   CommentaryRect:
+    serializedVersion: 2
+    x: 50
+    y: 100
+    width: 1000
+    height: 100
+  ResponseRect:
     serializedVersion: 2
     x: 50
     y: 100
@@ -14899,6 +14905,7 @@ MonoBehaviour:
   - Concerns/social_interaction
   - Concerns/conversation
   - Concerns/roles
+  - Concerns/player_interaction
   - NL/interface
   - NL/grammar
   - NL/base_grammar

@@ -23,4 +23,5 @@ input_completion(InputText, CompletionText, SpeechAct) :-
 
 bind_dialog_indexicals :-
     bind(speaker, $me),
+    bind(addressee, $me),
     bind(dialog_group, $me).
