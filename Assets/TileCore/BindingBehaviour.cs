@@ -285,7 +285,7 @@ public abstract class BindingBehaviour : MonoBehaviour
             switch (bindAttribute.IfNotFound)
             {
                 case BindingDefault.Exception:
-                    throw new Exception("No target to bind to");
+                    throw new Exception(string.Format("{0}.{1}.{2}: no target to bind to", component.gameObject.name, component.GetType().Name, field.Name));
 
                 case BindingDefault.Create:
                     target = component.gameObject.AddComponent(field.FieldType);
