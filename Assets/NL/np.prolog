@@ -8,7 +8,7 @@
 :- randomizable np//4.
 %np(NP, _C, third:Number, nogap) --> 
 %   det(N1^NP), n(Number, N1).
-np(NP, _C, third:Number, Gap, Gap) --> proper_noun(Number, NP).
 np(NP, Case, Agreement, Gap, Gap) --> pronoun(Case, Agreement, NP).
+np(NP, _C, third:Number, Gap, Gap) --> proper_noun(Number, NP).
 np((X^S)^S, _C, _Agreement, np(X), nogap) --> [].
 
