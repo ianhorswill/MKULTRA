@@ -25,9 +25,12 @@ opt_pp(Predication, Gap, S1, S3) -->
 %% preposition(?Word)
 %  Word is a preposition
 :- randomizable preposition/1.
+preposition(from).
 preposition(to).
 preposition(about).
 preposition(with).
+preposition(on).
+preposition(in).
 
 %% prepositional_slot(?Preposition, ?Referrent, ?Predication
 %  True when the slot of Predication corresponding to Preposition
