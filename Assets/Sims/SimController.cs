@@ -53,6 +53,8 @@ public class SimController : BindingBehaviour
     private const float SpeechDelaySecondsPerChar = 0.075f;
     private const float SpeechDelayMinimum = 0.5f;
     private const float SpeechDelayMaximum = 4f;
+
+    private readonly Symbol playerSymbol = Symbol.Intern("player");
     #endregion
 
     /// <summary>
@@ -427,7 +429,7 @@ public class SimController : BindingBehaviour
                         throw new Exception(
                             "generate_text returned " + ISOPrologWriter.WriteToString(text) + " for "
                             + ISOPrologWriter.WriteToString(structure));
-                    if (structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), gameObject))
+                    if (structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), playerSymbol))
                         // Character is talking to zhimself
                     {
                         if (nlPrompt != null)

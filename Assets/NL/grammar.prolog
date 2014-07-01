@@ -33,7 +33,7 @@ make_all_utterances_actions :-
    forall(( clause(utterance(A, _, _), _),
 	    nonvar(A) ),
 	  assert_action_functor(A)),
-   forall(clause(stock_phrase(A), _),
+   forall(clause(stock_phrase(A, _, _), _),
 	  assert_action_functor(A)).
 
 assert_action_functor(Structure) :-

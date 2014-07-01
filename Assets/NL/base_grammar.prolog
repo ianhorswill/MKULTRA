@@ -1,4 +1,11 @@
 sentence(S, Mood, Polarity, Tense, Aspect) -->
+   ['('],
+   { bind(speaker, player), bind(addressee, $me) },
+   s(S, Mood, Polarity, Tense, Aspect),
+   opt_stop(Mood),
+   [')'].
+
+sentence(S, Mood, Polarity, Tense, Aspect) -->
    s(S, Mood, Polarity, Tense, Aspect),
    opt_stop(Mood).
 
@@ -6,11 +13,6 @@ opt_stop(interrogative) --> [ '?' ].
 opt_stop(_Mood) --> [ ].
 opt_stop(Mood) --> [ '.' ], { Mood \= interrogative }.
 opt_stop(Mood) --> [ '!' ], { Mood \= interrogative }.
-
-
-:- public test_generation/2.
-test_generation(LF, Output) :-
-   s(LF, indicative, affirmative, present, simple, Output, []).
 
 %% s(?S, ?Mood, ?Polarity, ?Tense, ?Aspect)
 %  Sentences

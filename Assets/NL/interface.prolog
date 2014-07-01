@@ -23,9 +23,20 @@ input_completion(InputText, CompletionText, SpeechAct) :-
    word_list(CompletionText, CompletionWords).
 
 bind_dialog_indexicals_for_input :-
+   in_conversation_with_npc(NPC),
+   !,
    bind(speaker, $me),
+   bind(addressee, NPC),
+   bind(dialog_group, $me).
+bind_dialog_indexicals_for_input :-
+   bind(speaker, player),
    bind(addressee, $me),
    bind(dialog_group, $me).
+
+in_conversation_with_npc(NPC) :-
+   concern(C),
+   C/partner/NPC,
+   NPC \= $me.
 
 bind_dialog_indexicals_for_output(SpeechAct) :-
    agent(SpeechAct, A),

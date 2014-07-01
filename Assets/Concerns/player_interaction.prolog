@@ -9,5 +9,5 @@ player_interaction_script >-->
    player_dialog.
 
 player_dialog >-->
-   [ player_input(X), X ],
+   [ player_input(_X), greet($me, player) ],
    player_dialog.
