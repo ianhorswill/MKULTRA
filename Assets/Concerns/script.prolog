@@ -14,6 +14,7 @@ propose_action(Action, script, C) :-
    /perception/nobody_speaking,
    C/awaiting:Events,
    member(Action, Events),
+   action(Action),
    agent(Action, $me).
 
 update_script(C, Event) :-

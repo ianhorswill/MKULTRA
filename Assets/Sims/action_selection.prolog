@@ -15,19 +15,9 @@
 %  Concern, which is of type Type, proposes Action.
 :- external propose_action/3.
 
-%% blocked(+Action) is det
-%  True if action is unrunnable, either because of an unsatisfied
-% precondition or because it's not a user-runnable action in the first place.
-:- external blocked/1.
-
-blocked(_) :-
-   % Kluge: don't do *anything* if someone else is speaking.
-   \+ /perception/nobody_speaking.
-blocked(exit_social_space(_)).
-
 %% action_score(+Action, +Type, +Concern, -Score) is nondet
 %  Concern (of type Type) assigns Score to Action.
-:- external propose_action/3.
+:- external action_score/4.
 
 %% next_action(-Action) is det
 %  Action is the highest rated action available, or sleep if no available actions.
@@ -44,11 +34,6 @@ best_action(Action) :-
 	       runnable(Action),
 	       action_score(Action, Score),
 	       assert(/action_state/candidates/Action:Score) )).
-
-%% runnable(+Action) is det
-%  True if Action can be executed now.
-runnable(Action) :-
-   \+ blocked(Action).
 
 available_action(Action) :-
     concern(Concern, Type),

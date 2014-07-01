@@ -29,3 +29,19 @@ stock_phrase(parting($speaker, _)) --> [X], { member(X, [bye, byebye, goodbye]) 
 stock_phrase(parting($speaker, _)) --> [see, you].
 stock_phrase(parting($speaker, _)) --> [be, seeing, you].
 
+make_all_utterances_actions :-
+   forall(( clause(utterance(A, _, _), _),
+	    nonvar(A) ),
+	  assert_action_functor(A)),
+   forall(clause(stock_phrase(A), _),
+	  assert_action_functor(A)).
+
+assert_action_functor(Structure) :-
+   functor(Structure, Functor, Arity),
+   ( action_functor(Functor, Arity) -> true
+     ;
+     assert(action_functor(Functor, Arity)) ).
+
+:- make_all_utterances_actions.
+
+:- public make_all_utterances_actions/0.

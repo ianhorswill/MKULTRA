@@ -14895,6 +14895,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SourceFiles:
   - Sims/events
+  - Sims/actions
   - Sims/action_selection
   - Sims/utilities
   - Concerns/concerns
