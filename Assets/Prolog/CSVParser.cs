@@ -1,0 +1,206 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+namespace Prolog
+{
+    // ReSharper disable once InconsistentNaming
+    class CSVParser
+    {
+        public CSVParser(Symbol functor, char delimiter, PositionTrackingTextReader reader)
+        {
+            this.functor = functor;
+            this.delimiter = delimiter;
+            this.reader = reader;
+        }
+
+        struct ColumnFormat
+        {
+            private readonly bool isString;
+
+            private readonly string prefix;
+
+            public ColumnFormat(bool isString, string prefix)
+                : this()
+            {
+                this.isString = isString;
+                this.prefix = prefix;
+            }
+
+            public void AppendFormatted(StringBuilder b, string item)
+            {
+                if (this.isString)
+                {
+                    b.Append('"');
+                    b.Append(item);
+                    b.Append('"');
+                }
+                else
+                {
+                    if (this.prefix != null)
+                        b.Append(this.prefix);
+                    b.Append(item);
+                }
+            }
+        }
+
+        readonly List<ColumnFormat> columnFormats = new List<ColumnFormat>();
+
+        /// <summary>
+        /// Number of columns in the spreadsheet.
+        /// </summary>
+        public int Arity
+        {
+            get
+            {
+                return columnFormats.Count;
+            }
+        }
+
+        private readonly Symbol functor;
+
+        private readonly char delimiter;
+
+        private readonly PositionTrackingTextReader reader;
+
+        private readonly StringBuilder itemBuffer = new StringBuilder();
+
+        private readonly StringBuilder factBuffer = new StringBuilder();
+
+        private int rowNumber = 1;
+
+        const string PrefixHeader = "(prefix: ";
+
+        // ReSharper disable once InconsistentNaming
+        public void Read(Action<Structure> rowHandler)
+        {
+            this.ReadHeaderRow();
+            while (reader.Peek() >= 0)
+            {
+                rowHandler(this.ReadFactRow());
+            }
+        }
+
+        void ReadHeaderRow()
+        {
+            this.ReadRow(item => this.columnFormats.Add(DecodeFormat(item)));
+        }
+
+        private ColumnFormat DecodeFormat(string headerItem)
+        {
+            if (headerItem.EndsWith(")"))
+            {
+                if (headerItem.EndsWith("(string)"))
+                    return new ColumnFormat(true, null);
+
+                // ReSharper disable once StringIndexOfIsCultureSpecific.1
+                var prefixSpec = headerItem.IndexOf(PrefixHeader);
+                if (prefixSpec >= 0)
+                {
+                    var prefixStart = prefixSpec + PrefixHeader.Length;
+                    return new ColumnFormat(
+                        false,
+                        headerItem.Substring(prefixStart, headerItem.Length - (prefixStart + 1)));
+                }
+            }
+            return new ColumnFormat(false, null);
+        }
+
+        Structure ReadFactRow()
+        {
+            bool firstColumn = true;
+            int argument = 0;
+            factBuffer.Length = 0;
+            factBuffer.Append(functor.Name);
+            factBuffer.Append('(');
+            this.ReadRow(
+                item =>
+                {
+                    if (firstColumn)
+                        firstColumn = false;
+                    else
+                        factBuffer.Append(", ");
+                    if (argument>=Arity)
+                        throw new Exception("Too many columns in row "+rowNumber);
+                    columnFormats[argument].AppendFormatted(this.factBuffer, item);
+                    argument += 1;
+                });
+            if (argument != Arity)
+                throw new Exception("Too few columns in row "+rowNumber);
+            factBuffer.Append(").");
+            return (Structure)ISOPrologReader.Read(factBuffer.ToString());
+        }
+
+        private void ReadRow(Action<string> itemHandler)
+        {
+            int peek = reader.Peek();
+            while (peek >= 0)
+            {
+                if (peek == '\r' || peek == '\n')
+                {
+                    // end of line - swallow cr and/or lf
+                    reader.Read();
+                    if (peek == '\r')
+                    {
+                        // Swallow LF if CRLF
+                        peek = reader.Peek();
+                        if (peek == '\n')
+                            reader.Read();
+                    }
+                    rowNumber++;
+                    return;
+                }
+                if (peek == this.delimiter)
+                    // Skip over delimiter
+                    this.reader.Read();
+
+                itemHandler(ReadItem(this.reader, this.delimiter, this.itemBuffer));
+                peek = reader.Peek();
+            }
+        }
+
+        static string ReadItem(TextReader reader, char delimiter, StringBuilder stringBuilder)
+        {
+            bool quoted = false;
+            stringBuilder.Length = 0;
+            int peek = (char)reader.Peek();
+            if (peek == delimiter)
+                return "";
+            if (peek == '\"')
+            {
+                quoted = true;
+                reader.Read();
+            }
+        getNextChar:
+            peek = reader.Peek();
+            if (peek < 0)
+                goto done;
+            if (quoted && peek == '\"')
+            {
+                reader.Read();  // Swallow quote
+                if ((char)reader.Peek() == '\"')
+                {
+                    // It was an escaped quote
+                    reader.Read();
+                    stringBuilder.Append('\"');
+                    goto getNextChar;
+                }
+                // It was the end of the item
+                // ReSharper disable RedundantJumpStatement
+                goto done;
+                // ReSharper restore RedundantJumpStatement
+            }
+            if (!quoted && (peek == delimiter || peek == '\r' || peek == '\n'))
+                // ReSharper disable RedundantJumpStatement
+                goto done;
+            // ReSharper restore RedundantJumpStatement
+            stringBuilder.Append((char)peek);
+            reader.Read();
+            goto getNextChar;
+        //System.Diagnostics.Debug.Assert(false, "Line should not be reachable.");
+        done:
+            return stringBuilder.ToString();
+        }
+    }
+}
