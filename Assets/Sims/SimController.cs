@@ -241,7 +241,15 @@ public class SimController : BindingBehaviour
             CharacterName = name;
         if (!KB.Global.IsTrue("register_character", gameObject, Symbol.Intern(CharacterName)))
             throw new Exception("Can't register prop " + name);
-        gameObject.IsTrue(Symbol.Intern("do_all_character_initializations"));
+        try
+        {
+            gameObject.IsTrue(Symbol.Intern("do_all_character_initializations"));
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Exception while initializing character "+gameObject.name);
+            Debug.LogException(e);
+        }
     }
 
     internal void Update()
@@ -423,13 +431,23 @@ public class SimController : BindingBehaviour
                 default:
                     // Assume it's dialog
                     var textVar = new LogicVariable("DialogText");
-                    var text = gameObject.SolveFor(textVar, "generate_text", structure, textVar);
+                    object text = null;
+                    try
+                    {
+                        text = gameObject.SolveFor(textVar, "generate_text", structure, textVar);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError(string.Format("Exception while generating text for {0}", gameObject.name));
+                        Debug.LogException(e);
+                    }
                     var textString = text as string;
                     if (textString == null)
                         throw new Exception(
                             "generate_text returned " + ISOPrologWriter.WriteToString(text) + " for "
                             + ISOPrologWriter.WriteToString(structure));
-                    if (structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), playerSymbol))
+                    var talkingToPlayer = structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), playerSymbol);
+                    if (talkingToPlayer)
                         // Character is talking to zhimself
                     {
                         if (nlPrompt != null)
@@ -440,12 +458,15 @@ public class SimController : BindingBehaviour
                     else
                         this.Say(textString);
 
-                    // Tell the other characters
-                    foreach (var node in this.socialSpace.Children)
+                    if (!talkingToPlayer)
                     {
-                        var character = (GameObject)(node.Key);
-                        if (character != this.gameObject)
-                            character.QueueEvent((Structure)Term.CopyInstantiation(structure));
+                        // Tell the other characters
+                        foreach (var node in this.socialSpace.Children)
+                        {
+                            var character = (GameObject)(node.Key);
+                            if (character != this.gameObject)
+                                character.QueueEvent((Structure)Term.CopyInstantiation(structure));
+                        }
                     }
                     break;
             }
