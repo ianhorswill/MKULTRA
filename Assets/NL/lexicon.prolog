@@ -5,7 +5,7 @@
 
 pronoun('I', subject, first, singular, $speaker).
 pronoun(me, object, first, singular, $speaker).
-pronoun(you, _, second, singular, $speaker).
+pronoun(you, _, second, singular, $addressee).
 pronoun(we, subject, first, plural, $dialog_group).
 pronoun(us, object, first, plural, $dialog_group).
 

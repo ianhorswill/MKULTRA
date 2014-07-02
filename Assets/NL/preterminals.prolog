@@ -8,7 +8,7 @@ n(plural, LF)   --> [N], {noun(_, N, LF)}.
 
 proper_noun(singular, (E^S)^S) --> [PN], {proper_noun(PN, E)}.
 
-pronoun(Case, Person:Number, (E^S)^S) --> [PN], {pronoun(PN, Case, Person, Number, E)}.
+pronoun(Case, Person:Number, (E^S)^S) --> [PN], { pronoun(PN, Case, Person, Number, E) }.
 
 %relpron --> [RP], {relpron(RP)}.
 whpron --> [WH], {whpron(WH)}.
