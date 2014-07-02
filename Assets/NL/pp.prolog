@@ -16,6 +16,7 @@
 
 opt_pp(_, nogap, S, S) --> [ ].
 opt_pp(Predication, Gap, S1, S3) -->
+   { \+(generating_nl) },
    [ Preposition ],
    { preposition(Preposition),
      prepositional_slot(Preposition, X, Predication) },

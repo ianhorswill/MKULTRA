@@ -1,4 +1,5 @@
 :- public generate_text/2, input_completion/3.
+:- indexical input_from_player=false, generating_nl=false.
 
 %% generate_text(?SpeechAct, ?Text)
 %  The string Text is a possible realization of SpeechAct.
@@ -25,10 +26,12 @@ input_completion(InputText, CompletionText, SpeechAct) :-
 bind_dialog_indexicals_for_input :-
    in_conversation_with_npc(NPC),
    !,
+   bind(input_from_player, true),
    bind(speaker, $me),
    bind(addressee, NPC),
    bind(dialog_group, $me).
 bind_dialog_indexicals_for_input :-
+   bind(input_from_player, true),
    bind(speaker, player),
    bind(addressee, $me),
    bind(dialog_group, $me).
@@ -39,7 +42,11 @@ in_conversation_with_npc(NPC) :-
    NPC \= $me.
 
 bind_dialog_indexicals_for_output(SpeechAct) :-
+   bind(generating_nl, true),
    agent(SpeechAct, A),
    patient(SpeechAct, P),
    bind(speaker, A),
    bind(addressee, P).
+
+generating_nl :-
+   X = $generating_nl, X.
