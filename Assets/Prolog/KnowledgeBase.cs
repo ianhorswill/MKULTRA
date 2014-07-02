@@ -140,12 +140,17 @@ namespace Prolog
             {
                 result = Prove(t.Functor, t.Arguments, prologContext, 0).GetEnumerator().MoveNext();
             }
+            catch (InferenceStepsExceededException)
+            {
+                throw;
+            }
             catch (Exception e)
             {
                 throw new PrologError(e,
                                       prologContext.StackTrace(Prolog.CurrentSourceFile,
                                                          Prolog.CurrentSourceLineNumber,
-                                                         "IsTrue()")
+                                                         "IsTrue()",
+                                                         false)
                                                          + e.StackTrace);
             }
             finally
@@ -757,13 +762,19 @@ namespace Prolog
                     Prolog.CurrentSourceLineNumber = lastLine;
                 }
             }
+            catch (InferenceStepsExceededException e)
+            {
+                Repl.RecordExceptionSourceLocation(e, lastLine);
+                throw;
+            }
             catch (Exception e)
             {
                 Repl.RecordExceptionSourceLocation(e, lastLine);
                 throw new PrologError(e,
                                       context.StackTrace(Prolog.CurrentSourceFile,
                                                          Prolog.CurrentSourceLineNumber,
-                                                         "consult/1"));
+                                                         "consult/1",
+                                                         false));
             }
             finally
             {

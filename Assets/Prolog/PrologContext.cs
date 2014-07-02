@@ -172,7 +172,7 @@ namespace Prolog
         internal void NewStep() {
             StepsRemaining -= 1;
             if (StepsRemaining < 0)
-                throw new InferenceStepsExceededException();
+                throw new InferenceStepsExceededException(this);
         }
         #endregion
 
@@ -441,12 +441,14 @@ namespace Prolog
         /// <param name="sourcePath">Path for the source file being loaded.</param>
         /// <param name="lineNumber">Current line number in the source file.</param>
         /// <param name="toplevelCommand">Original prolog command to output, if stack is empty.</param>
+        /// <param name="fullTrace">If true, the complete stack is dumped, otherwise, just the starting frames.</param>
         /// <returns></returns>
-        public string StackTrace(string sourcePath, int lineNumber, string toplevelCommand)
+        public string StackTrace(string sourcePath, int lineNumber, string toplevelCommand, bool fullTrace)
         {
+            ushort startingFrame = fullTrace ? this.CurrentFrame : (ushort)Math.Min((int)this.CurrentFrame, 30);
             var result = new StringBuilder();
             if (this.GoalStackDepth > 0)
-                for (int i = this.CurrentFrame; i >= 0; i--)
+                for (int i = startingFrame; i >= 0; i--)
                 {
                     Structure g = this.GoalStackGoal((ushort)i);
                     if (g != null)
