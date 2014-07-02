@@ -22,7 +22,7 @@ namespace Prolog
             }
             else
             {
-                if (argument is LogicVariable)
+                if (argument is LogicVariable || argument is Indexical)
                 {
                     this.Type = IndexerType.Variable;
                     this.Functor = null;
