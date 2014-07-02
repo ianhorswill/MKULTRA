@@ -22,11 +22,16 @@ player_input_response(question(player, $me, Question, T, A),
 player_input_response(command(player, $me, LF),
 		      assertion($me, player, LF, future, simple)).
 
+answer_to(M:manner(be($'Bruce'), M), okay($'Bruce')) :-
+   !.
 answer_to(_X:Y, Y) :-
-   Y.
+   !, Y.
+answer_to(Y, Y) :-
+   Y, !.
+answer_to(Y, not(Y)).
 
-:- public manner/2, be/2.
+:- public manner/2, be/2, okay/1.
 
-manner(be($me), fine).
+okay($'Bruce').
 be($'Bruce', $'Bruce').
 be(player, $'Bruce').
