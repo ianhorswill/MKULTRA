@@ -17,11 +17,13 @@ aux_vp(VP, Polarity, Agreement, Tense, Aspect) -->
 %test_modal_vp(LF) :-
 %   vp(_, X^can(X), LF, _, _, nogap, [halt], [ ]).
 
-vp(Form, Predication^S1, Subject^S2, Tense, Agreement, Gap) --> 
+vp(Form, Predication^Modal, Subject^S, Tense, Agreement, Gap) -->
+   { lf_predication(S, Predication) },
    iv(Form, Agreement, Subject^Predication, Tense),
-   opt_pp(Predication, Gap, S1, S2).
+   opt_pp(Predication, Gap, Modal, S).
 
 vp(Form, Predication^Modal, Subject^S3, Tense, Agreement, GapInfo) -->
+   { lf_predication(S3, Predication) },
    dtv(Form, Agreement,
        Subject^IndirectObject^DirectObject^Predication,
        Tense), 
@@ -30,54 +32,69 @@ vp(Form, Predication^Modal, Subject^S3, Tense, Agreement, GapInfo) -->
    opt_pp(Predication, GapOut, S2, S3).
 
 vp(Form, Predication^Modal, Subject^S2, Tense, Agreement, GapInfo) -->
+   { lf_predication(S2, Predication) },
    tv(Form, Agreement, Subject^Object^Predication, Tense), 
    np((Object^Modal)^S1, object, _, GapInfo, GapOut),
    opt_pp(Predication, GapOut, S1, S2).
 
-%% analyze_lf(?SentenceLF, ?VP_LF)
-%  Fill in VP_LF from SentenceLF, if SentenceLF is instantiated
-%  This is needed inside the productions for the S nonterminal
-%  because when generating a sentence, the LF for the subject
-%  of the sentence would otherwise not get bound until the VP
-%  was parsed (because the VP determines which part of the LF
-%  is the LF of the subject.  That causes the NP productions to
-%  exhaustively generate every possible noun phrase to see if
-%  it has the LF needed by the VP.
-%
-%  So we handle this by detecting the case where the LF of the
-%  sentence is already instantiated (i.e. where we're generating)
-%  and searching down inside to bind the LF of the verb phrase
-%  in paricular, so that can be passed instantiated to the NP
-%  productions, allowing them to figure out what their LFs are.
+%% lf_predication(?SentenceLF, ?Predication)
+
+lf_predication(S, _) :-
+   var(S), !.  % do nothing if we don't know what the sentence LF is.
+lf_predication(_:S, P) :-
+   !,
+   lf_predication(S, P).
+lf_predication(explanation(S,_), P) :-
+   !,
+   lf_predication(S, P).
+lf_predication(not(S), P) :-
+   !,
+   lf_predication(S, P).
+lf_predication(may(S), P) :-
+   !,
+   lf_predication(S, P).
+lf_predication(should(S), P) :-
+   !,
+   lf_predication(S, P).
+lf_predication(can(S), P) :-
+   !,
+   lf_predication(S, P).
+lf_predication(must(S), P) :-
+   !,
+   lf_predication(S, P).
+lf_predication(S, S).
+
+
+%% lf_subject(?SentenceLF, ?Subject)
 
 % Don't do anything if S is uninstantiated
-analyze_lf(S, _VP) :-
+lf_subject(S, _) :-
    var(S), !.
 % If the LF is wrapped in modals or question markup, strip them away
-analyze_lf(_QuestionAnswerVar:QuestionConstraint, VP) :-
-   !, analyze_lf(QuestionConstraint, VP).
-analyze_lf(explanation(S, _Explanation), VP) :-
-   !, analyze_lf(S, VP).
-%analyze_lf(manner(S, _Manner), VP) :-
-%   !, analyze_lf(S, VP).
-analyze_lf(not(S), VP) :-
-   !, analyze_lf(S, VP).
-analyze_lf(can(S), can(VP)) :-
-   !, analyze_lf(S, VP).
-analyze_lf(may(S), VP) :-
-   !, analyze_lf(S, VP).
-analyze_lf(should(S), VP) :-
-   !, analyze_lf(S, VP).
-analyze_lf(must(S), VP) :-
-   !, analyze_lf(S, VP).
+lf_subject(_QuestionAnswerVar:QuestionConstraint, NP) :-
+   !, lf_subject(QuestionConstraint, NP).
+lf_subject(explanation(S, _Explanation), NP) :-
+   !, lf_subject(S, NP).
+%lf_subject(manner(S, _Manner), NP) :-
+%   !, lf_subject(S, NP).
+lf_subject(not(S), NP) :-
+   !, lf_subject(S, NP).
+lf_subject(can(S), NP) :-
+   !, lf_subject(S, NP).
+lf_subject(may(S), NP) :-
+   !, lf_subject(S, NP).
+lf_subject(should(S), NP) :-
+   !, lf_subject(S, NP).
+lf_subject(must(S), NP) :-
+   !, lf_subject(S, NP).
 % If we get this far, S should be the bare predication from the VP.
-analyze_lf(be(NP), NP^be(NP)) :-
+lf_subject(be(NP), NP) :-
    !.
-analyze_lf(S, NP^S) :-
+lf_subject(S, NP) :-
    intransitive_verb(_, _, _, _, _, NP^S).
-analyze_lf(S, NP^S) :-
+lf_subject(S, NP) :-
    transitive_verb(_, _, _, _, _, NP^_^S).
-analyze_lf(S, NP^S) :-
+lf_subject(S, NP) :-
    ditransitive_verb(_, _, _, _, _, NP^_^_^S).
 
 

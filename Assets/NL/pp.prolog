@@ -12,11 +12,21 @@
 %% opt_pp(Predication, +Gap, SentenceLFIn, SentenceLFOut)
 %  Fills in slots of Predication, specified by PPs, and wrapping SentenceLFIn
 %  in any further quantifiers from the NPs of the PPs, to produce SentenceLFOut
-:- randomizable opt_pp//3.
 
-opt_pp(_, nogap, S, S) --> [ ].
-opt_pp(Predication, Gap, S1, S3) -->
-   { \+(generating_nl) },
+opt_pp(Predication, Gap, SIn, SOut) -->
+   { generating_nl, ! },
+   generator_pp(Predication, Gap, SIn, SOut).
+
+opt_pp(Predication, Gap, SIn, SOut) -->
+   parser_opt_pp(Predication, Gap, SIn, SOut).
+
+%%% FINISH THIS
+generator_pp(_Predication, nogap, S, S) --> [ ].
+
+:- randomizable parser_opt_pp//3.
+
+parser_opt_pp(_, nogap, S, S) --> [ ].
+parser_opt_pp(Predication, Gap, S1, S3) -->
    [ Preposition ],
    { preposition(Preposition),
      prepositional_slot(Preposition, X, Predication) },
