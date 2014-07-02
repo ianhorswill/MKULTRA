@@ -1,4 +1,5 @@
 sentence(S, Mood, Polarity, Tense, Aspect) -->
+   { X = $input_from_player, X },
    ['('],
    { bind(speaker, player), bind(addressee, $me) },
    s(S, Mood, Polarity, Tense, Aspect),
@@ -32,6 +33,12 @@ s(S, indicative, Polarity, Tense, simple) -->
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    ap(Noun^S).
+
+s(be(S, O), indicative, Polarity, Tense, simple) -->
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   np((O^_)^_, object, _, nogap, nogap).
 
 %%%
 %%% Imperative mood
