@@ -40,5 +40,6 @@ proper_noun( terry,           terry           ).
 proper_noun('Kavi', $'Kavi').
 proper_noun(bed, $bed).
 
-:- randomizable intransitive_verb/6.
-:- randomizable transitive_verb/6.
+:- randomizable intransitive_verb/7.
+:- randomizable transitive_verb/7.
+:- randomizable ditransitive_verb/7.

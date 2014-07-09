@@ -19,23 +19,24 @@ aux_vp(VP, Polarity, Agreement, Tense, Aspect) -->
 
 vp(Form, Predication^Modal, Subject^S, Tense, Agreement, Gap) -->
    { lf_predication(S, Predication) },
-   iv(Form, Agreement, Subject^Predication, Tense),
-   opt_pp(Predication, Gap, Modal, S).
+   iv(Form, Agreement, Subject^Predication, Tense, ForcePPs),
+   opt_pp(ForcePPs, Predication, Gap, Modal, S).
 
 vp(Form, Predication^Modal, Subject^S3, Tense, Agreement, GapInfo) -->
    { lf_predication(S3, Predication) },
    dtv(Form, Agreement,
        Subject^IndirectObject^DirectObject^Predication,
-       Tense), 
+       Tense,
+       ForcePPs), 
    np((IndirectObject^Modal)^S1, object, _, nogap, nogap),
    np((DirectObject^S1)^S2, object, _, GapInfo, GapOut),
-   opt_pp(Predication, GapOut, S2, S3).
+   opt_pp(ForcePPs, Predication, GapOut, S2, S3).
 
 vp(Form, Predication^Modal, Subject^S2, Tense, Agreement, GapInfo) -->
    { lf_predication(S2, Predication) },
-   tv(Form, Agreement, Subject^Object^Predication, Tense), 
+   tv(Form, Agreement, Subject^Object^Predication, Tense, ForcePPs), 
    np((Object^Modal)^S1, object, _, GapInfo, GapOut),
-   opt_pp(Predication, GapOut, S1, S2).
+   opt_pp(ForcePPs, Predication, GapOut, S1, S2).
 
 %% lf_predication(?SentenceLF, ?Predication)
 
@@ -91,11 +92,11 @@ lf_subject(must(S), NP) :-
 lf_subject(be(NP), NP) :-
    !.
 lf_subject(S, NP) :-
-   intransitive_verb(_, _, _, _, _, NP^S).
+   intransitive_verb(_, _, _, _, _, _, NP^S).
 lf_subject(S, NP) :-
-   transitive_verb(_, _, _, _, _, NP^_^S).
+   transitive_verb(_, _, _, _, _, _, NP^_^S).
 lf_subject(S, NP) :-
-   ditransitive_verb(_, _, _, _, _, NP^_^_^S).
+   ditransitive_verb(_, _, _, _, _, _, NP^_^_^S).
 
 
 

@@ -13,15 +13,21 @@
 %  Fills in slots of Predication, specified by PPs, and wrapping SentenceLFIn
 %  in any further quantifiers from the NPs of the PPs, to produce SentenceLFOut
 
-opt_pp(Predication, Gap, SIn, SOut) -->
+opt_pp(ForcePPs, Predication, Gap, SIn, SOut) -->
    { generating_nl, ! },
-   generator_pp(Predication, Gap, SIn, SOut).
+   generator_pp(ForcePPs, Predication, Gap, SIn, SOut).
 
-opt_pp(Predication, Gap, SIn, SOut) -->
+opt_pp(_ForcePPs, Predication, Gap, SIn, SOut) -->
    parser_opt_pp(Predication, Gap, SIn, SOut).
 
 %%% FINISH THIS
-generator_pp(_Predication, nogap, S, S) --> [ ].
+generator_pp([], _Predication, nogap, S, S) --> [ ].
+generator_pp([ Preposition | Prepositions ], Predication, Gap, S1, S3) -->
+   [ Preposition ],
+   { prepositional_slot(Preposition, X, Predication) },
+   np((X^S1)^S2, object, _, Gap, NewGap),
+   generator_pp(Prepositions, Predication, NewGap, S2, S3).
+   
 
 :- randomizable parser_opt_pp//3.
 
@@ -31,7 +37,7 @@ parser_opt_pp(Predication, Gap, S1, S3) -->
    { preposition(Preposition),
      prepositional_slot(Preposition, X, Predication) },
    np((X^S1)^S2, object, _, Gap, nogap),
-   opt_pp(Predication, nogap, S2, S3).
+   parser_opt_pp(Predication, nogap, S2, S3).
 
 %% preposition(?Word)
 %  Word is a preposition
