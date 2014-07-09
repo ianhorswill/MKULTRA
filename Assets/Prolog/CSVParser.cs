@@ -17,30 +17,46 @@ namespace Prolog
 
         struct ColumnFormat
         {
-            private readonly bool isString;
+            public enum FormatType
+            {
+                // This is just a generic prolog expression (default)
+                PrologExpression,
+                // This is a string - wrap it in double quotes
+                String,
+                // This is a list of prolog expressions - wrap it in  [ ]
+                List
+            }
+            private readonly FormatType type;
 
             private readonly string prefix;
 
-            public ColumnFormat(bool isString, string prefix)
+            public ColumnFormat(FormatType type, string prefix)
                 : this()
             {
-                this.isString = isString;
+                this.type = type;
                 this.prefix = prefix;
             }
 
             public void AppendFormatted(StringBuilder b, string item)
             {
-                if (this.isString)
-                {
+                switch (type) {
+                    case FormatType.String:
                     b.Append('"');
                     b.Append(item);
                     b.Append('"');
-                }
-                else
-                {
+                        break;
+
+                    case FormatType.List:
+                        b.Append('[');
+                        b.Append(item);
+                        b.Append(']');
+                        break;
+
+                    default:
                     if (this.prefix != null)
                         b.Append(this.prefix);
                     b.Append(item);
+                        break;
                 }
             }
         }
@@ -92,7 +108,9 @@ namespace Prolog
             if (headerItem.EndsWith(")"))
             {
                 if (headerItem.EndsWith("(string)"))
-                    return new ColumnFormat(true, null);
+                    return new ColumnFormat(ColumnFormat.FormatType.String, null);
+                if (headerItem.EndsWith("(list)"))
+                    return new ColumnFormat(ColumnFormat.FormatType.List, null);
 
                 // ReSharper disable once StringIndexOfIsCultureSpecific.1
                 var prefixSpec = headerItem.IndexOf(PrefixHeader);
@@ -100,11 +118,11 @@ namespace Prolog
                 {
                     var prefixStart = prefixSpec + PrefixHeader.Length;
                     return new ColumnFormat(
-                        false,
+                        ColumnFormat.FormatType.PrologExpression, 
                         headerItem.Substring(prefixStart, headerItem.Length - (prefixStart + 1)));
                 }
             }
-            return new ColumnFormat(false, null);
+            return new ColumnFormat(ColumnFormat.FormatType.PrologExpression, null);
         }
 
         Structure ReadFactRow()
