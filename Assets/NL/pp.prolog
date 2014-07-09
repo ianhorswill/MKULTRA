@@ -20,8 +20,11 @@ opt_pp(ForcePPs, Predication, Gap, SIn, SOut) -->
 opt_pp(_ForcePPs, Predication, Gap, SIn, SOut) -->
    parser_opt_pp(Predication, Gap, SIn, SOut).
 
-%%% FINISH THIS
+% This must not be randomized.
 generator_pp([], _Predication, nogap, S, S) --> [ ].
+generator_pp([ Preposition | Prepositions ], Predication, Gap, S1, S2) -->
+   { prepositional_slot(Preposition, X, Predication), var(X), ! },
+   generator_pp(Prepositions, Predication, Gap, S1, S2).
 generator_pp([ Preposition | Prepositions ], Predication, Gap, S1, S3) -->
    [ Preposition ],
    { prepositional_slot(Preposition, X, Predication) },
