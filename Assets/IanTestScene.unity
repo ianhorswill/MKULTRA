@@ -1464,6 +1464,7 @@ GameObject:
   - 212: {fileID: 169465495}
   - 61: {fileID: 169465494}
   - 114: {fileID: 169465492}
+  - 114: {fileID: 169465493}
   m_Layer: 10
   m_Name: radio
   m_TagString: Untagged
@@ -1488,6 +1489,19 @@ MonoBehaviour:
     y: -1
     width: 1
     height: 1
+--- !u!114 &169465493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 169465491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &169465494
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1544,6 +1558,7 @@ GameObject:
   - 212: {fileID: 182778214}
   - 61: {fileID: 182778213}
   - 114: {fileID: 182778211}
+  - 114: {fileID: 182778212}
   m_Layer: 10
   m_Name: Refridgerator
   m_TagString: Untagged
@@ -1568,6 +1583,19 @@ MonoBehaviour:
     y: -1
     width: 1
     height: 1
+--- !u!114 &182778212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 182778210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &182778213
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2474,6 +2502,7 @@ GameObject:
   - 212: {fileID: 325868714}
   - 61: {fileID: 325868713}
   - 114: {fileID: 325868711}
+  - 114: {fileID: 325868712}
   m_Layer: 10
   m_Name: sofa
   m_TagString: Untagged
@@ -2498,6 +2527,19 @@ MonoBehaviour:
     y: 1
     width: 1
     height: 1
+--- !u!114 &325868712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 325868710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &325868713
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3999,6 +4041,7 @@ GameObject:
   - 4: {fileID: 489320536}
   - 212: {fileID: 489320535}
   - 61: {fileID: 489320534}
+  - 114: {fileID: 489320533}
   m_Layer: 10
   m_Name: plant
   m_TagString: Untagged
@@ -4006,6 +4049,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &489320533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 489320532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &489320534
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4162,6 +4218,7 @@ GameObject:
   - 212: {fileID: 496305892}
   - 61: {fileID: 496305891}
   - 114: {fileID: 496305889}
+  - 114: {fileID: 496305890}
   m_Layer: 10
   m_Name: bathroom sink
   m_TagString: Untagged
@@ -4186,6 +4243,19 @@ MonoBehaviour:
     y: -.5
     width: 1
     height: 1
+--- !u!114 &496305890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 496305888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &496305891
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10209,6 +10279,7 @@ GameObject:
   - 212: {fileID: 1454032860}
   - 61: {fileID: 1454032859}
   - 114: {fileID: 1454032857}
+  - 114: {fileID: 1454032858}
   m_Layer: 10
   m_Name: desk
   m_TagString: Untagged
@@ -10233,6 +10304,19 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &1454032858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1454032856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &1454032859
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10339,6 +10423,7 @@ GameObject:
   - 212: {fileID: 1466407116}
   - 61: {fileID: 1466407115}
   - 114: {fileID: 1466407113}
+  - 114: {fileID: 1466407114}
   m_Layer: 10
   m_Name: kitchen table
   m_TagString: Untagged
@@ -10363,6 +10448,19 @@ MonoBehaviour:
     y: -1
     width: 1
     height: 1
+--- !u!114 &1466407114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1466407112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &1466407115
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10568,6 +10666,7 @@ GameObject:
   - 4: {fileID: 1489428764}
   - 212: {fileID: 1489428763}
   - 61: {fileID: 1489428762}
+  - 114: {fileID: 1489428761}
   m_Layer: 10
   m_Name: kitchen seat
   m_TagString: Untagged
@@ -10575,6 +10674,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1489428761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1489428760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &1489428762
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10731,6 +10843,7 @@ GameObject:
   - 212: {fileID: 1541256198}
   - 61: {fileID: 1541256197}
   - 114: {fileID: 1541256195}
+  - 114: {fileID: 1541256196}
   m_Layer: 10
   m_Name: Radio Computer
   m_TagString: Untagged
@@ -10755,6 +10868,19 @@ MonoBehaviour:
     y: -1
     width: 1
     height: 1
+--- !u!114 &1541256196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1541256194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &1541256197
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11311,6 +11437,7 @@ GameObject:
   - 212: {fileID: 1616970358}
   - 61: {fileID: 1616970357}
   - 114: {fileID: 1616970355}
+  - 114: {fileID: 1616970356}
   m_Layer: 10
   m_Name: bookshelf
   m_TagString: Untagged
@@ -11335,6 +11462,19 @@ MonoBehaviour:
     y: -1
     width: 1
     height: 1
+--- !u!114 &1616970356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1616970354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &1616970357
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12690,6 +12830,7 @@ GameObject:
   - 4: {fileID: 1841301719}
   - 212: {fileID: 1841301718}
   - 61: {fileID: 1841301717}
+  - 114: {fileID: 1841301716}
   m_Layer: 10
   m_Name: karoake machine
   m_TagString: Untagged
@@ -12697,6 +12838,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1841301716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1841301715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &1841301717
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12753,6 +12907,7 @@ GameObject:
   - 212: {fileID: 1846938669}
   - 61: {fileID: 1846938668}
   - 114: {fileID: 1846938672}
+  - 114: {fileID: 1846938671}
   m_Layer: 10
   m_Name: toilet
   m_TagString: Untagged
@@ -12805,6 +12960,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1036973645}
   m_RootOrder: 14
+--- !u!114 &1846938671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1846938667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!114 &1846938672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13767,6 +13935,7 @@ GameObject:
   - 212: {fileID: 1985965126}
   - 61: {fileID: 1985965125}
   - 114: {fileID: 1985965123}
+  - 114: {fileID: 1985965124}
   m_Layer: 10
   m_Name: kitchen sink
   m_TagString: Untagged
@@ -13791,6 +13960,19 @@ MonoBehaviour:
     y: -1
     width: 1
     height: 1
+--- !u!114 &1985965124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1985965122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &1985965125
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14435,6 +14617,7 @@ GameObject:
   - 212: {fileID: 2003787085}
   - 61: {fileID: 2003787084}
   - 114: {fileID: 2003787082}
+  - 114: {fileID: 2003787083}
   m_Layer: 10
   m_Name: karoake microphone
   m_TagString: Untagged
@@ -14459,6 +14642,19 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &2003787083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2003787081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CommonNoun: 
+  Plural: 
 --- !u!61 &2003787084
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14898,6 +15094,8 @@ MonoBehaviour:
   - Sims/actions
   - Sims/action_selection
   - Sims/utilities
+  - Problem solver/problem_solver.prolog
+  - Problem solver/general_strategies.prolog
   - Concerns/concerns
   - Concerns/event_grammar
   - Concerns/script

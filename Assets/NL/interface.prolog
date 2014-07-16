@@ -39,7 +39,7 @@ bind_dialog_indexicals_for_input :-
 in_conversation_with_npc(NPC) :-
    concern(C),
    C/partner/NPC,
-   NPC \= $me.
+   NPC \= player.
 
 bind_dialog_indexicals_for_output(SpeechAct) :-
    bind(generating_nl, true),

@@ -3,7 +3,7 @@
 %%%
 
 on_enter_state(start, player_interaction, C) :-
-   launch_conversation(C, $me, player_interaction_script, [ ]).
+   launch_conversation(C, player, player_interaction_script, [ ]).
 
 player_interaction_script >-->
    player_dialog.
