@@ -1,0 +1,185 @@
+
+Concerns/be_polite.prolog,79
+standard_concern(1,0
+score_action(3,30
+on_event(5,76
+propose_action(13,266
+
+Concerns/concerns.prolog,225
+concern(11,126
+descendant_concern_of(24,486
+begin_concern(38,818
+begin_child_concern(52,1299
+kill_concern(75,1957
+kill_children(86,2204
+goto_state(106,2631
+character_initialization :-character_initialization130,3218
+
+Concerns/conversation.prolog,27
+launch_conversation(7,230
+
+Concerns/event_grammar.prolog,46
+next_events(6,156
+admissible_history(16,560
+
+Concerns/patrol.prolog,59
+rebid_patrol(5,30
+on_event(10,193
+on_enter_state(16,338
+
+Concerns/player_interaction.prolog,93
+on_enter_state(5,73
+player_input_response(19,381
+answer_to(25,625
+okay(35,804
+be(36,820
+
+Concerns/roles.prolog,29
+agent(6,135
+patient(15,346
+
+Concerns/script.prolog,106
+on_enter_state(3,46
+on_event(9,192
+propose_action(13,302
+update_script(20,463
+update_awaiting(26,626
+
+Concerns/social_interaction.prolog,37
+standard_concern(1,0
+on_event(3,39
+
+NL/aux.prolog,183
+aux(9,186
+aux_aspect_future(35,1254
+aux_aspect(47,1765
+aux_gap(60,2205
+aux_perfect(65,2341
+opt_not(71,2528
+modal_aux(79,2647
+aux_do(85,2743
+aux_have(93,2931
+aux_be(102,3165
+
+NL/base_grammar.prolog,92
+sentence(1,0
+opt_stop(13,320
+s(26,602
+inverted_sentence(63,1758
+s(70,2026
+ap(111,3308
+
+NL/contractions.prolog,43
+contracted_form(4,151
+contraction(13,555
+
+NL/grammar.prolog,136
+utterance(9,219
+stock_phrase(21,792
+make_all_utterances_actions :-make_all_utterances_actions32,1222
+assert_action_functor(39,1419
+
+NL/interface.prolog,239
+generate_text(6,202
+input_completion(15,568
+bind_dialog_indexicals_for_input :-bind_dialog_indexicals_for_input26,1076
+in_conversation_with_npc(39,1412
+bind_dialog_indexicals_for_output(44,1494
+generating_nl :-generating_nl51,1667
+
+NL/lexicon.prolog,74
+pronoun(6,62
+whpron(13,337
+det(18,409
+noun(23,568
+proper_noun(31,900
+
+NL/np.prolog,11
+np(14,312
+
+NL/pdebug.prolog,219
+pdebug(3,21
+test_nonterminal(7,123
+parse(15,269
+term_append(23,480
+nonterminal(28,631
+test_parser :-test_parser41,969
+try_parse(45,1072
+try_completion(50,1220
+run_parser_test(56,1442
+nonterminal_args(65,1820
+
+NL/pp.prolog,80
+opt_pp(16,700
+generator_pp(24,962
+parser_opt_pp(37,1507
+preposition(48,1863
+
+NL/preterminals.prolog,89
+det(3,23
+n(6,77
+proper_noun(9,166
+pronoun(11,230
+iv(22,522
+tv(35,1719
+dtv(48,2901
+
+NL/vp.prolog,69
+aux_vp(9,243
+vp(20,556
+lf_predication(43,1496
+lf_subject(72,2126
+
+Problem solver/general_strategies.prolog,55
+strategy(5,29
+self_achieving(19,309
+strategy(21,355
+
+Problem solver/problem_solver.prolog,285
+start_task(25,665
+tick_tasks :-tick_tasks35,828
+tick_task(43,1025
+dispatch(62,1538
+dispatch_from_strategy_list(74,1893
+apply_strategy(87,2216
+interrupt_step(115,2766
+step_completed(124,2921
+continue(132,3040
+propose_action(152,3448
+score_action(155,3507
+on_event(159,3600
+
+Sims/action_selection.prolog,115
+next_action(25,836
+best_action(30,922
+available_action(39,1198
+action_score(43,1296
+actions :-actions50,1509
+
+Sims/actions.prolog,49
+action(23,411
+runnable(40,779
+blocking(45,952
+
+Sims/events.prolog,107
+notify_event(23,580
+event_handler(34,963
+maybe_log_event(43,1296
+construals(67,1893
+construal(73,2111
+
+Sims/utilities.prolog,240
+register_prop(9,189
+register_character(15,375
+ensure(19,489
+world_object(30,765
+nearest(35,939
+docked_with(40,1073
+after_time(45,1198
+do_all_character_initializations :-do_all_character_initializations58,1428
+allocate_UID(71,1794
+
+Utilities/why.prolog,51
+why(3,31
+why_not(10,167
+diagnose_failure(20,372
