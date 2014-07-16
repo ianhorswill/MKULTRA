@@ -23,35 +23,36 @@
 %  Action is the highest rated action available, or sleep if no available actions.
 %  Called by SimController component's Update routine.
 next_action(Action) :-
-    best_action(Action).
+   tick_tasks,
+   best_action(Action).
 next_action(sleep(1)).
 
 best_action(Action) :-
-    ignore(retract(/action_state/candidates)),
-    arg_max(Action,
-	    Score,
-	    (  generate_unique(Action, available_action(Action)),
-	       runnable(Action),
-	       action_score(Action, Score),
-	       assert(/action_state/candidates/Action:Score) )).
+   ignore(retract(/action_state/candidates)),
+   arg_max(Action,
+	   Score,
+	   (  generate_unique(Action, available_action(Action)),
+	      runnable(Action),
+	      action_score(Action, Score),
+	      assert(/action_state/candidates/Action:Score) )).
 
 available_action(Action) :-
-    concern(Concern, Type),
-    propose_action(Action, Type, Concern).
+   concern(Concern, Type),
+   propose_action(Action, Type, Concern).
 
 action_score(Action, TotalScore) :-
-    sumall(Score,
-	   ( generate_unique(Construal, construal(Action, Construal)),
-	     concern(Concern, Type),
-	     score_action(Action, Type, Concern, Score) ),
-	   TotalScore).
+   sumall(Score,
+	  ( generate_unique(Construal, construal(Action, Construal)),
+	    concern(Concern, Type),
+	    score_action(Action, Type, Concern, Score) ),
+	  TotalScore).
 
 actions :-
-    findall(S-A,
-	    ( available_action(A), 
-	      action_score(A, S) ),
-	    Unsorted),
-    keysort(Unsorted, Sorted),
-    reverse(Sorted, Reversed),
-    forall(member(Score-Action, Reversed),
-	   ( write(Action), write("\t"), writeln(Score) )).
+   findall(S-A,
+	   ( available_action(A), 
+	     action_score(A, S) ),
+	   Unsorted),
+   keysort(Unsorted, Sorted),
+   reverse(Sorted, Reversed),
+   forall(member(Score-Action, Reversed),
+	  ( write(Action), write("\t"), writeln(Score) )).
