@@ -25,6 +25,70 @@ namespace Prolog
         }
 
         /// <summary>
+        /// Adds ASSERTION to GAMEOBJECT's knowledgebase.
+        /// </summary>
+        /// <param name="gameObject">Object whose knowledge base it should be added to</param>
+        /// <param name="assertion">Assertion to add</param>
+        public static void Assert(this GameObject gameObject, Structure assertion)
+        {
+            gameObject.KnowledgeBase().AssertZ(assertion);
+        }
+
+        /// <summary>
+        /// Adds assertion to GAMEOBJECT's knowledgebase.
+        /// </summary>
+        /// <param name="gameObject">Object whose knowledge base it should be added to</param>
+        /// <param name="functor">Functor (i.e. predicate) of the assertion</param>
+        /// <param name="args">Arguments to the functor</param>
+        public static void Assert(this GameObject gameObject, Symbol functor, params object[] args)
+        {
+            gameObject.KnowledgeBase().AssertZ(new Structure(functor, args));
+        }
+
+        /// <summary>
+        /// Adds assertion to GAMEOBJECT's knowledgebase.
+        /// </summary>
+        /// <param name="gameObject">Object whose knowledge base it should be added to</param>
+        /// <param name="functor">Functor (i.e. predicate) of the assertion</param>
+        /// <param name="args">Arguments to the functor</param>
+        public static void Assert(this GameObject gameObject, string functor, params object[] args)
+        {
+            gameObject.KnowledgeBase().AssertZ(new Structure(functor, args));
+        }
+
+        /// <summary>
+        /// Adds ASSERTION to COMPONENT's knowledgebase.
+        /// </summary>
+        /// <param name="component">Object whose knowledge base it should be added to</param>
+        /// <param name="assertion">Assertion to add</param>
+        public static void Assert(this Component component, Structure assertion)
+        {
+            component.KnowledgeBase().AssertZ(assertion);
+        }
+
+        /// <summary>
+        /// Adds assertion to component's knowledgebase.
+        /// </summary>
+        /// <param name="component">Object whose knowledge base it should be added to</param>
+        /// <param name="functor">Functor (i.e. predicate) of the assertion</param>
+        /// <param name="args">Arguments to the functor</param>
+        public static void Assert(this Component component, Symbol functor, params object[] args)
+        {
+            component.KnowledgeBase().AssertZ(new Structure(functor, args));
+        }
+
+        /// <summary>
+        /// Adds assertion to component's knowledgebase.
+        /// </summary>
+        /// <param name="component">Object whose knowledge base it should be added to</param>
+        /// <param name="functor">Functor (i.e. predicate) of the assertion</param>
+        /// <param name="args">Arguments to the functor</param>
+        public static void Assert(this Component component, string functor, params object[] args)
+        {
+            component.KnowledgeBase().AssertZ(new Structure(functor, args));
+        }
+
+        /// <summary>
         /// True if goal is provable within this GameObject's knowledge base.
         /// </summary>
         /// <param name="gameObject">GameObject whose KB should be queried.</param>
