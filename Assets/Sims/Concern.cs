@@ -10,8 +10,7 @@ public class Concern : MonoBehaviour
     {
         foreach (var c in Concerns)
         {
-            if (!this.IsTrue("begin_concern", Symbol.Intern(c)))
-                throw new Exception(string.Format("Could not initiate concern {0} in character {1}", c, name));
+            this.Assert("special_concern", Symbol.Intern(c));
         }
     }
 }

@@ -240,20 +240,29 @@ public class SimController : BindingBehaviour
         if (string.IsNullOrEmpty(CharacterName))
             CharacterName = name;
         if (!KB.Global.IsTrue("register_character", gameObject, Symbol.Intern(CharacterName)))
-            throw new Exception("Can't register prop " + name);
+            throw new Exception("Can't register character " + name);
+    }
+
+    private bool prologInitializationsExecuted;
+    private void EnsureCharacterInitialized()
+    {
+        if (prologInitializationsExecuted)
+            return;
         try
         {
-            gameObject.IsTrue(Symbol.Intern("do_all_character_initializations"));
+            prologInitializationsExecuted = true;
+            this.gameObject.IsTrue(Symbol.Intern("do_all_character_initializations"));
         }
         catch (Exception e)
         {
-            Debug.LogError("Exception while initializing character "+gameObject.name);
+            Debug.LogError("Exception while initializing character " + this.gameObject.name);
             Debug.LogException(e);
         }
     }
 
     internal void Update()
     {
+        this.EnsureCharacterInitialized();
         if (!PauseManager.Paused)
         {
             this.UpdateSpeechBubble();

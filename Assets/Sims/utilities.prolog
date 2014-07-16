@@ -2,7 +2,7 @@
 %%% Finding and testing Unity GameObjects
 %%%
 
-:- public prop/1, character/1, world_object/1, nearest/2.
+:- public prop/1, character/1, world_object/1, nearest/2, docked_with/1, after_time/1.
 
 :- public register_prop/3, register_character/2.
 
@@ -36,6 +36,14 @@ nearest(GameObject, Constraint) :-
     arg_min(GameObject,
 	    Distance,
 	    (Constraint, Distance is distance(GameObject, $me))).
+
+docked_with(WorldObject) :-
+   /perception/docked_with:WorldObject.
+
+%% after_time(+Time)
+%  The current time is after Time.
+after_time(Time) :-
+   $now > Time.
 
 %%%
 %%% Character initialization.

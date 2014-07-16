@@ -12,4 +12,4 @@ launch_conversation(Parent, Partner, Script, History) :-
 		       [ Child/partner/Partner,
 			 Child/type:script:Script,
 			 Child/history:History ]),
-   (Partner \= $me -> assert(Child/location_bids/Partner:200);true).
+   (Partner \= player -> assert(Child/location_bids/Partner:200);true).

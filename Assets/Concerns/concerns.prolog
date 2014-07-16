@@ -15,8 +15,7 @@ concern(Concern, Type) :-
 %% concern(?Concern)
 %  Concern is an existing concern.
 concern(A) :-
-       R is $root,
-       descendant_concern_of(R, A).
+       descendant_concern_of($root, A).
 
 %% descendant_concern_of(?Ancestor, ?Descendant)
 %  Both Ancestor and Descendant are existing concerns and Descendent
@@ -36,14 +35,13 @@ descendant_concern_of(Ancestor, Descendant) :-
 %  IMPERATIVE
 %  Creates a new concern of type Type at top level.
 begin_concern(Type) :-
-    begin_concern(Type, _).
+   begin_concern(Type, _).
 
 %% begin_concern(+Type, -Child)
 %  IMPERATIVE
 %  Creates a new concern of type Type at top level and returns its ELNode in Child.
 begin_concern(Type, Child) :-
-    Parent is $root,
-    begin_child_concern(Parent, Type, Child).
+    begin_child_concern($root, Type, Child).
 
 %% begin_child_concern(+Parent, +Type, -Child, +Assertions)
 %  IMPERATIVE
@@ -104,12 +102,11 @@ kill_children(Concern) :-
 :- public goto_state/2.
 
 goto_state(Concern, State) :-
-    Concern/type:Type,
-    ignore(( Concern/state:OldState,
-	     on_exit_state(OldState, Type, Concern) )),
-    Time is $now,
-    assert(Concern/state:State/enter_time:Time),
-    ignore(on_enter_state(State, Type, Concern)).
+   begin(Concern/type:Type,
+	 ignore(( Concern/state:OldState,
+		  on_exit_state(OldState, Type, Concern) )),
+	 assert(Concern/state:State/enter_time: $now),
+	 ignore(on_enter_state(State, Type, Concern))).
 
 %% on_enter_state(+NewState, +Type, +Concern)
 %  IMPERATIVE
@@ -128,11 +125,26 @@ goto_state(Concern, State) :-
 %%
 
 character_initialization :-
-    forall(standard_concern(Type),
-	   begin_concern(Type)).
+   forall(character_concern(Type),
+	  begin_concern(Type)).
+
+%% character_concern(+Type)
+%  Type is a concern of the character.
+%  It will be spawn automatically upon character initialization.
+
+character_concern(Type) :-
+   standard_concern(Type).
+character_concern(Type) :-
+   special_concern(Type).
 
 %% standard_concern(+Type)
-%  Type is a standard concern.
+%  Type is a standard concern of all characters.
 %  It will be spawn automatically upon character initialization.
 
 :- external standard_concern/1.
+
+%% special_concern(+Type)
+%  Type is a concern of this particular character.
+%  It will be spawn automatically upon character initialization.
+
+:- external special_concern/1.
