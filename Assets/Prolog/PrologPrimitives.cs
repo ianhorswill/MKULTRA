@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -239,6 +238,9 @@ namespace Prolog
             DefinePrimitive("memberchk", MemberChkImplementation, "list predicates",
                             "True if ELEMENT is an element of LIST, but will not backtrack different choices of the element.  This is a true relation, so if necessary, it will create new LISTS.",
                             "?element", "?list");
+            DefinePrimitive("random_member", RandomMemberImplementation, "list predicates",
+                            "Unifies ELEMENT with elements of LIST in random order.",
+                            "?element", "+list");
             DefinePrimitive("append", AppendImplementation, "list predicates",
                             "True if JOINED is a list that starts with the elements of START and is followed by the elements of END.  This is a true relation, so it can be used to compute any argument from the others.",
                             "?start", "?end", "?joined");
@@ -2268,6 +2270,23 @@ namespace Prolog
                 }
                 listArg = t.Argument(1);
             }
+        }
+
+        private static IEnumerable<CutState> RandomMemberImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException("random_member", args, "element", "list");
+            object objectArg = Term.Deref(args[0]);
+            object listArg = Term.Deref(args[1]);
+            if (listArg == null)
+                yield break;
+            if (listArg is LogicVariable)
+                throw new InstantiationException((LogicVariable)listArg, "List argument to random_member/2 must be instantiated to a proper list.");
+            var length = Prolog.PrologListLength(listArg);
+            var shuffler = new Shuffler((ushort)length);
+            while (!shuffler.Done)
+                // ReSharper disable once UnusedVariable
+                foreach (var ignore in Term.Unify(objectArg, Prolog.PrologListElement(listArg, shuffler.Next())))
+                    yield return CutState.Continue;
         }
 
         private static IEnumerable<CutState> AppendImplementation(object[] args, PrologContext context)

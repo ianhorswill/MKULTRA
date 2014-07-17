@@ -204,6 +204,36 @@ namespace Prolog
             }
             return index;
         }
+
+        /// <summary>
+        /// Computes the length of a prolog list.
+        /// </summary>
+        [Documentation("Finds the length of a prolog list.")]
+        public static object PrologListElement(object prologList, int index)
+        {
+            object current = Term.Deref(prologList);
+            while (current != null)
+            {
+                var t = current as Structure;
+                if (t == null)
+                {
+                    if (current is LogicVariable)
+                        throw new ArgumentException("List is incomplete (i.e. it ends in a logic variable).", "prologList");
+                    throw new ArgumentException("Argument is not a valid Prolog list", "prologList");
+                }
+                if (t.IsFunctor(Symbol.PrologListConstructor, 2))
+                {
+                    if (index-- == 0)
+                        // Done.
+                        return t.Argument(0);
+                    current = t.Argument(1);
+                }
+                else
+                    throw new ArgumentException("Argument is not a valid Prolog list", "prologList");
+            }
+            // Hit the end of the list
+            throw new IndexOutOfRangeException();
+        }
         #endregion
 
         /// <summary>
