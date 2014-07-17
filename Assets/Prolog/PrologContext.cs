@@ -366,6 +366,7 @@ namespace Prolog
         {
             GoalStackDepth = 0;
             dataStackPointer = 0;
+            Randomize = false;
             if (wokenStack != null)
                 wokenStack.Clear();
             StepsRemaining = StepLimit = DefaultStepLimit;
