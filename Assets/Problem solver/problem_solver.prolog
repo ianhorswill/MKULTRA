@@ -2,12 +2,10 @@
 %% Simple problem solver in the general tradition of NASL
 %%
 
-% The problem solver can be instantiated inside an concern by adding a task
-% to Concern/tasks/Task.
-%
 % Problem solver state is stored in:
-%   Concern/task/Task1/current:Task2              The step its working on
-%   Concern/task/Task/continuation:Task           What to do after current
+%   Task/type:task:TopLevelTask         
+%   Task/current:CurrentStep
+%   Task/continuation:Task
 
 :- indexical task=null, concern=null.
 
@@ -18,13 +16,15 @@
 
 :- public start_task/3.
 
-%% start_task(+Concern, +Task, +Priority) is det
-%  Adds a task to Concern's list of running tasks.  Priority is
+%% start_task(+Parent, +Task, +Priority) is det
+%  Adds a task to Parent's subconcerns.  Priority is
 %  The score to be given by the task to any actions it attempts
 %  to perform.
-start_task(C, T, Priority) :-
-   assert(C/task/T),
-   assert(C/task/T/priority:Priority).
+start_task(Parent, T, Priority) :-
+   begin_child_concern(Parent, task, Priority, Task,
+		       [Task/type:task:T,
+			Task/current:T,
+			Task/continuation:null]).
 
 %%
 %% Task update
@@ -33,10 +33,9 @@ start_task(C, T, Priority) :-
 %% tick_tasks
 %  Ticks all tasks of all concerns.
 tick_tasks :-
-   forall(concern(C),
-	  begin(bind(concern, C),
-		forall(C/task/T,
-		       begin(tick_task(T))))).
+   forall(concern(Task, task),
+	  tick_task(Task)).
+
 :- public tick_task/1.
 
 %% tick_task(+Task)
@@ -50,8 +49,8 @@ tick_task(T) :-
 tick_task(T) :-
    % This only runs if Current isn't an action.
    bind(task,T),
-   T/current:Current,
-   dispatch(Current).
+   begin(T/current:Current,
+	 dispatch(Current)).
 
 %% strategy(+Step, -NewStep)
 %  NewStep is a way of trying to achieve Step.
@@ -60,39 +59,53 @@ tick_task(T) :-
 %% dispatch(+Current)
 %  Attempts to make progress on compound task Current, which should be the current step
 %  of $task.
+dispatch(null) :-
+   !,
+   step_completed.
+dispatch(wait_event(_)).  % do nothing.
 dispatch(wait_condition(Condition)) :-
    !,
    (Condition -> step_completed ; true).
+dispatch(call(PrologCode)) :-
+   begin(PrologCode,
+	 step_completed).
 dispatch(Current) :-
-   all(S,
-       strategy(Current, S),
-       Strategies),
-   dispatch_from_strategy_list(Current, Strategies).
+   begin(all(S,
+	     strategy(Current, S),
+	     Strategies),
+	 dispatch_from_strategy_list(Current, Strategies)).
 
 %% dispatch_from_strategy_list(+Step, StrategyList)
 %  If StrategyList is a singleton, it runs it, else subgoals
 %  to a metastrategy.
+
+:- public dispatch_from_strategy_list/2.
+
 dispatch_from_strategy_list(_, [S]) :-
    !,
-   apply_strategy(S).
+   begin(apply_strategy(S)).
 
+dispatch_from_strategy_list(no_matches(X), []) :-
+   throw(no_null_strategy_for_null_strategy_for(X)).
 dispatch_from_strategy_list(Current, []) :-
    !,
-   dispatch(no_matches(Current)).
+   begin(dispatch(no_matches(Current))).
 
 dispatch_from_strategy_list(Current, Strategies) :-
-   dispatch(multiple_matches(Current, Strategies)).
+   begin(dispatch(multiple_matches(Current, Strategies))).
 
 %% apply_strategy(+Strategy)
 %  Makes Strategy the current step.
 apply_strategy(call(PrologCode)) :-
    !,
    begin(PrologCode,
-	 step_completed).
-   
+	 step_completed).   
 
 apply_strategy(wait_condition(Condition)) :-
    continue(wait_condition(Condition)).
+
+apply_strategy(wait_event(E)) :-
+   continue(wait_event(E)).
 
 apply_strategy((First, Rest)) :-
    !,
@@ -132,7 +145,7 @@ step_completed :-
 
 continue(null) :-
    !,
-   retract($task).
+   kill_concern($task).
 
 continue((First, Rest) ) :-
    !,
@@ -150,12 +163,15 @@ continue(Current, Continuation) :-
 %%  Interface to mundane action selection
 %%
 
-propose_action(A, _, C) :-
-   C/tasks/_/current:A:action.
+propose_action(A, task, T) :-
+   T/current:A:action.
 
-score_action(A, _, C, Score) :-
-   C/tasks/T/current:A:action,
-   C/tasks/T/priority:Score.
+score_action(A, task, T, Score) :-
+   T/current:X:action,
+   A=X,
+   T/priority:Score.
 
-on_event(A, _, C, step_completed(T)) :-
-   C/tasks/T/current:A:action.
+on_event(E, task, T, step_completed(T)) :-
+   (T/current:X:action, X=E)
+   ;
+   (T/current:X, X=wait_event(E)).

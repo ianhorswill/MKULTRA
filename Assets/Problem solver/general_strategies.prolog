@@ -25,6 +25,6 @@ strategy(sleep(Seconds),
 strategy(achieve(docked_with(WorldObject)),
 	 goto(WorldObject)).
 strategy(goto(Place),
-	 ( call(assert($concern/location_bids/Place:Priority)),
+	 ( call(assert($task/location_bids/Place:Priority)),
 	   wait_event(arrived_at(Place)) )) :-
    $task/priority:Priority.

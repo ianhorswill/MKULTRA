@@ -8,7 +8,7 @@ launch_conversation(Parent, Partner, Event) :-
    launch_conversation(Parent, Partner, conversation, [Event]).
 
 launch_conversation(Parent, Partner, Script, History) :-
-   begin_child_concern(Parent, script, Child,
+   begin_child_concern(Parent, script, 1, Child,
 		       [ Child/partner/Partner,
 			 Child/type:script:Script,
 			 Child/history:History ]),

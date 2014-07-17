@@ -31,35 +31,36 @@ descendant_concern_of(Ancestor, Descendant) :-
 
 :- public begin_concern/1, begin_concern/2, begin_child_concern/3.
 
-%% begin_concern(+Type)
+%% begin_concern(+Type, +Priority)
 %  IMPERATIVE
 %  Creates a new concern of type Type at top level.
-begin_concern(Type) :-
-   begin_concern(Type, _).
+begin_concern(Type, Priority) :-
+   begin_concern(Type, Priority, _).
 
-%% begin_concern(+Type, -Child)
+%% begin_concern(+Type, +Priority, -Child)
 %  IMPERATIVE
 %  Creates a new concern of type Type at top level and returns its ELNode in Child.
-begin_concern(Type, Child) :-
-    begin_child_concern($root, Type, Child).
+begin_concern(Type, Priority, Child) :-
+    begin_child_concern($root, Type, Priority, Child).
 
-%% begin_child_concern(+Parent, +Type, -Child, +Assertions)
+%% begin_child_concern(+Parent, +Type, Priority, -Child, +Assertions)
 %  IMPERATIVE
 %  Creates a new concern of type Type as a child of Parent, and returns its ELNode in Child.
 %  Adds Assertions to its ELNode.
-begin_child_concern(Parent, Type, Child, Assertions) :-
+begin_child_concern(Parent, Type, Priority, Child, Assertions) :-
     begin(allocate_UID(ChildUID),
 	  assert(Parent/concerns/ChildUID/type:Type),
 	  Parent/concerns/ChildUID>>Child,
+	  assert(Child/priority:Priority),
 	  forall(member(A, Assertions),
 		 assert(A)),
 	  goto_state(Child, start)).
 
-%% begin_child_concern(+Parent, +Type, -Child)
+%% begin_child_concern(+Parent, +Type, +Priority, -Child)
 %  IMPERATIVE
 %  Creates a new concern of type Type as a child of Parent, and returns its ELNode in Child.
-begin_child_concern(Parent, Type, Child) :-
-    begin_child_concern(Parent, Type, Child, [ ]).
+begin_child_concern(Parent, Type, Priority, Child) :-
+    begin_child_concern(Parent, Type, Priority, Child, [ ]).
 
 %%
 %% Destruction
@@ -125,26 +126,26 @@ goto_state(Concern, State) :-
 %%
 
 character_initialization :-
-   forall(character_concern(Type),
-	  begin_concern(Type)).
+   forall(character_concern(Type, Priority),
+	  begin_concern(Type, Priority)).
 
-%% character_concern(+Type)
+%% character_concern(?Type, ?Priority)
 %  Type is a concern of the character.
 %  It will be spawn automatically upon character initialization.
 
-character_concern(Type) :-
-   standard_concern(Type).
-character_concern(Type) :-
-   special_concern(Type).
+character_concern(Type, Priority) :-
+   standard_concern(Type, Priority).
+character_concern(Type, Priority) :-
+   special_concern(Type, Priority).
 
-%% standard_concern(+Type)
+%% standard_concern(?Type, ?Priority)
 %  Type is a standard concern of all characters.
 %  It will be spawn automatically upon character initialization.
 
-:- external standard_concern/1.
+:- external standard_concern/2.
 
-%% special_concern(+Type)
+%% special_concern(?Type, ?Priority)
 %  Type is a concern of this particular character.
 %  It will be spawn automatically upon character initialization.
 
-:- external special_concern/1.
+:- external special_concern/2.

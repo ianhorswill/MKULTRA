@@ -1,4 +1,4 @@
-standard_concern(social_interaction).
+standard_concern(social_interaction, 1).
 
 on_event(greet(Speaker, $me),
 	 social_interaction,
