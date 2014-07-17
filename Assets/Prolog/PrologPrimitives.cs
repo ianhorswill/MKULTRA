@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
 using UnityEngine;
+
+using Debug = UnityEngine.Debug;
 
 namespace Prolog
 {
@@ -361,6 +364,7 @@ namespace Prolog
                 "?Term", "...");
             DefinePrimitive("break", BreakImplementation, "flow control", "Pauses game within the Unity editor and prints TERMS as a line in the unity console.",
                 "?Term", "...");
+            DefinePrimitive("break_cs", BreakCSharpImplementation, "flow control", "Breakpoints the Prolog interpreter itself.");
             DefinePrimitive("op", DeclareOperator, "declarations",
                             "Declares the type and priority of an infix, prefix, or postfix operator.",
                             "*priority", "*type", "*operator");
@@ -2572,6 +2576,12 @@ namespace Prolog
         {
             Debug.LogWarning(args.Length == 0 ? "Break" : FormatLogMessage(args));
             Debug.Break();
+            yield return CutState.Continue;
+        }
+
+        private static IEnumerable<CutState> BreakCSharpImplementation(object[] args, PrologContext context)
+        {
+            //Debugger.Break();
             yield return CutState.Continue;
         }
 
