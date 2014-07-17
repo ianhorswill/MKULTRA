@@ -130,8 +130,11 @@ namespace Northwestern.UnityUtils
                             scrollPosition = GUI.skin.label.CalcSize(new GUIContent(consoleBuffer));
                             string command = In;
                             In = string.Empty;
-                            history.Add(command);
-                            historyPosition = history.Count;
+                            if (!this.OmitCommandFromHistory(command))
+                            {
+                                history.Add(command);
+                                historyPosition = history.Count;
+                            }
                             Run(command);
                         }
                         break;
@@ -230,6 +233,11 @@ namespace Northwestern.UnityUtils
         protected virtual void Initialize()
         {
             //override to set console properties
+        }
+
+        protected virtual bool OmitCommandFromHistory(string command)
+        {
+            return false;
         }
     }
 }

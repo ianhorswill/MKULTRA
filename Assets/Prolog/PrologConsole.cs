@@ -31,5 +31,11 @@ namespace Prolog
             Out.WriteLine(command);
             repl.ProcessCommandLine(command);
         }
+
+        protected override bool OmitCommandFromHistory(string command)
+        {
+            // Ignore requests for subsequent solutions
+            return command.Trim() == ";";
+        }
     }
 }
