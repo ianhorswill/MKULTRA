@@ -3,161 +3,187 @@
 %%
 
 % Problem solver state is stored in:
-%   Task/type:task:TopLevelTask         
-%   Task/current:CurrentStep
-%   Task/continuation:Task
+%   TaskConcern/type:task:TopLevelTask         
+%   TaskConcern/current:CurrentStep     (always an action or polled_builtin)
+%   TaskConcern/continuation:Task       (any task)
 
-:- indexical task=null, concern=null.
+:- indexical task=null.
+
+%% within_task(+TaskConcern, :Code)
+%  Runs Code within the task TaskConcern.
+within_task(TaskConcern, Code) :-
+   bind(task, TaskConcern),
+   Code.
+
+% Ontology:
+% event => task
+% task => compound_task | primitive_task
+% compound_task => simple_compound_task | (task, task)
+% primitive_task => builtins | actions
+% builtins => immediate_builtin | polled_builtin
+% immediate_builtin => null | done | call(PrologCode)
+% polled_builtin => wait_condition(PrologCode) | wait_event(Event). 
+%
+% Primitives are executable, compound tasks need to be decomposed using
+% strategies, which map simple compound tasks to other tasks.
+
+% primitive_task(T) :-
+%    builtin_task(T) ; action(T).
+% builtin_task(T) :-
+%    immediate_builtin(T) ; polled_builtin(T).
+% immediate_builtin(null).
+% immediate_builtin(done).
+% immediate_builtin(call(_)).
+polled_builtin(wait_condition(_)).
+polled_builtin(wait_event(_)).
+
+%% strategy(+Task, -CandidateStrategy)
+%  CandidateStrategy is a possible way to solve Task.
+%  CandidateStrategy may be another task, null, or a sequence of tasks
+%  constructed using ,/2.
 
 %%
 %% Interface to external code
-%% Task creation
+%% Task creation, strategy specification
 %%
 
-:- public start_task/3.
+:- public start_task/3, start_task/2.
 
 %% start_task(+Parent, +Task, +Priority) is det
 %  Adds a task to Parent's subconcerns.  Priority is
 %  The score to be given by the task to any actions it attempts
 %  to perform.
-start_task(Parent, T, Priority) :-
-   begin_child_concern(Parent, task, Priority, Task,
-		       [Task/type:task:T,
-			Task/current:T,
-			Task/continuation:null]).
+start_task(Parent, Task, Priority) :-
+   begin_child_concern(Parent, task, Priority, TaskConcern,
+		       [TaskConcern/type:task:Task,
+			TaskConcern/continuation:done]),
+   within_task(TaskConcern, switch_to_task(Task)).
 
-%%
-%% Task update
-%%
+start_task(Task, Priority) :-
+   start_task($root, Task, Priority).
 
-%% tick_tasks
-%  Ticks all tasks of all concerns.
-tick_tasks :-
-   forall(concern(Task, task),
-	  tick_task(Task)).
+%% switch_to_task(+Task)
+%  Stop running current step and instead run Task followed by our continuation.
+%  If Task decomposes to a (,) expression, this will update both current and
+%  continuation, otherwise just current.
 
-:- public tick_task/1.
-
-%% tick_task(+Task)
-%  Attempts to make forward progress on Task's current step.
-tick_task(T) :-
-   T/current:A:action,
-   % It's an action; we have to wait for it to be executed.
-   !,
-   (runnable(A) ; interrupt_step(achieve(runnable(A)))).
-
-tick_task(T) :-
-   % This only runs if Current isn't an action.
-   bind(task,T),
-   begin(T/current:Current,
-	 dispatch(Current)).
-
-%% strategy(+Step, -NewStep)
-%  NewStep is a way of trying to achieve Step.
-:- external strategy/2.
-
-%% dispatch(+Current)
-%  Attempts to make progress on compound task Current, which should be the current step
-%  of $task.
-dispatch(null) :-
-   !,
+% Check for immediate builtins
+switch_to_task(done) :-
+   kill_concern($task).
+switch_to_task(null) :-
    step_completed.
-dispatch(wait_event(_)).  % do nothing.
-dispatch(wait_condition(Condition)) :-
-   !,
-   (Condition -> step_completed ; true).
-dispatch(call(PrologCode)) :-
+switch_to_task(call(PrologCode)) :-
    begin(PrologCode,
 	 step_completed).
-dispatch(Current) :-
-   begin(all(S,
-	     strategy(Current, S),
-	     Strategies),
-	 dispatch_from_strategy_list(Current, Strategies)).
 
-%% dispatch_from_strategy_list(+Step, StrategyList)
+% Non-immediates that can be taken care of now.
+switch_to_task(wait_condition(Condition)) :-
+   Condition,
+   !,
+   step_completed.
+switch_to_task( (First, Rest) ) :-
+   begin($task/continuation:K,
+	 assert($task/continuation:(Rest,K)),
+	 switch_to_task(First)).
+
+% All other primitive tasks
+switch_to_task(B) :-
+   polled_builtin(B),
+   !,
+   assert($task/current:B).
+switch_to_task(A) :-
+   action(A),
+   (blocking(A, Precondition) ->
+      % Oops, can't run action yet because of blocked precondition.
+      switch_to_task( (achieve(Precondition),A) )
+      ;
+      % It's an action and it's ready to run.
+      assert($task/current:A:action)).
+
+% Simple compound task, so decompose it.
+switch_to_task(Task) :-
+   !,
+   begin(all(S,
+	     strategy(Task, S),
+	     Strategies),
+	 select_strategy(Task, Strategies)).
+
+%% select_strategy(+Step, StrategyList)
 %  If StrategyList is a singleton, it runs it, else subgoals
 %  to a metastrategy.
+select_strategy(_, [S]) :-
+   begin(switch_to_task(S)).
+select_strategy(resolve_match_failure(resolve_match_failure(X)), []) :-
+   throw(triple_match_failure(X)).
+select_strategy(Task, [ ]) :-
+   begin(switch_to_task(resolve_match_failure(Task))).
+select_strategy(Task, Strategies) :-
+   begin(switch_to_task(resolve_conflict(Task, Strategies))).
 
-:- public dispatch_from_strategy_list/2.
-
-dispatch_from_strategy_list(_, [S]) :-
-   !,
-   begin(apply_strategy(S)).
-
-dispatch_from_strategy_list(no_matches(X), []) :-
-   throw(no_null_strategy_for_null_strategy_for(X)).
-dispatch_from_strategy_list(Current, []) :-
-   !,
-   begin(dispatch(no_matches(Current))).
-
-dispatch_from_strategy_list(Current, Strategies) :-
-   begin(dispatch(multiple_matches(Current, Strategies))).
-
-%% apply_strategy(+Strategy)
-%  Makes Strategy the current step.
-apply_strategy(call(PrologCode)) :-
-   !,
-   begin(PrologCode,
-	 step_completed).   
-
-apply_strategy(wait_condition(Condition)) :-
-   continue(wait_condition(Condition)).
-
-apply_strategy(wait_event(E)) :-
-   continue(wait_event(E)).
-
-apply_strategy((First, Rest)) :-
-   !,
+%% step_completed
+%  Current task has completed its current step; run continuation.
+step_completed :-
    $task/continuation:K,
-   continue(First, (K, Rest) ).
+   invoke_continuation(K).
 
-apply_strategy(null) :-
-   step_completed.
+%% step_completed(+TaskConcern)
+%  TaskConcern has completed its current step; tell it to run
+%  its comtinuation.
+step_completed(TaskConcern) :-
+   within_task(TaskConcern, step_completed).
 
-apply_strategy(S) :-
-   action(S) -> assert($task/current:S:action)
-                ;
-		assert($task/current:S).   
+%% invoke_continuation(+Task)
+%  Switch to current task's continuation, which is Task.
+invoke_continuation( (First, Rest) ) :-
+   begin(assert($task/continuation:Rest),
+	 switch_to_task(First)).
+invoke_continuation(K) :-
+   begin(assert($task/continuation:done),
+	 switch_to_task(K)).
+
+%%
+%% Driver code - called from action_selection.prolog
+%%
+
+%% poll_tasks
+%  Polls all tasks of all concerns.
+poll_tasks :- !.
+poll_tasks :-
+   forall(concern(Task, task),
+	  poll_task(Task)).
+
+:- public poll_task/1.
+
+%% poll_task(+Task)
+%  Attempts to make forward progress on Task's current step.
+poll_task(T) :-
+   (T/current:A)>>ActionNode,
+   ActionNode:action ->
+      poll_action(T, A)
+      ;
+      poll_builtin(T, A).
+
+poll_action(T, A) :-
+   % Make sure it's still runnable
+   runnable(A) ; interrupt_step(T, achieve(runnable(A))).
+
+poll_builtin(T, wait_condition(Condition)) :-
+   !,
+   (Condition -> step_completed(T) ; true).
+poll_builtin(_, wait_event(_)).   % nothing to do.
 
 %%
 %% Interrupts
 %%
 
-%% interrupt_step(+InterruptingTask)
+%% interrupt_step(TaskConcern, +InterruptingTask)
 %  Executes InterruptingTask, then returns to previous step.
-interrupt_step(InterruptingTask) :-
-   $task/current:C,
-   $task/continuation:K,
-   continue(InterruptingTask, (C, K)).
-
-%%
-%% Continuation invocation
-%%
-
-step_completed(T) :-
-   bind(task, T),
-   step_completed.
-
-step_completed :-
-   $task/continuation:K,
-   continue(K).
-
-continue(null) :-
-   !,
-   kill_concern($task).
-
-continue((First, Rest) ) :-
-   !,
-   continue(First, Rest).
-
-continue(FinalTask) :-
-   continue(FinalTask, null).
-
-continue(Current, Continuation) :-
-   ( action(Current) -> assert($task/current:Current:action)
-                        ; assert($task/current:Current) ),
-   assert($task/continuation:Continuation).
+interrupt_step(TaskConcern, InterruptingTask) :-
+   within_task(TaskConcern,
+	       begin(TaskConcern/current:C,
+		     TaskConcern/continuation:K,
+		     assert(TaskConcern/continuation:(C,K)),
+		     switch_to_task(InterruptingTask))).
 
 %%
 %%  Interface to mundane action selection
@@ -172,6 +198,5 @@ score_action(A, task, T, Score) :-
    T/priority:Score.
 
 on_event(E, task, T, step_completed(T)) :-
-   (T/current:X:action, X=E)
-   ;
-   (T/current:X, X=wait_event(E)).
+   T/current:X,
+   (X=E ; X=wait_event(E)).

@@ -23,7 +23,7 @@
 %  Action is the highest rated action available, or sleep if no available actions.
 %  Called by SimController component's Update routine.
 next_action(Action) :-
-   tick_tasks,
+   poll_tasks,
    best_action(Action).
 next_action(sleep(1)).
 
