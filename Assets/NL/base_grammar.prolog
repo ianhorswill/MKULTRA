@@ -7,6 +7,13 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
    [')'].
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
+   [ Name, ',' ],     
+   { X = $input_from_player, X },
+   { bind_indexicals_for_addressing_character_named(Name) },
+   s(S, Mood, Polarity, Tense, Aspect),
+   opt_stop(Mood).
+
+sentence(S, Mood, Polarity, Tense, Aspect) -->
    s(S, Mood, Polarity, Tense, Aspect),
    opt_stop(Mood).
 

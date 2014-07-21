@@ -14,4 +14,5 @@
 np(NP, Case, Agreement, nogap, nogap) --> pronoun(Case, Agreement, NP).
 np(NP, _C, third:Number, Gap, Gap) --> proper_noun(Number, NP).
 np((X^_)^_, _C, _Agreement, np(X), nogap) --> [].
+np((String^_)^_, _, _, Gap, Gap) --> {string(String)}, [String].
 

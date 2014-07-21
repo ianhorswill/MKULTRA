@@ -36,6 +36,12 @@ bind_dialog_indexicals_for_input :-
    bind(addressee, $me),
    bind(dialog_group, $me).
 
+bind_indexicals_for_addressing_character_named(Name) :-
+   proper_noun(Name, Character),
+   character(Character),
+   bind(speaker, $me),
+   bind(addressee, Character).
+
 in_conversation_with_npc(NPC) :-
    concern(C),
    C/partner/NPC,
