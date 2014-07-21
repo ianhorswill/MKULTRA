@@ -101,6 +101,11 @@ namespace Prolog
             int arity = goal.Arity;
             switch (functor.Name)
             {
+                case "begin":
+                    foreach (var arg in goal.Arguments)
+                        WalkGoal(kb, rule, arg);
+                    break;
+
                 case "once":
                 case "check":
                 case "randomize":
