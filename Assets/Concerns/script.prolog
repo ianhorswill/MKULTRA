@@ -1,33 +1,39 @@
 :- indexical script_concern=unknown_concern.
 
 on_enter_state(start, script, C) :-
-   (C/history:History
-     ;
-     (History=[ ], assert(C/history:History))),
-   update_awaiting(C, History).
+   begin(C/initial_history:History,
+	 forall(member(Event, History),
+		assert(C/history/Event)),
+	 script_update_await_list(C)).
 
-on_event(Event, script, C, update_script(C, Event)) :-
-   C/awaiting:Events,
-   memberchk(Event, Events).
+on_event(Event, script, C, script_update(C, Event)) :-
+   C/awaiting/AwaitedEvent,
+   Event = AwaitedEvent.
    
 propose_action(Action, script, C) :-
    /perception/nobody_speaking,
-   C/awaiting:Events,
-   member(Action, Events),
+   C/awaiting/Action,
    action(Action),
    agent(Action, $me).
 
-update_script(C, Event) :-
-    C/history:History,
-    append(History, [Event], NewHistory),
-    assert(C/history:NewHistory),
-    update_awaiting(C, NewHistory).
+script_update(C, Event) :-
+   assert(C/history/Event),
+   script_update_await_list(C).
 
-update_awaiting(C, NewHistory) :-
-   C/type:script:Script,
-   bind(script_concern, C),
-   next_events(Script, NewHistory, NextSet),
-   ((NextSet = [ ]) ->
-      kill_concern(C)
-      ;
-      assert(C/awaiting:NextSet)).
+script_update_await_list(C) :-
+   begin(C/type:script:Script,
+	 ignore(retract(C/awaiting)),
+	 bind(script_concern, C),
+	 script_history(C, History),
+	 next_events(Script, History, NextSet),
+	 %log($me:(History->NextSet)),
+	 ( (NextSet = [ ]) ->
+	     % Done; exit.
+	     kill_concern(C)
+	     ;
+	     % Not done; write back to working memory
+	     forall(member(Event, NextSet),
+		    assert(C/awaiting/Event)))).
+
+script_history(C, History) :-
+   findall(Event, C/history/Event, History).

@@ -18,13 +18,19 @@ player_dialog >-->
 
 player_input_response(question(player, $me, Question, T, A),
 		      assertion($me, player, Answer, T, A)) :-
+   !,
    answer_to(Question, Answer).
 player_input_response(command(player, $me, LF),
 		      assertion($me, player, LF, future, simple)) :-
-   task_form(LF, Task),
-   start_task($script_concern, Task, 100).
+   !,
+   start_task($script_concern, LF, 1).
+player_input_response(DialogAct, DialogAct) :-
+   !,
+   agent(DialogAct, $me).
+player_input_response(_, do_not_understand($me, player)).
 
-task_form(go($me, X), goto(X)).
+strategy(go($me, Location),
+	 goto(Location)).
 
 answer_to(M:manner(be($'Bruce'), M), okay($'Bruce')) :-
    !.
@@ -34,8 +40,13 @@ answer_to(Y, Y) :-
    Y, !.
 answer_to(Y, not(Y)).
 
-:- public manner/2, be/2, okay/1.
+:- public manner/2, be/2, okay/1, can/1, type/2.
 
 okay($'Bruce').
 be($'Bruce', $'Bruce').
 be(player, $'Bruce').
+
+can(type(player, X)) :-
+   player_command(X).
+player_command("a question you want me to answer").
+
