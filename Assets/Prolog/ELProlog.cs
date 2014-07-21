@@ -420,7 +420,7 @@ namespace Prolog
             {
                 this.parentNode = parentNode;
                 this.variable = v;
-                childIndex = parentNode.Children.Count - 1;
+                childIndex = 0;
             }
 
             private int childIndex;
@@ -431,9 +431,9 @@ namespace Prolog
 
             public override bool MoveNext()
             {
-                if (this.childIndex >= 0)
+                if (this.childIndex < parentNode.Children.Count)
                 {
-                    Current = parentNode.Children[this.childIndex--];
+                    Current = parentNode.Children[this.childIndex++];
                     this.variable.Value = Term.CopyInstantiation(Current.Key);
                     return true;
                 }
