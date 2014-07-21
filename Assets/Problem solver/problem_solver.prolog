@@ -111,10 +111,12 @@ switch_to_task(Task) :-
 %% select_strategy(+Step, StrategyList)
 %  If StrategyList is a singleton, it runs it, else subgoals
 %  to a metastrategy.
+
 select_strategy(_, [S]) :-
    begin(switch_to_task(S)).
-select_strategy(resolve_match_failure(resolve_match_failure(X)), []) :-
-   throw(triple_match_failure(X)).
+select_strategy(resolve_match_failure(resolve_match_failure(resolve_match_failure(X))), []) :-
+   kill_concern($task),
+   throw(repeated_match_failure(X)).
 select_strategy(Task, [ ]) :-
    begin(switch_to_task(resolve_match_failure(Task))).
 select_strategy(Task, Strategies) :-
@@ -151,8 +153,6 @@ poll_tasks :- !.
 poll_tasks :-
    forall(concern(Task, task),
 	  poll_task(Task)).
-
-:- public poll_task/1.
 
 %% poll_task(+Task)
 %  Attempts to make forward progress on Task's current step.
