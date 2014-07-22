@@ -15,8 +15,10 @@ propose_action(Action, script, C) :-
    C/awaiting/Action,
    action(Action),
    agent(Action, $me).
+   %log($me:propose(Action)).
 
 script_update(C, Event) :-
+   %log($me:got(Event)),
    assert(C/history/Event),
    script_update_await_list(C).
 
@@ -33,7 +35,7 @@ script_update_await_list(C) :-
 	     ;
 	     % Not done; write back to working memory
 	     forall(member(Event, NextSet),
-		    assert(C/awaiting/Event)))).
+		    assert(C/awaiting/Event))) ).
 
 script_history(C, History) :-
    findall(Event, C/history/Event, History).

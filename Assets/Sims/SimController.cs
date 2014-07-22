@@ -51,7 +51,8 @@ public class SimController : BindingBehaviour
     private const int MaxConversationalSpaceColliders = 30;
 
     private const float SpeechDelaySecondsPerChar = 0.075f;
-    private const float SpeechDelayMinimum = 0.5f;
+
+    private const float SpeechDelayMinimum = 1f;
     private const float SpeechDelayMaximum = 4f;
 
     private readonly Symbol playerSymbol = Symbol.Intern("player");
