@@ -354,9 +354,9 @@ namespace Prolog
                             "Forcibly asserts PREDICATE(VALUE) and retracts all other clauses for PREDICATE.",
                             "*predicate", "*value");
             DefinePrimitive("write", WriteImplementation, "other predicates",
-                            "Prints the value of OBJECT to the console.", "?object");
+                            "Prints the value of OBJECT to the console.", "?objectOrStream", "[+Object]");
             DefinePrimitive("writeln", WritelnImplementation, "other predicates",
-                            "Prints the value of OBJECT to the console, along with a newline.", "?object");
+                            "Prints the value of OBJECT to the console, along with a newline.", "?objectOrStream", "[+Object]");
             DefinePrimitive("nl", NLImplementation, "other predicates", "Prints a newline to the system console.");
             DefinePrimitive("log", LogImplementation, "other predicates", "Prints TERMS as a line in the Unity console.",
                 "?Term", "...");
@@ -375,6 +375,9 @@ namespace Prolog
             DefinePrimitive("close", CloseImplementation, "other predicates", "Closes an open file.", "*stream");
             DefinePrimitive("read", ReadImplementation, "other predicates", "Reads an expression from an open stream.",
                             "*stream", "-term");
+            DefinePrimitive("shell", ShellImplementation, "other predicates",
+                            "Runs a shell command; disabled outside of editor builds.",
+                            "command", "arg_string");
             DefinePrimitive(ELProlog.NonExclusiveOperator, ELNonExclusiveQueryImplementation, "eremic logic",
                             "Succeeds if expression can be matched against the EL knowledgebase.",
                             "parent", "key");
@@ -405,7 +408,18 @@ namespace Prolog
                 MaximumArity[name] = int.MaxValue;
             }
             else
+            {
                 MinimumArity[name] = MaximumArity[name] = arglist.Length;
+                for (var i = arglist.Length - 1; i >= 0; i--)
+                {
+                    if (!((string)(arglist[i])).StartsWith("["))
+                    {
+                        // This is a non-optional parameter
+                        MinimumArity[name] = i + 1;
+                        break;
+                    }
+                }
+            }
 
             DelegateUtils.NameProcedure(implementationDelegate, name.Name);
             Manual.AddToSections(manualSections, implementationDelegate);
@@ -2279,13 +2293,16 @@ namespace Prolog
             object listArg = Term.Deref(args[1]);
             if (listArg == null)
                 yield break;
-            if (listArg is LogicVariable)
-                throw new InstantiationException((LogicVariable)listArg, "List argument to random_member/2 must be instantiated to a proper list.");
+            var arg = listArg as LogicVariable;
+            if (arg != null)
+                throw new InstantiationException(arg, "List argument to random_member/2 must be instantiated to a proper list.");
             var length = Prolog.PrologListLength(listArg);
             var shuffler = new Shuffler((ushort)length);
             while (!shuffler.Done)
+#pragma warning disable 414, 168, 219
                 // ReSharper disable once UnusedVariable
                 foreach (var ignore in Term.Unify(objectArg, Prolog.PrologListElement(listArg, shuffler.Next())))
+#pragma warning restore 414, 168, 219
                     yield return CutState.Continue;
         }
 
@@ -2550,17 +2567,37 @@ namespace Prolog
 
         private static IEnumerable<CutState> WriteImplementation(object[] args, PrologContext context)
         {
-            if (args.Length != 1)
-                throw new ArgumentCountException("write", args, "object");
-            context.Output.Write(Term.ToStringInPrologFormat(args[0]));
+            switch (args.Length)
+            {
+                case 1:
+                    context.Output.Write(Term.ToStringInPrologFormat(args[0]));
+                    break;
+
+                case 2:
+                    ((TextWriter)Term.Deref(args[0])).Write(Term.ToStringInPrologFormat(args[1]));
+                    break;
+
+                default:
+                    throw new ArgumentCountException("write", args, "object");
+            }
             yield return CutState.Continue;
         }
 
         private static IEnumerable<CutState> WritelnImplementation(object[] args, PrologContext context)
         {
-            if (args.Length != 1)
-                throw new ArgumentCountException("writeln", args, "object");
-            context.Output.WriteLine(Term.ToStringInPrologFormat(args[0]));
+            switch (args.Length)
+            {
+                case 1:
+                    context.Output.WriteLine(Term.ToStringInPrologFormat(args[0]));
+                    break;
+
+                case 2:
+                    ((TextWriter)Term.Deref(args[0])).WriteLine(Term.ToStringInPrologFormat(args[1]));
+                    break;
+
+                default:
+                    throw new ArgumentCountException("writeln", args, "object");
+            }
             yield return CutState.Continue;
         }
 
@@ -2644,37 +2681,56 @@ namespace Prolog
             }
             var mode = Term.Deref(args[1]) as Symbol;
             if (mode == null) throw new ArgumentTypeException("open", "mode", args[1], typeof (Symbol));
-            FileMode m;
+
             switch (mode.Name)
             {
                 case "read":
-                    m = FileMode.Open;
+                    using (var stream = File.Open(path, FileMode.Open))
+                    {
+#pragma warning disable 414, 168, 219
+                        // ReSharper disable UnusedVariable
+                        foreach (
+                            var ignore in
+                                Term.Unify(args[2], new ISOPrologReader(new StreamReader(stream))))
+                            // ReSharper restore UnusedVariable
+#pragma warning restore 414, 168, 219
+                            yield return CutState.Continue;
+                    }
                     break;
 
                 case "write":
-                    m = FileMode.Create;
+#pragma warning disable 414, 168, 219
+                    using (var f = File.CreateText(path))
+                    {
+                        // ReSharper disable UnusedVariable
+                        foreach (var ignore in Term.Unify(args[2], f))
+                            // ReSharper restore UnusedVariable
+#pragma warning restore 414, 168, 219
+                            yield return CutState.Continue;
+                    }
                     break;
 
                 default:
                     throw new ArgumentException("Invalid file mode: " + mode.Name);
             }
-            FileStream stream = File.Open(path, m);
-#pragma warning disable 414, 168, 219
-            // ReSharper disable UnusedVariable
-            foreach (var ignore in Term.Unify(args[2], (m==FileMode.Open)?new ISOPrologReader(new StreamReader(stream)):((object)new StreamWriter(stream))))
-                // ReSharper restore UnusedVariable
-#pragma warning restore 414, 168, 219
-                yield return CutState.Continue;
-            stream.Close();
         }
 
         private static IEnumerable<CutState> CloseImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 1)
                 throw new ArgumentCountException("close", args, "stream");
-            var s = Term.Deref(args[0]) as ISOPrologReader;
-            if (s == null) throw new ArgumentTypeException("close", "stream", args[0], typeof(ISOPrologReader));
-            s.Close();
+            var arg = Term.Deref(args[0]);
+            var reader = arg as ISOPrologReader;
+            if (reader != null)
+                reader.Close();
+            else
+            {
+                var writer = arg as StreamWriter;
+                if (writer != null)
+                    writer.Close();
+                else
+                    throw new ArgumentTypeException("close", "stream", arg, typeof(ISOPrologReader));
+            }
             return TrueImplementation(args, context);
         }
 
@@ -2687,6 +2743,15 @@ namespace Prolog
             //ISOPrologReader pr = new ISOPrologReader(s, context.Environment);
             object term = s.ReadTerm();
             return Term.UnifyAndReturnCutState(args[1], term);
+        }
+
+        private static IEnumerable<CutState> ShellImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException("shell", args, "command", "arg_string");
+#if UNITY_EDITOR
+            System.Diagnostics.Process.Start((string)args[0], (string)args[1]);
+#endif
+            yield return CutState.Continue;
         }
 
         private static IEnumerable<CutState> ELNonExclusiveQueryImplementation(object[] args, PrologContext context)
