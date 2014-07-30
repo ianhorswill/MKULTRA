@@ -23,6 +23,7 @@ player_input_response(question(player, $me, Question, T, A),
 player_input_response(command(player, $me, LF),
 		      assertion($me, player, LF, future, simple)) :-
    !,
+   kill_children($script_concern),
    start_task($script_concern, LF, 1).
 player_input_response(DialogAct, DialogAct) :-
    !,
@@ -31,6 +32,11 @@ player_input_response(_, do_not_understand($me, player)).
 
 strategy(go($me, Location),
 	 goto(Location)).
+strategy(take($me, Patient, _),
+	 pickup(Patient)).
+strategy(put($me, Patient, Destination),
+	 move(Patient, Destination)) :-
+   nonvar(Destination).
 
 answer_to(M:manner(be($'Bruce'), M), okay($'Bruce')) :-
    !.

@@ -228,4 +228,13 @@ public struct TileRect : IEnumerable<TilePosition>
             Width+2*borderWidth, Height+2*borderWidth
             );
     }
+
+    public Rect ScreenRect
+    {
+        get
+        {
+            var min = new TilePosition(CMin, RMin).TileMin;
+            return new Rect(min.x, min.y, Width * Tile.SizeInSceneUnits, Height * Tile.SizeInSceneUnits);
+        }
+    }
 }

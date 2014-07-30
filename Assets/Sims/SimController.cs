@@ -26,7 +26,7 @@ using UnityEngine;
 /// </summary>
 
 [AddComponentMenu("Sims/Sim Controller")]
-public class SimController : BindingBehaviour
+public class SimController : PhysicalObject
 {
     #region Public fields
     /// <summary>
@@ -34,6 +34,8 @@ public class SimController : BindingBehaviour
     /// Should be a single word.
     /// </summary>
     public string CharacterName;
+    [Popup("woman", "man")]
+    public string Type="woman";
     #endregion
 
     #region Constants
@@ -93,6 +95,8 @@ public class SimController : BindingBehaviour
 
     private ELNode perceptionRoot;
 
+    private ELNode locationRoot;
+
     private ELNode conversationalSpace;
 
     private ELNode socialSpace;
@@ -102,6 +106,8 @@ public class SimController : BindingBehaviour
     private ELNode eventHistory;
 
     private ELNode motorRoot;
+
+    private Room myCurrentRoom;
 
     readonly Queue<Structure> eventQueue = new Queue<Structure>();
 
@@ -232,6 +238,7 @@ public class SimController : BindingBehaviour
         updateConcernBids = this.UpdateConcernBids;
         elRoot = this.KnowledgeBase().ELRoot;
         this.perceptionRoot = elRoot / Symbol.Intern("perception");
+        this.locationRoot = perceptionRoot / Symbol.Intern("location");
         this.conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
         this.socialSpace = perceptionRoot / Symbol.Intern("social_space");
         this.motorRoot = elRoot / Symbol.Intern("motor_state");
@@ -240,7 +247,7 @@ public class SimController : BindingBehaviour
         ELNode.Store(lastDestination % null);  // Need a placeholder last destination so that /last_destination/X doesn't fail.
         if (string.IsNullOrEmpty(CharacterName))
             CharacterName = name;
-        if (!KB.Global.IsTrue("register_character", gameObject, Symbol.Intern(CharacterName)))
+        if (!KB.Global.IsTrue("register_character", gameObject, Symbol.Intern(CharacterName), Symbol.Intern((Type))))
             throw new Exception("Can't register character " + name);
     }
 
@@ -263,12 +270,13 @@ public class SimController : BindingBehaviour
 
     internal void Update()
     {
-        this.EnsureCharacterInitialized();
         if (!PauseManager.Paused)
         {
             this.UpdateSpeechBubble();
 
             this.UpdateLocomotion();
+
+            this.UpdateLocations();
 
             this.UpdateSpace(
                 conversationalSpaceColliders,
@@ -284,6 +292,8 @@ public class SimController : BindingBehaviour
                 "enter_social_space",
                 "exit_social_space",
                 false);
+
+            this.EnsureCharacterInitialized();
 
             this.HandleEvents();
 
@@ -339,7 +349,7 @@ public class SimController : BindingBehaviour
         for (var i = 0; i<characterCount;i++)
         {
             var character = colliders[i].gameObject;
-            if (character != gameObject && !statusNode.ContainsKey(character))
+            if (character != gameObject && !statusNode.ContainsKey(character) && myCurrentRoom.Contains(character))
             {
                 // The character just arrived in this character's conversational space
 
@@ -369,6 +379,33 @@ public class SimController : BindingBehaviour
             }
         }
     }
+
+    private void UpdateLocations()
+    {
+        foreach (var p in Registry<PhysicalObject>())
+        {
+            var o = p.gameObject;
+            // Determine if it's inside something
+            if (p.Container == null)
+            {
+                // It's not inside another object, so find what room it's in.
+                var n = locationRoot.ChildWithKey(o);
+                if (n == null || !n.ExclusiveKeyValue<GameObject>().GetComponent<Room>().Contains(o))
+                {
+                    foreach (var r in Registry<Room>())
+                        if (r.Contains(o))
+                        {
+                            ELNode.Store(locationRoot / o % (r.gameObject));
+                            if (o == gameObject)
+                                myCurrentRoom = r;
+                        }
+                }
+            }
+            else
+                ELNode.Store((this.locationRoot/o%p.Container));
+        }
+    }
+
     #endregion
 
     #region Primitive actions handled by SimController
@@ -437,6 +474,36 @@ public class SimController : BindingBehaviour
                 case "sleep":
                     this.sleepUntil = Time.time + Convert.ToSingle(structure.Argument(0));
                     break;
+
+                case "pickup":
+                {
+                    var patient = structure.Argument<GameObject>(0);
+                    if (patient == null)
+                        throw new NullReferenceException("Argument to pickup is not a gameobject");
+                    var physob = patient.GetComponent<PhysicalObject>();
+                    if (physob == null)
+                        throw new NullReferenceException("Argument to pickup is not a physical object.");
+                    physob.MoveTo(gameObject);
+                    break;
+                }
+
+                case "putdown":
+                {
+                    var patient = structure.Argument<GameObject>(0);
+                    if (patient == null)
+                        throw new NullReferenceException("Argument to putdown is not a gameobject");
+                    var physob = patient.GetComponent<PhysicalObject>();
+                    if (physob == null)
+                        throw new NullReferenceException("Argument to putdown is not a physical object.");
+                    var dest = structure.Argument<GameObject>(1);
+                    if (dest == null)
+                        throw new NullReferenceException("Argument to putdown is not a gameobject");
+                    physob.MoveTo(dest);
+                    break;
+                }
+
+
+
 
                 default:
                     // Assume it's dialog

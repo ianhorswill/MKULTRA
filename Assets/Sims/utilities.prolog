@@ -4,16 +4,24 @@
 
 :- public prop/1, character/1, world_object/1, nearest/2, docked_with/1, after_time/1.
 
-:- public register_prop/3, register_character/2.
+:- public register_room/2, register_prop/4, register_character/3.
 
-register_prop(Prop, CommonNoun, Plural) :-
+register_room(Room, Name) :-
+   ensure(room(Room)),
+   ensure(declare_kind(Room, room)),
+   ensure(proper_noun(Room, Name)).
+
+register_prop(Prop, CommonNoun, Plural, Adjectives) :-
+   Predication =.. [CommonNoun, X],
+   ensure(noun(CommonNoun, Plural, X^Predication)),
    ensure(prop(Prop)),
    ensure([CommonNoun, Prop]),
-   Predication =.. [CommonNoun, X],
-   ensure(noun(CommonNoun, Plural, X^Predication)).
+   ensure(declare_kind(Prop, CommonNoun)),
+   forall(member(A, Adjectives), ensure([A, Prop])).
 
-register_character(Character, Name) :-
+register_character(Character, Name, Type) :-
    ensure(character(Character)),
+   ensure(declare_kind(Character, Type)),
    ensure(proper_noun(Name, Character)).
 
 ensure([Functor | Arguments]) :-
@@ -39,6 +47,10 @@ nearest(GameObject, Constraint) :-
 
 docked_with(WorldObject) :-
    /perception/docked_with:WorldObject.
+docked_with(WorldObject) :-
+   top_level_container(WorldObject, Container),
+   WorldObject \= Container,
+   docked_with(Container).
 
 %% after_time(+Time)
 %  The current time is after Time.

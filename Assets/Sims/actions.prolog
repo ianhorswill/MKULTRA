@@ -45,3 +45,17 @@ runnable(Action) :-
 blocking(Action, P) :-
    precondition(Action, P),
    \+ P.
+
+%%
+%% Builtin primitive actions handled in SimController.cs
+%%
+
+action_functor(pickup, 1).
+precondition(pickup(X),
+	     docked_with(X)).
+
+action_functor(putdown, 2).
+precondition(putdown(Object, _Dest),
+	     location(Object, $me)).
+precondition(putdown(_Object, Dest),
+	     docked_with(Dest)).

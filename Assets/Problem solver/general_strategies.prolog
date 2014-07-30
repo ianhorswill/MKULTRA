@@ -16,6 +16,12 @@ strategy(achieve(P),
 	 wait_condition(P)) :-
    self_achieving(P).
 
+strategy(achieve(location(X,$me)),
+	 pickup(X)).
+
+strategy(move(X,Y),
+	 putdown(X,Y)).
+
 self_achieving(/perception/nobody_speaking).
 
 strategy(sleep(Seconds),
@@ -24,7 +30,9 @@ strategy(sleep(Seconds),
 
 strategy(achieve(docked_with(WorldObject)),
 	 goto(WorldObject)).
-strategy(goto(Place),
-	 ( call(assert($task/location_bids/Place:Priority)),
-	   wait_event(arrived_at(Place)) )) :-
+strategy(goto(Object),
+	 ( let(top_level_container(Object, Place),
+	       ( call(assert($task/location_bids/Place:Priority)),
+		 wait_event(arrived_at(Place)),
+		 call(retract($task/location_bids/Place))) ) )) :-
    $task/priority:Priority.

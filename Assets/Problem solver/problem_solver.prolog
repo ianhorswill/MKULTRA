@@ -18,7 +18,7 @@ within_task(TaskConcern, Code) :-
 % Ontology:
 % event => task
 % task => compound_task | primitive_task
-% compound_task => simple_compound_task | (task, task)
+% compound_task => simple_compound_task | (task, task) | let(PrologCode, task)
 % primitive_task => builtins | actions
 % builtins => immediate_builtin | polled_builtin
 % immediate_builtin => null | done | call(PrologCode)
@@ -85,6 +85,11 @@ switch_to_task( (First, Rest) ) :-
    begin($task/continuation:K,
 	 assert($task/continuation:(Rest,K)),
 	 switch_to_task(First)).
+switch_to_task(let(BindingCode, Task)) :-
+   BindingCode ->
+      switch_to_task(Task)
+      ;
+      throw(let_failed(let(BindingCode, Task))).
 
 % All other primitive tasks
 switch_to_task(B) :-
