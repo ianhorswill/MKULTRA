@@ -170,6 +170,21 @@ namespace Prolog
         }
 
         /// <summary>
+        /// Returns the child with the specified key or null is no such child.
+        /// </summary>
+        /// <param name="key">Key to search for</param>
+        /// <returns>The child, if there is a child with that key, otherwise null.</returns>
+        public ELNode ChildWithKey(object key)
+        {
+            foreach (var c in Children)
+                if (c.Key.Equals(key))
+                {
+                    return c;
+                }
+            return null;
+        }
+
+        /// <summary>
         /// Return the value of this node's exclusive child's key.
         /// Throw exception if its not exclusive, doesn't have a child, or the key has the wrong type.
         /// </summary>
@@ -178,7 +193,7 @@ namespace Prolog
         public T ExclusiveKeyValue<T>()
         {
             if (!IsExclusive)
-                throw new ArgumentException("ExclusiveKeyValue called on non-exclusive or empty node: "+this.ToString());
+                throw new ArgumentException("ExclusiveKeyValue called on non-exclusive or empty node: "+this);
             var child = Children[0];
             if (!(child.Key is T))
                 throw new ArgumentException(string.Format("Node {0} has wrong type; should be {1}.", child, typeof(T).Name));
