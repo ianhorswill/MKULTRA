@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class PopupAttribute : PropertyAttribute
 {
-    public string[] List;
-    public object VariableType;
+    public string[] list;
+    public object variableType;
 
     #region PopupAttribute()
 
@@ -20,12 +20,17 @@ public class PopupAttribute : PropertyAttribute
     {
         if (IsVariablesTypeConsistent(list) && AssignVariableType(list[0]))
         {
-            this.List = new string[list.Length];
+            this.list = new string[list.Length];
             for (int i = 0; i < list.Length; i++)
             {
-                this.List[i] = list[i].ToString();
+                this.list[i] = list[i].ToString();
             }
         }
+        else
+        {
+            return;
+        }
+
     }
     #endregion
 
@@ -40,31 +45,33 @@ public class PopupAttribute : PropertyAttribute
     
     private bool AssignVariableType(object variable)
     {
-        if (variable is int)
+        if (variable.GetType() == typeof(int))
         {
-            this.VariableType = typeof(int[]);
+            variableType = typeof(int[]);
             return true;
         }
-        if (variable is float)
+        else if (variable.GetType() == typeof(float))
         {
-            this.VariableType = typeof(float[]);
+            variableType = typeof(float[]);
             return true;
         }
-        if (variable is double)
+        else if (variable.GetType() == typeof(double))
         {
             Debug.LogWarning("Popup Drawer doesn't properly support double type, for float variables please use 'f' at the end of each value.");
-            this.VariableType = typeof(float[]);
+            variableType = typeof(float[]);
             return true;
         }
-        if (variable is string)
+        else if (variable.GetType() == typeof(string))
         {
-            this.VariableType = typeof(string[]);
+            variableType = typeof(string[]);
             return true;
         }
-        Debug.LogError("Popup Property Drawer doesn't support " + variable.GetType() + " this type of variable");
-        return false;
+        else
+        {
+            Debug.LogError("Popup Property Drawer doesn't support " + variable.GetType() + " this type of variable");
+            return false;
+        }
     }
-
     #endregion
 
     #region IsVariablesTypeConsistent()
@@ -72,20 +79,18 @@ public class PopupAttribute : PropertyAttribute
     /// <summary>
     /// Checks to see if there is only one variable type in the given value.
     /// </summary>
-    /// <param name="values">Array of variables to be checked.</param>
+    /// <param name="list">Array of variables to be checked.</param>
     /// <returns>True if there is only one type, false if there is 2 or more.</returns>
     
-    private bool IsVariablesTypeConsistent(object[] values)
+    private bool IsVariablesTypeConsistent(object[] list)
     {
-        for (int i = 0; i < values.Length; i++)
+        for (int i = 0; i < list.Length; i++)
         {
             if (i == 0)
             {
-                this.VariableType = values[i].GetType();
+                variableType = list[i].GetType();
             }
-                // ReSharper disable PossibleUnintendedReferenceComparison
-            else if (this.VariableType != values[i].GetType())
-                // ReSharper restore PossibleUnintendedReferenceComparison
+            else if (variableType != list[i].GetType())
             {
                 Debug.LogError("Popup Property Drawer can only contain one type per variable");
                 return false;
