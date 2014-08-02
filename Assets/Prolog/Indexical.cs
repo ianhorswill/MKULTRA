@@ -36,6 +36,7 @@ namespace Prolog
                 });
             DeclareIndexical("global", context => KnowledgeBase.Global);
             DeclareIndexical("root", context => context.KnowledgeBase.ELRoot);
+            DeclareIndexical("global_root", context => KnowledgeBase.Global.ELRoot);
             DeclareIndexical("now", context => Time.time);
         }
 
