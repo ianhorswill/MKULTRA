@@ -9,7 +9,7 @@
 register_room(Room, Name) :-
    ensure(room(Room)),
    ensure(declare_kind(Room, room)),
-   ensure(proper_noun(Room, Name)).
+   ensure(proper_noun(Name, Room)).
 
 register_prop(Prop, CommonNoun, Plural, Adjectives) :-
    Predication =.. [CommonNoun, X],
