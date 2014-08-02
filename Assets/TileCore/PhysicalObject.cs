@@ -5,13 +5,20 @@ public abstract class PhysicalObject : BindingBehaviour
     [HideInInspector]
     public GameObject Container;
 
+    /// <summary>
+    /// True if this object has not been destroyed.
+    /// </summary>
+    public bool Exists = true;
+
     public void MoveTo(GameObject newContainer)
     {
         Container = newContainer;
         // Reparent our gameObject to newContainer
         // Because Unity is braindamaged, this has to be done by way of the transform.
         transform.parent = newContainer.transform;
-        newContainer.GetComponent<PhysicalObject>().ObjectAdded(this.gameObject);
+        var physicalObject = newContainer.GetComponent<PhysicalObject>();
+        if (physicalObject != null)
+            physicalObject.ObjectAdded(this.gameObject);
     }
 
     public bool ContentsVisible;
@@ -20,5 +27,13 @@ public abstract class PhysicalObject : BindingBehaviour
     {
         if (newObject.renderer != null)
             newObject.renderer.enabled = ContentsVisible;
+    }
+
+    public virtual void Destroy()
+    {
+        Exists = false;
+        this.MoveTo(GameObject.Find("DestroyedObjects"));
+        this.enabled = false;
+        this.renderer.enabled = false;
     }
 }
