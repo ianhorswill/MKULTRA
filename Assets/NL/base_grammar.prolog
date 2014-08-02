@@ -146,14 +146,14 @@ s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
    [where],
    aux_be(Tense, Agreement),
    opt_not(Polarity),
-   np((S^_)^_, subject, Agreement, nogap, nogap).
+   np((S^S)^S, subject, Agreement, nogap, nogap).
 
 % Who has  NP
-s(Character:location(Object, Character), indicative, Polarity, Tense, simple) -->
+s(Character:location(Object, Character), interrogative, Polarity, Tense, simple) -->
    [who],
    aux_have(Tense, third:singular),
    opt_not(Polarity),
-   np((Object^_)^_, object, _, nogap, nogap).
+   np((Object^S)^S, object, _, nogap, nogap).
 
 % what is on the X
 s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
@@ -161,7 +161,7 @@ s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    [on],
-   np((Container^_)^_, subject, Agreement, nogap, nogap),
+   np((Container^S)^S, subject, Agreement, nogap, nogap),
    { is_a(Container, work_surface) }.
 
 % what is in the X
@@ -170,7 +170,7 @@ s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    [in],
-   np((Container^_)^_, subject, Agreement, nogap, nogap),
+   np((Container^S)^S, subject, Agreement, nogap, nogap),
    { is_a(Container, closed_container), \+ character(Container) }.
 
 % what does Character have?
@@ -178,7 +178,7 @@ s(S:location(S, Character), interrogative, Polarity, Tense, simple) -->
    [what],
    aux_do(Tense, Agreement),
    opt_not(Polarity),
-   np((Character^_)^_, subject, Agreement, nogap, nogap),
+   np((Character^S)^S, subject, Agreement, nogap, nogap),
    { character(Character) },
    aux_have(Tense, Agreement).
 
