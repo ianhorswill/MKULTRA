@@ -19,9 +19,6 @@ immediate_kind_of(man, male).
 immediate_kind_of(woman, human).
 immediate_kind_of(woman, female).
 
-immediate_kind_of(room, physical_object).
-immediate_kind_of(room, container).
-
 immediate_kind_of(prop, physical_object).
 
 immediate_kind_of(furniture, prop).
@@ -35,14 +32,18 @@ immediate_kind_of(bed, layable).
 
 immediate_kind_of(physical_storage, furniture).
 immediate_kind_of(physical_storage, container).
-immediate_kind_of(refridgerator, physical_storage).
-immediate_kind_of(sink, physical_storage).
-immediate_kind_of(bookshelf, physical_storage).
+immediate_kind_of(closed_container, physical_storage).
+immediate_kind_of(refridgerator, closed_container).
+immediate_kind_of(sink, closed_container).
+immediate_kind_of(bookshelf, closed_container).
 
 immediate_kind_of(work_surface, furniture).
-immediate_kind_of(work_surface, container).
+immediate_kind_of(work_surface, physical_storage).
 immediate_kind_of(desk, work_surface).
 immediate_kind_of(table, work_surface).
+
+immediate_kind_of(room, physical_object).
+immediate_kind_of(room, closed_container).
 
 immediate_kind_of(food, prop).
 immediate_kind_of(fruit, food).
