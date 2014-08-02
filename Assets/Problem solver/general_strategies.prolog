@@ -19,8 +19,14 @@ strategy(achieve(P),
 strategy(achieve(location(X,$me)),
 	 pickup(X)).
 
-strategy(move(X,Y),
+strategy(move($me, X,Y),
 	 putdown(X,Y)).
+
+strategy(eat($me, X),
+	 ingest(X)).
+
+strategy(drink($me, X),
+	 ingest(X)).
 
 self_achieving(/perception/nobody_speaking).
 

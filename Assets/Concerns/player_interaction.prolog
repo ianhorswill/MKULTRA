@@ -35,7 +35,7 @@ strategy(go($me, Location),
 strategy(take($me, Patient, _),
 	 pickup(Patient)).
 strategy(put($me, Patient, Destination),
-	 move(Patient, Destination)) :-
+	 move($me, Patient, Destination)) :-
    nonvar(Destination).
 
 answer_to(M:manner(be($'Bruce'), M), okay($'Bruce')) :-
