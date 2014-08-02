@@ -9,7 +9,9 @@
 register_room(Room, CommonNoun, Plural) :-
    ensure(room(Room)),
    ensure(declare_kind(Room, CommonNoun)),
-   ensure(noun(CommonNoun, Plural, X^is_a(X,CommonNoun))).
+   ( noun(_,_,X^is_a(X, CommonNoun))
+     ;
+     assertz(noun(CommonNoun, Plural, X^is_a(X,CommonNoun))) ).
 
 register_prop(Prop, CommonNoun, Plural, Adjectives) :-
    Predication =.. [CommonNoun, X],
@@ -17,7 +19,9 @@ register_prop(Prop, CommonNoun, Plural, Adjectives) :-
    ensure(prop(Prop)),
    ensure([CommonNoun, Prop]),
    ensure(declare_kind(Prop, CommonNoun)),
-   forall(member(A, Adjectives), ensure([A, Prop])).
+   forall(member(A, Adjectives), ensure([A, Prop])),
+   forall(is_a(Prop, Kind),
+	  ignore(initialize_prop(Prop, Kind))).
 
 register_character(Character, Name, Type) :-
    ensure(character(Character)),
