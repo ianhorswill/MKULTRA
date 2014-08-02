@@ -165,6 +165,7 @@ namespace Prolog
             DeclareOperator(200, XFX, "**");
             DeclareOperator(200, XFY, "^");
             DeclareOperator(200, FY, "-");
+            DeclareOperator(200, FY, "~");
             DeclareOperator(200, FY, "\\");
             DeclareOperator(100, XFY, "@");
             DeclareOperator(40, YFX, ".");
