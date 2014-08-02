@@ -18,9 +18,19 @@ strategy(achieve(P),
 
 strategy(achieve(location(X,$me)),
 	 pickup(X)).
+strategy(achieve(location(X, Room)),
+	 achieve(location(X, Container))) :-
+   %\+ freestanding(X),
+   is_a(Room, room),
+   is_a(Container, work_surface),
+   location(Container, Room).
+strategy(achieve(location(X, Container)),
+	 putdown(X, Container)) :-
+   Container \= $me,
+   \+ is_a(Container, room).
 
 strategy(move($me, X,Y),
-	 putdown(X,Y)).
+	 achieve(location(X, Y))).
 
 strategy(eat($me, X),
 	 ingest(X)).
