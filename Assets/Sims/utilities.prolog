@@ -43,7 +43,13 @@ world_object(WorldObject) :-
 nearest(GameObject, Constraint) :-
     arg_min(GameObject,
 	    Distance,
-	    (Constraint, Distance is distance(GameObject, $me))).
+	    ( Constraint,
+	      exists(GameObject),
+	      Distance is distance(GameObject, $me))).
+
+exists(X) :-
+   component_of_gameobject_with_type(C, X, $'PhysicalObject'),
+   C.'Exists'.
 
 docked_with(WorldObject) :-
    /perception/docked_with:WorldObject.
