@@ -120,6 +120,9 @@ namespace Prolog
                 "flow control",
                 "Declares that the predicate should be byte compiled rather than interpreted.",
                 ":predicateIndicator", "...");
+            DefinePrimitive("predicate_property", PredicatePropertyImplementation, "declarations",
+                            "True if PROPERTY holds of the predicate of GOAL.",
+                            ":goal", "+property");
             DefinePrimitive("forall", ForAllImplementation, "all solutions predicates",
                             "True if GOAL is true for all bindings of all solutions of GENERATOR.",
                             ":generator", ":goal");
@@ -1497,6 +1500,24 @@ namespace Prolog
             return SucceedDriver();
         }
 
+        private static IEnumerable<CutState> PredicatePropertyImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException("predicate_property", args, ":goal", "+property");
+            var goal = Term.Structurify(args[0], "Goal argument to predicate_property/2 must be a valid goal.");
+            
+            var property = Term.Deref(args[1]) as Symbol;
+            if (property == null)
+                throw new ArgumentException("Property argument must be an atom.");
+            switch (property.Name)
+            {
+                case "built_in":
+                    return ToCutStateEnumerator(Implementations.ContainsKey(goal.Functor));
+
+                default:
+                    throw new ArgumentException("Unknown predicate property: "+ISOPrologWriter.WriteToString(property));
+            }
+        }
+
         private static PrimitiveImplementation MakeDeclarationPredicate(DeclarationHandler handler)
         {
             return (args, context) => DeclarationDriver(handler, args, context);
@@ -1769,7 +1790,7 @@ namespace Prolog
             }
             context.StepLimit = previousLimit;
             context.StepsRemaining = previousRemaining;
-            return success ? SucceedDriver() : FailDriver();
+            return ToCutStateEnumerator(success);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals",
@@ -2459,6 +2480,11 @@ namespace Prolog
         internal static IEnumerable<CutState> SucceedDriver()
         {
             yield return CutState.Continue;
+        }
+
+        static IEnumerable<CutState>  ToCutStateEnumerator(bool success)
+        {
+            return success ? SucceedDriver() : FailDriver();
         }
 
         internal static IEnumerable<CutState> FailImplementation = FailDriver();
