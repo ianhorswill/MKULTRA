@@ -14,9 +14,25 @@
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    [ the, Noun ],
    { noun(Noun, _, X^P),
-     nearest(X, P) }.
-np(NP, Case, Agreement, Gap, Gap) --> pronoun(Case, Agreement, NP).
-np(NP, _C, third:Number, Gap, Gap) --> proper_noun(Number, NP).
-np((X^S)^S, _C, _Agreement, np(X), nogap) --> [].
-np((String^S)^S, _, _, Gap, Gap) --> {string(String)}, [String].
+     resolve_definite_description(X, P) }.
+np(NP, Case, Agreement, Gap, Gap) -->
+   pronoun(Case, Agreement, NP).
+np(NP, _C, third:Number, Gap, Gap) -->
+   proper_noun(Number, NP).
+np((X^S)^S, _C, _Agreement, np(X), nogap) -->
+   [].
+np((String^S)^S, _, _, Gap, Gap) -->
+   {string(String)},
+   [String].
 
+resolve_definite_description(Object, is_a(Object, Kind)) :-
+   kind_of(Kind, room),
+   !,
+   is_a(Object, Kind).
+resolve_definite_description(Object, Constraint) :-
+   % Pick the nearest one, if it's something that nearest works on.
+   nearest(Object, Constraint),
+   !.
+resolve_definite_description(_Object, Constraint) :-
+   % Punt, and choose whatever Prolog gives us first.
+   Constraint.

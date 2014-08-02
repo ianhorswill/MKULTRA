@@ -44,6 +44,10 @@ immediate_kind_of(table, work_surface).
 
 immediate_kind_of(room, physical_object).
 immediate_kind_of(room, closed_container).
+immediate_kind_of(kitchen, room).
+immediate_kind_of(bedroom, room).
+immediate_kind_of(bathroom, room).
+immediate_kind_of(living_room, room).
 
 immediate_kind_of(food, prop).
 immediate_kind_of(fruit, food).

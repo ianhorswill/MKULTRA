@@ -38,30 +38,32 @@ public class PropInfo : PhysicalObject
             CommonNoun = name.ToLower();
         CommonNoun = LastWordOf(CommonNoun);
         if (string.IsNullOrEmpty(Plural) && !string.IsNullOrEmpty(CommonNoun))
-            switch (CommonNoun[CommonNoun.Length - 1])
-            {
-                case 's':
-                case 'o':
-                    Plural = CommonNoun + "es";
-                    break;
+            Plural = PluralForm(CommonNoun);
+    }
 
-                case 'f':
-                    Plural = CommonNoun.Substring(0, CommonNoun.Length - 1) + "ves";
-                    break;
+    public static string PluralForm(string singularForm)
+    {
+        switch (singularForm[singularForm.Length - 1])
+        {
+            case 's':
+            case 'o':
+                return singularForm + "es";
 
-                case 'y':
-                    var secondToLast = CommonNoun[CommonNoun.Length - 2];
-                    if (Vowels.Contains(secondToLast))
-                        Plural = CommonNoun + "s";
-                    else
-                    {
-                        Plural = CommonNoun.Substring(0, CommonNoun.Length - 1) + "ies";
-                    }
-                    break;
-                default:
-                    Plural = CommonNoun + "s";
-                    break;
-            }
+            case 'f':
+                return singularForm.Substring(0, singularForm.Length - 1) + "ves";
+
+
+            case 'y':
+                var secondToLast = singularForm[singularForm.Length - 2];
+                if (Vowels.Contains(secondToLast))
+                {
+                    return singularForm + "s";
+                }
+                return singularForm.Substring(0, singularForm.Length - 1) + "ies";
+
+            default:
+                return singularForm + "s";
+        }
     }
 
     private string LastWordOf(string phrase)
@@ -74,10 +76,6 @@ public class PropInfo : PhysicalObject
 
     public void Start()
     {
-        if (string.IsNullOrEmpty(CommonNoun))
-            CommonNoun = name;
-        if (string.IsNullOrEmpty(Plural))
-            Plural = CommonNoun + (CommonNoun.EndsWith("s") ? "es" : "s");
         if (!KB.Global.IsTrue("register_prop",
                                 gameObject, Symbol.Intern(CommonNoun),
                                 Symbol.Intern(Plural),

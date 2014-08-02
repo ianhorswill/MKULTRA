@@ -4,12 +4,12 @@
 
 :- public prop/1, character/1, world_object/1, nearest/2, docked_with/1, after_time/1.
 
-:- public register_room/2, register_prop/4, register_character/3.
+:- public register_room/3, register_prop/4, register_character/3.
 
-register_room(Room, Name) :-
+register_room(Room, CommonNoun, Plural) :-
    ensure(room(Room)),
-   ensure(declare_kind(Room, room)),
-   ensure(proper_noun(Name, Room)).
+   ensure(declare_kind(Room, CommonNoun)),
+   ensure(noun(CommonNoun, Plural, X^is_a(X,CommonNoun))).
 
 register_prop(Prop, CommonNoun, Plural, Adjectives) :-
    Predication =.. [CommonNoun, X],
