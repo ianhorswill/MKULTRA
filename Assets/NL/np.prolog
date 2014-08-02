@@ -14,6 +14,11 @@
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    [ the, Noun ],
    { noun(Noun, _, X^P),
+     atomic(Noun),
+     resolve_definite_description(X, P) }.
+np((X^S)^S, _C, third:singular, Gap, Gap) -->
+   [ the, N1, N2 ],
+   { noun([N1, N2], _, X^P),
      resolve_definite_description(X, P) }.
 np(NP, Case, Agreement, Gap, Gap) -->
    pronoun(Case, Agreement, NP).

@@ -6,6 +6,10 @@ proper_noun(singular, (E^S)^S) -->
    [PN],
    {proper_noun(PN, E)}.
 
+proper_noun(singular, (E^S)^S) -->
+   [PN1, PN2],
+   {proper_noun([PN1, PN2], E)}.
+
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],
    { pronoun(PN, Case, Person, Number, E) }.

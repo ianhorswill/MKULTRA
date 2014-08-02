@@ -24,3 +24,5 @@ whpron( what ).
 :- randomizable intransitive_verb/7.
 :- randomizable transitive_verb/7.
 :- randomizable ditransitive_verb/7.
+
+noun([living, room], [living, rooms], X^is_a(X,living_room)).
