@@ -9,6 +9,8 @@
 
 :- indexical task=null.
 
+:- external veto_strategy/1.
+
 %% within_task(+TaskConcern, :Code)
 %  Runs Code within the task TaskConcern.
 within_task(TaskConcern, Code) :-
@@ -109,7 +111,8 @@ switch_to_task(A) :-
 switch_to_task(Task) :-
    !,
    begin(all(S,
-	     strategy(Task, S),
+	     ( strategy(Task, S),
+	       \+ veto_strategy(Task) ),
 	     Strategies),
 	 select_strategy(Task, Strategies)).
 
