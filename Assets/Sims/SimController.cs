@@ -86,6 +86,9 @@ public class SimController : PhysicalObject
 
     [Bind(BindingScope.Global, BindingDefault.Create)]
     private PathPlanner planner;
+
+    [Bind(BindingScope.Global)]
+    private TileMap tileMap;
 #pragma warning restore 649
     #endregion
 
@@ -487,6 +490,18 @@ public class SimController : PhysicalObject
                     break;
                 }
 
+                case "ingest":
+                {
+                    var patient = structure.Argument<GameObject>(0);
+                    if (patient == null)
+                        throw new NullReferenceException("Argument to ingest is not a gameobject");
+                    var physob = patient.GetComponent<PhysicalObject>();
+                    if (physob == null)
+                        throw new NullReferenceException("Argument to ingest is not a physical object.");
+                    physob.Destroy();
+                    break;
+                }
+
                 case "putdown":
                 {
                     var patient = structure.Argument<GameObject>(0);
@@ -701,5 +716,14 @@ public class SimController : PhysicalObject
             GUI.Label(new Rect(bubblelocation.x, Camera.current.pixelHeight-bubblelocation.y, 300, 300), this.currentSpeechBubbleText, SpeechBubbleStyle);
         }
     }
+    #endregion
+
+    #region PhysicalObject methods
+    public override void Destroy()
+    {
+        tileMap.SetTileColor(gameObject.DockingTiles(), Color.red);
+        base.Destroy();
+    }
+
     #endregion
 }
