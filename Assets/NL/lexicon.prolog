@@ -16,10 +16,10 @@ whpron( who  ).
 whpron( whom ).
 whpron( what ).
 
-:- randomizable det/2.
-det( every, (X^S1)^(X^S2)^   all(X,S1,S2) ).
-det( a,     (X^S1)^(X^S2)^exists(X,S1,S2)  ).
-det( some,  (X^S1)^(X^S2)^exists(X,S1,S2)  ).
+% :- randomizable det/2.
+% det( every, (X^S1)^(X^S2)^   all(X,S1,S2) ).
+% det( a,     (X^S1)^(X^S2)^exists(X,S1,S2)  ).
+% det( some,  (X^S1)^(X^S2)^exists(X,S1,S2)  ).
 
 :- randomizable intransitive_verb/7.
 :- randomizable transitive_verb/7.

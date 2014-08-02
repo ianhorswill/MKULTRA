@@ -35,17 +35,48 @@ s(S, indicative, Polarity, Tense, Aspect) -->
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
    aux_vp(NP^S1, Polarity, Agreement, Tense, Aspect).
 
+% NP is [not] Adj
 s(S, indicative, Polarity, Tense, simple) -->
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    ap(Noun^S).
 
+% NP is [not] NP
 s(be(S, O), indicative, Polarity, Tense, simple) -->
    np((S^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    np((O^_)^_, object, _, nogap, nogap).
+
+% NP is [not] in NP
+s(location(S, Container), indicative, Polarity, Tense, simple) -->
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [in],
+   np((Container^_)^_, object, _, nogap, nogap),
+   { is_a(Container, closed_container) }.
+
+% NP is [not] on NP
+s(location(S, Container), indicative, Polarity, Tense, simple) -->
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [on],
+   np((Container^_)^_, object, _, nogap, nogap),
+   { is_a(Container, work_surface) }.
+
+% Character has  NP
+s(location(Object, Character), indicative, Polarity, Tense, simple) -->
+   np((Character^_)^_, subject, Agreement, nogap, nogap),
+   { character(Character) },
+   aux_have(Tense, Agreement),
+   opt_not(Polarity),
+   np((Object^_)^_, object, _, nogap, nogap).
+
+
+
 
 %%%
 %%% Imperative mood
@@ -109,6 +140,49 @@ s(S, interrogative, Polarity, present, simple) -->
 s(X:explanation(S, X), interrogative, Polarity, Tense, Aspect) -->
    [why],
    inverted_sentence(S, Polarity, Tense, Aspect).
+
+% where is NP
+s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
+   [where],
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   np((S^_)^_, subject, Agreement, nogap, nogap).
+
+% Who has  NP
+s(Character:location(Object, Character), indicative, Polarity, Tense, simple) -->
+   [who],
+   aux_have(Tense, third:singular),
+   opt_not(Polarity),
+   np((Object^_)^_, object, _, nogap, nogap).
+
+% what is on the X
+s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
+   [what],
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [on],
+   np((Container^_)^_, subject, Agreement, nogap, nogap),
+   { is_a(Container, work_surface) }.
+
+% what is in the X
+s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
+   [what],
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [in],
+   np((Container^_)^_, subject, Agreement, nogap, nogap),
+   { is_a(Container, closed_container), \+ character(Container) }.
+
+% what does Character have?
+s(S:location(S, Character), interrogative, Polarity, Tense, simple) -->
+   [what],
+   aux_do(Tense, Agreement),
+   opt_not(Polarity),
+   np((Character^_)^_, subject, Agreement, nogap, nogap),
+   { character(Character) },
+   aux_have(Tense, Agreement).
+
+
 
 %%%
 %%% Adjectival phrases

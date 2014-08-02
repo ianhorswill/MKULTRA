@@ -1,14 +1,14 @@
-:- public det/3, n/4.
+%:- public det/3.
 
-det(LF) --> [D], {det(D, LF)}.
+%det(LF) --> [D], {det(D, LF)}.
 
-:- randomizable n//2.
-n(singular, LF)   --> [N], {noun(N, _, LF)}.
-n(plural, LF)   --> [N], {noun(_, N, LF)}.
+proper_noun(singular, (E^S)^S) -->
+   [PN],
+   {proper_noun(PN, E)}.
 
-proper_noun(singular, (E^S)^S) --> [PN], {proper_noun(PN, E)}.
-
-pronoun(Case, Person:Number, (E^S)^S) --> [PN], { pronoun(PN, Case, Person, Number, E) }.
+pronoun(Case, Person:Number, (E^S)^S) -->
+   [PN],
+   { pronoun(PN, Case, Person, Number, E) }.
 
 %relpron --> [RP], {relpron(RP)}.
 whpron --> [WH], {whpron(WH)}.
