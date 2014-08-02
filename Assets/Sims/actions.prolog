@@ -59,3 +59,7 @@ precondition(putdown(Object, _Dest),
 	     location(Object, $me)).
 precondition(putdown(_Object, Dest),
 	     docked_with(Dest)).
+
+action_functor(ingest, 1).
+precondition(ingest(Edible),
+	     location(Edible, $me)).
