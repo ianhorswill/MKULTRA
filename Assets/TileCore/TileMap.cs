@@ -15,6 +15,8 @@ public class TileMap : BindingBehaviour
     #region Map data
     private Tile[,] contents;
 
+    private SpriteRenderer[,] renderers;
+
     public int MapRows { get; private set; }
 
     public int MapColumns { get; private set; }
@@ -112,7 +114,21 @@ public class TileMap : BindingBehaviour
             var spriteName = spriteRenderer.sprite.name;
             tile.SpriteName = spriteName;
             tile.Type = wall.IsMatch(spriteName) ? TileType.Wall : TileType.Freespace;
+            renderers[p.Column, p.Row] = spriteRenderer;
         }
+    }
+
+    public void SetTileColor(TilePosition p, Color c)
+    {
+        var tileRenderer = renderers[p.Column, p.Row];
+        if (tileRenderer != null)
+            tileRenderer.color = c;
+    }
+
+    public void SetTileColor(TileRect r, Color c)
+    {
+        foreach (var tile in r)
+            SetTileColor(tile, c);
     }
 
     private void GetMapDimensions(SpriteRenderer[] allSprites)
@@ -141,6 +157,7 @@ public class TileMap : BindingBehaviour
         MapColumns = Mathf.RoundToInt((maxY - minY) / tileSize);
         MapRows = Mathf.RoundToInt((maxX - minX) / tileSize);
         contents = new Tile[MapColumns, MapRows];
+        renderers = new SpriteRenderer[MapColumns, MapRows];
     }
     #endregion
 
