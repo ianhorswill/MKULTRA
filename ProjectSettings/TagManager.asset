@@ -9,13 +9,13 @@ TagManager:
   Builtin Layer 2: Ignore Raycast
   Builtin Layer 3: 
   Builtin Layer 4: Water
-  Builtin Layer 5: 
+  Builtin Layer 5: UI
   Builtin Layer 6: 
   Builtin Layer 7: 
   User Layer 8: Map
   User Layer 9: Characters
   User Layer 10: Props
-  User Layer 11: 
+  User Layer 11: PlaceOnSurface
   User Layer 12: 
   User Layer 13: 
   User Layer 14: 
@@ -44,4 +44,8 @@ TagManager:
   - name: Default
     userID: 0
     uniqueID: 0
+    locked: 0
+  - name: PlacedOnSurface
+    userID: 2
+    uniqueID: 81158165
     locked: 0

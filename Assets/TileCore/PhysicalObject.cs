@@ -26,7 +26,13 @@ public abstract class PhysicalObject : BindingBehaviour
     public void ObjectAdded(GameObject newObject)
     {
         if (newObject.renderer != null)
+        {
             newObject.renderer.enabled = ContentsVisible;
+            var sr = newObject.renderer as SpriteRenderer;
+            if (sr != null && ContentsVisible)
+                sr.sortingLayerName = "PlacedOnSurface";
+        }
+        newObject.transform.localPosition = Vector3.zero;
     }
 
     public virtual void Destroy()
