@@ -62,12 +62,14 @@ public class PauseManager : MonoBehaviour
         }
     }
 
+    public const int PauseGreyoutDepth = 100;
+
     void RepaintGUI()
     {
+        GUI.depth = PauseGreyoutDepth;
         if (ReallyPaused)
         {
             //GUI.Label(new Rect(0, 0, 100, 100), "PAUSED");
-            GUI.depth = 99999;
             GUI.Box(new Rect(0, 0, Screen.width, Screen.height), GUIContent.none);
         }
     }

@@ -71,6 +71,7 @@ public class NLPrompt : BindingBehaviour
 
     internal void OnGUI()
     {
+        GUI.depth = 0;
         var e = Event.current;
         switch (e.type)
         {
@@ -94,6 +95,7 @@ public class NLPrompt : BindingBehaviour
             case KeyCode.Escape:
                 this.input = this.formatted = this.commentary = "";
                 this.dialogAct = null;
+                PauseManager.Paused = false;
                 break;
 
             case KeyCode.Delete:
@@ -105,6 +107,13 @@ public class NLPrompt : BindingBehaviour
                 }
                 break;
 
+            case KeyCode.Tab:
+                this.input = string.Format("{0}{1}{2}",
+                                           this.input,
+                                           (this.input.EndsWith(" ") || !char.IsLetterOrDigit(completion[0])) ? "" : " ",
+                                           this.completion);
+                break;
+
             case KeyCode.Return:
             case KeyCode.KeypadEnter:
                 if (this.dialogAct != null)
@@ -112,6 +121,7 @@ public class NLPrompt : BindingBehaviour
                     simController.QueueEvent("player_input", dialogAct);
                     this.formatted = this.input = this.completion = this.commentary = "";
                     this.dialogAct = null;
+                    PauseManager.Paused = false;
                 }
                 Event.current.Use();
                 break;
@@ -130,6 +140,7 @@ public class NLPrompt : BindingBehaviour
         if (c == '\n')
             return;
 
+        PauseManager.Paused = true;
         characterResponse = "";
         if (c != ' ' || (this.input != "" && !this.input.EndsWith(" "))) // don't let them type redundant spaces
             this.input = this.input + c;
