@@ -15,6 +15,7 @@
 %  Runs Code within the task TaskConcern.
 within_task(TaskConcern, Code) :-
    bind(task, TaskConcern),
+   (TaskConcern/partner/P -> bind(addressee, P) ; true),
    Code.
 
 % Ontology:
@@ -49,20 +50,24 @@ polled_builtin(wait_event(_)).
 %% Task creation, strategy specification
 %%
 
-:- public start_task/3, start_task/2.
+:- public start_task/5, start_task/3, start_task/2.
 
-%% start_task(+Parent, +Task, +Priority) is det
+%% start_task(+Parent, +Task, +Priority, TaskConcern, +Assertions) is det
 %  Adds a task to Parent's subconcerns.  Priority is
 %  The score to be given by the task to any actions it attempts
 %  to perform.
-start_task(Parent, Task, Priority) :-
+start_task(Parent, Task, Priority, TaskConcern, Assertions) :-
    begin_child_concern(Parent, task, Priority, TaskConcern,
 		       [TaskConcern/type:task:Task,
 			TaskConcern/continuation:done]),
+   forall(member(A, Assertions),
+	  assert(A)),
    within_task(TaskConcern, switch_to_task(Task)).
 
+start_task(Parent, Task, Priority) :-
+   start_task(Parent, Task, Priority, _, [ ]).
 start_task(Task, Priority) :-
-   start_task($root, Task, Priority).
+   start_task($root, Task, Priority, _, [ ]).
 
 %% switch_to_task(+Task)
 %  Stop running current step and instead run Task followed by our continuation.
@@ -157,7 +162,6 @@ invoke_continuation(K) :-
 
 %% poll_tasks
 %  Polls all tasks of all concerns.
-poll_tasks :- !.
 poll_tasks :-
    forall(concern(Task, task),
 	  poll_task(Task)).
@@ -166,10 +170,10 @@ poll_tasks :-
 %  Attempts to make forward progress on Task's current step.
 poll_task(T) :-
    (T/current:A)>>ActionNode,
-   ActionNode:action ->
+   ((ActionNode:action) ->
       poll_action(T, A)
       ;
-      poll_builtin(T, A).
+      poll_builtin(T, A)).
 
 poll_action(T, A) :-
    % Make sure it's still runnable

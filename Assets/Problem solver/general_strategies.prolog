@@ -2,6 +2,9 @@
 %% General strategies
 %%
 
+strategy(resolve_match_failure(X), S) :-
+   default_strategy(X, S).
+
 strategy(achieve(Condition),
 	 null) :-
    % Don't have to do anything if condition is already true.

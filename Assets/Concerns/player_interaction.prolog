@@ -2,33 +2,23 @@
 %%% Driver for conversation between player and player character
 %%%
 
-on_enter_state(start, player_interaction, C) :-
-   launch_conversation(C, player, player_interaction_script, [ ]).
+on_event(player_input(X),
+	 player_interaction,
+	 C,
+	 player_input_task(C, player_input(X))).
 
-player_interaction_script >-->
-   player_dialog.
+player_input_task(Concern, Input) :-
+   kill_children(Concern),
+   start_task(Concern, Input, 100, T, [T/partner/player]).
 
-player_dialog >-->
-   [ player_input(I) ],
-   { player_input_response(I, R)  },
-   [ R ],
-   player_dialog.
+default_strategy(player_input(_),
+		 do_not_understand($me, player)).
 
-:- public player_input_response/2.
-
-player_input_response(question(player, $me, Question, T, A),
-		      assertion($me, player, Answer, T, A)) :-
-   !,
-   answer_to(Question, Answer).
-player_input_response(command(player, $me, LF),
-		      assertion($me, player, LF, future, simple)) :-
-   !,
-   kill_children($script_concern),
-   start_task($script_concern, LF, 1).
-player_input_response(DialogAct, DialogAct) :-
-   !,
-   agent(DialogAct, $me).
-player_input_response(_, do_not_understand($me, player)).
+strategy(player_input(command(player, $me, LF)),
+	 follow_command(LF)).
+strategy(follow_command(LF),
+	 ( assertion($me, $addressee, LF, future, simple),
+	   LF )).
 
 strategy(go($me, Location),
 	 goto(Location)).
@@ -38,18 +28,30 @@ strategy(put($me, Patient, Destination),
 	 move($me, Patient, Destination)) :-
    nonvar(Destination).
 
-answer_to(M:manner(be($'Bruce'), M), okay($'Bruce')) :-
-   !.
-answer_to(_X:Y, Y) :-
-   !, Y.
-answer_to(Y, Y) :-
-   Y, !.
-answer_to(Y, not(Y)).
+strategy(player_input(question(player, $me, Question, present, simple)),
+	 S) :-
+   (Question = Answer:Constraint) -> (S=answer_wh(Answer, Constraint)) ; (S=answer_yes_no(Question)).
 
+strategy(answer_yesno(Q),
+	 Answer) :-
+   Q -> (Answer = agree($me, $addressee, Q)) ; (Answer = disagree($me, $addressee, Q)).
+
+default_strategy(answer_wh(Answer, Constraint),
+		 enumerate_answers(Answer, Constraint)).
+strategy(answer_wh(M, manner(be($'Bruce'), M)),
+	 say(okay($'Bruce'))).
+
+strategy(enumerate_answers(Answer, Constraint),
+	 answer_with_list(List)) :-
+   all(Answer, Constraint, List),
+   log(list:List).
+strategy(answer_with_list(List),
+	 say_list(List)).	
+	 
 :- public manner/2, be/2, okay/1, can/1, type/2.
 
 okay($'Bruce').
-be($'Bruce', $'Bruce').
+be($'Bruce', "Bruce").
 be(player, $'Bruce').
 
 can(type(player, X)) :-

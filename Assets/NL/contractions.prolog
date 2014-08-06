@@ -31,6 +31,7 @@ contraction(he, is, 'he''s').
 contraction(she, is, 'she''s').
 contraction(we, are, 'we''re').
 contraction(they, are, 'they''re').
+contraction(what, is, 'what''s').
 
 contraction('I', will, 'I''ll').
 contraction(let, us, 'let''s').
