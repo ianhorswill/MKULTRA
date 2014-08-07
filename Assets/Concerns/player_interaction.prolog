@@ -38,23 +38,34 @@ strategy(answer_yesno(Q),
 
 default_strategy(answer_wh(Answer, Constraint),
 		 enumerate_answers(Answer, Constraint)).
+strategy(answer_wh(Identity, be(Person, Identity)),
+	 introduce_person(Person)) :-
+   character(Person).
+strategy(answer_wh(Identity, be(player, Identity)),
+	 say(be(player, $'Bruce'))).
+
 strategy(answer_wh(M, manner(be($'Bruce'), M)),
 	 say(okay($'Bruce'))).
 
-strategy(enumerate_answers(Answer, Constraint),
-	 answer_with_list(List)) :-
-   all(Answer, Constraint, List),
-   log(list:List).
-strategy(answer_with_list(List),
-	 say_list(List)).	
+default_strategy(enumerate_answers(Answer, Constraint),
+	 answer_with_list(List, "and", Answer^s(Constraint))) :-
+   all(Answer, Constraint, List).
+
+strategy(enumerate_answers(Answer, can(Constraint)),
+	 answer_with_list(List, "or", Answer^s(can(Constraint)))) :-
+   all(Answer, can(Constraint), List).
+
+strategy(answer_with_list(ItemList, Termination, LongFormLambda),
+	 say_list(ItemList, Termination, LongFormLambda)).	
 	 
 :- public manner/2, be/2, okay/1, can/1, type/2.
 
 okay($'Bruce').
-be($'Bruce', "Bruce").
 be(player, $'Bruce').
 
 can(type(player, X)) :-
    player_command(X).
 player_command("a question you want me to answer").
+player_command("an action you want me to perform").
 
+person_name($'Bruce', "Bruce").
