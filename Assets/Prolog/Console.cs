@@ -117,6 +117,7 @@ namespace Northwestern.UnityUtils
             }
             if (Event.current.isKey && Event.current.type == EventType.KeyUp)
             {
+                var weAreFocus = GUI.GetNameOfFocusedControl() == this.consoleID;
                 if (Event.current.keyCode == ActivationKey)
                 {
                     this.ShowConsole = !this.ShowConsole;
@@ -125,7 +126,7 @@ namespace Northwestern.UnityUtils
                 switch (Event.current.keyCode)
                 {
                     case KeyCode.Return:
-                        if (GUI.GetNameOfFocusedControl() == this.consoleID && In != string.Empty)
+                        if (weAreFocus && In != string.Empty)
                         {
                             scrollPosition = GUI.skin.label.CalcSize(new GUIContent(consoleBuffer));
                             string command = In;
@@ -153,7 +154,8 @@ namespace Northwestern.UnityUtils
                         }
                         break;
                 }
-                
+                if (weAreFocus)
+                    Event.current.Use();
             }
             if (Out != null && Out.IsUpdated())
             {
