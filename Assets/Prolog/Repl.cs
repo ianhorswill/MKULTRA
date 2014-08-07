@@ -108,6 +108,10 @@ namespace Prolog
                         SwitchComponents(command);
                         break;
 
+                    case "global":
+                        this.SwitchComponents("global");
+                        break;
+
                     case "make":
                         ReloadModifiedSourceFilesForAllComponents();
                         break;
@@ -170,6 +174,8 @@ namespace Prolog
         private void SwitchComponents(string command)
         {
             var gameObjectName = command.Replace("within", "").Trim();
+            if (gameObjectName == "global")
+                gameObjectName = "GlobalKB";
             var newGameObject = GameObject.Find(gameObjectName);
             if (newGameObject == null)
             {
