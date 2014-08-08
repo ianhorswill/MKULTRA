@@ -15,7 +15,7 @@ pronoun(Case, Person:Number, (E^S)^S) -->
    { pronoun(PN, Case, Person, Number, E) }.
 
 %relpron --> [RP], {relpron(RP)}.
-whpron --> [WH], {whpron(WH)}.
+whpron(Kind) --> [WH], {whpron(WH, Kind)}.
 
 %%
 %% Verb conjugations

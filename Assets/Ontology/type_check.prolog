@@ -9,7 +9,7 @@ well_typed(Var, Kind, BIn, BOut) :-
 well_typed(Atom, Kind, Bindings, Bindings) :-
    atomic(Atom),
    !,
-   kind_of(Atom, Kind).
+   is_a(Atom, Kind).
 
 well_typed((is_a(Var, VKind), Expression), Kind, BIn, BOut) :-
    well_typed(Expression, Kind, [Var:VKind | BIn], BOut).

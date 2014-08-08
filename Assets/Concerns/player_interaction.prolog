@@ -48,15 +48,30 @@ strategy(answer_wh(M, manner(be($'Bruce'), M)),
 	 say(okay($'Bruce'))).
 
 default_strategy(enumerate_answers(Answer, Constraint),
-	 answer_with_list(List, "and", Answer^s(Constraint))) :-
+	 answer_with_list(List, "and", Answer, Constraint)) :-
    all(Answer, Constraint, List).
 
 strategy(enumerate_answers(Answer, can(Constraint)),
-	 answer_with_list(List, "or", Answer^s(can(Constraint)))) :-
+	 answer_with_list(List, "or", Answer, s(can(Constraint)))) :-
    all(Answer, can(Constraint), List).
 
-strategy(answer_with_list(ItemList, Termination, LongFormLambda),
-	 say_list(ItemList, Termination, LongFormLambda)).	
+strategy(answer_with_list([], _, Var, Constraint),
+	 say_string(S)) :-
+   !,
+   begin(well_typed(Constraint, _, Bindings),
+	 lookup_variable_type(Var, Kind, Bindings)),
+   (kind_of(Kind, actor) -> S="Nobody"; S="Nothing").
+
+strategy(answer_with_list(ItemList, Termination, Var, Constraint),
+	 say_list(ItemList, Termination, Var^s(Core))) :-
+   core_predication(Constraint, Core).
+
+core_predication((is_a(_,_), P), C) :-
+   !,
+   core_predication(P, C).
+core_predication(P,P).
+
+
 	 
 :- public manner/2, be/2, okay/1, can/1, type/2.
 

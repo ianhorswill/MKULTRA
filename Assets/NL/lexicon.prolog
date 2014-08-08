@@ -11,10 +11,10 @@ pronoun(us, object, first, plural, $dialog_group).
 
 :- randomizable noun/3, proper_noun/2.
 
-:- randomizable whpron/1.
-whpron( who  ).
-whpron( whom ).
-whpron( what ).
+:- randomizable whpron/2.
+whpron( who, person  ).
+whpron( whom, person ).
+whpron( what, prop ).
 
 % :- randomizable det/2.
 % det( every, (X^S1)^(X^S2)^   all(X,S1,S2) ).
