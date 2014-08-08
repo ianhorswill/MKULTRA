@@ -54,6 +54,16 @@ nearest(GameObject, Constraint) :-
 exists(X) :-
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
    C.'Exists'.
+~exists(X) :-
+   component_of_gameobject_with_type(C, X, $'PhysicalObject'),
+   \+ C.'Exists'.
+
+:- public dead/1, alive/1.
+
+dead(X) :- is_a(X, person), ~exists(X).
+~dead(X) :- is_a(X, person), exists(X).
+alive(X) :- is_a(X, person), exists(X).
+~alive(X) :- is_a(X, person), ~exists(X).
 
 docked_with(WorldObject) :-
    /perception/docked_with:WorldObject.

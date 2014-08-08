@@ -53,13 +53,47 @@ blocking(Action, P) :-
 action_functor(pickup, 1).
 precondition(pickup(X),
 	     docked_with(X)).
+postcondition(pickup(X),
+	      location(X, $me)).
 
 action_functor(putdown, 2).
 precondition(putdown(Object, _Dest),
 	     location(Object, $me)).
 precondition(putdown(_Object, Dest),
 	     docked_with(Dest)).
+postcondition(putdown(Object, Dest),
+	      location(Object, Dest)).
 
 action_functor(ingest, 1).
 precondition(ingest(Edible),
 	     location(Edible, $me)).
+postcondition(ingest(X),
+	      ~exists(X)).
+postcondition(eat(_, X),
+	      ~exists(X)).
+postcondition(drink(_, X),
+	      ~exists(X)).
+
+
+true_after(Action, Condition) :-
+   postcondition(Action, Condition).
+true_after(Action, Condition) :-
+   all(PC, postcondition(Action, PC), AllPCs),
+   follows_from(Condition, AllPCs).
+
+follows_from( (A, B) , L) :-
+   follows_from(A, L),
+   follows_from(B, L).
+follows_from(P, L) :-
+   member(P, L).
+follows_from(P, L) :-
+   member(~P, L), !, fail.
+follows_from(P, _) :-
+   P.
+follows_from(P, L) :-
+   inferrable_postcondition(P),
+   clause(P, C),
+   follows_from(C, L).
+
+inferrable_postcondition(alive(_)).
+inferrable_postcondition(dead(_)).
