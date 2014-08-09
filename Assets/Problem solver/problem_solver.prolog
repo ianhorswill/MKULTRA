@@ -69,12 +69,18 @@ start_task(Parent, Task, Priority) :-
 start_task(Task, Priority) :-
    start_task($root, Task, Priority, _, [ ]).
 
+:- external trace_task/1.
+
 %% switch_to_task(+Task)
 %  Stop running current step and instead run Task followed by our continuation.
 %  If Task decomposes to a (,) expression, this will update both current and
 %  continuation, otherwise just current.
 
 % Check for immediate builtins
+switch_to_task(Task) :-
+   trace_task(Task),
+   log($me:Task),
+   fail.
 switch_to_task(done) :-
    kill_concern($task).
 switch_to_task(null) :-

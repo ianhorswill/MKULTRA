@@ -16,7 +16,7 @@ default_strategy(player_input(_),
 
 strategy(player_input(command(player, $me, LF)),
 	 follow_command(LF, Morality)) :-
-   immoral(LF) -> (Morality = immoral) ; (Morality = moral).
+   (@immoral(LF)) -> (Morality = immoral) ; (Morality = moral).
 strategy(follow_command(LF, moral),
 	 ( assertion($me, $addressee, LF, future, simple),
 	   LF )).

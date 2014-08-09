@@ -58,6 +58,8 @@ immediate_kind_of(mental_object, nonphysical_object).
 immediate_kind_of(social_object, nonphysical_object).
 
 immediate_kind_of(perdurant, entity).
+immediate_kind_of(event, perdurant).
+immediate_kind_of(action, event).
 
 immediate_kind_of(social_group, social_object).
 immediate_kind_of(social_group, actor).
