@@ -60,6 +60,7 @@ immediate_kind_of(social_object, nonphysical_object).
 immediate_kind_of(perdurant, entity).
 immediate_kind_of(event, perdurant).
 immediate_kind_of(action, event).
+immediate_kind_of(tort, event).
 
 immediate_kind_of(social_group, social_object).
 immediate_kind_of(social_group, actor).
@@ -69,5 +70,26 @@ immediate_kind_of(government, organization).
 immediate_kind_of(government_agency, organization).
 immediate_kind_of(business, organization).
 immediate_kind_of(conspiracy, organization).
+
+immediate_kind_of(intentional_tort, tort).
+immediate_kind_of(assult, intentional_tort).
+immediate_kind_of(battery, intentional_tort).
+immediate_kind_of(false_imprisonment, intentional_tort).
+immediate_kind_of(infliction_of_emotional_distress, intentional_tort).
+immediate_kind_of(property_tort, tort).
+immediate_kind_of(trespass, property_tort).
+immediate_kind_of(conversion, property_tort).
+immediate_kind_of(theft, conversion).
+immediate_kind_of(dignitary_tort, tort).
+immediate_kind_of(defamation, dignitary_tort).
+immediate_kind_of(invasion_of_privacy, dignitary_tort).
+immediate_kind_of(breach_of_confidence, dignitary_tort).
+immediate_kind_of(abuse_of_process, dignitary_tort).
+immediate_kind_of(malicious_prosecution, abuse_of_process).
+immediate_kind_of(alienation_of_affections, dignitary_tort).
+immediate_kind_of(economic_tort, tort).
+immediate_kind_of(fraud, economic_tort).
+immediate_kind_of(nuisance, tort).
+
 
 :- process_kind_hierarchy.
