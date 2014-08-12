@@ -11,8 +11,16 @@ player_input_task(Concern, Input) :-
    kill_children(Concern),
    start_task(Concern, Input, 100, T, [T/partner/player]).
 
+%%
+%% Uninterpretable inputs
+%%
+
 default_strategy(player_input(_),
 		 do_not_understand($me, player)).
+
+%%
+%% Imperatives
+%%
 
 strategy(player_input(command(player, $me, LF)),
 	 follow_command(LF, Morality)) :-
@@ -31,24 +39,39 @@ strategy(put($me, Patient, Destination),
 	 move($me, Patient, Destination)) :-
    nonvar(Destination).
 
+%%
+%% Questions
+%%
+
+% Dispatch on question type
 strategy(player_input(question(player, $me, Question, present, simple)),
 	 S) :-
-   (Question = Answer:Constraint) -> (S=answer_wh(Answer, Constraint)) ; (S=answer_yes_no(Question)).
+   (Question = Answer:Constraint) ->
+      ( core_predication(Constraint, Core),
+	S=answer_wh(Answer, Core, Constraint)
+      )
+      ;
+      (S=answer_yes_no(Question)).
 
-strategy(answer_yesno(Q),
+%% Yes/no quetsions
+strategy(answer_yes_no(Q),
 	 Answer) :-
    Q -> (Answer = agree($me, $addressee, Q)) ; (Answer = disagree($me, $addressee, Q)).
 
+%% Wh-questions
+
 default_strategy(answer_wh(Answer, Constraint),
 		 enumerate_answers(Answer, Constraint)).
-strategy(answer_wh(Identity, be(Person, Identity)),
+
+strategy(answer_wh(Identity, _, (is_a(Person, person), be(Person, Identity))),
 	 introduce_person(Person)) :-
    character(Person).
-strategy(answer_wh(Identity, be(player, Identity)),
-	 say(be(player, $'Bruce'))).
 
-strategy(answer_wh(M, manner(be($'Bruce'), M)),
-	 say(okay($'Bruce'))).
+strategy(answer_wh(Identity, _, (is_a(player, person), be(player, Identity))),
+	 say(be(player, $me))).
+
+strategy(answer_wh(M, _, manner(be($me), M)),
+	 say(okay($me))).
 
 default_strategy(enumerate_answers(Answer, Constraint),
 	 answer_with_list(List, "and", Answer, Constraint)) :-
@@ -74,7 +97,9 @@ core_predication((is_a(_,_), P), C) :-
    core_predication(P, C).
 core_predication(P,P).
 
-
+%%
+%% Question answering KB
+%%
 	 
 :- public manner/2, be/2, okay/1, can/1, type/2.
 
