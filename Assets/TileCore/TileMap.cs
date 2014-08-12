@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// A map (background) built out of tiles in a TileSet (a kind of sprite sheet).
 /// </summary>
-[ExecuteInEditMode]
 public class TileMap : BindingBehaviour
 {
     public static string WallTileRegex = "^Wall top";
