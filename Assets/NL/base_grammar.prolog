@@ -42,6 +42,14 @@ s(S, indicative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    ap(Noun^S).
 
+% NP is [not] CLASS
+s(be(Noun, Class), indicative, Polarity, Tense, simple) -->
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [a, Class],
+   { atom(Class) }.
+
 % NP is [not] NP
 s(be(S, O), indicative, Polarity, Tense, simple) -->
    np((S^_)^_, subject, Agreement, nogap, nogap),
@@ -74,9 +82,6 @@ s(location(Object, Character), indicative, Polarity, Tense, simple) -->
    aux_have(Tense, Agreement),
    opt_not(Polarity),
    np((Object^_)^_, object, _, nogap, nogap).
-
-
-
 
 %%%
 %%% Imperative mood

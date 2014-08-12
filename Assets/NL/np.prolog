@@ -29,6 +29,9 @@ np((X^S)^S, _C, _Agreement, np(X), nogap) -->
 np((String^S)^S, _, _, Gap, Gap) -->
    {string(String)},
    [String].
+np((Number^S)^S, _, _, Gap, Gap) -->
+   {number(Number)},
+   [Number].
 
 resolve_definite_description(Object, is_a(Object, Kind)) :-
    kind_of(Kind, room),
