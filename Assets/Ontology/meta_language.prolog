@@ -3,6 +3,7 @@
 :- public property_value/3, related/3.
 :- public process_kind_hierarchy/0.
 :- public has_property/2, has_relation/2.
+:- public declare_object/3.
 
 :- external declare_value/3, default_value/3, declare_related/3.
 
@@ -16,8 +17,17 @@ kind_of(Sub, Super) :-
    kind_of(K, Super).
 
 property_value(Object, Property, Value) :-
-   declare_value(Object, Property, Value), !.
+   nonvar(Property),
+   !,
+   lookup_property_value(Object, Property, Value).
 property_value(Object, Property, Value) :-
+   is_a(Object, Kind),
+   has_property(Kind, Property),
+   lookup_property_value(Object, Property, Value).
+
+lookup_property_value(Object, Property, Value) :-
+   declare_value(Object, Property, Value), !.
+lookup_property_value(Object, Property, Value) :-
    is_a(Object, Kind),
    default_value(Kind, Property, Value), !.
 
@@ -29,6 +39,14 @@ decendant_relation(R, R).
 decendant_relation(D, R) :-
    implies_relation(I, R),
    decendant_relation(D, I).
+
+declare_object(Object,
+	       Properties,
+	       Relations) :-
+   begin(forall(member((Property=Value), Properties),
+		assert(declare_value(Object, Property, Value))),
+	 forall(member((Relation:Relatum), Relations),
+		assert(declare_related(Object, Relation, Relatum)))).
 
 process_kind_hierarchy :-
 				% Find all the kinds
