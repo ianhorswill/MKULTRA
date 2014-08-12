@@ -78,6 +78,7 @@ start_task(Task, Priority) :-
 
 % Check for immediate builtins
 switch_to_task(Task) :-
+   assert($task/log/Task),
    trace_task(Task),
    log($me:Task),
    fail.
