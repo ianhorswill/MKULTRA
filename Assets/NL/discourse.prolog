@@ -19,7 +19,8 @@ strategy(describe(Object),
 	 property_interesting_to($addressee, Object, Prop, Value) ),
        Properties).
 
-property_interesting_to(_, _, _, _).
+property_interesting_to(Who, Object, Prop, Value) :-
+   \+(/mentioned_to/Who/Object/Prop:Value).
 
 strategy(describe_properties(Object, Properties),
 	 generate_list(Properties, property_of(Object))).
@@ -31,7 +32,8 @@ strategy(generate_last(Property:Value, property_of(Object)),
 
 strategy(describe_property(Linkage, Object, Property, Value, Termination),
 	 speech([Linkage, Surface, Termination])) :-
-   surface_form(property_value(Object, Property, Value), Surface).
+   surface_form(property_value(Object, Property, Value), Surface),
+   assert(/mentioned_to/ $addressee /Object/Property:Value).
 
 surface_form(property_value(Object, Property, Value),
 	     s(be(Object, Value))) :-
@@ -39,39 +41,39 @@ surface_form(property_value(Object, Property, Value),
 
 %%
 %% Enumerating lists
-%% To use this, call the task generate_list(List, Generator), where the
-%% list is what you want to generate, and Generator is whatever information
+%% To use this, call the task generate_list(List, GenerationInfo), where the
+%% list is what you want to generate, and GenerationInfo is whatever information
 %% is needed to keep track of how to generate items.  Then supply strategies
 %% for your generator for:
-%%   generate_empty(Generator)                   The list is empty
-%%   generate_singleton(Item, Generator)         The list has exactly one item
-%%   generate_first/next/last(Item, Generator)   Generate an item
+%%   generate_empty(GenerationInfo)                   The list is empty
+%%   generate_singleton(Item, GenerationInfo)         The list has exactly one item
+%%   generate_first/next/last(Item, GenerationInfo)   Generate an item
 %%
 
-strategy(generate_list([ ], Generator),
-	 generate_empty(Generator)).
-strategy(generate_list([X], Generator),
-	 generate_singleton(X, Generator)).
-strategy(generate_list([H | T], Generator),
-	 ( generate_first(H, Generator),
-	   generate_rest(T, Generator) )) :-
+strategy(generate_list([ ], GenerationInfo),
+	 generate_empty(GenerationInfo)).
+strategy(generate_list([X], GenerationInfo),
+	 generate_singleton(X, GenerationInfo)).
+strategy(generate_list([H | T], GenerationInfo),
+	 ( generate_first(H, GenerationInfo),
+	   generate_rest(T, GenerationInfo) )) :-
    T \= [ ].
 
-strategy(generate_rest([H | T], Generator),
-	 ( generate_next(H, Generator),
-	   generate_rest(T, Generator) )) :-
+strategy(generate_rest([H | T], GenerationInfo),
+	 ( generate_next(H, GenerationInfo),
+	   generate_rest(T, GenerationInfo) )) :-
    T \= [ ].
-strategy(generate_rest([X], Generator),
-	 generate_last(X, Generator)).
+strategy(generate_rest([X], GenerationInfo),
+	 generate_last(X, GenerationInfo)).
 
 default_strategy(generate_empty(_),
 		 null).
-default_strategy(generate_singleton(Item, Generator),
-		 generate_next(Item, Generator)).
-default_strategy(generate_first(Item, Generator),
-		 generate_next(Item, Generator)).
-default_strategy(generate_last(Item, Generator),
-		 generate_next(Item, Generator)).
+default_strategy(generate_singleton(Item, GenerationInfo),
+		 generate_next(Item, GenerationInfo)).
+default_strategy(generate_first(Item, GenerationInfo),
+		 generate_next(Item, GenerationInfo)).
+default_strategy(generate_last(Item, GenerationInfo),
+		 generate_next(Item, GenerationInfo)).
 
 
 %%
