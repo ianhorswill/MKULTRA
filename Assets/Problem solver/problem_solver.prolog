@@ -80,7 +80,9 @@ start_task(Task, Priority) :-
 switch_to_task(Task) :-
    assert($task/log/Task),
    trace_task(Task),
-   log($me:Task),
+   $task/current:CurrentStep,
+   $task/continuation:K,
+   log($me:(CurrentStep -> (Task, K))),
    fail.
 switch_to_task(done) :-
    kill_concern($task).
@@ -112,6 +114,7 @@ switch_to_task(B) :-
    assert($task/current:B).
 switch_to_task(A) :-
    action(A),
+   !,
    (blocking(A, Precondition) ->
       % Oops, can't run action yet because of blocked precondition.
       switch_to_task( (achieve(Precondition),A) )
@@ -157,6 +160,7 @@ step_completed(TaskConcern) :-
 %% invoke_continuation(+Task)
 %  Switch to current task's continuation, which is Task.
 invoke_continuation( (First, Rest) ) :-
+   !,
    begin(assert($task/continuation:Rest),
 	 switch_to_task(First)).
 invoke_continuation(K) :-
