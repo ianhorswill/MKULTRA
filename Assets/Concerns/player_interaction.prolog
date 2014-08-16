@@ -60,14 +60,14 @@ strategy(answer_yes_no(Q),
 
 %% Wh-questions
 
-default_strategy(answer_wh(Answer, Constraint),
+default_strategy(answer_wh(Answer, _, Constraint),
 		 enumerate_answers(Answer, Constraint)).
 
-strategy(answer_wh(Identity, _, (is_a(Person, person), be(Person, Identity))),
+strategy(answer_wh(Identity, _, (be(Person, Identity), is_a(Person, person))),
 	 introduce_person(Person)) :-
    character(Person).
 
-strategy(answer_wh(Identity, _, (is_a(player, person), be(player, Identity))),
+strategy(answer_wh(Identity, _, (be(player, Identity), is_a(player, person))),
 	 say(be(player, $me))).
 
 strategy(answer_wh(M, _, manner(be($me), M)),
@@ -81,7 +81,7 @@ strategy(enumerate_answers(Answer, can(Constraint)),
 	 answer_with_list(List, "or", Answer, s(can(Constraint)))) :-
    all(Answer, can(Constraint), List).
 
-strategy(answer_with_list([], _, Var, Constraint),
+strategy(answer_with_list([ ], _, Var, Constraint),
 	 say_string(S)) :-
    !,
    begin(well_typed(Constraint, _, Bindings),
@@ -92,7 +92,7 @@ strategy(answer_with_list(ItemList, Termination, Var, Constraint),
 	 say_list(ItemList, Termination, Var^s(Core))) :-
    core_predication(Constraint, Core).
 
-core_predication((is_a(_,_), P), C) :-
+core_predication((P, is_a(_,_)), C) :-
    !,
    core_predication(P, C).
 core_predication(P,P).

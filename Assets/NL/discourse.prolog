@@ -4,36 +4,63 @@
 
 strategy(introduce_person(Person),
 	 ( say(be(Person, Name)),
-	   describe(Person) )
+	   describe(Person, introduction) )
 	) :-
    person_name(Person, Name).
+
+property_relevant_to_purpose(introduction, _, Property, _) :-
+   memberchk(Property, [age, gender, job]).
+
+relation_relevant_to_purpose(introduction, _, Relation, _) :-
+   memberchk(Relation, [ ]).
 
 %%
 %% Describing objects
 %%
 
-strategy(describe(Object),
-	 describe_properties(Object, Properties)) :-
-   all(Prop:Value,
-       ( property_value(Object, Prop, Value),
-	 property_interesting_to($addressee, Object, Prop, Value) ),
-       Properties).
+strategy(describe(Object, Purpose),
+	 describe_attributes(Object, Attributes)) :-
+   all(Attribute,
+       interesting_attribute(Purpose, Object, Attribute),
+       Attributes).
 
-property_interesting_to(Who, Object, Prop, Value) :-
-   \+(/mentioned_to/Who/Object/Prop:Value).
+interesting_attribute(Purpose, Object, Attribute) :-
+   interesting_property(Purpose, Object, Attribute)
+   ;
+   interesting_relation(Purpose, Object, Attribute).
 
-strategy(describe_properties(Object, Properties),
-	 generate_list(Properties, property_of(Object))).
+interesting_property(Purpose, Object, Prop:Value) :-
+   property_nondefault_value(Object, Prop, Value),
+   \+ /mentioned_to/ $addressee /Object/Prop:Value,
+   property_relevant_to_purpose(Purpose, Object, Prop, Value).
 
-strategy(generate_next(Property:Value, property_of(Object)),
+interesting_relation(Purpose, Object, Relation/Relatum) :-
+   related_nondefault(Object, Relation, Relatum),
+   \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
+   relation_relevant_to_purpose(Purpose, Object, Relation, Relatum).
+
+strategy(describe_attributes(Object, Attributes),
+	 generate_list(Attributes, attribute_of(Object))).
+
+strategy(generate_next(Property:Value, attribute_of(Object)),
 	 describe_property("", Object, Property, Value, ", ...")).
-strategy(generate_last(Property:Value, property_of(Object)),
+strategy(generate_last(Property:Value, attribute_of(Object)),
 	 describe_property("and", Object, Property, Value, ".")).
+
+strategy(generate_next(Property/Value, attribute_of(Object)),
+	 describe_relation("", Object, Property, Value, ", ...")).
+strategy(generate_last(Property/Value, attribute_of(Object)),
+	 describe_relation("and", Object, Property, Value, ".")).
 
 strategy(describe_property(Linkage, Object, Property, Value, Termination),
 	 speech([Linkage, Surface, Termination])) :-
    surface_form(property_value(Object, Property, Value), Surface),
    assert(/mentioned_to/ $addressee /Object/Property:Value).
+
+strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
+	 speech([Linkage, Surface, Termination])) :-
+   surface_form(relation(Object, Relation, Relatum), Surface),
+   assert(/mentioned_to/ $addressee /Object/Relation/Relatum).
 
 surface_form(property_value(Object, Property, Value),
 	     s(be(Object, Value))) :-

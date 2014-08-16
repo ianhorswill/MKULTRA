@@ -7,6 +7,10 @@
 
 :- external declare_value/3, default_value/3, declare_related/3.
 
+is_a(Object, ~Kind) :-
+   nonvar(Kind),
+   !,
+   \+ is_a(Object, Kind).
 is_a(Object, Kind) :-
    declare_kind(Object, ImmediateKind),
    kind_of(ImmediateKind, Kind).
@@ -16,6 +20,13 @@ kind_of(Sub, Super) :-
    immediate_kind_of(Sub, K),
    kind_of(K, Super).
 
+%% property_nondefault_value(?Object, ?Property, ?Value)
+%  Object has this property value explicitly declared, rather than inferred.
+property_nondefault_value(Object, Property, Value) :-
+   declare_value(Object, Property, Value).
+
+%% property_value(?Object, ?Property, ?Value)
+%  Object has this value for this property.
 property_value(Object, Property, Value) :-
    nonvar(Property),
    !,
@@ -31,6 +42,13 @@ lookup_property_value(Object, Property, Value) :-
    is_a(Object, Kind),
    default_value(Kind, Property, Value), !.
 
+%% related_nondefault(?Object, ?Relation, ?Relatum)
+%  Object and Relatum are related by Relation through an explicit declaration.
+related_nondefault(Object, Relation, Relatum) :-
+   declare_related(Object, Relation, Relatum).
+
+%% related(?Object, ?Relation, ?Relatum)
+%  Object and Relatum are related by Relation.
 related(Object, Relation, Relatum) :-
    decendant_relation(D, Relation),
    declare_related(Object, D, Relatum).

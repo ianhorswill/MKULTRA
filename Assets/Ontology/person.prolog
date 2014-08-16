@@ -11,12 +11,17 @@ has_relation(human, knows_about).
 has_relation(human, interested_in).
 has_relation(human, member_of).
 has_relation(human, friend_of).
+has_relation(human, knows).
 has_relation(human, likes).
 has_relation(human, loves).
+has_relation(human, hates).
+has_relation(human, roommate_of).
 
 implies_relation(interested_in, knows_about).
 implies_relation(loves, friend_of).
 implies_relation(friend_of, likes).
+implies_relation(knows, knows_about).
+implies_relation(likes, knows).
 
 
 :- declare_object($'Bruce',
@@ -25,9 +30,8 @@ implies_relation(friend_of, likes).
 		    %surname='Bigelow',
 		    gender=male,
 		    job=spy ],
-		  []).
-		  % [ knows_about:spying,
-		  %   interested_in:cia,
-		  %   member_of:illuminati,
-		  %   friend_of:$'Kavi',
-		  %   loves:$'Kavi' ]).
+		  [ knows_about: spying,
+		    interested_in: cia,
+		    member_of: illuminati,
+		    friend_of: $'Kavi',
+		    loves: $'Kavi' ]).

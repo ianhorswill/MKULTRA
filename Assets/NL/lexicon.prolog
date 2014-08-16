@@ -14,7 +14,7 @@ pronoun(us, object, first, plural, $dialog_group).
 :- randomizable whpron/2.
 whpron( who, person  ).
 whpron( whom, person ).
-whpron( what, prop ).
+whpron( what, ~person ).
 
 % :- randomizable det/2.
 % det( every, (X^S1)^(X^S2)^   all(X,S1,S2) ).
@@ -26,3 +26,6 @@ whpron( what, prop ).
 :- randomizable ditransitive_verb/7.
 
 noun([living, room], [living, rooms], X^is_a(X,living_room)).
+
+proper_noun([the, cia], cia).
+proper_noun(spying, spying).

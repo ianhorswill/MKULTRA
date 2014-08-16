@@ -110,12 +110,12 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
 % Wh-questions about the subject.
-s(Subject:(is_a(Subject, Kind), S), interrogative, Polarity, Tense, Aspect) -->
+s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, Subject) },
    whpron(Kind),
    aux_vp(Subject^S, Polarity, _Agreement, Tense, Aspect).
 % Wh-questions about the object.
-s(Object:(is_a(Object, Kind), S), interrogative, Polarity, Tense, Aspect) -->
+s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    whpron(Kind),
    aux(np((NP^S1)^S, subject, Agreement),
@@ -123,7 +123,7 @@ s(Object:(is_a(Object, Kind), S), interrogative, Polarity, Tense, Aspect) -->
    vp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
 
 % Who is/what is Subject
-s(Object:(is_a(Subject, Kind), be(Subject, Object)), interrogative, affirmative, present, simple) -->
+s(Object:(be(Subject, Object), is_a(Subject, Kind)), interrogative, affirmative, present, simple) -->
    whpron(Kind),
    aux_be(present, Agreement),
    np((Subject^S)^S, subject, Agreement, nogap, nogap).
@@ -178,7 +178,7 @@ s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
    { is_a(Container, work_surface) }.
 
 % Who/what is in the X
-s(S:(is_a(S, Kind), location(S, Container)), interrogative, Polarity, Tense, simple) -->
+s(S:(location(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, simple) -->
    whpron(Kind),
    aux_be(Tense, Agreement),
    opt_not(Polarity),

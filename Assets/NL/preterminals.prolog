@@ -4,7 +4,8 @@
 
 proper_noun(singular, (E^S)^S) -->
    [PN],
-   {proper_noun(PN, E)}.
+   { proper_noun(PN, E),
+     atomic(PN) }.
 
 proper_noun(singular, (E^S)^S) -->
    [PN1, PN2],
