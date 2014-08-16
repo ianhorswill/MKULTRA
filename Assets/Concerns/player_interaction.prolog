@@ -110,5 +110,3 @@ can(type(player, X)) :-
    player_command(X).
 player_command("a question you want me to answer").
 player_command("an action you want me to perform").
-
-person_name($'Bruce', "Bruce").

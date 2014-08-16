@@ -6,13 +6,13 @@ strategy(introduce_person(Person),
 	 ( say(be(Person, Name)),
 	   describe(Person, introduction) )
 	) :-
-   person_name(Person, Name).
+   property_value(Person, given_name, Name).
 
 property_relevant_to_purpose(introduction, _, Property, _) :-
    memberchk(Property, [age, gender, job]).
 
 relation_relevant_to_purpose(introduction, _, Relation, _) :-
-   memberchk(Relation, [ ]).
+   memberchk(Relation, [ knows_about ]).
 
 %%
 %% Describing objects
@@ -59,12 +59,15 @@ strategy(describe_property(Linkage, Object, Property, Value, Termination),
 
 strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
 	 speech([Linkage, Surface, Termination])) :-
-   surface_form(relation(Object, Relation, Relatum), Surface),
+   surface_form(related(Object, Relation, Relatum), Surface),
    assert(/mentioned_to/ $addressee /Object/Relation/Relatum).
 
 surface_form(property_value(Object, Property, Value),
 	     s(be(Object, Value))) :-
    copular_property(Property).
+
+surface_form(related(Object, Relation, Relatum),
+	     s(related(Object, Relation, Relatum))).
 
 %%
 %% Enumerating lists

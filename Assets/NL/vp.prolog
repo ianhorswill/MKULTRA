@@ -6,6 +6,38 @@
 %test_aux_vp(LF) :-
 %   aux_vp(LF, _, _, _, _, [can, halt], []).
 
+:- randomizable aux_vp//5.
+aux_vp(Subject^S, Polarity, Agreement, Tense, Aspect) -->
+   aux_without_do_support(nogap, Polarity, Agreement, Tense, Aspect, Form, Predication^Modal),
+   copula(Form, Tense, Agreement),
+   opt_not_if_unbound(Polarity),
+   copular_relation(Subject^Object^Predication), 
+   np((Object^Modal)^S, object, _, nogap, nogap).
+
+copula(base, _, _) -->
+   [be].
+copula(Form, Tense, Agreement) -->
+   { Form \= base },
+   aux_be(Tense, Agreement).
+
+opt_not_if_unbound(Polarity) -->
+   { var(Polarity) }, opt_not(Polarity).
+opt_not_if_unbound(Polarity) -->
+   { nonvar(Polarity) }, [ ].
+
+:- randomizable copular_relation//1, copular_relation/2.
+% copular_relation(Subject^Object^related(Subject, Relation, Object)) -->
+%    [R1],
+%    { copular_relation([R1], Relation) }.
+
+copular_relation(Subject^Object^related(Subject, Relation, Object)) -->
+   [R1, R2],
+   { copular_relation([R1, R2], Relation) }.
+
+copular_relation(Subject^Object^related(Subject, Relation, Object)) -->
+   [R1, R2, R3],
+   { copular_relation([R1, R2, R3], Relation) }.
+
 aux_vp(VP, Polarity, Agreement, Tense, Aspect) --> 
    aux(nogap, Polarity, Agreement, Tense, Aspect, Form, M),
    vp(Form, M, VP, Tense, Agreement, nogap).
@@ -90,6 +122,8 @@ lf_subject(must(S), NP) :-
    !, lf_subject(S, NP).
 % If we get this far, S should be the bare predication from the VP.
 lf_subject(be(NP), NP) :-
+   !.
+lf_subject(related(NP, _, _), NP):-
    !.
 lf_subject(S, NP) :-
    intransitive_verb(_, _, _, _, _, _, NP^S).

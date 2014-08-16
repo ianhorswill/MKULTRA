@@ -14,18 +14,22 @@ aux(Gap, negative, Agreement, Tense, simple, base, X^X) -->
    aux_do(Tense, Agreement),
    [ not ],
    aux_gap(Gap).
-aux(Gap, Polarity, Agreement, future, Aspect, Form, X^X) -->
+aux(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF) -->
+   aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF).
+   
+aux_without_do_support(Gap, Polarity, Agreement, future, Aspect, Form, X^X) -->
    [ will ],
    opt_not(Polarity),
    aux_gap(Gap),
    aux_aspect_future(Aspect, Agreement, Form).
-aux(Gap, Polarity, _Agreement, present, simple, base, P^LF) -->
+aux_without_do_support(Gap, Polarity, _Agreement, present, simple, base, P^LF) -->
    [ ModalAux ],
    { modal_aux(ModalAux), LF =.. [ModalAux, P] },
    opt_not(Polarity),
    aux_gap(Gap).
-aux(Gap, Polarity, Agreement, Tense, Aspect, Form, X^X) -->
+aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, X^X) -->
    aux_aspect(Gap, Polarity, Tense, Aspect, Agreement, Form).
+
 
 %% aux_aspect_future(?Aspect, ?Agreement, ?Form)
 %  An optional string of auxilliaries devoted to aspect (be, have), and/or negative particle.

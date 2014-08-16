@@ -109,6 +109,22 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
+inverted_sentence(S, Polarity, Tense, Aspect) -->
+   { lf_subject(S, Subject) },
+   aux(np((Subject^S1)^S, subject, Agreement),
+       Polarity, Agreement, Tense, Aspect, Form, Predication^Modal),
+   copula(Form, Tense, Agreement),
+   copular_relation(Subject^Object^Predication), 
+   np((Object^Modal)^S1, object, _, nogap, nogap).
+
+inverted_sentence(S, Polarity, Tense, simple) -->
+   { lf_subject(S, Subject) },
+   copula(simple, Tense, Agreement),
+   opt_not(Polarity),
+   np((Subject^S1)^S, subject, Agreement, nogap, nogap),
+   copular_relation(Subject^Object^Predication), 
+   np((Object^Predication)^S1, object, _, nogap, nogap).
+
 % Wh-questions about the subject.
 s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, Subject) },
@@ -121,6 +137,13 @@ s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
    aux(np((NP^S1)^S, subject, Agreement),
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
+s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, simple) -->
+   { lf_subject(S, Subject) },
+   whpron(Kind),
+   copula(simple, Tense, Agreement),
+   np((Subject^Predication)^S, subject, Agreement, nogap, nogap),
+   opt_not(Polarity),
+   copular_relation(Subject^Object^Predication).
 
 % Who is/what is Subject
 s(Object:(be(Subject, Object), is_a(Subject, Kind)), interrogative, affirmative, present, simple) -->

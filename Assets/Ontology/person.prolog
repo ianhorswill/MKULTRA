@@ -9,13 +9,18 @@ copular_property(age).
 
 has_relation(human, knows_about).
 has_relation(human, interested_in).
+copular_relation([interested, in], interested_in).
 has_relation(human, member_of).
+copular_relation([a, member, of], member_of).
 has_relation(human, friend_of).
+copular_relation([a, friend, of], friend_of).
+has_relation(human, roommate_of).
+copular_relation([a, roommate, of], roommate_of).
+copular_relation([the, roommate, of], roommate_of).
 has_relation(human, knows).
 has_relation(human, likes).
 has_relation(human, loves).
 has_relation(human, hates).
-has_relation(human, roommate_of).
 
 implies_relation(interested_in, knows_about).
 implies_relation(loves, friend_of).
@@ -26,8 +31,8 @@ implies_relation(likes, knows).
 
 :- declare_object($'Bruce',
 		  [ age=23,
-		    %given_name='Bruce',
-		    %surname='Bigelow',
+		    given_name="Bruce",
+		    surname="Bigelow",
 		    gender=male,
 		    job=spy ],
 		  [ knows_about: spying,
