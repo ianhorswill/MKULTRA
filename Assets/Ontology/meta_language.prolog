@@ -45,7 +45,8 @@ lookup_property_value(Object, Property, Value) :-
 %% related_nondefault(?Object, ?Relation, ?Relatum)
 %  Object and Relatum are related by Relation through an explicit declaration.
 related_nondefault(Object, Relation, Relatum) :-
-   declare_related(Object, Relation, Relatum).
+   decendant_relation(D, Relation),
+   declare_related(Object, D, Relatum).
 
 %% related(?Object, ?Relation, ?Relatum)
 %  Object and Relatum are related by Relation.
@@ -57,6 +58,11 @@ decendant_relation(R, R).
 decendant_relation(D, R) :-
    implies_relation(I, R),
    decendant_relation(D, I).
+
+ancestor_relation(R,R).
+ancestor_relation(A, R) :-
+   implies_relation(R, I),
+   ancestor_relation(A, I).
 
 declare_object(Object,
 	       Properties,

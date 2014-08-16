@@ -12,7 +12,7 @@ property_relevant_to_purpose(introduction, _, Property, _) :-
    memberchk(Property, [age, gender, job]).
 
 relation_relevant_to_purpose(introduction, _, Relation, _) :-
-   memberchk(Relation, [ knows_about ]).
+   memberchk(Relation, [ interested_in, knows_about, roommate_of ]).
 
 %%
 %% Describing objects
@@ -22,7 +22,26 @@ strategy(describe(Object, Purpose),
 	 describe_attributes(Object, Attributes)) :-
    all(Attribute,
        interesting_attribute(Purpose, Object, Attribute),
-       Attributes).
+       AllAttributes),
+   remove_redundant_attributes(AllAttributes, Attributes).
+
+remove_redundant_attributes([ ], [ ]).
+remove_redundant_attributes([Relation/Relatum | Rest], RestRemoved) :-
+   decendant_relation(Antecedant, Relation),
+   member(Antecedant/Relatum, Rest),
+   !,
+   remove_redundant_attributes(Rest, RestRemoved).
+remove_redundant_attributes([X | Rest], [X | Final]) :-
+   remove_implicants(X, Rest, WithoutImplicants),
+   remove_redundant_attributes(WithoutImplicants, Final).
+
+remove_implicants(_, [ ], [ ]).
+remove_implicants(Rel/Object, [Implicant/Object | Rest], Rest) :-
+   ancestor_relation(Implicant, Rel),
+   !.
+remove_implicants(Attribute, [X | Rest] , [X | RestRemoved]) :-
+   remove_implicants(Attribute, Rest, RestRemoved).
+
 
 interesting_attribute(Purpose, Object, Attribute) :-
    interesting_property(Purpose, Object, Attribute)
@@ -60,7 +79,8 @@ strategy(describe_property(Linkage, Object, Property, Value, Termination),
 strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
 	 speech([Linkage, Surface, Termination])) :-
    surface_form(related(Object, Relation, Relatum), Surface),
-   assert(/mentioned_to/ $addressee /Object/Relation/Relatum).
+   forall(ancestor_relation(A, Relation),
+	  assert(/mentioned_to/ $addressee /Object/A/Relatum)).
 
 surface_form(property_value(Object, Property, Value),
 	     s(be(Object, Value))) :-
