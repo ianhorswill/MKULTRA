@@ -74,12 +74,12 @@ strategy(answer_wh(M, _, manner(be($me), M)),
 	 say(okay($me))).
 
 default_strategy(enumerate_answers(Answer, Constraint),
-	 answer_with_list(List, "and", Answer, Constraint)) :-
-   all(Answer, Constraint, List).
+	 answer_with_list(List, Connective, Answer, Constraint)) :-
+   all(Answer, Constraint, List),
+   connective_for_answer(Constraint, Connective).
 
-strategy(enumerate_answers(Answer, can(Constraint)),
-	 answer_with_list(List, "or", Answer, s(can(Constraint)))) :-
-   all(Answer, can(Constraint), List).
+connective_for_answer((can(_), _), "or") :- !.
+connective_for_answer(_, "and").
 
 strategy(answer_with_list([ ], _, Var, Constraint),
 	 say_string(S)) :-
