@@ -63,8 +63,8 @@ strategy(answer_yes_no(Q),
 
 %% Wh-questions
 
-default_strategy(answer_wh(Answer, _, Constraint),
-		 enumerate_answers(Answer, Constraint)).
+default_strategy(answer_wh(Answer, Core, Constraint),
+		 enumerate_answers(Answer, Core, Constraint)).
 
 strategy(answer_wh(Identity, _, (be(Person, Identity), is_a(Person, person))),
 	 introduce_person(Person)) :-
@@ -73,11 +73,17 @@ strategy(answer_wh(Identity, _, (be(Person, Identity), is_a(Person, person))),
 strategy(answer_wh(Identity, _, (be(player, Identity), is_a(player, person))),
 	 say(be(player, $me))).
 
+strategy(answer_wh(Answer, can(Action), Constraint),
+	 answer_with_list(List, "or", Type, (can(Action), is_a(Answer, Type)))) :-
+   all(Type,
+       variable_type_given_constraint(Answer, Type, Constraint),
+       List).
+
 strategy(answer_wh(M, _, manner(be($me), M)),
 	 say(okay($me))).
 
-default_strategy(enumerate_answers(Answer, Constraint),
-	 answer_with_list(List, Connective, Answer, Constraint)) :-
+default_strategy(enumerate_answers(Answer, Core, Constraint),
+	 answer_with_list(List, Connective, Answer, Core)) :-
    all(Answer, Constraint, List),
    connective_for_answer(Constraint, Connective).
 
@@ -87,13 +93,11 @@ connective_for_answer(_, "and").
 strategy(answer_with_list([ ], _, Var, Constraint),
 	 say_string(S)) :-
    !,
-   begin(well_typed(Constraint, _, Bindings),
-	 lookup_variable_type(Var, Kind, Bindings)),
+   begin(variable_type_given_constraint(Var, Kind, Constraint)),
    (kind_of(Kind, actor) -> S="Nobody"; S="Nothing").
 
 strategy(answer_with_list(ItemList, Termination, Var, Constraint),
-	 say_list(ItemList, Termination, Var^s(Core))) :-
-   core_predication(Constraint, Core).
+	 say_list(ItemList, Termination, Var^s(Constraint))).
 
 core_predication((P, is_a(_,_)), C) :-
    !,
@@ -108,3 +112,5 @@ core_predication(P,P).
 
 okay($'Bruce').
 be(player, $'Bruce').
+
+declare_kind(player, actor).

@@ -30,3 +30,5 @@ noun([living, room], [living, rooms], X^is_a(X,living_room)).
 proper_noun([the, cia], cia).
 proper_noun(spying, spying).
 proper_noun([the, illuminati], illuminati).
+
+noun(action, actions, X^is_a(X, action)).

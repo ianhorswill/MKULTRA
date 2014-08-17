@@ -80,9 +80,13 @@ start_task(Task, Priority) :-
 switch_to_task(Task) :-
    assert($task/log/Task),
    trace_task(Task),
-   $task/current:CurrentStep,
-   $task/continuation:K,
-   log($me:(CurrentStep -> (Task, K))),
+   ($task/current:CurrentStep ->
+      ($task/continuation:K ->
+           log($me:(CurrentStep -> (Task, K)))
+           ;
+           log($me:(CurrentStep -> Task)))
+      ;
+      log($me:(null->Task))),
    fail.
 switch_to_task(done) :-
    kill_concern($task).

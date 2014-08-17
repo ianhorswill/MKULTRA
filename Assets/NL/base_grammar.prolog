@@ -14,8 +14,20 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
    opt_stop(Mood).
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
-   s(S, Mood, Polarity, Tense, Aspect),
+   { bind_discourse_variables(S, Core) },
+   s(Core, Mood, Polarity, Tense, Aspect),
    opt_stop(Mood).
+
+bind_discourse_variables(Var, Var) :-
+   var(Var),
+   !.
+bind_discourse_variables( (Core, is_a(Var, Kind)), Core) :-
+   !,
+   bind(discourse_variables, [is_a(Var, Kind) | $discourse_variables]).
+bind_discourse_variables(S, S).
+
+discourse_variable_type(Var, Kind) :-
+   member(is_a(Var, Kind), $discourse_variables).
 
 opt_stop(interrogative) --> [ '?' ].
 opt_stop(_Mood) --> [ ].

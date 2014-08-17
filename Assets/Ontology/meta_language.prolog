@@ -4,6 +4,7 @@
 :- public process_kind_hierarchy/0.
 :- public has_property/2, has_relation/2.
 :- public declare_object/3.
+:- public kind_lub/3, kind_glb/3.
 
 :- external declare_value/3, default_value/3, declare_related/3.
 

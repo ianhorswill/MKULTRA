@@ -13,9 +13,14 @@
 % np((X^_)^_, _, _, _, _, [Y | _], _) :-
 %    % Catch cases where we don't know the LF or the words.
 %    var(X), var(Y), !, fail.
+np((X^S)^S, _, third:singular, Gap, Gap) -->
+   { var(X),
+     discourse_variable_type(X, Kind),
+     noun(Kind, _, _) },
+   [a, Kind].
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    [ Det, Noun ],
-   { memberchk(Det, [the, a, an]),
+   { memberchk(Det, [the, a]),
      noun(Noun, _, X^P),
      atomic(Noun),
      resolve_definite_description(X, P) }.

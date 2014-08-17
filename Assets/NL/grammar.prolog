@@ -48,7 +48,7 @@ discourse_fragments([F | Fs]) -->
    discourse_fragments(Fs).
 
 discourse_fragment(s(X)) -->
-   {!}, s(X, indicative, affirmative, present, simple).
+   {!}, sentence(X, indicative, affirmative, present, simple).
 
 discourse_fragment(np(X)) -->
    {!}, np((X^S)^S, subject, third:singular, nogap, nogap).

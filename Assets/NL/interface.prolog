@@ -1,5 +1,5 @@
 :- public generate_text/2, input_completion/3.
-:- indexical input_from_player=false, generating_nl=false.
+:- indexical input_from_player=false, generating_nl=false, discourse_variables=null.
 
 %% generate_text(?SpeechAct, ?Text)
 %  The string Text is a possible realization of SpeechAct.
@@ -49,6 +49,7 @@ in_conversation_with_npc(NPC) :-
 
 bind_dialog_indexicals_for_output(SpeechAct) :-
    bind(generating_nl, true),
+   bind(discourse_variables, null),
    agent(SpeechAct, A),
    patient(SpeechAct, P),
    bind(speaker, A),
