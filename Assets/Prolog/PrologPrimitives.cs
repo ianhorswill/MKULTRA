@@ -2076,14 +2076,6 @@ namespace Prolog
         static IEnumerable<CutState> ArgImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 3) throw new ArgumentCountException("arg", args, "arg_number", "structure", "arg_value");
-            if (!(args[0] is int))
-            {
-                var v = args[0] as LogicVariable;
-                if (v != null)
-                    throw new InstantiationException(v, "Argument number must be an integer.");
-                throw new ArgumentTypeException("arg", "argument_number", args[0], typeof(int));
-            }
-            var argNumber = (int) Term.Deref(args[0]);
             var s = Term.Deref(args[1]) as Structure;
             if (s == null)
             {
@@ -2092,11 +2084,37 @@ namespace Prolog
                     throw new InstantiationException(v, "Structure argument was not instantiated.");
                 throw new ArgumentTypeException("arg", "structure", args[1], typeof(Structure));
             }
+            if (!(args[0] is int))
+            {
+                var v = args[0] as LogicVariable;
+                if (v != null)
+                    return EnumerateStructureArguments(v, s, Term.Deref(args[2]));
+                throw new ArgumentTypeException("arg", "argument_number", args[0], typeof(int));
+            }
+            var argNumber = (int) Term.Deref(args[0]);
             if (argNumber < 0)
                 throw new IndexOutOfRangeException("The specified argument number is invalid.");
             if (argNumber == 0 || argNumber > s.Arguments.Length)
                 return FailDriver();
             return Term.UnifyAndReturnCutState(s.Arguments[argNumber-1], args[2]);
+        }
+
+        private static IEnumerable<CutState> EnumerateStructureArguments(LogicVariable argNumberArgument, Structure s, object argArgument)
+        {
+            var i = 1;
+            foreach (var arg in s.Arguments)
+            {
+#pragma warning disable 414, 168, 219
+                // ReSharper disable UnusedVariable
+                foreach (var ignore in Term.Unify(arg, argArgument))
+                    foreach (var ignore2 in Term.Unify(i, argNumberArgument))
+                        // ReSharper restore UnusedVariable
+#pragma warning restore 414, 168, 219
+                    {
+                        yield return CutState.Continue;
+                        i++;
+                    }
+            }
         }
 
         private static IEnumerable<CutState> ListImplementation(object[] args, PrologContext context)
