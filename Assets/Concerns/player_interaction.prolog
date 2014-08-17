@@ -108,8 +108,3 @@ core_predication(P,P).
 
 okay($'Bruce').
 be(player, $'Bruce').
-
-can(type(player, X)) :-
-   player_command(X).
-player_command("a question you want me to answer").
-player_command("an action you want me to perform").

@@ -28,6 +28,7 @@ implies_relation(friend_of, likes).
 implies_relation(knows, knows_about).
 implies_relation(roommate_of, knows).
 implies_relation(likes, knows).
+implies_relation(member_of, knows_about).
 
 
 :- declare_object($'Bruce',
