@@ -368,6 +368,10 @@ namespace Prolog
         /// The Prolog symbol '-'
         /// </summary>
         public static readonly Symbol Minus = Intern("-");
+        /// <summary>
+        /// The Prolog symbol '::'
+        /// </summary>
+        public static readonly Symbol ColonColon = Intern("::");
 
         #endregion
     }

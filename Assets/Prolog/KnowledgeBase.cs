@@ -342,29 +342,58 @@ namespace Prolog
             //structure = structure.Expand();
 
             if (structure == null) throw new ArgumentNullException("structure");
+
             Structure head = structure.IsFunctor(Symbol.Implication, 2)
                                  ? Term.Structurify(structure.Argument(0),
                                                     "Head of :- must be a valid proposition or predicate.")
                                  : structure;
-            if (PrologPrimitives.Implementations.ContainsKey(head.Functor))
-                throw new PrologException(new Structure("error",
-                                                        new Structure("permission_error", Symbol.Intern("modify"),
-                                                                      Symbol.Intern("static_procedure"),
-                                                                      Term.PredicateIndicatorExpression(head))));
+            if (head.IsFunctor(Symbol.ColonColon, 2))
+            {
+                var kb = head.Argument<KnowledgeBase>(0);
+                if (kb == null)
+                    throw new ArgumentTypeException("assert", "knowledgebase", head.Argument(0), typeof(KnowledgeBase));
+                if (structure.IsFunctor(Symbol.Implication, 2))
+                    kb.Assert(
+                        new Structure(Symbol.Implication, head.Argument(1), structure.Argument(1)),
+                        atEnd,
+                        checkSingletons);
+                else
+                {
+                    kb.Assert(structure.Argument(1), atEnd, checkSingletons);
+                }
+            }
+            else
+            {
+                if (PrologPrimitives.Implementations.ContainsKey(head.Functor))
+                    throw new PrologException(
+                        new Structure(
+                            "error",
+                            new Structure(
+                                "permission_error",
+                                Symbol.Intern("modify"),
+                                Symbol.Intern("static_procedure"),
+                                Term.PredicateIndicatorExpression(head))));
 
-            KnowledgeBaseRule assertion = KnowledgeBaseRule.FromTerm(structure, checkSingletons, Prolog.CurrentSourceFile, Prolog.CurrentSourceLineNumber);
-            PredicateInfo info = EntryForStoring(head.PredicateIndicator);
-            PredicateInfo parentInfo;
-            if (!info.Shadow
-                && this.Parent != null
-                && (parentInfo = this.Parent.CheckForPredicateInfoInThisKB(head.PredicateIndicator)) != null
-                && !parentInfo.External)
-                throw new PrologException(new Structure("error",
-                                                        new Structure("permission_error",
-                                                                      Symbol.Intern("shadow"),
-                                                                      Term.PredicateIndicatorExpression(head))));
+                KnowledgeBaseRule assertion = KnowledgeBaseRule.FromTerm(
+                    structure,
+                    checkSingletons,
+                    Prolog.CurrentSourceFile,
+                    Prolog.CurrentSourceLineNumber);
+                PredicateInfo info = EntryForStoring(head.PredicateIndicator);
+                PredicateInfo parentInfo;
+                if (!info.Shadow && this.Parent != null
+                    && (parentInfo = this.Parent.CheckForPredicateInfoInThisKB(head.PredicateIndicator)) != null
+                    && !parentInfo.External)
+                    throw new PrologException(
+                        new Structure(
+                            "error",
+                            new Structure(
+                                "permission_error",
+                                Symbol.Intern("shadow"),
+                                Term.PredicateIndicatorExpression(head))));
 
-            info.Assert(assertion, atEnd);
+                info.Assert(assertion, atEnd);
+            }
         }
 
         /// <summary>
@@ -377,7 +406,12 @@ namespace Prolog
             if (ELProlog.IsELTerm(term))
                 ELProlog.Update(term, this);
             else
-            Assert(Term.Structurify(term, "Assertion is not a valid proposition or predicate."), atEnd, checkSingletons);
+            {
+                Assert(
+                    Term.Structurify(term, "Assertion is not a valid proposition or predicate."),
+                    atEnd,
+                    checkSingletons);
+            }
         }
 
         /// <summary>
@@ -408,8 +442,7 @@ namespace Prolog
         /// Add a term (fact or rule) to the KB.
         /// </summary>
         public void AssertA(object term)
-        {
-            
+        {   
             Assert(term, false, false);
         }
 
