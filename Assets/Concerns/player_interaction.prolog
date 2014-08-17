@@ -39,6 +39,9 @@ strategy(put($me, Patient, Destination),
 	 move($me, Patient, Destination)) :-
    nonvar(Destination).
 
+strategy(talk($me, _, Topic),
+	 describe(Topic, introduction)).
+
 %%
 %% Questions
 %%

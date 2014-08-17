@@ -6,7 +6,7 @@
 %test_aux_vp(LF) :-
 %   aux_vp(LF, _, _, _, _, [can, halt], []).
 
-:- randomizable aux_vp//5.
+:- randomizable aux_vp/7.
 aux_vp(Subject^S, Polarity, Agreement, Tense, Aspect) -->
    aux_without_do_support(nogap, Polarity, Agreement, Tense, Aspect, Form, Predication^Modal),
    copula(Form, Tense, Agreement),
@@ -44,7 +44,7 @@ aux_vp(VP, Polarity, Agreement, Tense, Aspect) -->
 
 %% vp(?Form, ?Modal, ?Meaning, ?Tense, ?Agreement ?Gap)
 
-:- randomizable vp//6.
+:- randomizable vp/8.
 
 %test_modal_vp(LF) :-
 %   vp(_, X^can(X), LF, _, _, nogap, [halt], [ ]).

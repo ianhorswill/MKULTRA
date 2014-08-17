@@ -2,6 +2,7 @@
 
 %det(LF) --> [D], {det(D, LF)}.
 
+:- randomizable proper_noun/2, proper_noun/4.
 proper_noun(singular, (E^S)^S) -->
    [PN],
    { proper_noun(PN, E),

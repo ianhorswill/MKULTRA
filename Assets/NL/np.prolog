@@ -2,6 +2,8 @@
 %%%                  Noun Phrases
 %%%
 
+:- randomizable np/7.
+
 %% np(?Meaning, ?Case, Agreement, +GapIn, -GapOut)
 %  Noun phrases
 
@@ -13,6 +15,11 @@
 %    var(X), var(Y), !, fail.
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    [ the, Noun ],
+   { noun(Noun, _, X^P),
+     atomic(Noun),
+     resolve_definite_description(X, P) }.
+np((X^S)^S, _C, third:singular, Gap, Gap) -->
+   [ a, Noun ],
    { noun(Noun, _, X^P),
      atomic(Noun),
      resolve_definite_description(X, P) }.

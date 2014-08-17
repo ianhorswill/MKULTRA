@@ -5,7 +5,7 @@
 %% aux(+Gap, ?Polarity, ?Agreement, ?Tense, ?Aspect, ?Form, ?ModalLF)
 %  An optional string of auxilliaries and/or negative particle.
 
-:- randomizable aux//7.
+:- randomizable aux/9, aux_without_do_support/9.
 aux(nogap, affirmative, _Agreement, present, simple, simple, X^X) --> [ ].
 aux(np(NP, Case, Agreement), affirmative, Agreement, Tense, simple, base, X^X) -->
    aux_do(Tense, Agreement),
@@ -16,7 +16,7 @@ aux(Gap, negative, Agreement, Tense, simple, base, X^X) -->
    aux_gap(Gap).
 aux(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF) -->
    aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF).
-   
+
 aux_without_do_support(Gap, Polarity, Agreement, future, Aspect, Form, X^X) -->
    [ will ],
    opt_not(Polarity),

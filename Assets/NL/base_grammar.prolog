@@ -25,7 +25,7 @@ opt_stop(Mood) --> [ '!' ], { Mood \= interrogative }.
 %% s(?S, ?Mood, ?Polarity, ?Tense, ?Aspect)
 %  Sentences
 
-:- randomizable s//5.
+:- randomizable s/7.
 
 %%%
 %%% Indicative mood
