@@ -7,18 +7,82 @@
 
 :- external declare_value/3, default_value/3, declare_related/3.
 
-is_a(Object, ~Kind) :-
-   nonvar(Kind),
-   !,
-   \+ is_a(Object, Kind).
 is_a(Object, Kind) :-
+   atomic(Object),
    declare_kind(Object, ImmediateKind),
-   kind_of(ImmediateKind, Kind).
+   superkind_array(ImmediateKind, Supers),
+   array_member(Kind, Supers).
+is_a(Object, Kind) :-
+   var(Object),
+   subkind_array(Kind, Subs),
+   array_member(Sub, Subs),
+   declare_kind(Object, Sub).
 
 kind_of(K, K).
 kind_of(Sub, Super) :-
-   immediate_kind_of(Sub, K),
-   kind_of(K, Super).
+   atomic(Sub),
+   superkind_array(Sub, Supers),
+   array_member(Super, Supers).
+kind_of(Sub, Super) :-
+   atomic(Super),
+   subkind_array(Super, Subs),
+   array_member(Sub, Subs).
+
+:- public immediate_superkind_of/2.
+
+immediate_superkind_of(K, Sub) :-
+   immediate_kind_of(Sub, K).
+
+superkinds(Kind, Superkinds) :-
+   atomic(Kind),
+   topological_sort([Kind], immediate_kind_of, Superkinds).
+
+subkinds(Kind, Subkinds) :-
+   atomic(Kind),
+   topological_sort([Kind], immediate_superkind_of, Subkinds).
+
+superkind_array(Kind, Array) :-
+   superkinds(Kind, List),
+   list_to_array(List, Array),
+   asserta( ( $global::superkind_array(Kind, Array) :- ! ) ).
+
+subkind_array(Kind, Array) :-
+   subkinds(Kind, List),
+   list_to_array(List, Array),
+   asserta( ( $global::subkind_array(Kind, Array) :- ! ) ).
+
+% This version handles multiple LUBs, but then it turned out the hierarchy doesn't currently have multiple lubs.
+% lub(Kind1, Kind2, LUB) :-
+%    atomic(Kind1),
+%    atomic(Kind2),
+%    superkind_array(Kind1, A1),
+%    superkind_array(Kind2, A2),
+%    lub_not_including(A1, A2, LUB, []).
+
+% lub_not_including(A1, A2, LUB, AlreadyFound) :-
+%    array_member(Candidate, A1),
+%    array_member(Candidate, A2),
+%    \+ (member(Previous, AlreadyFound), kind_of(Previous, Candidate)),
+%    !,
+%    (LUB = Candidate ; lub_not_including(A1, A2, LUB, [Candidate | AlreadyFound])).
+
+kind_lub(Kind1, Kind2, LUB) :-
+   atomic(Kind1),
+   atomic(Kind2),
+   superkind_array(Kind1, A1),
+   superkind_array(Kind2, A2),
+   array_member(LUB, A1),
+   array_member(LUB, A2),
+   !.
+
+kind_glb(Kind1, Kind2, GLB) :-
+   atomic(Kind1),
+   atomic(Kind2),
+   subkind_array(Kind1, A1),
+   subkind_array(Kind2, A2),
+   array_member(GLB, A1),
+   array_member(GLB, A2),
+   !.
 
 %% property_nondefault_value(?Object, ?Property, ?Value)
 %  Object has this property value explicitly declared, rather than inferred.

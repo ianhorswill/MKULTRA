@@ -12,6 +12,7 @@ immediate_kind_of(creature, living_thing).
 immediate_kind_of(plant, living_thing).
 immediate_kind_of(creature, actor).
 immediate_kind_of(person, creature).
+immediate_kind_of(person, container).
 immediate_kind_of(container, physical_object).
 immediate_kind_of(human, person).
 immediate_kind_of(man, human).
