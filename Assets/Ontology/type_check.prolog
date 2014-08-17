@@ -11,7 +11,7 @@ well_typed(Atom, Kind, Bindings, Bindings) :-
    !,
    is_a(Atom, Kind).
 
-well_typed((is_a(Var, VKind), Expression), Kind, BIn, BOut) :-
+well_typed((Expression, is_a(Var, VKind)), Kind, BIn, BOut) :-
    well_typed(Expression, Kind, [Var:VKind | BIn], BOut).
 
 well_typed(Event, Kind, BindingsIn, BindingsOut) :-
