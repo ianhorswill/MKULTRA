@@ -26,8 +26,6 @@ public class PropInfo : PhysicalObject
     /// </summary>
     public string[] Adjectives=new string[0];
 
-    static readonly char[] Vowels = {'a', 'e', 'i', 'o', 'u'};
-
     public override void Awake()
     {
         base.Awake();
@@ -36,42 +34,9 @@ public class PropInfo : PhysicalObject
 
         if (string.IsNullOrEmpty(CommonNoun))
             CommonNoun = name.ToLower();
-        CommonNoun = LastWordOf(CommonNoun);
+        CommonNoun = StringUtils.LastWordOf(CommonNoun);
         if (string.IsNullOrEmpty(Plural) && !string.IsNullOrEmpty(CommonNoun))
-            Plural = PluralForm(CommonNoun);
-    }
-
-    public static string PluralForm(string singularForm)
-    {
-        switch (singularForm[singularForm.Length - 1])
-        {
-            case 's':
-            case 'o':
-                return singularForm + "es";
-
-            case 'f':
-                return singularForm.Substring(0, singularForm.Length - 1) + "ves";
-
-
-            case 'y':
-                var secondToLast = singularForm[singularForm.Length - 2];
-                if (Vowels.Contains(secondToLast))
-                {
-                    return singularForm + "s";
-                }
-                return singularForm.Substring(0, singularForm.Length - 1) + "ies";
-
-            default:
-                return singularForm + "s";
-        }
-    }
-
-    private string LastWordOf(string phrase)
-    {
-        var space = phrase.LastIndexOf(' ');
-        if (space < 0)
-            return phrase;
-        return phrase.Substring(space + 1);
+            Plural = StringUtils.PluralForm(CommonNoun);
     }
 
     public void Start()

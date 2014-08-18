@@ -359,6 +359,10 @@ namespace Prolog
                             "The string or symbol's name begins with one of the characters in the specified string.", "*possible_first_chars_string", "*string_or_symbol");
             DefinePrimitive("contains_substring", ContainsSubstringImplementation, "other predicates",
                             "The string or symbol's name contains the specified string.", "*substring", "*string_or_symbol");
+            DefinePrimitive("plural_form", PluralFormImplementation, "other predicates",
+                            "String plural is the plural form of string singular, using the default rules for English plurals.", "*singular", "?plural");
+            DefinePrimitive("atom_string", AtomStringImplementation, "other predicates",
+                            "Atom has the same print name as string.", "?atom", "?string");
             DefinePrimitive("game_object_name", GameObjectNameImplementation, "other predicates",
                             "True when name_symbol is the name of game_object.", "?game_object", "?name_symbol");
             DefinePrimitive("set", KnowledgeBaseVariable.SetImplementation, "other predicates,meta-logical predicates",
@@ -2649,6 +2653,49 @@ namespace Prolog
                 stringToCheck = sym.Name;
             }
             return ToCutStateEnumerator(stringToCheck.Contains(substringArg));
+        }
+
+        private static IEnumerable<CutState> PluralFormImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("plural_form", args, "+singular", "-plural");
+            var singularArg = Term.Deref(args[0]);
+            var saVar = singularArg as LogicVariable;
+            if (saVar != null)
+                throw new InstantiationException(saVar, "First argument to plural_form/2 must be instantiated to a string or symbol.");
+            var singular = singularArg as string;
+            if (singular == null)
+            {
+                var sym = singularArg as Symbol;
+                if (sym == null)
+                    throw new ArgumentTypeException("plural_form", "singular_form", singularArg, typeof(string));
+                singular = sym.Name;
+            }
+            return Term.UnifyAndReturnCutState(StringUtils.PluralForm(singular), args[1]);
+        }
+
+        private static IEnumerable<CutState> AtomStringImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("atom_string", args, "?atom", "?string");
+            var atomArg = Term.Deref(args[0]);
+            var atomVar = atomArg as LogicVariable;
+            if (atomVar != null)
+            {
+                // We need to intern the string arg and return the atom.
+                var stringArg = Term.Deref(args[1]);
+                var stringForm = stringArg as string;
+                if (stringForm != null)
+                    return Term.UnifyAndReturnCutState(Symbol.Intern(stringForm), atomArg);
+                var stringVar = stringArg as LogicVariable;
+                if (stringVar != null)
+                    throw new InstantiationException(stringVar, "At least one argument to atom_string/2 must be instantiated.");
+                throw new ArgumentTypeException("atom_string", "string", atomArg, typeof(string));
+            }
+            var sym = atomArg as Symbol;
+            if (sym == null)
+                throw new ArgumentTypeException("atom_string", "atom", atomArg, typeof(Symbol));
+            return Term.UnifyAndReturnCutState(sym.Name, args[1]);
         }
 
         private static IEnumerable<CutState> GameObjectNameImplementation(object[] args, PrologContext context)

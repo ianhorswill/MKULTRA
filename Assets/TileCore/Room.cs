@@ -22,7 +22,7 @@ public class Room : BindingBehaviour
         if (!KB.Global.IsTrue("register_room",
             gameObject,
             Symbol.Intern(name),
-            Symbol.Intern(PropInfo.PluralForm(name)))
+            Symbol.Intern(StringUtils.PluralForm(name)))
             )
             throw new Exception("Can't register prop " + name);
     }
