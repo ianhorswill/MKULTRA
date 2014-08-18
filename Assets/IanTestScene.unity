@@ -15641,6 +15641,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SourceFiles:
+  - Utilities/startup
   - Utilities/data_structures
   - Ontology/meta_language
   - Ontology/kinds

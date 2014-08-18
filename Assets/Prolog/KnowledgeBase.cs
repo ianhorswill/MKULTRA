@@ -725,7 +725,7 @@ namespace Prolog
                     if (Path.GetExtension(path) == ".csv")
                         new CSVParser(Symbol.Intern(Path.GetFileNameWithoutExtension(path)),
                                     ',',
-                                    textReader).Read(AssertZ);
+                                    textReader).Read(this.LoadCSVRow);
                     else
                         Consult(textReader);
                 }
@@ -735,6 +735,13 @@ namespace Prolog
                     Prolog.CurrentSourceLineNumber = savedLineNumber;
                 }
             }
+        }
+
+        // ReSharper disable once InconsistentNaming
+        void LoadCSVRow(Structure row)
+        {
+            if (!this.IsTrue(new Structure("load_csv_row", row)))
+                throw new Exception("Failed to load CSV row: "+Term.ToStringInPrologFormat(row));
         }
 
         /// <summary>
