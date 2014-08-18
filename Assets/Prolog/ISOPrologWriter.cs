@@ -531,6 +531,12 @@ namespace Prolog
                 else
                     output.Write(g.name);
             }
+            else if (x is string)
+            {
+                output.Write('"');
+                output.Write(x);
+                output.Write('"');
+            }
             else
                 output.Write(x ?? "null");
             lastChar = '1';
