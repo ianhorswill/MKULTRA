@@ -157,7 +157,7 @@ strategy(say_next(Object),
 % 	 speech([ Termination, Surface ])) :-
 %    reduce(SurfaceLambda, Object, Surface).
 strategy(say_last(Object, Termination, _SurfaceLambda),
-	 speech([ Termination, np(Object)])).
+	 speech([ Termination, np(Object), "."])).
 strategy(say_object(Object),
 	 speech([ np(Object) ])).
 strategy(say_string(String),

@@ -1,7 +1,10 @@
 %% contracted_form(?UncontractedList, ?ContractedList) is det
 %  True when UncontractedList is the expansion of the contractions
-%  in ContractedList.
+%  in ContractedList. Also replaces "a" with "an" where appropriate
 contracted_form([ ], [ ]).
+contracted_form([a, Word | UncontractedTail], [an, Word | ContractedTail]) :-
+   starts_with_one_of("aeiou", Word),
+   contracted_form(UncontractedTail, ContractedTail).
 contracted_form([X, Y | UncontractedTail], [Z | ContractedTail]) :-
 	contraction(X, Y, Z), !,
 	contracted_form(UncontractedTail, ContractedTail).
