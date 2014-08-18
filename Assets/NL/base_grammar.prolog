@@ -21,10 +21,19 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
 bind_discourse_variables(Var, Var) :-
    var(Var),
    !.
-bind_discourse_variables( (Core, is_a(Var, Kind)), Core) :-
+bind_discourse_variables( (Core, Other), Core) :-
+   !,
+   bind_discourse_variables(Other).
+bind_discourse_variables(S, S).
+
+bind_discourse_variables( (X, Y)) :-
+   !,
+   bind_discourse_variables(X),
+   bind_discourse_variables(Y).
+bind_discourse_variables(is_a(Var, Kind)) :-
    !,
    bind(discourse_variables, [is_a(Var, Kind) | $discourse_variables]).
-bind_discourse_variables(S, S).
+bind_discourse_variables(_).
 
 discourse_variable_type(Var, Kind) :-
    member(is_a(Var, Kind), $discourse_variables).
