@@ -3,8 +3,7 @@
 possible_types_given_constraint(Var, Expression, Types) :-
    all(Type,
        variable_type_given_constraint(Var, Expression, Type),
-       Types),
-   log(Var:Expression:Types).
+       Types).
 
 %% possibile_types_given_constraint(-Var, :Expression, -Types)
 %  Gives all the possible types for Var within Expression.
