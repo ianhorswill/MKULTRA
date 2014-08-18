@@ -351,6 +351,14 @@ namespace Prolog
                             "Parses/unparses STRING into a LIST of word.", "?string", "?list");
             DefinePrimitive("string_representation", StringRepresentationImplementation, "other predicates",
                             "Parses/unparses between TERM and STRING.", "?term", "?string");
+            DefinePrimitive("starts_with", StartsWithImplementation, "other predicates",
+                            "The string or symbol's name begins with the specified substring.", "*substring", "*string_or_symbol");
+            DefinePrimitive("ends_with", EndsWithImplementation, "other predicates",
+                            "The string or symbol's name end with the specified substring.", "*substring", "*string_or_symbol");
+            DefinePrimitive("starts_with_one_of", StartsWithOneOfImplementation, "other predicates",
+                            "The string or symbol's name begins with one of the characters in the specified string.", "*possible_first_chars_string", "*string_or_symbol");
+            DefinePrimitive("contains_substring", ContainsSubstringImplementation, "other predicates",
+                            "The string or symbol's name contains the specified string.", "*substring", "*string_or_symbol");
             DefinePrimitive("game_object_name", GameObjectNameImplementation, "other predicates",
                             "True when name_symbol is the name of game_object.", "?game_object", "?name_symbol");
             DefinePrimitive("set", KnowledgeBaseVariable.SetImplementation, "other predicates,meta-logical predicates",
@@ -2565,6 +2573,82 @@ namespace Prolog
                 return Term.UnifyAndReturnCutState(Term.ToStringInPrologFormat(objectArg), stringVar);
             }
             return Term.UnifyAndReturnCutState(Term.ToStringInPrologFormat(objectArg), stringArg);
+        }
+
+        private static IEnumerable<CutState> StartsWithImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("starts_with", args, "substring", "string_or_symbol");
+            var substringArg = Term.Deref(args[0]) as string;
+            if (substringArg == null)
+                throw new ArgumentTypeException("starts_with", "substring", args[0], typeof(string));
+            object objectArg = Term.Deref(args[1]);
+            var stringToCheck = objectArg as string;
+            if (stringToCheck == null)
+            {
+                var sym = objectArg as Symbol;
+                if (sym == null)
+                    throw new ArgumentTypeException("starts_with", "string_or_symbol", args[1], typeof(string));
+                stringToCheck = sym.Name;
+            }
+            return ToCutStateEnumerator(stringToCheck.StartsWith(substringArg));
+        }
+
+        private static IEnumerable<CutState> EndsWithImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("ends_with", args, "substring", "string_or_symbol");
+            var substringArg = Term.Deref(args[0]) as string;
+            if (substringArg == null)
+                throw new ArgumentTypeException("ends_with", "substring", args[0], typeof(string));
+            object objectArg = Term.Deref(args[1]);
+            var stringToCheck = objectArg as string;
+            if (stringToCheck == null)
+            {
+                var sym = objectArg as Symbol;
+                if (sym == null)
+                    throw new ArgumentTypeException("ends_with", "string_or_symbol", args[1], typeof(string));
+                stringToCheck = sym.Name;
+            }
+            return ToCutStateEnumerator(stringToCheck.EndsWith(substringArg));
+        }
+
+        private static IEnumerable<CutState> StartsWithOneOfImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("starts_with_one_of", args, "possible_first_letters", "string_or_symbol");
+            var firstLetterArg = Term.Deref(args[0]) as string;
+            if (firstLetterArg == null)
+                throw new ArgumentTypeException("starts_with_one_of", "possible_first_letters", args[0], typeof(string));
+            object objectArg = Term.Deref(args[1]);
+            var stringToCheck = objectArg as string;
+            if (stringToCheck == null)
+            {
+                var sym = objectArg as Symbol;
+                if (sym == null)
+                    throw new ArgumentTypeException("starts_with_one_of", "string_or_symbol", args[1], typeof(string));
+                stringToCheck = sym.Name;
+            }
+            return ToCutStateEnumerator(firstLetterArg.IndexOf(stringToCheck[0])>=0);
+        }
+
+        private static IEnumerable<CutState> ContainsSubstringImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2)
+                throw new ArgumentCountException("contains_substring", args, "substring", "string_or_symbol");
+            var substringArg = Term.Deref(args[0]) as string;
+            if (substringArg == null)
+                throw new ArgumentTypeException("contains_substring", "substring", args[0], typeof(string));
+            object objectArg = Term.Deref(args[1]);
+            var stringToCheck = objectArg as string;
+            if (stringToCheck == null)
+            {
+                var sym = objectArg as Symbol;
+                if (sym == null)
+                    throw new ArgumentTypeException("contains_substring", "string_or_symbol", args[1], typeof(string));
+                stringToCheck = sym.Name;
+            }
+            return ToCutStateEnumerator(stringToCheck.Contains(substringArg));
         }
 
         private static IEnumerable<CutState> GameObjectNameImplementation(object[] args, PrologContext context)
