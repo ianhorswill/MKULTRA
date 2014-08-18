@@ -51,6 +51,9 @@ discourse_fragment(s(X)) -->
    {!}, sentence(X, indicative, affirmative, present, simple).
 
 discourse_fragment(np(X)) -->
+   {kind(X), !}, [a, X].
+
+discourse_fragment(np(X)) -->
    {!}, np((X^S)^S, subject, third:singular, nogap, nogap).
 
 discourse_fragment(X) -->
