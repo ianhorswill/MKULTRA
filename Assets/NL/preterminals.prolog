@@ -17,6 +17,12 @@ pronoun(Case, Person:Number, (E^S)^S) -->
    { pronoun(PN, Case, Person, Number, E) }.
 
 %relpron --> [RP], {relpron(RP)}.
+whpron(Kind) -->
+   [what, Plural],
+   { kind_plural_form(Kind, Plural) }.
+
+kind_plural_form(furniture, furniture).
+
 whpron(Kind) --> [WH], {whpron(WH, Kind)}.
 
 %%

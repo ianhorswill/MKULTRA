@@ -11037,8 +11037,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: chair
+  Plural: chairs
   Adjectives: []
 --- !u!61 &1489428762
 BoxCollider2D:
