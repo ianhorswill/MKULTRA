@@ -32,3 +32,5 @@ proper_noun(spying, spying).
 proper_noun([the, illuminati], illuminati).
 
 noun(action, actions, X^is_a(X, action)).
+noun(assertion, assertions, X^is_a(X, assertion)).
+noun(question, questions, X^is_a(X, question)).

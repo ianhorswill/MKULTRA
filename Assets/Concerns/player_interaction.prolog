@@ -75,9 +75,7 @@ strategy(answer_wh(Identity, _, (be(player, Identity), is_a(player, person))),
 
 strategy(answer_wh(Answer, can(Action), Constraint),
 	 answer_with_list(List, "or", Type, (can(Action), is_a(Answer, Type)))) :-
-   all(Type,
-       variable_type_given_constraint(Answer, Type, Constraint),
-       List).
+   possible_types_given_constraint(Answer, Constraint, List).
 
 strategy(answer_wh(M, _, manner(be($me), M)),
 	 say(okay($me))).
@@ -93,13 +91,13 @@ connective_for_answer(_, "and").
 strategy(answer_with_list([ ], _, Var, Constraint),
 	 say_string(S)) :-
    !,
-   begin(variable_type_given_constraint(Var, Kind, Constraint)),
+   begin(variable_type_given_constraint(Var, Constraint, Kind)),
    (kind_of(Kind, actor) -> S="Nobody"; S="Nothing").
 
 strategy(answer_with_list(ItemList, Termination, Var, Constraint),
 	 say_list(ItemList, Termination, Var^s(Constraint))).
 
-core_predication((P, is_a(_,_)), C) :-
+core_predication((P, _), C) :-
    !,
    core_predication(P, C).
 core_predication(P,P).
