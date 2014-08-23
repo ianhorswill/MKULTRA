@@ -26,6 +26,7 @@ kind_of(Sub, Super) :-
    array_member(Super, Supers).
 kind_of(Sub, Super) :-
    atomic(Super),
+   var(Sub),
    subkind_array(Super, Subs),
    array_member(Sub, Subs).
 
@@ -137,16 +138,37 @@ declare_object(Object,
 	 forall(member((Relation:Relatum), Relations),
 		assert(declare_related(Object, Relation, Relatum)))).
 
-process_kind_hierarchy :-
-				% Find all the kinds
-   for_all_unique(K,
-		  ( immediate_kind_of(K1,K2),
-		    ( K=K1 ; K=K2 ) ),
-		  assert(kind(K))),
-				% Find all the leaf kinds
+load_special_csv_row(RowNumber, kinds(Kind, Parents, _Properties, _Relations, Singular, Plural)) :-
+   define_kind(RowNumber, Kind, Parents),
+   define_kind_noun(Kind, Singular, Plural).
+
+define_kind(RowNumber, Kind, _) :-
+   kind(Kind),
+   throw(error(row:RowNumber:kind_already_defined:Kind)).
+define_kind(RowNumber, Kind, [ ]) :-
+   Kind \= entity,
+   throw(error(row:RowNumber:kind_has_no_parents:Kind)).
+define_kind(_, Kind, Parents) :-
+   assert(kind(Kind)),
+   forall(member(P, Parents),
+	  assert(immediate_kind_of(Kind, P))).
+
+define_kind_noun(_, "-", _).  % No noun defined
+define_kind_noun(Kind, "", Plural) :-
+   atom_string(Kind, Singular),
+   define_kind_noun(Kind, Singular, Plural).
+define_kind_noun(Kind, Singular, "") :-
+   plural_form(Singular, Plural),
+   define_kind_noun(Kind, Singular, Plural).
+define_kind_noun(Kind, Singular, Plural) :-
+   atom_string(SAtom, Singular),
+   atom_string(PAtom, Plural),
+   assert(kind_noun(Kind, SAtom, PAtom)).
+
+noun(Singular, Plural, X^is_a(X, Kind)) :-
+   kind_noun(Kind, Singular, Plural).
+
+end_csv_loading(kinds) :-
+   % Find all the leaf kinds
    forall((kind(K), \+ immediate_kind_of(_, K)),
-	   assert(leaf_kind(K))),
-				% Warn about any orphan kinds
-   forall((kind(K), \+ immediate_kind_of(K, _), K \= entity),
-	  log(orphan_kind(K))).
-	  
+	   assert(leaf_kind(K))).
