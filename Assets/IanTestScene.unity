@@ -2657,6 +2657,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!212 &338102928
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -14792,6 +14793,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!212 &1989881532
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -15642,9 +15644,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SourceFiles:
   - Utilities/startup
+  - Utilities/general
+  - Utilities/test_rig
   - Utilities/data_structures
   - Ontology/meta_language
-  - Ontology/kinds
+  - Ontology/kinds.csv
   - Ontology/physical_object
   - Ontology/person
   - Ontology/container
