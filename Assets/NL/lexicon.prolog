@@ -3,11 +3,11 @@
 %% relpron( who  ).
 %% relpron( whom ).
 
-pronoun('I', subject, first, singular, $speaker).
-pronoun(me, object, first, singular, $speaker).
-pronoun(you, _, second, singular, $addressee).
-pronoun(we, subject, first, plural, $dialog_group).
-pronoun(us, object, first, plural, $dialog_group).
+pronoun_word('I', subject, first, singular, $speaker).
+pronoun_word(me, object, first, singular, $speaker).
+pronoun_word(you, _, second, singular, $addressee).
+pronoun_word(we, subject, first, plural, $dialog_group).
+pronoun_word(us, object, first, plural, $dialog_group).
 
 :- randomizable noun/3, proper_noun/2.
 

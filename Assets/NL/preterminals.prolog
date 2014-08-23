@@ -5,23 +5,24 @@
 :- randomizable proper_noun/2, proper_noun/4.
 proper_noun(singular, (E^S)^S) -->
    [PN],
-   { proper_noun(PN, E),
+   { (nonvar(PN) ; nonvar(E)),
+     proper_noun(PN, E),
      atomic(PN) }.
 
 proper_noun(singular, (E^S)^S) -->
    [PN1, PN2],
-   {proper_noun([PN1, PN2], E)}.
+   { (nonvar(PN1) ; nonvar(E)),
+     proper_noun([PN1, PN2], E)}.
 
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],
-   { pronoun(PN, Case, Person, Number, E) }.
+   { (nonvar(E); nonvar(PN)),
+     pronoun_word(PN, Case, Person, Number, E) }.
 
 %relpron --> [RP], {relpron(RP)}.
 whpron(Kind) -->
    [what, Plural],
-   { kind_plural_form(Kind, Plural) }.
-
-kind_plural_form(furniture, furniture).
+   { kind_noun(Kind, _, Plural) }.
 
 whpron(Kind) --> [WH], {whpron(WH, Kind)}.
 

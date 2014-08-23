@@ -131,6 +131,8 @@ lf_subject(S, NP) :-
    transitive_verb(_, _, _, _, _, _, NP^_^S).
 lf_subject(S, NP) :-
    ditransitive_verb(_, _, _, _, _, _, NP^_^_^S).
+lf_subject(S, NP) :-
+   adjective(_, NP^S).
 
 
 

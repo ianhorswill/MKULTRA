@@ -52,13 +52,14 @@ opt_stop(Mood) --> [ '!' ], { Mood \= interrogative }.
 %%% Indicative mood
 %%%
 s(S, indicative, Polarity, Tense, Aspect) -->
- { lf_subject(S, NP) },
+   { lf_subject(S, NP) },
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
    aux_vp(NP^S1, Polarity, Agreement, Tense, Aspect).
 
 % NP is [not] Adj
 s(S, indicative, Polarity, Tense, simple) -->
-   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   { lf_subject(S, Noun) },
+   np((Noun^S)^S, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    ap(Noun^S).
@@ -176,7 +177,7 @@ s(Object:(be(Subject, Object), is_a(Subject, Kind)), interrogative, affirmative,
 s(Manner:manner(be(Subject), Manner), interrogative, affirmative, present, simple) -->
    [ how ],
    aux_be(present, Agreement),
-   np((Subject^S)^S, subject, Agreement, nogap, nogap).
+   np((Subject^be(Subject))^be(Subject), subject, Agreement, nogap, nogap).
 
 % How does Subject Predicate?
 s(Method:method(S, Method), interrogative, affirmative, Tense, simple) -->
