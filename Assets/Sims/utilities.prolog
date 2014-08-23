@@ -52,9 +52,11 @@ nearest(GameObject, Constraint) :-
 	      Distance is distance(GameObject, $me))).
 
 exists(X) :-
+   is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
    C.'Exists'.
 ~exists(X) :-
+   is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
    \+ C.'Exists'.
 
