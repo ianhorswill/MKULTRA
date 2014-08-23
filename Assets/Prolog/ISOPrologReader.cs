@@ -2584,7 +2584,19 @@ namespace Prolog
                 }
             }
             object[] args = new object[arty];
-            tterm = new Structure((Symbol) sp.term, args);
+            var functor = sp.term as Symbol;
+            if (functor == null)
+            {
+                if (sp.term.Equals(true))
+                    functor = Symbol.True;
+                else if (sp.term.Equals(false))
+                    functor = Symbol.Intern("false");
+                else
+                    throw new SyntaxErrorException(
+                    sp.term,
+                    "Invalid functor for compound term: " + Term.ToStringInPrologFormat(sp.term));
+            }
+            tterm = new Structure(functor, args);
             while (arty != 0)
             {
                 args[--arty] = pStack.term;
