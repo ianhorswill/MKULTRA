@@ -172,12 +172,11 @@ namespace Prolog
                             "declarations",
                             "Declares that the specified predicate is allowed be dynamically modified using assert.  Currently unused but provided for compatibility with other Prolog implementation.",
                             ":predicateIndicator", "..."); // noop
-            DefinePrimitive("trace", MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareTraced(p)),
+            DefinePrimitive("trace", TraceImplementation,
                             "flow control,declarations",
                             "Declares that the specified predicate should be traced when executing.",
                             ":predicateIndicator", "...");
-            DefinePrimitive("notrace",
-                            MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareUntraced(p)),
+            DefinePrimitive("notrace", NoTraceImplementation,
                             "flow control,declarations",
                             "Declares that the specified predicate should be traced when executing.",
                             ":predicateIndicator", "...");
@@ -368,6 +367,10 @@ namespace Prolog
             DefinePrimitive("set", KnowledgeBaseVariable.SetImplementation, "other predicates,meta-logical predicates",
                             "Forcibly asserts PREDICATE(VALUE) and retracts all other clauses for PREDICATE.",
                             "*predicate", "*value");
+            DefinePrimitive("display", DisplayImplementation, "other predicates",
+                            "Prints arguments to the console; string arguments are not quoted.", "?argument", "...");
+            DefinePrimitive("displayln", DisplayLnImplementation, "other predicates",
+                            "Prints arguments to the console; string arguments are not quoted.", "?argument", "...");
             DefinePrimitive("write", WriteImplementation, "other predicates",
                             "Prints the value of OBJECT to the console.", "?objectOrStream", "[+Object]");
             DefinePrimitive("writeln", WritelnImplementation, "other predicates",
@@ -706,7 +709,7 @@ namespace Prolog
                                     isoexception = new Structure(Symbol.Intern("type_error"), type, ate.Value);
                                 }
                                 else
-                                    isoexception = Symbol.Intern("system_error");
+                                    isoexception = new Structure("clr_exception", Symbol.Intern(exception.GetType().Name), exception.Message);
                             }
                         }
                     }
@@ -1530,6 +1533,26 @@ namespace Prolog
             }
         }
 
+        private static IEnumerable<CutState> TraceImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length == 0)
+            {
+                context.KnowledgeBase.Trace = true;
+                return SucceedDriver();
+            }
+            return DeclarationDriver(((p, c) => c.KnowledgeBase.DeclareTraced(p)), args, context);
+        }
+
+        private static IEnumerable<CutState> NoTraceImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length == 0)
+            {
+                context.KnowledgeBase.Trace = false;
+                return SucceedDriver();
+            }
+            return DeclarationDriver(((p, c) => c.KnowledgeBase.DeclareUntraced(p)), args, context);
+        }
+
         private static PrimitiveImplementation MakeDeclarationPredicate(DeclarationHandler handler)
         {
             return (args, context) => DeclarationDriver(handler, args, context);
@@ -1642,12 +1665,13 @@ namespace Prolog
         private static IEnumerable<CutState> ConsultImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 1) throw new ArgumentCountException("consult", args, "filename");
-            var s = args[0] as string;
+            var fileArg = Term.Deref(args[0]);
+            var s = fileArg as string;
             if (s != null)
                 context.KnowledgeBase.Consult(s);
             else
             {
-                var symbol = args[0] as Symbol;
+                var symbol = fileArg as Symbol;
                 if (symbol != null)
                     context.KnowledgeBase.Consult(symbol.Name);
                 else
@@ -2738,7 +2762,28 @@ namespace Prolog
                         // ReSharper restore UnusedVariable
 #pragma warning restore 0168
                         yield return CutState.Continue;
-        } 
+        }
+
+        private static IEnumerable<CutState> DisplayImplementation(object[] args, PrologContext context)
+        {
+            foreach (var arg in args)
+                if (arg is string)
+                    context.Output.Write(arg);
+                else
+                    context.Output.Write(Term.ToStringInPrologFormat(arg));
+            return SucceedDriver();
+        }
+
+        private static IEnumerable<CutState> DisplayLnImplementation(object[] args, PrologContext context)
+        {
+            foreach (var arg in args)
+                if (arg is string)
+                    context.Output.Write(arg);
+                else
+                    context.Output.Write(Term.ToStringInPrologFormat(arg));
+            context.Output.WriteLine();
+            return SucceedDriver();
+        }
 
         private static IEnumerable<CutState> WriteImplementation(object[] args, PrologContext context)
         {
