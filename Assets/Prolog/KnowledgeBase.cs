@@ -572,6 +572,8 @@ namespace Prolog
             if (CheckForPredicateInfoInThisKB(p) != null)
                 EntryForStoring(p).Trace = false;
             else if (this.Parent != null)
+                this.Parent.DeclareTraced(p);
+            else
                 throw new UndefinedPredicateException(p);
         }
         #endregion
@@ -723,9 +725,12 @@ namespace Prolog
                     Prolog.CurrentSourceLineNumber = 0;
                     var textReader = new PositionTrackingTextReader(stream, path);
                     if (Path.GetExtension(path) == ".csv")
-                        new CSVParser(Symbol.Intern(Path.GetFileNameWithoutExtension(path)),
-                                    ',',
-                                    textReader).Read(this.LoadCSVRow);
+                    {
+                        var functor = Symbol.Intern(Path.GetFileNameWithoutExtension(path));
+                        this.IsTrue(new Structure("begin_csv_loading", functor));  // Ignore return value
+                        new CSVParser(functor, ',', textReader).Read(this.LoadCSVRow);
+                        this.IsTrue(new Structure("end_csv_loading", functor));    // Ignore return value
+                    }
                     else
                         Consult(textReader);
                 }
@@ -738,10 +743,10 @@ namespace Prolog
         }
 
         // ReSharper disable once InconsistentNaming
-        void LoadCSVRow(Structure row)
+        void LoadCSVRow(int rowNumber, Structure row)
         {
-            if (!this.IsTrue(new Structure("load_csv_row", row)))
-                throw new Exception("Failed to load CSV row: "+Term.ToStringInPrologFormat(row));
+            if (!this.IsTrue(new Structure("load_csv_row", rowNumber, row)))
+                throw new Exception(string.Format("Failed to load CSV row number {0} : {1}", rowNumber, Term.ToStringInPrologFormat(row)));
         }
 
         /// <summary>
@@ -809,6 +814,7 @@ namespace Prolog
             }
             catch (Exception e)
             {
+                UnityEngine.Debug.LogException(e);
                 Repl.RecordExceptionSourceLocation(e, lastLine);
                 throw new PrologError(e,
                                       context.StackTrace(Prolog.CurrentSourceFile,
