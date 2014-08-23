@@ -522,7 +522,7 @@ namespace Prolog
             if (g != null)
             {
                 output.Write('$');
-                if (g.name.IndexOf(' ') >= 0)
+                if (g.name.IndexOf(' ') >= 0 || !char.IsLower(g.name[0]))
                 {
                     output.Write('\'');
                     output.Write(g.name);
