@@ -89,13 +89,30 @@ namespace Prolog
         const string PrefixHeader = "(prefix: ";
 
         // ReSharper disable once InconsistentNaming
-        public void Read(Action<Structure> rowHandler)
+        public void Read(Action<int, Structure> rowHandler)
         {
+
+            var row = 1;
             this.ReadHeaderRow();
+            row++;
             while (reader.Peek() >= 0)
             {
-                rowHandler(this.ReadFactRow());
+                if (reader.Peek() == '%')
+                    SkipLine();    // Skip comment lines
+                else
+                    rowHandler(row, this.ReadFactRow());
+                row++;
             }
+        }
+
+        void SkipLine()
+        {
+            int c;
+            do
+            {
+                c = reader.Read();
+            }
+            while (c != '\r');
         }
 
         void ReadHeaderRow()
