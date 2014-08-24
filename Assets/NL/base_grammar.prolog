@@ -1,3 +1,5 @@
+test_file(completion(s, _), "NL/base_grammar_test").
+
 sentence(S, Mood, Polarity, Tense, Aspect) -->
    { X = $input_from_player, X },
    ['('],
@@ -227,7 +229,8 @@ s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    [on],
-   np((Container^S)^S, subject, Agreement, nogap, nogap),
+   { impose_selectional_constraint(Container, work_surface) },
+   np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap),
    { is_a(Container, work_surface) }.
 
 % Who/what is in the X
@@ -236,15 +239,16 @@ s(S:(location(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, sim
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    [in],
-   np((Container^S)^S, subject, Agreement, nogap, nogap),
-   { is_a(Container, closed_container), \+ character(Container) }.
+   { impose_selectional_constraint(Container, enclosing_container) },
+   np((Container^Ignored)^Ignored, subject, Agreement, nogap, nogap),
+   { is_a(Container, enclosing_container), \+ character(Container) }.
 
 % what does Character have?
 s(S:location(S, Character), interrogative, Polarity, Tense, simple) -->
    [what],
    aux_do(Tense, Agreement),
    opt_not(Polarity),
-   np((Character^S)^S, subject, Agreement, nogap, nogap),
+   np((Character^Ignored)^Ignored, subject, Agreement, nogap, nogap),
    { character(Character) },
    aux_have(Tense, Agreement).
 

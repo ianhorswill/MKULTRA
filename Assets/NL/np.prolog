@@ -6,6 +6,16 @@ test_file(generate(np, _), "NL/np_tests").
 test_file(complete(np, _), "NL/np_tests").
 test_file(parse(np, _), "NL/np_tests").
 
+:- indexical selectional_constraints=null.
+
+impose_selectional_constraint(Var, Type) :-
+   bind(selectional_constraints, [Var:Type | $selectional_constraints]).
+
+selectional_constraint(Var, Type) :-
+   memberchk(Var:Type, $selectional_constraints),
+   !.
+selectional_constraint(_, entity).
+
 %:- randomizable np/7.
 
 %% np(?Meaning, ?Case, Agreement, +GapIn, -GapOut)
@@ -48,15 +58,33 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
      atomic(Noun),
      resolve_definite_description(X, P) }.
 
-% GENERATE/COMPLETE ONLY
+% GENERATE ONLY
 % "the NOUN"
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { nonvar(X),
+     % If it has a proper name or a bound variable, then don't use this rule.
      \+ proper_noun(_, X),
      is_a(X, Kind),
      leaf_kind(Kind),
      kind_noun(Kind, Singular, _) },
    [the, Singular].
+
+% COMPLETE ONLY
+% "the NOUN"
+np((X^S)^S, _C, third:singular, Gap, Gap) -->
+   % If we're generating (nonvar(X)) rather than completing (var(X)),
+   % don't generate something that has a proper name.
+   { var(X),
+     \+ bound_discourse_variable(X),
+     leaf_kind_of_var_with_selectional_constraint(X, Kind),
+     kind_noun(Kind, Singular, _),
+     is_a(X, Kind) },
+   [the, Singular].
+
+leaf_kind_of_var_with_selectional_constraint(X, Kind) :-
+   selectional_constraint(X, ConstraintKind),
+     kind_of(Kind, ConstraintKind),
+     leaf_kind(Kind).
 
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    [ the, N1, N2 ],
