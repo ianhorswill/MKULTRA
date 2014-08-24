@@ -155,6 +155,21 @@ call_on_list(OptionPattern, [ _ | MoreOptions ], Predicate) :-
 deterministic(Goal) :-
    findnsols(2, _, Goal, [_]).
 
+%% nonempty_instantiated_atom_list(+List)
+%  List is a non_empty list of atoms.
+
+:- public nonempty_instantiated_atom_list/1.
+
+nonempty_instantiated_atom_list(X) :-
+   var(X),
+   !,
+   fail.
+nonempty_instantiated_atom_list([A | B]) :-
+   atom(A),
+   ground(B),
+   forall(member(X, B),
+	  atom(X)).
+
 
 %% test_file(+TestName, *File)
 %  File should be loaded before running TestName.

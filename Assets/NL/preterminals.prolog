@@ -5,18 +5,18 @@
 :- randomizable proper_noun/2, proper_noun/4.
 proper_noun(singular, (E^S)^S) -->
    [PN],
-   { (nonvar(PN) ; nonvar(E)),
+   { \+ bound_discourse_variable(E),
      proper_noun(PN, E),
      atomic(PN) }.
 
 proper_noun(singular, (E^S)^S) -->
    [PN1, PN2],
-   { (nonvar(PN1) ; nonvar(E)),
+   { \+ bound_discourse_variable(E),
      proper_noun([PN1, PN2], E)}.
 
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],
-   { (nonvar(E); nonvar(PN)),
+   { \+ bound_discourse_variable(E),
      pronoun_word(PN, Case, Person, Number, E) }.
 
 %relpron --> [RP], {relpron(RP)}.

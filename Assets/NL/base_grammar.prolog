@@ -35,8 +35,16 @@ bind_discourse_variables(is_a(Var, Kind)) :-
    bind(discourse_variables, [is_a(Var, Kind) | $discourse_variables]).
 bind_discourse_variables(_).
 
+%% discourse_variable_type(Var, Kind)
+%  Var is bound in $discourse_variables using is_a(Var,Kind).
 discourse_variable_type(Var, Kind) :-
    member(is_a(Var, Kind), $discourse_variables).
+
+%% bound_discourse_variable(Var)
+%  Var is an uninstantiated variable that is bound to a type in $discourse_variables.
+bound_discourse_variable(Var) :-
+   var(Var),
+   discourse_variable_type(Var, _).
 
 opt_stop(interrogative) --> [ '?' ].
 opt_stop(_Mood) --> [ ].

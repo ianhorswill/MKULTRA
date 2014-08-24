@@ -1,5 +1,9 @@
-test_options(generate(_, _),
+test_options(generate(np, _),
 	     [ setup( (bind(speaker, $'Bruce'), bind(addressee, player)) ) ]).
+
+%%
+%% Generation
+%%
 
 test(generate(np, speaker_subject_case),
      [ true(Generated == [ 'I' ]) ]) :-
@@ -26,8 +30,17 @@ test(generate(np, prop),
      [ true(Generated == [the, bed]) ]) :-
    np_test($bed, subject, third:singular, Generated).
 
+%%
+%% Completion
+%%
+
+test(completion(np, from_nothing),
+     [ true(nonempty_instantiated_atom_list(Completion)),
+       nondet ]) :-
+   np(_, subject, third:singular, nogap, nogap, Completion, [ ]).
+
 test(completion(np, kind),
-     [ true(nonvar(Completion)),
+     [ true(ground(Completion)),
        true(Completion = [_]),
        nondet ]) :-
    np(_, subject, third:singular, nogap, nogap, [a | Completion ], [ ]).
@@ -36,6 +49,10 @@ test(completion(np, prop),
      [ true(atomic(Noun)),
        nondet ]) :-
    np_test(_, subject, third:singular, [the, Noun]).
+
+%%
+%% Parsing
+%%
 
 test(parse(np, speaker_subject_case),
      [ true(LF == unknown_speaker) ]) :-

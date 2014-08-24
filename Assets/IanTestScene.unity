@@ -8079,7 +8079,7 @@ GameObject:
   - 212: {fileID: 1051585098}
   - 114: {fileID: 1051585097}
   m_Layer: 10
-  m_Name: Beer
+  m_Name: beer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

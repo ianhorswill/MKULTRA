@@ -1,5 +1,9 @@
 %%%                  Verb Phrases
 
+test_file(generate(vp, _), "NL/vp_tests").
+test_file(complete(vp, _), "NL/vp_tests").
+test_file(parse(vp, _), "NL/vp_tests").
+
 %% aux_vp(LF, Person, Number, Tense, Progressive, Perfect)
 %  Verb phrases, optionally augmented with auxilliaries and/or negative particle.
 
