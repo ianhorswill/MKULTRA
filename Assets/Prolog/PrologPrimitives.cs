@@ -1831,25 +1831,15 @@ namespace Prolog
             int previousRemaining = context.StepsRemaining;
             context.StepLimit = newStepLimit;
             context.StepsRemaining = newStepLimit;
-            var success = false;
-            try
-            {
 #pragma warning disable 0168
                 // ReSharper disable once UnusedVariable
                 foreach (var ignore in context.Prove(args[1], "Argument to step_limit/2 must be a valid goal"))
 #pragma warning restore 0168
                 {
-                    success = true;
-                    break;
+                    yield return CutState.Continue;
                 }
-            }
-            catch (InferenceStepsExceededException)
-            {
-                
-            }
             context.StepLimit = previousLimit;
             context.StepsRemaining = previousRemaining;
-            return ToCutStateEnumerator(success);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals",

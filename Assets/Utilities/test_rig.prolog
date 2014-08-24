@@ -55,9 +55,9 @@ run_test_body(Options, Body) :-
    !,
    trace,
    % Run Body, but turn off tracing regardless of whether it succeeds.
-   (Body -> notrace ; (notrace, fail)).
+   (call_with_step_limit(10000, Body) -> notrace ; (notrace, fail)).
 run_test_body(_, Body) :-
-   Body.
+   call_with_step_limit(10000, Body).
 
 print_test_results(Name, Options, Exception) :-
    test_has_option(throws(ExpectedException), Options) ->
