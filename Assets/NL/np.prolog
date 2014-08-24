@@ -3,6 +3,7 @@
 %%%
 
 test_file(generate(np, _), "NL/np_tests").
+test_file(complete(np, _), "NL/np_tests").
 test_file(parse(np, _), "NL/np_tests").
 
 %:- randomizable np/7.
@@ -47,7 +48,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
      atomic(Noun),
      resolve_definite_description(X, P) }.
 
-% GENERATE ONLY
+% GENERATE/COMPLETE ONLY
 % "the NOUN"
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { nonvar(X),

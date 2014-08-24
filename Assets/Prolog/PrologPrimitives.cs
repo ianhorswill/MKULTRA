@@ -135,6 +135,9 @@ namespace Prolog
             DefinePrimitive("findall", FindallImplementation, "all solutions predicates",
                             "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.",
                             "=template", ":goal", "-solutions");
+            DefinePrimitive("findnsols", FindNSolsImplementation, "all solutions predicates",
+                            "Unifies SOLUTIONS with a list of every value of TEMPLATE for every possible solution of GOAL.  Finds at most N solutiosn.",
+                            "*n", "=template", ":goal", "-solutions");
             DefinePrimitive("all", AllImplementation, "all solutions predicates",
                             "Unifies SOLUTIONS with a list of every unique value of TEMPLATE for every possible solution of GOAL.",
                             "=template", ":goal", "-solutions");
@@ -1224,7 +1227,7 @@ namespace Prolog
             if (args.Length != 3)
                 throw new ArgumentCountException("for_all_unique", args, "-Template", ":generator", ":goal");
             var template = Term.Deref(args[0]);
-            foreach (var templateValue in SolutionList(context, template, Term.Deref(args[1]), true))
+            foreach (var templateValue in SolutionList(context, template, Term.Deref(args[1]), int.MaxValue, true))
 #pragma warning disable 414, 168, 219
                 // ReSharper disable UnusedVariable
                 foreach (var ignore in Term.Unify(template, templateValue))
@@ -1245,7 +1248,7 @@ namespace Prolog
             if (args.Length != 2)
                 throw new ArgumentCountException("generate_unique", args, "-Template", ":generator");
             var template = Term.Deref(args[0]);
-            foreach (var templateValue in SolutionList(context, template, Term.Deref(args[1]), true))
+            foreach (var templateValue in SolutionList(context, template, Term.Deref(args[1]), int.MaxValue, true))
 #pragma warning disable 414, 168, 219
                 // ReSharper disable UnusedVariable
                 foreach (var ignore in Term.Unify(template, templateValue))
@@ -1264,6 +1267,23 @@ namespace Prolog
                                                 Prolog.IListToPrologList(SolutionList(context,
                                                                                       Term.Deref(args[0]), 
                                                                                       Term.Deref(args[1]),
+                                                                                      int.MaxValue,
+                                                                                      false)));
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals",
+            MessageId = "ignore")]
+        private static IEnumerable<CutState> FindNSolsImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 4) throw new ArgumentCountException("findnsols", args, "*max_solutions", "template", "goal", "bag");
+            object countArg = Term.Deref(args[0]);
+            if (!(countArg is int))
+                throw new ArgumentTypeException("findnsols", "max_solutions", countArg, typeof(int));
+            return Term.UnifyAndReturnCutState(args[3],
+                                                Prolog.IListToPrologList(SolutionList(context,
+                                                                                      Term.Deref(args[1]),
+                                                                                      Term.Deref(args[2]),
+                                                                                      (int)countArg,
                                                                                       false)));
         }
 
@@ -1274,10 +1294,11 @@ namespace Prolog
                                                 Prolog.IListToPrologList(SolutionList(context,
                                                                                       Term.Deref(args[0]),
                                                                                       Term.Deref(args[1]),
+                                                                                      int.MaxValue,
                                                                                       true)));
         }
 
-        private static List<object> SolutionList(PrologContext context, object template, object goal, bool deleteDuplicates)
+        private static List<object> SolutionList(PrologContext context, object template, object goal, int maxSolutions, bool deleteDuplicates)
         {
             var bag = new List<object>();
 #pragma warning disable 414, 168, 219
@@ -1288,6 +1309,8 @@ namespace Prolog
             {
                 object instance = Term.CopyInstantiation(template);
                 bag.Add(instance);
+                if (--maxSolutions <= 0)
+                    break;
             }
             if (deleteDuplicates)
                 Term.Sort(bag, true);

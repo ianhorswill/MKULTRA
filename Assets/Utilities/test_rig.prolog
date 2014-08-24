@@ -151,10 +151,9 @@ call_on_list(OptionPattern, [ _ | MoreOptions ], Predicate) :-
    call_on_list(OptionPattern, MoreOptions, Predicate).
 
 %% deterministic(:Goal)
-%  Goal has exactly one solution.  Danger: current implementation
-%  finds all solutions! :(
+%  Goal has exactly one solution by attempting to solve for a second solution.
 deterministic(Goal) :-
-   findall(_, Goal, [_]).
+   findnsols(2, _, Goal, [_]).
 
 
 %% test_file(+TestName, *File)
