@@ -946,23 +946,33 @@ namespace Prolog
             if (p.Functor == null) throw new ArgumentNullException("functor");
             var s = new StringWriter();
             var writer = new ISOPrologWriter(s);
-            var predicateInfo = CheckForPredicateInfoInThisKB(p);
+            var predicateInfo = CheckForPredicateInfo(p);
             if (predicateInfo == null)
                 throw new ArgumentException(string.Format("Unknown predicate: {0}.", p));
+            SourceFromPredicateInfo(p, predicateInfo, writer);
+            return s.ToString();
+        }
+
+        private static void SourceFromPredicateInfo(PredicateIndicator p, PredicateInfo predicateInfo, ISOPrologWriter writer)
+        {
             foreach (var knowledgeBaseEntry in predicateInfo.Entries)
             {
                 var rule = (KnowledgeBaseRule)knowledgeBaseEntry;
                 var head = new Structure(p.Functor, rule.HeadArgs);
                 Structure structure;
                 if (rule.BodyGoals == null || rule.BodyGoals.Length == 0)
+                {
                     structure = head;
+                }
                 else
-                    structure =new Structure(Symbol.Implication, head, Commafy(rule.BodyGoals));
+                {
+                    structure = new Structure(Symbol.Implication, head, Commafy(rule.BodyGoals));
+                }
                 writer.Write(structure);
                 writer.WriteString(".\n");
             }
-            return s.ToString();
         }
+
         #endregion
     }
 }

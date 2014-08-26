@@ -330,7 +330,7 @@ namespace Prolog
             DefinePrimitive("compound", MakeNullFailingTypePredicate("compound", (x => (x is Structure))),
                             "type predicates", "True if X is a structured term or list.", "?x");
             DefinePrimitive("consult", ConsultImplementation, "loading code",
-                            "Reads the clauses in FILE and addds them to the database.", "*file");
+                            "Reads the clauses in FILE and addds them to the database.", "*file", "[kb]");
             DefinePrimitive("reconsult", ReconsultImplementation, "loading code",
                             "Removes all clauses previously loaded from FILE, then reads the clauses in FILE and addds them to the database.",
                             "*file");
@@ -1687,16 +1687,32 @@ namespace Prolog
 
         private static IEnumerable<CutState> ConsultImplementation(object[] args, PrologContext context)
         {
-            if (args.Length != 1) throw new ArgumentCountException("consult", args, "filename");
+            if (args.Length < 1 || args.Length > 2) throw new ArgumentCountException("consult", args, "filename", "[kb]");
             var fileArg = Term.Deref(args[0]);
+            var kb = context.KnowledgeBase;
+            if (args.Length == 2)
+            {
+                var kbArg = args[1];
+                var arg = kbArg as KnowledgeBase;
+                if (arg != null)
+                    kb = arg;
+                else
+                {
+                    var o = kbArg as GameObject;
+                    if (o != null)
+                        kb = o.KnowledgeBase();
+                    else
+                        throw new ArgumentTypeException("consult", "kb", kbArg, typeof(KnowledgeBase));
+                }
+            }
             var s = fileArg as string;
             if (s != null)
-                context.KnowledgeBase.Consult(s);
+                kb.Consult(s);
             else
             {
                 var symbol = fileArg as Symbol;
                 if (symbol != null)
-                    context.KnowledgeBase.Consult(symbol.Name);
+                    kb.Consult(symbol.Name);
                 else
                     // ReSharper disable NotResolvedInText
                     throw new ArgumentException("Filename should be a string or symbol.", "filename");

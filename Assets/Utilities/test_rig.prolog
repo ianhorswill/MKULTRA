@@ -186,5 +186,5 @@ ensure_tests_loaded(TestName) :-
 	  ensure_test_file_loaded(File)).
 
 ensure_test_file_loaded(File) :-
-   consult(File),
-   asserta( (ensure_test_file_loaded(File) :- !) ).
+   consult(File, $global),
+   asserta( $global::(ensure_test_file_loaded(File) :- !) ).
