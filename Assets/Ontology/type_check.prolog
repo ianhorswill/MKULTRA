@@ -39,7 +39,7 @@ well_typed(Event, Kind, BindingsIn, BindingsOut) :-
    Event =.. [Functor | ActualArgs],
    copy_list_as_variables(ActualArgs, ArgTypes),
    TypeDecl =.. [Functor | ArgTypes],
-   type(TypeDecl, Kind),
+   predicate_type(Kind, TypeDecl),
    well_typed_arguments(ActualArgs, ArgTypes, BindingsIn, BindingsOut).
 
 well_typed_arguments([], [], Bindings, Bindings).
@@ -68,12 +68,3 @@ lookup_variable_type(Var, Type, [Var:Type | _]) :-
    !.
 lookup_variable_type(Var, Type, [_ | Tail]) :-
    lookup_variable_type(Var, Type, Tail).
-
-type(eat(person, food), action).
-type(move(person, physical_object, container), action).
-type(can(action), condition).
-type(type(actor, question), action).
-type(type(actor, action), action).
-type(type(actor, assertion), action).
-type(location(physical_object, container), condition).
-

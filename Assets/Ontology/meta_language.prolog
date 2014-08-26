@@ -172,3 +172,16 @@ end_csv_loading(kinds) :-
    % Find all the leaf kinds
    forall((kind(K), \+ immediate_kind_of(_, K)),
 	   assert(leaf_kind(K))).
+
+end_csv_loading(predicate_type) :-
+   forall(predicate_type(Type, ArgTypes),
+	  check_predicate_signature(Type, ArgTypes)).
+
+check_predicate_signature(Type, ArgTypes) :-
+   \+ kind(Type),
+   log(bad_declared_type(ArgTypes, Type)).
+check_predicate_signature(_Type, ArgTypes) :-
+   ArgTypes =.. [_Functor | Types],
+   forall(member(AType, Types),
+	  ((kind(AType),!) ; log(bad_declared_argument_type(AType, ArgTypes)))).
+	  

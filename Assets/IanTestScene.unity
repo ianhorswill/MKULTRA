@@ -15653,6 +15653,7 @@ MonoBehaviour:
   - Ontology/person
   - Ontology/container
   - Ontology/type_check
+  - Ontology/predicate_type.csv
   - Norms/dprolog
   - Norms/dputils
   - Norms/ethics
