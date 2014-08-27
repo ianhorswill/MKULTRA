@@ -1,4 +1,5 @@
 test_file(completion(s, _), "NL/base_grammar_test").
+test_file(generate(s, _), "NL/base_grammar_test").
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
    { X = $input_from_player, X },
@@ -96,7 +97,7 @@ s(location(S, Container), indicative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    [in],
    np((Container^_)^_, object, _, nogap, nogap),
-   { is_a(Container, closed_container) }.
+   { is_a(Container, enclosing_container) }.
 
 % NP is [not] on NP
 s(location(S, Container), indicative, Polarity, Tense, simple) -->
