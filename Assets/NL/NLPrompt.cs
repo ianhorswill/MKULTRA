@@ -183,8 +183,11 @@ public class NLPrompt : BindingBehaviour
         {
             completionSuccess = this.IsTrue("input_completion", this.input, completionVar, commentaryVar);
         }
-        catch (InferenceStepsExceededException)
-        { }
+        catch (InferenceStepsExceededException e)
+        {
+            Debug.LogError("Completion took too many steps for input: "+this.input);
+            Debug.LogException(e);
+        }
         if (completionSuccess)
         {
             this.completion = (string)completionVar.Value;
