@@ -26,7 +26,11 @@ is_a(Object, Kind) :-
    declare_kind(Object, Sub).
 
 valid_kind(Kind) :-
-   var(Kind) ; kind(Kind).
+   var(Kind),
+   !.
+valid_kind(Kind) :-
+   atomic(Kind),
+   kind(Kind).
 
 kind_of(K, K).
 kind_of(Sub, Super) :-
@@ -53,12 +57,12 @@ subkinds(Kind, Subkinds) :-
    topological_sort([Kind], immediate_superkind_of, Subkinds).
 
 superkind_array(Kind, Array) :-
-   superkinds(Kind, List),
+   call_with_step_limit(10000, superkinds(Kind, List)),
    list_to_array(List, Array),
    asserta( ( $global::superkind_array(Kind, Array) :- ! ) ).
 
 subkind_array(Kind, Array) :-
-   subkinds(Kind, List),
+   call_with_step_limit(10000, subkinds(Kind, List)),
    list_to_array(List, Array),
    asserta( ( $global::subkind_array(Kind, Array) :- ! ) ).
 

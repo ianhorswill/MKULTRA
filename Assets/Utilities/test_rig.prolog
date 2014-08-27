@@ -17,7 +17,7 @@ running_tests :-
 %% run_tests
 %  Run all defined tests
 run_tests :-
-   run_tests(_).
+   call_with_step_limit(100000, run_tests(_)).
 
 %% run_tests(*TestName)
 %  Run all tests with name TestName
@@ -90,7 +90,7 @@ check_test_determinism(_Name, Options) :-
    !.
 check_test_determinism(_Name, _Options) :-
    % $test_body is a copy of the body (doesn't share variables with the one that was run previously)
-   deterministic($test_body), !.
+   call_with_step_limit(10000, deterministic($test_body)), !.
 check_test_determinism(Name, _) :-
    displayln("Test ", Name, " succeeded but is non-deterministic.").
       
