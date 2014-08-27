@@ -74,17 +74,19 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    % If we're generating (nonvar(X)) rather than completing (var(X)),
    % don't generate something that has a proper name.
+   [the, SingularNoun],
    { var(X),
      \+ bound_discourse_variable(X),
-     leaf_kind_of_var_with_selectional_constraint(X, Kind),
-     kind_noun(Kind, Singular, _),
-     is_a(X, Kind) },
-   [the, Singular].
+     object_matching_selectional_constraint(X, SingularNoun) }.
 
-leaf_kind_of_var_with_selectional_constraint(X, Kind) :-
+object_matching_selectional_constraint(X, SingularNoun) :-
    selectional_constraint(X, ConstraintKind),
-     kind_of(Kind, ConstraintKind),
-     leaf_kind(Kind).
+   is_a(X, ConstraintKind),
+   noun_describing(X, SingularNoun).
+
+noun_describing(X, SingularNoun) :-
+   is_a(X, SpecificKind),
+   kind_noun(SpecificKind, SingularNoun, _).
 
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    [ the, N1, N2 ],

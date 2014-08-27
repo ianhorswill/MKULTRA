@@ -45,6 +45,9 @@ test(completion(np, kind),
        nondet ]) :-
    np(_, subject, third:singular, nogap, nogap, [a | Completion ], [ ]).
 
+test(completion(np, reject_verb)) :-
+   \+ np(_, subject, third:singular, nogap, nogap, [go | Completion ], [ ]).
+
 test(completion(np, prop),
      [ true(atomic(Noun)),
        nondet ]) :-

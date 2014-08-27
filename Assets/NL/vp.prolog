@@ -52,7 +52,6 @@ aux_vp(VP, Polarity, Agreement, Tense, Aspect) -->
 
 %test_modal_vp(LF) :-
 %   vp(_, X^can(X), LF, _, _, nogap, [halt], [ ]).
-
 vp(Form, Predication^Modal, Subject^S, Tense, Agreement, Gap) -->
    { lf_predication(S, Predication) },
    iv(Form, Agreement, Subject^Predication, Tense, ForcePPs),
