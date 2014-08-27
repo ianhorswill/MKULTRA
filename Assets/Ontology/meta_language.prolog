@@ -9,15 +9,24 @@
 :- external declare_value/3, default_value/3, declare_related/3.
 
 is_a(Object, Kind) :-
+   var(Object),
+   var(Kind),
+   throw(error("is_a/2 called with neither argument instantiated")).
+is_a(Object, Kind) :-
    atomic(Object),
+   assertion(valid_kind(Kind), "Invalid kind"),
    declare_kind(Object, ImmediateKind),
    superkind_array(ImmediateKind, Supers),
    array_member(Kind, Supers).
 is_a(Object, Kind) :-
    var(Object),
+   assertion(valid_kind(Kind), "Invalid kind"),
    subkind_array(Kind, Subs),
    array_member(Sub, Subs),
    declare_kind(Object, Sub).
+
+valid_kind(Kind) :-
+   var(Kind) ; kind(Kind).
 
 kind_of(K, K).
 kind_of(Sub, Super) :-
@@ -138,7 +147,7 @@ declare_object(Object,
 	 forall(member((Relation:Relatum), Relations),
 		assert(declare_related(Object, Relation, Relatum)))).
 
-load_special_csv_row(RowNumber, kinds(Kind, Parents, _Properties, _Relations, Singular, Plural)) :-
+load_special_csv_row(RowNumber, kinds(Kind, Parents, Singular, Plural)) :-
    define_kind(RowNumber, Kind, Parents),
    define_kind_noun(Kind, Singular, Plural).
 
