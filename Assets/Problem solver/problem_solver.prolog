@@ -129,11 +129,17 @@ switch_to_task(A) :-
 % Simple compound task, so decompose it.
 switch_to_task(Task) :-
    !,
-   begin(all(S,
-	     ( strategy(Task, S),
-	       \+ veto_strategy(Task) ),
-	     Strategies),
+   begin(matching_strategies(Strategies, Task),
 	 select_strategy(Task, Strategies)).
+
+matching_strategies(Strategies, Task) :-
+   all(S,
+       matching_strategy(S, Task),
+       Strategies).
+
+matching_strategy(S, Task) :-
+   strategy(Task, S),
+   \+ veto_strategy(Task).
 
 %% select_strategy(+Step, StrategyList)
 %  If StrategyList is a singleton, it runs it, else subgoals

@@ -62,18 +62,16 @@ precondition(putdown(Object, _Dest),
 precondition(putdown(_Object, Dest),
 	     docked_with(Dest)).
 postcondition(putdown(Object, Dest),
-	      location(Object, Dest)).
+	      location(Object, Dest)) :-
+   Dest \= $me.
 
 action_functor(ingest, 1).
 precondition(ingest(Edible),
 	     location(Edible, $me)).
+precondition(ingest(Edible, _),
+	     exists(Edible)).
 postcondition(ingest(X),
 	      ~exists(X)).
-postcondition(eat(_, X),
-	      ~exists(X)).
-postcondition(drink(_, X),
-	      ~exists(X)).
-
 
 true_after(Action, Condition) :-
    postcondition(Action, Condition).

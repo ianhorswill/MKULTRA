@@ -5,6 +5,10 @@
 strategy(resolve_match_failure(X), S) :-
    default_strategy(X, S).
 
+strategy(achieve(P),
+	 Task) :-
+   postcondition(Task, P).
+
 strategy(achieve(Condition),
 	 null) :-
    % Don't have to do anything if condition is already true.
@@ -37,9 +41,19 @@ strategy(move($me, X,Y),
 
 strategy(eat($me, X),
 	 ingest(X)).
+postcondition(eat(_, X),
+	      ~exists(X)).
+postcondition(eat($me, F),
+	      ~hungry) :-
+   is_a(F, food).
 
 strategy(drink($me, X),
 	 ingest(X)).
+postcondition(drink(_, X),
+	      ~exists(X)).
+postcondition(drink($me, B),
+	      ~thirsty) :-
+   is_a(B, beverage).
 
 self_achieving(/perception/nobody_speaking).
 

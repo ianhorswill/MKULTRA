@@ -2836,8 +2836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Priority: 1
-  Concerns:
-  - patrol
+  Concerns: []
 --- !u!1 &338932983
 GameObject:
   m_ObjectHideFlags: 0
@@ -15662,8 +15661,8 @@ MonoBehaviour:
   - Sims/actions
   - Sims/action_selection
   - Sims/utilities
-  - Problem solver/problem_solver.prolog
-  - Problem solver/general_strategies.prolog
+  - Problem solver/problem_solver
+  - Problem solver/general_strategies
   - Concerns/concerns
   - Concerns/event_grammar
   - Concerns/script
@@ -15673,6 +15672,7 @@ MonoBehaviour:
   - Concerns/conversation
   - Concerns/roles
   - Concerns/player_interaction
+  - Problem solver/everyday_life
   - NL/interface
   - NL/grammar
   - NL/base_grammar
