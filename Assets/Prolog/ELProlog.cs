@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace Prolog
@@ -696,11 +698,11 @@ namespace Prolog
             ELNode foundNode;
             ELNodeEnumerator enumerator;
             if (!TryQuery(term, context, out foundNode, out enumerator))
-                return PrologPrimitives.FailDriver();
+                return CutStateSequencer.Fail();
             if (foundNode != null)
             {
                 foundNode.DeleteSelf();
-                return PrologPrimitives.SucceedDriver();
+                return CutStateSequencer.Succeed();
             }
             return DeleteSuccessive(enumerator);
         }

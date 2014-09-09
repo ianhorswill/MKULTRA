@@ -65,7 +65,7 @@ namespace Prolog
         IEnumerable<CutState> Prover(Structure goal)
         {
             if (goal == null)
-                return PrologPrimitives.TrueImplementation(null, null);
+                return CutStateSequencer.Succeed();
             return context.Prove(goal);
         }
 

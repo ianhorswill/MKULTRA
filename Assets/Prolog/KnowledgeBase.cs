@@ -294,7 +294,7 @@ namespace Prolog
         internal IEnumerable<CutState> FindClauses(Structure head, object body)
         {
             PredicateInfo i = CheckForPredicateInfo(head.PredicateIndicator);
-            return (i==null)?PrologPrimitives.FailDriver():i.FindClauses(head, body);
+            return (i==null)?CutStateSequencer.Fail():i.FindClauses(head, body);
         }
 
         /// <summary>

@@ -655,8 +655,8 @@ namespace Prolog
         /// </summary>
         internal IEnumerable<CutState> ProveAllWokenGoals()
         {
-            if (wokenStack == null || wokenStack.Count==0)
-                return PrologPrimitives.SucceedDriver();
+            if (this.wokenStack == null || this.wokenStack.Count==0)
+                return CutStateSequencer.Succeed();
             WokenGoal[] goals = wokenStack.ToArray();
             wokenStack.Clear();
             return ProveWokenGoalsInternal(goals, 0);

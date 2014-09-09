@@ -50,14 +50,14 @@ namespace Prolog
             {
                 case 0:
                     entries.Add(new KnowledgeBaseVariable(value));
-                    return PrologPrimitives.TrueImplementation(null, context);
+                    return CutStateSequencer.Succeed();
 
                 case 1:
                     var v = entries[0] as KnowledgeBaseVariable;
                     if (v==null)
                         throw new ArgumentException("Functor is not a variable; it has another entry defined for it.");
                     v.CurrentValue = value;
-                    return PrologPrimitives.TrueImplementation(null, context);
+                    return CutStateSequencer.Succeed();
 
                 default:
                     throw new ArgumentException("Functor is not a variable; it has multiple entries defined for it.");

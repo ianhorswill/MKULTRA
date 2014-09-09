@@ -165,10 +165,10 @@ namespace Prolog
             DefinePrimitive("component_of_gameobject_with_type", ComponentOfGameObjectWithTypeImplementation, ".net interoperation",
                             "True if component is a component of gameobject with type class.",
                             "?component", "?gameobject", "+class");
-            DefinePrimitive("discontiguous", TrueImplementation, "declarations",
+            DefinePrimitive("discontiguous", (args1, context1) => CutStateSequencer.Succeed(), "declarations",
                             "Declares that the specified predicate is allowed to be scattered through a file.  Currently unused but provided for compatibility with other Prolog implementation.",
                             ":predicateIndicator", "..."); // noop
-            DefinePrimitive("multifile", TrueImplementation, "declarations",
+            DefinePrimitive("multifile", (args2, context2) => CutStateSequencer.Succeed(), "declarations",
                             "Declares that the specified predicate is allowed to be scattered through multiple files.  Currently unused but provided for compatibility with other Prolog implementation.",
                             ":predicateIndicator", "..."); // noop
             DefinePrimitive("dynamic", MakeDeclarationPredicate( (p, context) => context.KnowledgeBase.DeclareExternal(p)),
@@ -201,7 +201,7 @@ namespace Prolog
                             "Prohibits backtracking past this point for the current goal.");
             DefinePrimitive(Symbol.Fail, ((args, context) => FailImplementation), "flow control",
                             "Forces failure of the current goal.");
-            DefinePrimitive("true", TrueImplementation, "flow control", "Always succeeds.");
+            DefinePrimitive("true", (args3, context3) => CutStateSequencer.Succeed(), "flow control", "Always succeeds.");
             DefinePrimitive("repeat", RepeatImplementation, "flow control", "Always succeeds, and allows infinite backtracking.");
             DefinePrimitive("throw", ThrowImplementation, "flow control,meta-logical predicates",
                             "Throws the specified exception.",
@@ -541,7 +541,7 @@ namespace Prolog
             if (args.Length != 2)
                 throw new ArgumentCountException("method calll", args, "*object", "method(*arguments, ...)");
             var result = FunctionalExpression.EvalMemberExpression(args[0], args[1], context);
-            return CutStateEnumerator(!(result is bool) || ((bool)result));
+            return CutStateSequencer.FromBoolean(!(result is bool) || ((bool)result));
         }
 
         private static IEnumerable<CutState> ModuleCallImplementation(object[] args, PrologContext context)
@@ -772,12 +772,12 @@ namespace Prolog
             {
                 if (vars == null)
                     // The terms are already equal
-                    return FailDriver();
+                    return CutStateSequencer.Fail();
                 // Unifying them would require binding a variable; delay this call to Dif on that variable.
                 return vars[0].MetaUnify(new Suspension(new Structure(SDif, args), null, context));
             }
             // Nothing can make these terms equal
-            return TrueImplementation(null, null);
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> AndImplementation(object[] args, PrologContext context)
@@ -1535,7 +1535,7 @@ namespace Prolog
             if (arg == null)
                 throw new ArgumentException("Indexical declaration should be of the form Name=DefaultValue.");
             Indexical.DeclareUserBindableIndexical(arg);
-            return SucceedDriver();
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> PredicatePropertyImplementation(object[] args, PrologContext context)
@@ -1549,7 +1549,7 @@ namespace Prolog
             switch (property.Name)
             {
                 case "built_in":
-                    return ToCutStateEnumerator(Implementations.ContainsKey(goal.Functor));
+                    return CutStateSequencer.FromBoolean(Implementations.ContainsKey(goal.Functor));
 
                 default:
                     throw new ArgumentException("Unknown predicate property: "+ISOPrologWriter.WriteToString(property));
@@ -1561,7 +1561,7 @@ namespace Prolog
             if (args.Length == 0)
             {
                 context.KnowledgeBase.Trace = true;
-                return SucceedDriver();
+                return CutStateSequencer.Succeed();
             }
             return DeclarationDriver(((p, c) => c.KnowledgeBase.DeclareTraced(p)), args, context);
         }
@@ -1571,7 +1571,7 @@ namespace Prolog
             if (args.Length == 0)
             {
                 context.KnowledgeBase.Trace = false;
-                return SucceedDriver();
+                return CutStateSequencer.Succeed();
             }
             return DeclarationDriver(((p, c) => c.KnowledgeBase.DeclareUntraced(p)), args, context);
         }
@@ -1657,7 +1657,7 @@ namespace Prolog
                 default:
                     throw new ArgumentException("Unknown prolog flag: "+flag.Name);
             }
-            return TrueImplementation(args, context);
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> CheckImplementation(object[] args, PrologContext context)
@@ -1762,14 +1762,14 @@ namespace Prolog
         {
             if (args.Length != 1) throw new ArgumentCountException("assertz", args, "term");
             context.KnowledgeBase.AssertZ(ELProlog.IsELTerm(args[0])?args[0]:Term.CopyInstantiation(args[0]));
-            return TrueImplementation(args, context);
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> AssertaImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 1) throw new ArgumentCountException("asserta", args, "term");
             context.KnowledgeBase.AssertA(ELProlog.IsELTerm(args[0]) ? args[0] : Term.CopyInstantiation(args[0]));
-            return TrueImplementation(args, context);
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> RetractAllImplementation(object[] args, PrologContext context)
@@ -1780,7 +1780,7 @@ namespace Prolog
                 ELProlog.RetractAll(term, context);
             else
                 context.KnowledgeBase.RetractAll(term);
-            return SucceedDriver();
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> RetractImplementation(object[] args, PrologContext context)
@@ -1791,7 +1791,7 @@ namespace Prolog
             if (eln != null)
             {
                 eln.DeleteSelf();
-                return SucceedDriver();
+                return CutStateSequencer.Succeed();
             }
             if (ELProlog.IsELTerm(term))
                 return ELProlog.Retract(term, context);
@@ -1831,7 +1831,7 @@ namespace Prolog
                 return Term.UnifyAndReturnCutState(v, context.StepLimit);
 
             context.StepLimit = Convert.ToInt32(arg);
-            return TrueImplementation(args, context);
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> CallWithStepLimitImplementation(object[] args, PrologContext context)
@@ -1880,7 +1880,7 @@ namespace Prolog
                 if (!gotOne)
                     throw new ArgumentException("Goal is unsatisfiable.");
             }
-            return TrueImplementation(args, context);
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> IsImplementation(object[] args, PrologContext context)
@@ -1937,7 +1937,7 @@ namespace Prolog
             {
                 // Component is known; solve for the gameobject.
                 if (!type.IsInstanceOfType(componentArg))
-                    return FailDriver();
+                    return CutStateSequencer.Fail();
                 return Term.UnifyAndReturnCutState(((Component)componentArg).gameObject, gameobjectArg);
             }
             var gameObject = gameobjectArg as GameObject;
@@ -1992,7 +1992,7 @@ namespace Prolog
             List<object> values = null;
             if (!Term.Unifiable(args[0], args[1], ref vars, ref values))
                 // Fail
-                return FailDriver();
+                return CutStateSequencer.Fail();
             object unifier = null;
             if (vars != null)
             {
@@ -2018,13 +2018,13 @@ namespace Prolog
         private static IEnumerable<CutState> EquivalentImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 2) throw new ArgumentCountException("==", args, "term1", "term2");
-            return CutStateEnumerator(Term.Identical(args[0], args[1]));
+            return CutStateSequencer.FromBoolean(Term.Identical(args[0], args[1]));
         }
 
         private static IEnumerable<CutState> NotEquivalentImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 2) throw new ArgumentCountException("\\==", args, "term1", "term2");
-            return Term.Identical(args[0], args[1]) ?  FailDriver() : TrueImplementation(args, context);
+            return Term.Identical(args[0], args[1]) ?  CutStateSequencer.Fail() : CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> CopyTermImplementation(object[] args, PrologContext context)
@@ -2160,7 +2160,7 @@ namespace Prolog
             if (argNumber < 0)
                 throw new IndexOutOfRangeException("The specified argument number is invalid.");
             if (argNumber == 0 || argNumber > s.Arguments.Length)
-                return FailDriver();
+                return CutStateSequencer.Fail();
             return Term.UnifyAndReturnCutState(s.Arguments[argNumber-1], args[2]);
         }
 
@@ -2291,7 +2291,7 @@ namespace Prolog
                 // Simple check for whether a known element appears in an IList.
                 if (Term.IsGround(objectArg))
                 {
-                    return CutStateEnumerator(iList.Contains(objectArg));
+                    return CutStateSequencer.FromBoolean(iList.Contains(objectArg));
                 }
                 throw new ArgumentException("member(o, l) not implemented for non-ground o when l is an IList rather than a Prolog list.");
             }
@@ -2532,7 +2532,7 @@ namespace Prolog
             object arg = Term.Deref(args[0]);
             //if (arg is LogicVariable)
             //    throw new UninstantiatedVariableException((LogicVariable) args[0], "Argument must be bound to value.");
-            return CutStateEnumerator(arg != null && predicate(arg));
+            return CutStateSequencer.FromBoolean(arg != null && predicate(arg));
         }
 
         private static PrimitiveImplementation MakeNullTestingTypePredicate(string name, Func<object, bool> predicate)
@@ -2552,30 +2552,10 @@ namespace Prolog
             if (arg is LogicVariable)
                 //throw new UninstantiatedVariableException((LogicVariable) args[0], "Argument must be bound to value.");
                 return FailImplementation;
-            return CutStateEnumerator(predicate(arg));
+            return CutStateSequencer.FromBoolean(predicate(arg));
         }
 
-        internal static IEnumerable<CutState> FailDriver()
-        {
-            yield break;
-        }
-
-        internal static IEnumerable<CutState> SucceedDriver()
-        {
-            yield return CutState.Continue;
-        }
-
-        static IEnumerable<CutState>  ToCutStateEnumerator(bool success)
-        {
-            return success ? SucceedDriver() : FailDriver();
-        }
-
-        internal static IEnumerable<CutState> FailImplementation = FailDriver();
-
-        internal static IEnumerable<CutState> TrueImplementation(object[] args, PrologContext context)
-        {
-            return SucceedDriver();
-        }
+        internal static IEnumerable<CutState> FailImplementation = CutStateSequencer.Fail();
 
         internal static IEnumerable<CutState> RepeatImplementation(object[] args, PrologContext context)
         {
@@ -2648,7 +2628,7 @@ namespace Prolog
                     throw new ArgumentTypeException("starts_with", "string_or_symbol", args[1], typeof(string));
                 stringToCheck = sym.Name;
             }
-            return ToCutStateEnumerator(stringToCheck.StartsWith(substringArg));
+            return CutStateSequencer.FromBoolean(stringToCheck.StartsWith(substringArg));
         }
 
         private static IEnumerable<CutState> EndsWithImplementation(object[] args, PrologContext context)
@@ -2667,7 +2647,7 @@ namespace Prolog
                     throw new ArgumentTypeException("ends_with", "string_or_symbol", args[1], typeof(string));
                 stringToCheck = sym.Name;
             }
-            return ToCutStateEnumerator(stringToCheck.EndsWith(substringArg));
+            return CutStateSequencer.FromBoolean(stringToCheck.EndsWith(substringArg));
         }
 
         private static IEnumerable<CutState> StartsWithOneOfImplementation(object[] args, PrologContext context)
@@ -2686,7 +2666,7 @@ namespace Prolog
                     throw new ArgumentTypeException("starts_with_one_of", "string_or_symbol", args[1], typeof(string));
                 stringToCheck = sym.Name;
             }
-            return ToCutStateEnumerator(firstLetterArg.IndexOf(stringToCheck[0])>=0);
+            return CutStateSequencer.FromBoolean(firstLetterArg.IndexOf(stringToCheck[0])>=0);
         }
 
         private static IEnumerable<CutState> ContainsSubstringImplementation(object[] args, PrologContext context)
@@ -2705,7 +2685,7 @@ namespace Prolog
                     throw new ArgumentTypeException("contains_substring", "string_or_symbol", args[1], typeof(string));
                 stringToCheck = sym.Name;
             }
-            return ToCutStateEnumerator(stringToCheck.Contains(substringArg));
+            return CutStateSequencer.FromBoolean(stringToCheck.Contains(substringArg));
         }
 
         private static IEnumerable<CutState> PluralFormImplementation(object[] args, PrologContext context)
@@ -2769,7 +2749,7 @@ namespace Prolog
                     if (name == null)
                         throw new ArgumentTypeException("game_object_name", "name", symbolArg, typeof(Symbol));
                     var foundGameObject = GameObject.Find(name.Name);
-                    return foundGameObject == null ? FailDriver():Term.UnifyAndReturnCutState(objectVar, foundGameObject);
+                    return foundGameObject == null ? CutStateSequencer.Fail():Term.UnifyAndReturnCutState(objectVar, foundGameObject);
                 }
                 // Both are unbound
                 return EnumerateGameObjectsAndNames(objectArg, symbolArg);
@@ -2800,7 +2780,7 @@ namespace Prolog
                     context.Output.Write(arg);
                 else
                     context.Output.Write(Term.ToStringInPrologFormat(arg));
-            return SucceedDriver();
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> DisplayLnImplementation(object[] args, PrologContext context)
@@ -2811,7 +2791,7 @@ namespace Prolog
                 else
                     context.Output.Write(Term.ToStringInPrologFormat(arg));
             context.Output.WriteLine();
-            return SucceedDriver();
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> WriteImplementation(object[] args, PrologContext context)
@@ -2980,7 +2960,7 @@ namespace Prolog
                 else
                     throw new ArgumentTypeException("close", "stream", arg, typeof(ISOPrologReader));
             }
-            return TrueImplementation(args, context);
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> ReadImplementation(object[] args, PrologContext context)
@@ -3056,7 +3036,7 @@ namespace Prolog
                 return EnumerateAndBindNode(enumerator, args[1]);
             }
             // No matches.
-            return FailDriver();
+            return CutStateSequencer.Fail();
         }
 
         private static IEnumerable<CutState> EnumerateAndBindNode(ELNodeEnumerator enumerator, object varToBindTo)
@@ -3074,7 +3054,7 @@ namespace Prolog
             if (args.Length != 0)
                 throw new ArgumentCountException("pause_game", args, 0);
             PauseManager.Paused = true;
-            return SucceedDriver();
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> UnpauseImplementation(object[] args, PrologContext context)
@@ -3082,16 +3062,8 @@ namespace Prolog
             if (args.Length != 0)
                 throw new ArgumentCountException("unpause_game", args, 0);
             PauseManager.Paused = false;
-            return SucceedDriver();
+            return CutStateSequencer.Succeed();
         } 
-        #endregion
-
-        #region Utilities
-
-        static IEnumerable<CutState> CutStateEnumerator(bool truthValue)
-        {
-            return truthValue ? TrueImplementation(null, null) : FailDriver();
-        }
         #endregion
     }
 }
