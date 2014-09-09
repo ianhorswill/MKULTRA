@@ -1397,6 +1397,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -1496,6 +1498,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 1
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -2522,6 +2526,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -3654,6 +3660,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -4235,6 +4243,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -4434,6 +4444,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -5777,6 +5789,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -7874,6 +7888,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: bed
   Plural: beds
   Adjectives: []
@@ -8111,6 +8127,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: beer
   Plural: beer
   Adjectives: []
@@ -10656,6 +10674,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 1
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -10805,6 +10825,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 1
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -11037,6 +11059,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: chair
   Plural: chairs
   Adjectives: []
@@ -11236,6 +11260,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -11828,6 +11854,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -13279,6 +13307,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -13406,6 +13436,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -14511,6 +14543,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -15204,6 +15238,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []
@@ -15651,6 +15687,7 @@ MonoBehaviour:
   - Ontology/physical_object
   - Ontology/person
   - Ontology/container
+  - Ontology/food_drink
   - Ontology/type_check
   - Ontology/predicate_type.csv
   - Norms/dprolog
@@ -15888,6 +15925,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
   CommonNoun: 
   Plural: 
   Adjectives: []

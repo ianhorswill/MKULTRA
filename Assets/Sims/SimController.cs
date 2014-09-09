@@ -110,6 +110,8 @@ public class SimController : PhysicalObject
 
     private ELNode motorRoot;
 
+    private ELNode physiologicalStates;
+
     private Room myCurrentRoom;
 
     readonly Queue<Structure> eventQueue = new Queue<Structure>();
@@ -245,6 +247,7 @@ public class SimController : PhysicalObject
         this.conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
         this.socialSpace = perceptionRoot / Symbol.Intern("social_space");
         this.motorRoot = elRoot / Symbol.Intern("motor_state");
+        this.physiologicalStates = elRoot / Symbol.Intern("physiological_states");
         this.eventHistory = elRoot / Symbol.Intern("event_history");
         this.lastDestination = elRoot / Symbol.Intern("last_destination");
         ELNode.Store(lastDestination % null);  // Need a placeholder last destination so that /last_destination/X doesn't fail.
@@ -499,6 +502,14 @@ public class SimController : PhysicalObject
                     if (physob == null)
                         throw new NullReferenceException("Argument to ingest is not a physical object.");
                     physob.Destroy();
+                    var propinfo = patient.GetComponent<PropInfo>();
+                    if (propinfo != null)
+                    {
+                        if (propinfo.IsFood)
+                            this.physiologicalStates.DeleteKey(Symbol.Intern("hungry"));
+                        if (propinfo.IsBeverage)
+                            this.physiologicalStates.DeleteKey(Symbol.Intern("thirsty"));
+                    }
                     break;
                 }
 

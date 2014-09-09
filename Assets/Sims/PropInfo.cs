@@ -13,6 +13,16 @@ public class PropInfo : PhysicalObject
     public bool IsContainer;
 
     /// <summary>
+    /// True if this satisfies hunger
+    /// </summary>
+    public bool IsFood;
+
+    /// <summary>
+    /// True if this is quenches thirst.
+    /// </summary>
+    public bool IsBeverage;
+
+    /// <summary>
     /// The word for this type of object
     /// </summary>
     public string CommonNoun;
