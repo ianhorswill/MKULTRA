@@ -204,7 +204,7 @@ namespace Prolog
         PrologContext prologContext;
         PrologContext PrologContext
         {
-            get { return prologContext ?? (prologContext = PrologContext.GetFreePrologContext(CurrentKnowledgeBase, CurrentGameObject)); }
+            get { return prologContext ?? (prologContext = PrologContext.Allocate(CurrentKnowledgeBase, CurrentGameObject)); }
         }
 
         void PrologModeCommandLineHandler(string command)

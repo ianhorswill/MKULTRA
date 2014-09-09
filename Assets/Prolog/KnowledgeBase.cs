@@ -99,30 +99,33 @@ namespace Prolog
         }
 
         #region Proving goals
+
         /// <summary>
         /// Attempts to prove the specified goal.
         /// WARNING: THIS WILL LEAK A PROLOG CONTEXT UNLESS ENUMERATED TO COMPLETION.
         /// </summary>
         internal IEnumerable<bool> Prove(Structure t)
         {
-            var prologContext = PrologContext.GetFreePrologContext(this, null);
-            var enumerator = Prove(t.Functor, t.Arguments, prologContext, 0).GetEnumerator();
-            bool done = false;
-            while (!done)
+            using (var prologContext = PrologContext.Allocate(this, null))
             {
-                try
+
+                var enumerator = Prove(t.Functor, t.Arguments, prologContext, 0).GetEnumerator();
+                bool done = false;
+                while (!done)
                 {
-                    done = !enumerator.MoveNext() || enumerator.Current == CutState.ForceFail;
+                    try
+                    {
+                        done = !enumerator.MoveNext() || enumerator.Current == CutState.ForceFail;
+                    }
+                    catch
+                    {
+                        PrologContext.LastExceptionContext = prologContext;
+                        throw;
+                    }
+                    if (!done)
+                        yield return false;
                 }
-                catch
-                {
-                    PrologContext.LastExceptionContext = prologContext;
-                    throw;
-                }
-                if (!done)
-                    yield return false;
             }
-            PrologContext.ReleaseContext(prologContext);
         }
 
         /// <summary>
@@ -134,28 +137,27 @@ namespace Prolog
         public bool IsTrue(object goal, object thisValue=null)
         {
             var t = Term.Structurify(goal, "Argument to IsTrue() should be a valid Prolog goal.");
-            var prologContext = PrologContext.GetFreePrologContext(this, thisValue);
             bool result;
-            try
+            using (var prologContext = PrologContext.Allocate(this, thisValue))
             {
-                result = Prove(t.Functor, t.Arguments, prologContext, 0).GetEnumerator().MoveNext();
-            }
-            catch (InferenceStepsExceededException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                throw new PrologError(e,
-                                      prologContext.StackTrace(Prolog.CurrentSourceFile,
-                                                         Prolog.CurrentSourceLineNumber,
-                                                         "IsTrue()",
-                                                         false)
-                                                         + e.StackTrace);
-            }
-            finally
-            {
-                PrologContext.ReleaseContext(prologContext);
+                try
+                {
+                    result = Prove(t.Functor, t.Arguments, prologContext, 0).GetEnumerator().MoveNext();
+                }
+                catch (InferenceStepsExceededException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    throw new PrologError(
+                        e,
+                        prologContext.StackTrace(
+                            Prolog.CurrentSourceFile,
+                            Prolog.CurrentSourceLineNumber,
+                            "IsTrue()",
+                            false) + e.StackTrace);
+                }
             }
             return result;
         }
@@ -767,64 +769,59 @@ namespace Prolog
             var reader = new ISOPrologReader(inStream);
             reader.SkipLayout();
             int lastLine = reader.LineNumber;
-            PrologContext context = PrologContext.GetFreePrologContext(this, this);
-
-            try
+            using (var context = PrologContext.Allocate(this, this))
             {
-                object unexpanded;
-                Prolog.CurrentSourceLineNumber = lastLine;
-                while ((unexpanded = reader.ReadTerm()) != Symbol.EndOfFile)
+                try
                 {
-                    // Perform user-level macroexpansion.
-                    object assertion = TermExpansion(unexpanded);
-                    if (ELProlog.IsELTerm(assertion))
-                        // It's an EL term.
-                        ELProlog.Update(assertion, this);
-                    else
-                    {
-                        // It's a normal Prolog term
-                        var t = Term.Structurify(
-                            assertion,
-                            "Assertions in prolog files must be valid propositions or predicates.");
-
-                        // Perform built-in macroexpansion.
-                        t = t.Expand();
-
-                        if (t.IsFunctor(Symbol.Implication, 1))
-                        {
-                            context.Reset();
-                            var goal = Term.Structurify(
-                                t.Argument(0),
-                                "Argument to a :- directive must be an atom or structure.");
-                            // Run t once, but don't backtrack for a second solution (since it's presumably an imperative anyway).
-                            Prove(goal.Functor, goal.Arguments, context, 0).GetEnumerator().MoveNext();
-                        }
-                        else
-                            Assert(t, true, true);
-                    }
-                    reader.SkipLayout();
-                    lastLine = reader.LineNumber;
+                    object unexpanded;
                     Prolog.CurrentSourceLineNumber = lastLine;
+                    while ((unexpanded = reader.ReadTerm()) != Symbol.EndOfFile)
+                    {
+                        // Perform user-level macroexpansion.
+                        object assertion = TermExpansion(unexpanded);
+                        if (ELProlog.IsELTerm(assertion))
+                            // It's an EL term.
+                            ELProlog.Update(assertion, this);
+                        else
+                        {
+                            // It's a normal Prolog term
+                            var t = Term.Structurify(
+                                assertion,
+                                "Assertions in prolog files must be valid propositions or predicates.");
+
+                            // Perform built-in macroexpansion.
+                            t = t.Expand();
+
+                            if (t.IsFunctor(Symbol.Implication, 1))
+                            {
+                                context.Reset();
+                                var goal = Term.Structurify(
+                                    t.Argument(0),
+                                    "Argument to a :- directive must be an atom or structure.");
+                                // Run t once, but don't backtrack for a second solution (since it's presumably an imperative anyway).
+                                Prove(goal.Functor, goal.Arguments, context, 0).GetEnumerator().MoveNext();
+                            }
+                            else
+                                Assert(t, true, true);
+                        }
+                        reader.SkipLayout();
+                        lastLine = reader.LineNumber;
+                        Prolog.CurrentSourceLineNumber = lastLine;
+                    }
                 }
-            }
-            catch (InferenceStepsExceededException e)
-            {
-                Repl.RecordExceptionSourceLocation(e, lastLine);
-                throw;
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-                Repl.RecordExceptionSourceLocation(e, lastLine);
-                throw new PrologError(e,
-                                      context.StackTrace(Prolog.CurrentSourceFile,
-                                                         Prolog.CurrentSourceLineNumber,
-                                                         "consult/1",
-                                                         false));
-            }
-            finally
-            {
-                PrologContext.ReleaseContext(context);
+                catch (InferenceStepsExceededException e)
+                {
+                    Repl.RecordExceptionSourceLocation(e, lastLine);
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                    Repl.RecordExceptionSourceLocation(e, lastLine);
+                    throw new PrologError(
+                        e,
+                        context.StackTrace(Prolog.CurrentSourceFile, Prolog.CurrentSourceLineNumber, "consult/1", false));
+                }
             }
         }
 

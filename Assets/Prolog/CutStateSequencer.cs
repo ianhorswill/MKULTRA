@@ -4,6 +4,16 @@ using System.Collections.Generic;
 
 namespace Prolog
 {
+    /// <summary>
+    /// A placeholder enumerator that primitives can return when they just want to succeed or fail
+    /// without the overhead of the state machine craeted by yield return.  These enumerators will
+    /// either succeed one or fail, and are pooled so they don't allocate storage in steady state.
+    ///
+    /// Notes:
+    /// - There is one pool shared across PrologContexts.
+    /// - This could be further optimized by making a specialized fail enumerator, since there need
+    ///   only be one of it.  This might possibly improve cache locality.
+    /// </summary>
     internal sealed class CutStateSequencer : IEnumerable<CutState>, IEnumerator<CutState>
     {
         /// <summary>

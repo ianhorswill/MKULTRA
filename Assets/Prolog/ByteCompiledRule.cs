@@ -44,30 +44,32 @@ namespace Prolog
             var term = (Structure)(new ISOPrologReader(call).ReadTerm());
             if (term.Arity != predicate.Arity)
                 throw new Exception("Wrong number of arguments");
-            var c = PrologContext.GetFreePrologContext(KnowledgeBase.Global, null);
-            c.PushArguments(term.Arguments);
-            int solutions = 0;
-            foreach (var x in StackCall(c))
+            using (var c = PrologContext.Allocate(KnowledgeBase.Global, null))
             {
-                foreach (var arg in term.Arguments)
-                    if (arg is LogicVariable)
-                    {
-                        var l = arg as LogicVariable;
-                        Console.WriteLine("{0}={1}", l.Name, ISOPrologWriter.WriteToString(l.Value));
-                    }
-                Console.WriteLine(x);
-                if (solutions++ > 10)
+                c.PushArguments(term.Arguments);
+                int solutions = 0;
+                foreach (var x in StackCall(c))
                 {
-                    Console.WriteLine("Max solutions found; terminating search");
-                    c.PopFrame(0);
-                    goto abort;
+                    foreach (var arg in term.Arguments)
+                        if (arg is LogicVariable)
+                        {
+                            var l = arg as LogicVariable;
+                            Console.WriteLine("{0}={1}", l.Name, ISOPrologWriter.WriteToString(l.Value));
+                        }
+                    Console.WriteLine(x);
+                    if (solutions++ > 10)
+                    {
+                        Console.WriteLine("Max solutions found; terminating search");
+                        c.PopFrame(0);
+                        goto abort;
+                    }
                 }
+                Console.WriteLine("fail");
+                abort:
+                int tos = c.MakeFrame(0);
+                if (tos != 0)
+                    Console.WriteLine("Error: tos is " + tos);
             }
-            Console.WriteLine("fail");
-            abort:
-            int tos = c.MakeFrame(0);
-            if (tos != 0)
-                Console.WriteLine("Error: tos is "+tos);
         }
 
         internal ByteCompiledRule(PredicateInfo predicate, Structure head, Structure[] ruleBody, string source, int line)

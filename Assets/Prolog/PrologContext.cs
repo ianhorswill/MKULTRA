@@ -12,7 +12,7 @@ namespace Prolog
     /// Controls the execution of a prolog program.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("Top={GoalStackTopSafe}")]
-    public class PrologContext
+    public class PrologContext : IDisposable
     {
         #region Static variables
         /// <summary>
@@ -84,6 +84,7 @@ namespace Prolog
             traceValues = new object[256];
             tracePointer = 0;
             IndexicalBindingStack = new List<KeyValuePair<Symbol, object>>();
+            isFree = true;
         }
 
         static PrologContext()
@@ -96,7 +97,7 @@ namespace Prolog
         /// <summary>
         /// Pool of contexts available to be re-used.
         /// </summary>
-        static readonly Stack<PrologContext> FreeContexts = new Stack<PrologContext>();
+        static readonly StoragePool<PrologContext> Pool = new StoragePool<PrologContext>(() => new PrologContext(null)); 
 
         /// <summary>
         /// True if this context is NOT supposed to be in use.
@@ -107,30 +108,22 @@ namespace Prolog
         /// Gets a context that is currently free to use.  Should be relased afterward using ReleaseContext().
         /// </summary>
         /// <returns>A free PrologContext</returns>
-        public static PrologContext GetFreePrologContext(KnowledgeBase kb, object thisValue)
+        public static PrologContext Allocate(KnowledgeBase kb, object thisValue)
         {
-            if (FreeContexts.Count > 0)
-            {
-                var c = FreeContexts.Pop();
-                if (!c.isFree)
-                    throw new InvalidOperationException("Allocated PrologContext is still in use!");
-                c.isFree = false;
-                c.KnowledgeBase = kb;
-                c.Reset(thisValue);
-                c.Output = Console.Out;
-                return c;
-            }
-            return new PrologContext(kb) { This = thisValue };
+            var c = Pool.Allocate();
+            if (!c.isFree)
+                throw new InvalidOperationException("Allocated PrologContext is still in use!");
+            c.isFree = false;
+            c.KnowledgeBase = kb;
+            c.Reset(thisValue);
+            c.Output = Console.Out;
+            return c;
         }
 
-        /// <summary>
-        /// Deallocates a PrologContext that was allocated using GetFreePrologContext().
-        /// </summary>
-        /// <param name="c">Context to deallocate.</param>
-        public static void ReleaseContext(PrologContext c)
+        public void Dispose()
         {
-            c.isFree = true;
-            FreeContexts.Push(c);
+            isFree = true;
+            Pool.Deallocate(this);
         }
         #endregion
 
