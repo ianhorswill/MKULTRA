@@ -2,8 +2,15 @@
 %% General strategies
 %%
 
+%% default_strategy(+Task, -Strategy) is nondet
+%  Provides default strategies to use when Task has no specific matches.
 strategy(resolve_match_failure(X), S) :-
    default_strategy(X, S).
+
+%%
+%% achieve(P)
+%% Task to make P become true.
+%%
 
 strategy(achieve(P),
 	 Task) :-
@@ -23,6 +30,14 @@ strategy(achieve(P),
 	 wait_condition(P)) :-
    self_achieving(P).
 
+%%
+%% MOVEMENT AND LOCOMOTION
+%% achieving locations
+%% moving
+%% docking
+%% goto
+%%
+
 strategy(achieve(location(X,$me)),
 	 pickup(X)).
 strategy(achieve(location(X, Room)),
@@ -38,6 +53,19 @@ strategy(achieve(location(X, Container)),
 
 strategy(move($me, X,Y),
 	 achieve(location(X, Y))).
+
+strategy(achieve(docked_with(WorldObject)),
+	 goto(WorldObject)).
+strategy(goto(Object),
+	 ( let(top_level_container(Object, Place),
+	       ( call(assert($task/location_bids/Place:Priority)),
+		 wait_event(arrived_at(Place)),
+		 call(retract($task/location_bids/Place))) ) )) :-
+   $task/priority:Priority.
+
+%%
+%% Ingestion (eating and drinking)
+%%
 
 strategy(eat($me, X),
 	 ingest(X)).
@@ -57,15 +85,12 @@ postcondition(drink($me, B),
 
 self_achieving(/perception/nobody_speaking).
 
+%%
+%% OTHER
+%% Sleeping
+%%
+
 strategy(sleep(Seconds),
 	 wait_condition(after_time(Time))) :-
    Time is $now + Seconds.
 
-strategy(achieve(docked_with(WorldObject)),
-	 goto(WorldObject)).
-strategy(goto(Object),
-	 ( let(top_level_container(Object, Place),
-	       ( call(assert($task/location_bids/Place:Priority)),
-		 wait_event(arrived_at(Place)),
-		 call(retract($task/location_bids/Place))) ) )) :-
-   $task/priority:Priority.
