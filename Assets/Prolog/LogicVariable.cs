@@ -178,17 +178,30 @@ namespace Prolog
             m.MetaTermUnify(value, context);
         }
 
+        /// <summary>
+        /// This is an attributed variable with attribute myMetaStructure, unify it with attributed variable them, with attribute theirMetaStructure.
+        /// </summary>
+        /// <param name="myMetaStructure">This variable's metavalue</param>
+        /// <param name="theirMetaStructure">The meta-value of the variable we're unifying with</param>
+        /// <param name="them">The variable to unify with</param>
+        /// <param name="context">Prolog context</param>
         void UnifyMetaMeta(Metastructure myMetaStructure, Metastructure theirMetaStructure, LogicVariable them, PrologContext context)
         {
             SaveAndUpdate(myMetaStructure.MetaMetaUnify(theirMetaStructure, context), context);
             them.SaveAndUpdate(this, context);
         }
 
+        /// <summary>
+        /// This is an atributed variable with metastructure m, unify with unattributed and unbound variable v.
+        /// </summary>
+        /// <param name="m">This variable's metavalue</param>
+        /// <param name="l">The completely unbound logic variable to which we are binding.</param>
+        /// <param name="context">Prolog context</param>
         void UnifyMetaVar(Metastructure m, LogicVariable l, PrologContext context)
         {
             System.Diagnostics.Debug.Assert(l.MetaBinding == null);
             l.SaveAndUpdate(this, context);
-            m.MetaVarUnify(l, context);
+            this.SaveAndUpdate(m.MetaVarUnify(l, context), context);
         }
 
         internal override bool UnifyWithStructure(Structure value, PrologContext context)

@@ -2,7 +2,7 @@
 %%% Simple unit test system based loosely on Jan Wielemaker's paper Prolog Unit Tests
 %%%
 
-:- public test/2, test/1, test_options/2.
+:- public test/2, test/1, test_options/2, test_file/2.
 :- public run_tests/0, run_tests/1.
 
 :- indexical test_name=null, test_options=null, test_body=null, running_tests=false.
@@ -188,3 +188,6 @@ ensure_tests_loaded(TestName) :-
 ensure_test_file_loaded(File) :-
    consult(File, $global),
    asserta( $global::(ensure_test_file_loaded(File) :- !) ).
+
+%% test_file(+TestPattern, *File)
+%  Declares that File must be loaded before running test matching TestPattern.

@@ -14,15 +14,8 @@ namespace Prolog
         #endregion
 
         #region Trail-based unification
-        internal object MetaMetaUnify(Metastructure theirMetaStructure, PrologContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void MetaVarUnify(LogicVariable l, PrologContext context)
-        {
-            throw new NotImplementedException();
-        }
+        internal abstract Metastructure MetaMetaUnify(Metastructure theirMetaStructure, PrologContext context);
+        internal abstract Metastructure MetaVarUnify(LogicVariable l, PrologContext context);
         #endregion
     }
 
@@ -62,6 +55,23 @@ namespace Prolog
             return MakeSuspension(null, FrozenGoal);
         }
 
+        internal override Metastructure MetaMetaUnify(Metastructure theirMetaStructure, PrologContext context)
+        {
+            var s = theirMetaStructure as Suspension;
+            if (s == null) throw new ArgumentTypeException("MetaMetaUnify", "theirMetaStructure", theirMetaStructure, typeof(Suspension));
+            if (context != s.context) throw new ArgumentException("Can't unify suspended goals across PrologContexts.");
+
+            context.WakeUpGoal(CombineGoals(DelayedGoal, s.DelayedGoal));
+            return MakeSuspension(null, CombineGoals(FrozenGoal, s.FrozenGoal));
+        }
+
+        internal override Metastructure MetaVarUnify(LogicVariable l, PrologContext context)
+        {
+            if (DelayedGoal != null)
+                context.WakeUpGoal(DelayedGoal);
+            return MakeSuspension(null, FrozenGoal);
+        }
+
         IEnumerable<CutState> Prover(Structure goal)
         {
             if (goal == null)
@@ -95,6 +105,7 @@ namespace Prolog
             System.Diagnostics.Debug.Assert(contextOfBinding==context, "Delayed goal woken in a different context than it was created in.");
             contextOfBinding.WakeUpGoal(CombineGoals(DelayedGoal, FrozenGoal));
         }
+
 
         internal string DebuggerDisplay
         {
