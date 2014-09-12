@@ -52,6 +52,7 @@ Thumbs.db
 .dropbox
 UnityVS/
 UnityVS.meta
+UnityVS.*.sln.DotSettings
 
 #Un-ignore these specific files
 !Library/*.asset
@@ -65,3 +66,4 @@ UnityVS.meta
 !Library/unity default resources
 !Library/unity editor resources
 !Library/metadata/
+
