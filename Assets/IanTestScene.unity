@@ -15713,7 +15713,7 @@ MonoBehaviour:
   - NL/interface
   - NL/grammar
   - NL/base_grammar
-  - NL/aux
+  - NL/auxverbs
   - NL/vp
   - NL/np
   - NL/pp

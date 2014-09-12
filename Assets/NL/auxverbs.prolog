@@ -120,4 +120,3 @@ aux_be(past, third:singular) -->
 aux_be(past, _:plural) -->
 	[ were ].
 aux_be(future, _Agreement) --> [be].
-
