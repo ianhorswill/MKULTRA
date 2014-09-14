@@ -1,8 +1,17 @@
 conversation >--> opening, content, closing.
 opening >--> [greet(I, R), greet(R, I)].
 content >--> [ ].
-closing >--> { $script_concern/partner/Partner }, [exit_conversational_space(Partner)].
-closing >--> { conversation_participants(I, R) }, [parting(I, R), parting(R, I)].
+closing >-->
+   somebody_leaves,
+   { conversation_participants(I, R) },
+   [parting(I, R), parting(R, I)].
+
+somebody_leaves >-->
+   { $script_concern/partner/Partner },
+   [exit_conversational_space(Partner)].
+
+somebody_leaves >-->
+   [exit_conversational_space($me)].
 
 :- public conversation_participants/2.
 conversation_participants($me, Partner) :-

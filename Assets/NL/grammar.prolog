@@ -6,14 +6,34 @@
 :- randomizable utterance//1, stock_phrase//1.
 
 utterance(DialogAct) --> stock_phrase(DialogAct).
-utterance(question($speaker, $addressee, LF, T, A)) -->
-   sentence(LF, interrogative, affirmative, T, A).
-utterance(assertion($speaker, $addressee, LF, T, A)) --> sentence(LF, indicative, affirmative, T, A).
-utterance(assertion($speaker, $addressee, not(LF), T, A)) --> sentence(LF, indicative, negative, T, A).
-utterance(command($speaker, $addressee, LF)) --> sentence(LF, imperative, affirmative, _, _).
-utterance(injunction($speaker, $addressee, LF)) --> sentence(LF, imperative, negative, _, _).
-utterance(agree($speaker, $addressee, _LF)) --> [ yes ].
-utterance(disagree($speaker, $addressee, _LF)) --> [ no ].
+utterance(question(Speaker, Addressee, LF, T, A)) -->
+   sentence(LF, interrogative, affirmative, T, A),
+   { current_dialog_pair(Speaker, Addressee) }.
+utterance(assertion(Speaker, Addressee, LF, T, A)) -->
+   sentence(LF, indicative, affirmative, T, A),
+   { current_dialog_pair(Speaker, Addressee) }.
+utterance(assertion(Speaker, Addressee, not(LF), T, A)) -->
+   sentence(LF, indicative, negative, T, A),
+   { current_dialog_pair(Speaker, Addressee) }.
+utterance(command(Speaker, Addressee, LF)) -->
+   sentence(LF, imperative, affirmative, _, _),
+   { current_dialog_pair(Speaker, Addressee) }.
+utterance(injunction(Speaker, Addressee, LF)) -->
+   sentence(LF, imperative, negative, _, _),
+   { current_dialog_pair(Speaker, Addressee) }.
+utterance(agree(Speaker, Addressee, _LF)) -->
+   [ yes ],
+   { current_dialog_pair(Speaker, Addressee) }.
+utterance(disagree(Speaker, Addressee, _LF)) -->
+   [ no ],
+   { current_dialog_pair(Speaker, Addressee) }.
+utterance(hypno_command(Speaker, Addressee, LF, T, A)) -->
+   [ fnord ],
+   s(LF, indicative, affirmative, T, A),
+   { current_dialog_pair(Speaker, Addressee) }.
+
+
+current_dialog_pair($speaker, $addressee).
 
 %
 % Stock phrases

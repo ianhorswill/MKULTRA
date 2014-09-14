@@ -8,6 +8,8 @@
 
 :- external declare_value/3, default_value/3, declare_related/3.
 
+:- randomizable declare_kind/2.
+
 is_a(Object, Kind) :-
    var(Object),
    var(Kind),
@@ -15,7 +17,7 @@ is_a(Object, Kind) :-
 is_a(Object, Kind) :-
    atomic(Object),
    assertion(valid_kind(Kind), "Invalid kind"),
-   declare_kind(Object, ImmediateKind),
+   is_a_aux(Object, ImmediateKind),
    superkind_array(ImmediateKind, Supers),
    array_member(Kind, Supers).
 is_a(Object, Kind) :-
@@ -23,7 +25,13 @@ is_a(Object, Kind) :-
    assertion(valid_kind(Kind), "Invalid kind"),
    subkind_array(Kind, Subs),
    array_member(Sub, Subs),
-   declare_kind(Object, Sub).
+   is_a_aux(Object, Sub).
+
+is_a_aux(Object, Kind) :-
+   /brainwash/Object/kind ->
+      /brainwash/Object/kind/Kind
+      ;
+      declare_kind(Object, Kind).
 
 valid_kind(Kind) :-
    var(Kind),

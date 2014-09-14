@@ -2,7 +2,7 @@ test_file(completion(s, _), "NL/base_grammar_test").
 test_file(generate(s, _), "NL/base_grammar_test").
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
-   { X = $input_from_player, X },
+   { call($input_from_player) },
    ['('],
    { bind(speaker, player), bind(addressee, $me) },
    s(S, Mood, Polarity, Tense, Aspect),
@@ -76,7 +76,7 @@ s(S, indicative, Polarity, Tense, simple) -->
    ap(Noun^S).
 
 % NP is [not] CLASS
-s(be(Noun, Class), indicative, Polarity, Tense, simple) -->
+s(is_a(Noun, Class), indicative, Polarity, Tense, simple) -->
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
