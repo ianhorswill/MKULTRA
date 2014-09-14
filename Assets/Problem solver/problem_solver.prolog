@@ -23,9 +23,9 @@ within_task(TaskConcern, Code) :-
 % task => compound_task | primitive_task
 % compound_task => simple_compound_task | (task, task) | let(PrologCode, task)
 % primitive_task => builtins | actions
-% builtins => immediate_builtin | polled_builtin
+% builtins => immediate_builtin | polled_builtin | wait_event_with_timeout(Event, TimeoutPeriod)
 % immediate_builtin => null | done | call(PrologCode)
-% polled_builtin => wait_condition(PrologCode) | wait_event(Event). 
+% polled_builtin => wait_condition(PrologCode) | wait_event(Event) | wait_event(Event, Deadline). 
 %
 % Primitives are executable, compound tasks need to be decomposed using
 % strategies, which map simple compound tasks to other tasks.
@@ -39,6 +39,7 @@ within_task(TaskConcern, Code) :-
 % immediate_builtin(call(_)).
 polled_builtin(wait_condition(_)).
 polled_builtin(wait_event(_)).
+polled_builtin(wait_event(_,_)).
 
 %% strategy(+Task, -CandidateStrategy)
 %  CandidateStrategy is a possible way to solve Task.
@@ -112,6 +113,11 @@ switch_to_task(let(BindingCode, Task)) :-
       throw(let_failed(let(BindingCode, Task))).
 
 % All other primitive tasks
+switch_to_task(wait_event_with_timeout(E, TimeoutPeriod)) :-
+   % Translate wait_event_with_timeout into wait_event/2,
+   % which has a deadline rather than a timeout period.
+   Deadline is $now + TimeoutPeriod,
+   switch_to_task(wait_event(E, Deadline)).
 switch_to_task(B) :-
    polled_builtin(B),
    !,
@@ -204,6 +210,9 @@ poll_builtin(T, wait_condition(Condition)) :-
    !,
    (Condition -> step_completed(T) ; true).
 poll_builtin(_, wait_event(_)).   % nothing to do.
+poll_builtin(T, wait_event(_, Timeout)) :-
+   ($now > Timeout) ->
+      step_completed(T) ; true.
 
 %%
 %% Interrupts
@@ -232,4 +241,4 @@ score_action(A, task, T, Score) :-
 
 on_event(E, task, T, step_completed(T)) :-
    T/current:X,
-   (X=E ; X=wait_event(E)).
+   (X=E ; X=wait_event(E) ; X=wait_event(E,_)).
