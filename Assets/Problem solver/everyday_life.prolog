@@ -19,25 +19,25 @@ default_strategy(everyday_life,
 		 ( wait_event_with_timeout(_, 60),
 		   everyday_life )).
 
-maintenance_goal(~hungry).
-hungry :- /physiological_states/hungry.
-~hungry :- \+ hungry.
+maintenance_goal(~hungry($me)).
+hungry($me) :- /physiological_states/hungry.
+~hungry(X) :- \+ hungry(X).
 
-maintenance_goal(~thirsty).
-thirsty :- /physiological_states/thirsty.
-~thirsty :- \+ thirsty.
+maintenance_goal(~thirsty($me)).
+thirsty($me) :- /physiological_states/thirsty.
+~thirsty(X) :- \+ thirsty(X).
 
-maintenance_goal(~tired).
-tired :- /physiological_states/tired.
-~tired :- \+ tired.
+maintenance_goal(~tired($me)).
+tired($me) :- /physiological_states/tired.
+~tired(X) :- \+ tired(X).
 
-maintenance_goal(~dirty).
-dirty :- /physiological_states/dirty.
-~dirty :- \+ dirty.
+maintenance_goal(~dirty($me)).
+dirty($me) :- /physiological_states/dirty.
+~dirty(X) :- \+ dirty(X).
 
-maintenance_goal(~full_bladder).
-full_bladder :- /physiological_states/full_bladder.
-~full_bladder :- \+ full_bladder.
+maintenance_goal(~full_bladder($me)).
+full_bladder($me) :- /physiological_states/full_bladder.
+~full_bladder(X) :- \+ full_bladder(X).
 
 
 

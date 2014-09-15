@@ -15684,6 +15684,7 @@ MonoBehaviour:
   - Utilities/data_structures
   - Ontology/meta_language
   - Ontology/kinds.csv
+  - Ontology/hypno
   - Ontology/physical_object
   - Ontology/person
   - Ontology/container
@@ -15711,6 +15712,7 @@ MonoBehaviour:
   - Concerns/player_interaction
   - Problem solver/everyday_life
   - NL/interface
+  - NL/lf
   - NL/grammar
   - NL/base_grammar
   - NL/auxverbs

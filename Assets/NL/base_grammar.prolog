@@ -75,13 +75,21 @@ s(S, indicative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    ap(Noun^S).
 
-% NP is [not] CLASS
-s(is_a(Noun, Class), indicative, Polarity, Tense, simple) -->
+% NP is [not] KIND
+s(is_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
-   [a, Class],
-   { atom(Class) }.
+   [a, Singular],
+   { kind_noun(Kind, Singular, _Plural) }.
+
+% NP is [not] CLASS
+s(be(Noun, Property), indicative, Polarity, Tense, simple) -->
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [a, Property],
+   { atom(Property), \+ kind(Property) }.
 
 % NP is [not] NP
 s(be(S, O), indicative, Polarity, Tense, simple) -->

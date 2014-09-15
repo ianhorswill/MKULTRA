@@ -71,16 +71,16 @@ strategy(eat($me, X),
 	 ingest(X)).
 postcondition(eat(_, X),
 	      ~exists(X)).
-postcondition(eat($me, F),
-	      ~hungry) :-
+postcondition(eat(Person, F),
+	      ~hungry(Person)) :-
    is_a(F, food).
 
 strategy(drink($me, X),
 	 ingest(X)).
 postcondition(drink(_, X),
 	      ~exists(X)).
-postcondition(drink($me, B),
-	      ~thirsty) :-
+postcondition(drink(Person, B),
+	      ~thirsty(Person)) :-
    is_a(B, beverage).
 
 self_achieving(/perception/nobody_speaking).
