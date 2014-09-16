@@ -6837,6 +6837,77 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300004, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &861427263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 861427264}
+  - 212: {fileID: 861427266}
+  - 114: {fileID: 861427265}
+  m_Layer: 10
+  m_Name: beer1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &861427264
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861427263}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.179572105, y: .682662964, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1454032861}
+  m_RootOrder: 0
+--- !u!114 &861427265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861427263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Container: {fileID: 0}
+  Exists: 1
+  ContentsVisible: 0
+  IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
+  CommonNoun: beer
+  Plural: beer
+  Adjectives: []
+--- !u!212 &861427266
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 861427263}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_SortingLayerID: 81158165
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300220, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &869598114
 GameObject:
   m_ObjectHideFlags: 0
@@ -8094,7 +8165,7 @@ GameObject:
   - 212: {fileID: 1051585098}
   - 114: {fileID: 1051585097}
   m_Layer: 10
-  m_Name: beer
+  m_Name: beer2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8150,7 +8221,7 @@ SpriteRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayerID: 0
+  m_SortingLayerID: 81158165
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300220, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -10676,7 +10747,7 @@ MonoBehaviour:
   IsContainer: 1
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
+  CommonNoun: desk
   Plural: 
   Adjectives: []
 --- !u!61 &1454032859
@@ -10721,7 +10792,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.76833725, y: -5.33702564, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 861427264}
   m_Father: {fileID: 1036973645}
   m_RootOrder: 3
 --- !u!1 &1463094325
@@ -10827,7 +10899,7 @@ MonoBehaviour:
   IsContainer: 1
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
+  CommonNoun: table
   Plural: 
   Adjectives: []
 --- !u!61 &1466407115
@@ -15700,6 +15772,7 @@ MonoBehaviour:
   - Sims/action_selection
   - Sims/utilities
   - Problem solver/problem_solver
+  - Problem solver/metastrategies
   - Problem solver/general_strategies
   - Concerns/concerns
   - Concerns/event_grammar
