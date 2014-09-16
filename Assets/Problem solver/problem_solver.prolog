@@ -2,6 +2,8 @@
 %% Simple problem solver in the general tradition of NASL
 %%
 
+test_file(problem_solver(_), "Problem solver/ps_tests").
+
 % Problem solver state is stored in:
 %   TaskConcern/type:task:TopLevelTask         
 %   TaskConcern/current:CurrentStep     (always an action or polled_builtin)

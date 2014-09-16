@@ -90,6 +90,7 @@ strategy(answer_wh(M, _, manner(be($me), M)),
 
 default_strategy(enumerate_answers(Answer, Core, Constraint),
 	 answer_with_list(List, Connective, Answer, Core)) :-
+   nonvar(Constraint),
    all(Answer, Constraint, List),
    connective_for_answer(Constraint, Connective).
 
