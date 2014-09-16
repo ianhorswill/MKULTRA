@@ -38,7 +38,3 @@ dirty($me) :- /physiological_states/dirty.
 maintenance_goal(~full_bladder($me)).
 full_bladder($me) :- /physiological_states/full_bladder.
 ~full_bladder(X) :- \+ full_bladder(X).
-
-
-
-

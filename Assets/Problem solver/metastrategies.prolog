@@ -5,7 +5,7 @@
 
 default_strategy(resolve_conflict(T, L), S) :-
    % Pick preferred strategy if there's a preference relation defined for this task.
-   once(prefer_strategy(T, _, _)) ->
+   clause(prefer_strategy(T, _, _),_) ->
 	S = pick_preferred(T, L)
 	;
 	S = pick_randomly(L).
