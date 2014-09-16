@@ -26,7 +26,7 @@ within_task(TaskConcern, Code) :-
 % compound_task => simple_compound_task | (task, task) | let(PrologCode, task)
 % primitive_task => builtins | actions
 % builtins => immediate_builtin | polled_builtin | wait_event_with_timeout(Event, TimeoutPeriod)
-% immediate_builtin => null | done | call(PrologCode)
+% immediate_builtin => null | done | call(PrologCode) | assert(Fact) | retract(Fact) | invoke_continuation(K)
 % polled_builtin => wait_condition(PrologCode) | wait_event(Event) | wait_event(Event, Deadline). 
 %
 % Primitives are executable, compound tasks need to be decomposed using
@@ -98,6 +98,14 @@ switch_to_task(null) :-
 switch_to_task(call(PrologCode)) :-
    begin(PrologCode,
 	 step_completed).
+switch_to_task(assert(Fact)) :-
+   begin(assert(Fact),
+	 step_completed).
+switch_to_task(retract(Fact)) :-
+   begin(retract(Fact),
+	 step_completed).
+switch_to_task(invoke_continuation(K)) :-
+   invoke_continuation(K).
 
 % Non-immediates that can be taken care of now.
 switch_to_task(wait_condition(Condition)) :-

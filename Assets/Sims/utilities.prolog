@@ -6,6 +6,8 @@
 
 :- public register_room/3, register_prop/4, register_character/3.
 
+%% register_room(*Room, *CommonNoun, *Plural)
+%  Add Room to the database, ensuring its singular and plural nouns are registered in the lexicon
 register_room(Room, CommonNoun, Plural) :-
    ensure(room(Room)),
    ensure(declare_kind(Room, CommonNoun)),
@@ -13,6 +15,8 @@ register_room(Room, CommonNoun, Plural) :-
      ;
      assertz(noun(CommonNoun, Plural, X^is_a(X,CommonNoun))) ).
 
+%% register_prop(*Prop, *CommonNoun, *Plural, Adjectives)
+%  Add Prop to the database, ensuring its singular and plural nouns are registered in the lexicon
 register_prop(Prop, CommonNoun, Plural, Adjectives) :-
    Predication =.. [CommonNoun, X],
    ensure(noun(CommonNoun, Plural, X^Predication)),
@@ -23,11 +27,15 @@ register_prop(Prop, CommonNoun, Plural, Adjectives) :-
    forall(is_a(Prop, Kind),
 	  ignore(initialize_prop(Prop, Kind))).
 
+%% register_character(*Character, *Name, *Kind)
+%  Add Character to database with the specified Name and Kind (male or female).
 register_character(Character, Name, Type) :-
    ensure(character(Character)),
    ensure(declare_kind(Character, Type)),
    ensure(proper_noun(Name, Character)).
 
+%% ensure(+Fact)
+%  Adds Fact to database, if it is not already there.
 ensure([Functor | Arguments]) :-
    !,
    Predication =.. [Functor | Arguments],
@@ -51,6 +59,8 @@ nearest(GameObject, Constraint) :-
 	      exists(GameObject),
 	      Distance is distance(GameObject, $me))).
 
+%% exists(*GameObject)
+%  The specified game object has not been destroyed
 exists(X) :-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
@@ -60,13 +70,29 @@ exists(X) :-
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
    \+ C.'Exists'.
 
+%% existing(*Kind, ?GameObject)
+%  GameObject is an undestroyed instance of Kind
+
+:- public existing/2.
+
+existing(Kind, Object) :-
+   is_a(Object, Kind),
+   exists(Object).
+
 :- public dead/1, alive/1.
 
+%% dead(?X)
+%  X is a dead (nonexisting) person.
 dead(X) :- is_a(X, person), ~exists(X).
 ~dead(X) :- is_a(X, person), exists(X).
+
+%% alive(?X)
+%  X is a living (undestroyed) person
 alive(X) :- is_a(X, person), exists(X).
 ~alive(X) :- is_a(X, person), ~exists(X).
 
+%% docked_with(?GameObject)
+%  The character is currently docked with GameObject or its top-level container.
 docked_with(WorldObject) :-
    /perception/docked_with:WorldObject.
 docked_with(WorldObject) :-

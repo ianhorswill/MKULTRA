@@ -14,7 +14,6 @@ strategy(everyday_life,
    % Make sure that P isn't obviously unachievable.
    once(strategy(achieve(P), _)).
 
-
 default_strategy(everyday_life,
 		 ( wait_event_with_timeout(_, 60),
 		   everyday_life )).

@@ -24,7 +24,12 @@ strategy(achieve(Condition),
 
 strategy(achieve(runnable(Action)),
 	 achieve(Blocker)) :-
-   blocking(Action, Blocker).
+   blocking(Action, Blocker),
+   \+ unachievable(Blocker).
+
+%% unachievable(+Task)
+%  Task is a-priori unachievable, so give up.
+unachievable(exists(_)).
 
 strategy(achieve(P),
 	 wait_condition(P)) :-
@@ -58,9 +63,9 @@ strategy(achieve(docked_with(WorldObject)),
 	 goto(WorldObject)).
 strategy(goto(Object),
 	 ( let(top_level_container(Object, Place),
-	       ( call(assert($task/location_bids/Place:Priority)),
+	       ( assert($task/location_bids/Place:Priority),
 		 wait_event(arrived_at(Place)),
-		 call(retract($task/location_bids/Place))) ) )) :-
+		 retract($task/location_bids/Place)) ) )) :-
    $task/priority:Priority.
 
 %%
@@ -73,7 +78,7 @@ postcondition(eat(_, X),
 	      ~exists(X)).
 postcondition(eat(Person, F),
 	      ~hungry(Person)) :-
-   is_a(F, food).
+   existing(food, F).
 
 strategy(drink($me, X),
 	 ingest(X)).
@@ -81,7 +86,7 @@ postcondition(drink(_, X),
 	      ~exists(X)).
 postcondition(drink(Person, B),
 	      ~thirsty(Person)) :-
-   is_a(B, beverage).
+   existing(beverage, B).
 
 self_achieving(/perception/nobody_speaking).
 

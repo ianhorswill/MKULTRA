@@ -6,6 +6,13 @@
 %  P is a precondition of Action.
 
 :- external precondition/2.
+:- higher_order(precondition(0,1)).
+
+%% postcondition(?Action, ?P)
+%  P is a postcondition of Action.
+
+:- external postcondition/2.
+:- higher_order(postcondition(0,1)).
 
 %% achieves(?Action, ?Effect)
 %  Action can be expected to achieve Effect
@@ -52,6 +59,8 @@ blocking(Action, P) :-
 
 action_functor(pickup, 1).
 precondition(pickup(X),
+	     exists(X)).
+precondition(pickup(X),
 	     docked_with(X)).
 postcondition(pickup(X),
 	      location(X, $me)).
@@ -68,7 +77,7 @@ postcondition(putdown(Object, Dest),
 action_functor(ingest, 1).
 precondition(ingest(Edible),
 	     location(Edible, $me)).
-precondition(ingest(Edible, _),
+precondition(ingest(Edible),
 	     exists(Edible)).
 postcondition(ingest(X),
 	      ~exists(X)).

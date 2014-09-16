@@ -15,11 +15,11 @@ default_strategy(resolve_conflict(T, L), S) :-
 %%
 
 default_strategy(resolve_match_failure(T), restart(T)) :-
-   \+ $task/restart_attempted.
+   \+ $task/failed/T .
 
-strategy(restart(_T),
-	 ( call(assert($task/restart_attempted)),
-	   continue(Goal, null) )) :-
+strategy(restart(T),
+	 ( assert($task/failed/T),
+	   invoke_continuation(Goal) )) :-
    $task/type:task:Goal.
 
 strategy(pick_randomly(List), X) :-
