@@ -182,6 +182,16 @@ namespace Prolog
                         Convert.ToSingle(Eval(t.Argument(2), context)));
                 }
 
+                case "instance_id":
+                {
+                    if (t.Arguments.Length != 1)
+                        throw new ArgumentCountException("instance_id", t.Arguments, "game_object");
+                    var arg = t.Argument(0) as UnityEngine.Object;
+                    if (arg == null)
+                        throw new ArgumentTypeException("instance_id", "object", t.Argument(0), typeof(UnityEngine.Object));
+                    return arg.GetInstanceID();
+                }
+
                 default:
                     throw new BadProcedureException(t.Functor, t.Arguments.Length);
             }
