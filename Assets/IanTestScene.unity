@@ -15803,6 +15803,7 @@ MonoBehaviour:
   - NL/adjective.csv
   - NL/pdebug
   - NL/parser_tests.csv
+  - Conversation/strategies
   - Utilities/why
   - Utilities/graphviz
 --- !u!1 &2049919187
