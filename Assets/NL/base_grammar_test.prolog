@@ -26,5 +26,9 @@ test(parse(s, imperative),
        nondet]):-
    s_test(LF, Mood, [go, to, the, bed]).
 
+test(parse(s, adjectival_property),
+     [ true(Generated == ['Bruce', is, male]) ]) :-
+   s(be($'Bruce', male), indicative, affirmative, present, simple, Generated, []).
+
 s_test(LF, Mood, SurfaceForm) :-
    s(LF, Mood, affirmative, present, simple, SurfaceForm, [ ]).

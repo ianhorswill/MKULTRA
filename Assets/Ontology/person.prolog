@@ -1,11 +1,17 @@
 has_property(human, given_name).
 has_property(human, surname).
 has_property(human, gender).
-copular_property(gender).
+adjectival_property(gender).
+property_extension(gender,
+		   [male, female]).
 has_property(human, job).
-copular_property(job).
+nominal_property(job).
+valid_property_value(job, X) :-
+   atom(X).
 has_property(human, age).
-copular_property(age).
+adjectival_property(age).
+valid_property_value(age, X) :-
+   number(X).
 
 has_relation(human, knows_about).
 has_relation(human, interested_in).

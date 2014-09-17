@@ -129,6 +129,12 @@ lookup_property_value(Object, Property, Value) :-
    is_a(Object, Kind),
    default_value(Kind, Property, Value), !.
 
+%% valid_property_value(?Property, ?Value)
+%  True if Value is a valid value for Property.
+valid_property_value(P, V) :-
+   property_extension(P, L),
+   member(V, L).
+
 %% related_nondefault(?Object, ?Relation, ?Relatum)
 %  Object and Relatum are related by Relation through an explicit declaration.
 related_nondefault(Object, Relation, Relatum) :-

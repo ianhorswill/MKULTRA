@@ -83,8 +83,7 @@ strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
 	  assert(/mentioned_to/ $addressee /Object/A/Relatum)).
 
 surface_form(property_value(Object, Property, Value),
-	     s(be(Object, Value))) :-
-   copular_property(Property).
+	     s(property_value(Object, Property, Value))).
 
 surface_form(related(Object, Relation, Relatum),
 	     s(related(Object, Relation, Relatum))).

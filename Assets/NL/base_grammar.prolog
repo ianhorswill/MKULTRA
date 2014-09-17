@@ -83,13 +83,23 @@ s(is_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
    [a, Singular],
    { kind_noun(Kind, Singular, _Plural) }.
 
-% NP is [not] CLASS
-s(be(Noun, Property), indicative, Polarity, Tense, simple) -->
+% NP is [not] PropertyValue
+s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+   { valid_property_value(Property, Value),
+     adjectival_property(Property) },
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
-   [a, Property],
-   { atom(Property), \+ kind(Property) }.
+   [Value].
+
+% NP is [not] a PropertyValue
+s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+   { valid_property_value(Property, Value),
+     nominal_property(Property) },
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [a, Value].
 
 % NP is [not] NP
 s(be(S, O), indicative, Polarity, Tense, simple) -->
