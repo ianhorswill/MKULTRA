@@ -13,7 +13,7 @@ pronoun_word(us, object, first, plural, $dialog_group).
 
 :- randomizable whpron/2.
 whpron( who, person  ).
-whpron( whom, person ).
+%whpron( whom, person ).
 whpron( what, entity ).
 
 % :- randomizable det/2.

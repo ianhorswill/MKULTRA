@@ -21,6 +21,7 @@ pronoun(Case, Person:Number, (E^S)^S) -->
 
 %relpron --> [RP], {relpron(RP)}.
 whpron(Kind) -->
+   { Kind \== person },
    [what, Plural],
    { kind_noun(Kind, _, Plural) }.
 
