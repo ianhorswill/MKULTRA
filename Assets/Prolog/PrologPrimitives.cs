@@ -85,6 +85,11 @@ namespace Prolog
                             "declarations",
                             "Declares that the specified name is an indexical name that can be bound using bind.",
                             "*Name=*DefaultValue");
+            DefinePrimitive("indexical_named",
+                            IndexicalNamedImplementation,
+                            "term manipulation",
+                            "The INDEXICAL is an indexical object with name NAME.",
+                            "?name","?indexical");
             DefinePrimitive("randomizable",
                             MakeDeclarationPredicate((p, context) => context.KnowledgeBase.DeclareRandomizable(p)),
                             "flow control,declarations",
@@ -1538,6 +1543,36 @@ namespace Prolog
             return CutStateSequencer.Succeed();
         }
 
+        private static IEnumerable<CutState> IndexicalNamedImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException("indexical_named", args, "?name", "?indexical");
+            var nameArg = Term.Deref(args[0]);
+            var nameVar = nameArg as LogicVariable;
+            var indexicalArg = Term.Deref(args[1]);
+
+            if (nameVar == null)
+            {
+                // name is instantiated
+                var nameSym = nameArg as Symbol;
+                if (nameSym == null)
+                    throw new ArgumentTypeException("indexical_named", "name", nameArg, typeof(Symbol));
+                var ind = Indexical.Find(nameSym);
+                if (ind == null)
+                    throw new ArgumentException("No indexical exists with the name " + nameSym.Name);
+                return Term.UnifyAndReturnCutState(ind, indexicalArg);
+            }
+
+            if (indexicalArg is LogicVariable)
+                // Both arguments are variables
+                throw new InstantiationException(nameVar, "At least one argument of indexical_named must be instantiated.");
+
+            var indexical = indexicalArg as Indexical;
+            if (indexical == null)
+                throw new ArgumentTypeException("indexical_named", "indexical", indexicalArg, typeof(Indexical));
+
+            return Term.UnifyAndReturnCutState(nameArg, indexical.Name);
+        }
+        
         private static IEnumerable<CutState> PredicatePropertyImplementation(object[] args, PrologContext context)
         {
             if (args.Length != 2) throw new ArgumentCountException("predicate_property", args, ":goal", "+property");
