@@ -44,6 +44,7 @@ namespace Prolog
                 return Type.GetType(name, false, true);
             return Type.GetType(name, false, true) 
                 ?? Type.GetType("System." + name, false, true)
+                ?? Type.GetType("Prolog." + name, false, true)
                 ?? Type.GetType(string.Format(UnityEngineTypeFormat, name), false, true);
         }
 
