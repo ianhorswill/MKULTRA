@@ -1,5 +1,7 @@
 :- op(1200, xfx, >-->).
 
+:- public ('>-->')/ 2.
+
 %% next_events(Nonterminal, History, Events)
 %  Events is a list of possible events that can come after History
 %  for Nonterminal

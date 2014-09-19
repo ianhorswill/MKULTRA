@@ -49,3 +49,15 @@ implies_relation(member_of, knows_about).
 		    friend_of: $'Kavi',
 		    roommate_of: $'Kavi',
 		    loves: $'Kavi' ]).
+
+
+:- declare_object($'Kavi',
+		  [ age=23,
+		    given_name="Kavi",
+		    surname="Surkow",
+		    gender=male,
+		    job=barista ],
+		  [ knows_about: coffee,
+		    interested_in: tamping,
+		    friend_of: $'Bruce',
+		    roommate_of: $'Bruce' ]).

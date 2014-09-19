@@ -81,12 +81,17 @@ discourse_fragment(X) -->
    [ X ].
 
 %
-% Interface to action system
+% Interface to action and conversation systems
+% This adds rules at load time for the different utterances
+% They declare utterances to be actions (i.e. atomically executable)
+% and to be events that conversations should respond to.
 %
 
 action_functor(discourse_increment, 5).
 
-make_all_utterances_actions :-
+:- public register_utterance_types/0.
+
+register_utterance_types :-
    forall(( clause(utterance(A, _, _), _),
 	    nonvar(A) ),
 	  assert_action_functor(A)),
@@ -97,8 +102,18 @@ assert_action_functor(Structure) :-
    functor(Structure, Functor, Arity),
    ( action_functor(Functor, Arity) -> true
      ;
-     assert(action_functor(Functor, Arity)) ).
+     ( assert(action_functor(Functor, Arity)),
+       add_conversation_dispatch_clause(Structure) ) ).
 
-:- make_all_utterances_actions.
+add_conversation_dispatch_clause(Structure) :-
+   functor(Structure, Functor, Arity),
+   indexical_named(me, Me),
+   EventArgs = [Partner, Me | _],
+   length(EventArgs, Arity),
+   Event =.. [Functor | EventArgs],
+   assert( ( on_event(Event, conversation, C,
+		      conversation_handler_task(C, respond_to_dialog_act(Event))) :-
+	        C/partner/Partner
+	   ) ).
 
-:- public make_all_utterances_actions/0.
+:- register_utterance_types.

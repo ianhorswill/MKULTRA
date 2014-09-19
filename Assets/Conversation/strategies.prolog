@@ -2,14 +2,32 @@
 %% Uninterpretable inputs
 %%
 
-default_strategy(respond_to_dialog_act(_),
-		 do_not_understand($me, player)).
+default_strategy(respond_to_dialog_act(Act),
+		 speech(["huh?"])) :-
+   log(not_understood:Act).
+
+%%
+%% Discourse increments
+%%
+
+strategy(respond_to_dialog_act(discourse_increment(_Sender, _Receiver, _Acts)),
+	 null).
+
+%%
+%% Assertions
+%%
+
+strategy(respond_to_dialog_act(assertion(_,_, LF, Tense, Aspect)),
+	 respond_to_assertion(LF, Tense, Aspect)).
+
+default_strategy(respond_to_assertion(_, _, _),
+		 null).
 
 %%
 %% Imperatives
 %%
 
-strategy(respond_to_dialog_act(command(player, $me, LF)),
+strategy(respond_to_dialog_act(command(_, $me, LF)),
 	 follow_command(LF, Morality)) :-
    (@immoral(LF)) -> (Morality = immoral) ; (Morality = moral).
 strategy(follow_command(LF, moral),
@@ -42,7 +60,7 @@ strategy(engage_in_conversation(Person, _Topic),
 %%
 
 % Dispatch on question type
-strategy(respond_to_dialog_act(question(player, $me, Question, present, simple)),
+strategy(respond_to_dialog_act(question(_, $me, Question, present, simple)),
 	 S) :-
    (Question = Answer:Constraint) ->
       ( lf_main_predicate(Constraint, Core),

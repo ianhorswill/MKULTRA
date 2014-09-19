@@ -59,6 +59,13 @@ nearest(GameObject, Constraint) :-
 	      exists(GameObject),
 	      Distance is distance(GameObject, $me))).
 
+%% elroot(+GameObject, -Root)
+%  Returns the root of the EL database for GameObject, if there is one.
+
+elroot(GameObject, Root) :-
+   component_of_gameobject_with_type(KB, GameObject, $'KB'),
+   Root is KB.'KnowledgeBase'.'ELRoot' .
+
 %% exists(*GameObject)
 %  The specified game object has not been destroyed
 exists(X) :-

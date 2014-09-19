@@ -23,6 +23,8 @@ on_event(DialogAct,
 propose_action(A, player_interaction, C) :-
    C/propose_action:A.
 
+:- public player_input_task/2.
+
 player_input_task(Concern, Input) :-
    kill_children(Concern),
    start_task(Concern, Input, 100, T, [T/partner/player]).

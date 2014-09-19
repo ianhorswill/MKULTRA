@@ -165,7 +165,13 @@ strategy(say(Assertion),
 	 speech([ s(Assertion) ])).
 
 strategy(speech(Items),
-	 ( discourse_increment($me, $addressee, Items), sleep(1))).
+	 ( discourse_increment($me, $addressee, Items), sleep(1))) :-
+   $task/partner/player.
+strategy(speech(Items),
+	 ( wait_condition(/perception/nobody_speaking), discourse_increment($me, $addressee, Items))) :-
+   $task/partner/P,
+   P \= player.
+
 
 %%
 %% Utilities
