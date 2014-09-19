@@ -68,12 +68,13 @@ namespace Prolog
             if (tracker != null)
             {
                 var sb = new StringBuilder();
-                //sb.Append(tracker.File);
-                //sb.Append(":");
-                //sb.Append(tracker.Line);
-                //sb.Append(" ");
                 sb.Append(mes);
-                sb.Append(" in line:\n");
+                sb.Append(" in line:        (at ");
+                sb.Append(tracker.File);
+                sb.Append(":");
+                sb.Append(tracker.Line);
+                sb.Append(")\n");
+
                 sb.Append(tracker.ErrorLine);
                 sb.Append('\n');
                 for (int i = 0; i < tracker.Column-2; i++)
