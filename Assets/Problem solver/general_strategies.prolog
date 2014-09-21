@@ -91,6 +91,14 @@ postcondition(drink(Person, B),
 self_achieving(/perception/nobody_speaking).
 
 %%
+%% Social interaction
+%%
+
+strategy(engage_in_conversation(Person),
+	 ( goto(Person),
+	   greet($me, Person) )).
+
+%%
 %% OTHER
 %% Sleeping
 %%

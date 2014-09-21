@@ -35,3 +35,6 @@ propose_action(_, conversation, C) :-
    conversation_is_idle(C),
    conversation_handler_task(C, say_something),
    fail.
+
+currently_in_conversation :-
+   once(concern(_, conversation)).

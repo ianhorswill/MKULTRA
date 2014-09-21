@@ -92,7 +92,10 @@ switch_to_task(Task) :-
       log($me:(null->Task))),
    fail.
 switch_to_task(done) :-
-   kill_concern($task).
+   $task/repeating_task ->
+      ( $task/type:task:Goal, invoke_continuation(Goal) )
+      ;
+      kill_concern($task).
 switch_to_task(null) :-
    step_completed.
 switch_to_task(call(PrologCode)) :-

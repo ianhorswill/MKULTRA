@@ -5,18 +5,22 @@
 %%
 
 character_initialization :-
-   start_task(everyday_life, 100).
+   start_task($root, everyday_life, 100, T, [T/repeating_task]).
 
 strategy(everyday_life,
-	 ( achieve(P), everyday_life )) :-
+	 achieve(P) ) :-
    maintenance_goal(P),
    \+ P,
    % Make sure that P isn't obviously unachievable.
    once(strategy(achieve(P), _)).
 
+strategy(everyday_life,
+	 engage_in_conversation(Person)) :-
+   /pending_conversation_topics/Person/_,
+   \+ currently_in_conversation.
+
 default_strategy(everyday_life,
-		 ( wait_event_with_timeout(_, 60),
-		   everyday_life )).
+		 wait_event_with_timeout(_, 60)).
 
 maintenance_goal(~hungry($me)).
 hungry($me) :- /physiological_states/hungry.

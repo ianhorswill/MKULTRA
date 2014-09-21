@@ -58,8 +58,11 @@ interesting_relation(Purpose, Object, Relation/Relatum) :-
    \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
    relation_relevant_to_purpose(Purpose, Object, Relation, Relatum).
 
+strategy(describe_attributes(_Object, []),
+	 speech(["Sorry; I don't know anything."])).
 strategy(describe_attributes(Object, Attributes),
-	 generate_list(Attributes, attribute_of(Object))).
+	 generate_list(Attributes, attribute_of(Object))) :-
+   Attributes \= [ ].
 
 strategy(generate_next(Property:Value, attribute_of(Object)),
 	 describe_property("", Object, Property, Value, ", ...")).

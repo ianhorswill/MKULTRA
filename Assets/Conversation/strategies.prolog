@@ -1,7 +1,8 @@
 strategy(say_something,
-	 command($me, $addressee,
-		 tell_about($addressee, $me, Topic))) :-
-   /pending_conversation_topics/ $addressee/Topic.
+	 ( retract(TopicNode),
+	   command($me, $addressee,
+		   tell_about($addressee, $me, Topic)) )) :-
+   /pending_conversation_topics/ $addressee/Topic>>TopicNode.
 
 default_strategy(say_something,
 		 null).
@@ -86,13 +87,8 @@ strategy(talk($me, $addressee, Topic),
    nonvar(Topic).
 
 strategy(talk($me, ConversationalPartner, Topic),
-	 engage_in_conversation(ConversationalPartner, Topic)) :-
+	 add_conversation_topic(ConversationalPartner, Topic)) :-
    ConversationalPartner \= $addressee.
-
-strategy(engage_in_conversation(Person, Topic),
-	 ( add_conversation_topic(Person, Topic),
-	   goto(Person),
-	   greet($me, Person) )).
 
 strategy(add_conversation_topic(Person, Topic),
 	 S) :-
