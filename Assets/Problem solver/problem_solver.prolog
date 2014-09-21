@@ -165,7 +165,7 @@ select_strategy(_, [S]) :-
    begin(switch_to_task(S)).
 select_strategy(resolve_match_failure(resolve_match_failure(resolve_match_failure(X))), []) :-
    kill_concern($task),
-   throw(repeated_match_failure(X)).
+   throw(repeated_match_failure($me, X)).
 select_strategy(Task, [ ]) :-
    begin(switch_to_task(resolve_match_failure(Task))).
 select_strategy(Task, Strategies) :-

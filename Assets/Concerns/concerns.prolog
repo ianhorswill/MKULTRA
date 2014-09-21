@@ -25,6 +25,9 @@ descendant_concern_of(Ancestor, Descendant) :-
     ( Descendant=Child 
       ; descendant_concern_of(Child,Descendant) ).
 
+parent_concern_of(Child, Parent) :-
+   Parent is Child.'Parent'.'Parent'.
+
 %%
 %% Creation
 %%

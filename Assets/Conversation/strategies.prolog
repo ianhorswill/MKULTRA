@@ -1,3 +1,15 @@
+strategy(say_something,
+	 command($me, $addressee,
+		 tell_about($addressee, $me, Topic))) :-
+   /pending_conversation_topics/ $addressee/Topic.
+
+default_strategy(say_something,
+		 null).
+
+%%
+%% Top-level strategies for responding to different kinds of dialog acts
+%%
+
 %%
 %% Uninterpretable inputs
 %%
@@ -7,21 +19,43 @@ default_strategy(respond_to_dialog_act(Act),
    log(not_understood:Act).
 
 %%
+%% Greetings and closings
+%%
+
+strategy(respond_to_dialog_act(greet($addressee, $me)),
+	 (assert(Conversation/greeted), greet($me, $addressee))) :-
+   parent_concern_of($task, Conversation),
+   \+ Conversation/greeted.
+strategy(respond_to_dialog_act(greet($addressee, $me)),
+	 null) :-
+   parent_concern_of($task, Conversation),
+   Conversation/greeted.
+
+%%
 %% Discourse increments
 %%
 
-strategy(respond_to_dialog_act(discourse_increment(_Sender, _Receiver, _Acts)),
+strategy(respond_to_dialog_act(discourse_increment(_Sender, _Receiver, [ ])),
 	 null).
+strategy(respond_to_dialog_act(discourse_increment(Sender, Receiver, [ Act | Acts])),
+	 ( respond_to_increment(Sender, Receiver, Act),
+	   respond_to_dialog_act(discourse_increment(Sender, Receiver, Acts)) )).
+
+default_strategy(respond_to_increment(_, _, _),
+		 null).
+strategy(respond_to_increment(Speaker, _, s(LF)),
+	 respond_to_assertion(Speaker, LF)).
 
 %%
 %% Assertions
 %%
 
-strategy(respond_to_dialog_act(assertion(_,_, LF, Tense, Aspect)),
-	 respond_to_assertion(LF, Tense, Aspect)).
+strategy(respond_to_dialog_act(assertion(Speaker,_, LF, Tense, Aspect)),
+	 respond_to_assertion(Speaker, Modalized)) :-
+   modalized(LF, Tense, Aspect, Modalized).
 
-default_strategy(respond_to_assertion(_, _, _),
-		 null).
+default_strategy(respond_to_assertion(Speaker, ModalLF),
+		 assert(/hearsay/Speaker/ModalLF)).
 
 %%
 %% Imperatives
@@ -31,10 +65,13 @@ strategy(respond_to_dialog_act(command(_, $me, LF)),
 	 follow_command(LF, Morality)) :-
    (@immoral(LF)) -> (Morality = immoral) ; (Morality = moral).
 strategy(follow_command(LF, moral),
-	 ( assertion($me, $addressee, LF, future, simple),
+	 ( %assertion($me, $addressee, LF, future, simple),
 	   LF )).
 strategy(follow_command(_, immoral),
 	 say_string("That would be immoral.")).
+
+strategy(tell_about($me, $addressee, Topic),
+	 describe(Topic, general)).
 
 strategy(go($me, Location),
 	 goto(Location)).
@@ -52,8 +89,17 @@ strategy(talk($me, ConversationalPartner, Topic),
 	 engage_in_conversation(ConversationalPartner, Topic)) :-
    ConversationalPartner \= $addressee.
 
-strategy(engage_in_conversation(Person, _Topic),
-	 ( goto(Person), greet($me, Person) )).
+strategy(engage_in_conversation(Person, Topic),
+	 ( add_conversation_topic(Person, Topic),
+	   goto(Person),
+	   greet($me, Person) )).
+
+strategy(add_conversation_topic(Person, Topic),
+	 S) :-
+   var(Topic) ->
+      S = null
+      ;
+      S = assert(/pending_conversation_topics/Person/Topic).
 
 %%
 %% Questions

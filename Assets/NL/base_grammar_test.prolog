@@ -19,6 +19,13 @@ test(generate(s, future_indicative),
        nondet ]) :-
    s(eat($'Bruce', $plant), indicative, affirmative, future, simple, Generated, [ ]).
 
+test(generate(s, future_indicative2),
+     [ setup(bind(speaker, $'Bruce')),
+       true(Generated == ['I', will, talk, to, 'Kavi']),
+       nondet ]) :-
+   bind(generating_nl, true),
+   s(talk($'Bruce', $'Kavi', _), indicative, affirmative, future, simple, Generated, [ ]).
+
 test(parse(s, imperative),
      [ setup(bind(addressee, $'Bruce')),
        true(LF == go($'Bruce', $bed)),
@@ -28,7 +35,7 @@ test(parse(s, imperative),
 
 test(parse(s, adjectival_property),
      [ true(Generated == ['Bruce', is, male]) ]) :-
-   s(be($'Bruce', male), indicative, affirmative, present, simple, Generated, []).
+   s(property_value($'Bruce', gender, male), indicative, affirmative, present, simple, Generated, []).
 
 s_test(LF, Mood, SurfaceForm) :-
    s(LF, Mood, affirmative, present, simple, SurfaceForm, [ ]).

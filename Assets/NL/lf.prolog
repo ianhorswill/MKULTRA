@@ -2,6 +2,16 @@
 %% Predicates for manipulating logical forms
 %%
 
+%% modalized(?LF, ?Tense, ?Aspect, ?Modalized) is det
+%  Modalized is LF inflected with Tense and Aspect
+
+modalized(P, present, simple, P) :-
+   !.
+modalized(P, past, _, past(P)) :-
+   !.
+modalized(P, future, _, future(P)) :-
+   !.
+
 %% lf_main_predicate(:LF, -Core)
 %  Strips ancillary conjuncts from LF and returns its main predicate,
 %  including modals and/or question operators.

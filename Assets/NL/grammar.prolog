@@ -42,14 +42,14 @@ current_dialog_pair($speaker, $addressee).
 stock_phrase(do_not_understand($me, _)) --> [ huh, '?'].
 stock_phrase(prompt_player($me, $me)) --> [type, something].
 
-stock_phrase(greet($speaker, _)) --> [X], { member(X, [hey, hello, hi]) }.
-stock_phrase(greet($speaker, _)) --> [hi, there].
+stock_phrase(greet($speaker, $addressee)) --> [X], { member(X, [hey, hello, hi]) }.
+stock_phrase(greet($speaker, $addressee)) --> [hi, there].
 
-stock_phrase(apology($speaker, _)) --> [sorry].
+stock_phrase(apology($speaker, $addressee)) --> [sorry].
 
-stock_phrase(parting($speaker, _)) --> [X], { member(X, [bye, byebye, goodbye]) }.
-stock_phrase(parting($speaker, _)) --> [see, you].
-stock_phrase(parting($speaker, _)) --> [be, seeing, you].
+stock_phrase(parting($speaker, $addressee)) --> [X], { member(X, [bye, byebye, goodbye]) }.
+stock_phrase(parting($speaker, $addressee)) --> [see, you].
+stock_phrase(parting($speaker, $addressee)) --> [be, seeing, you].
 
 %
 % Increments produced by the discourse generator
