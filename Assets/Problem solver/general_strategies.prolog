@@ -95,8 +95,12 @@ self_achieving(/perception/nobody_speaking).
 %%
 
 strategy(engage_in_conversation(Person),
-	 ( goto(Person),
-	   greet($me, Person) )).
+	 S) :-
+   in_conversation_with(Person) ->
+      S = null
+      ;
+      S = ( goto(Person),
+	    greet($me, Person) ).
 
 %%
 %% OTHER

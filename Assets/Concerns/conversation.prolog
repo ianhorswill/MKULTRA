@@ -38,3 +38,7 @@ propose_action(_, conversation, C) :-
 
 currently_in_conversation :-
    once(concern(_, conversation)).
+
+in_conversation_with(Person) :-
+   once( ( concern(C, conversation),
+	   C/partner/Person )).

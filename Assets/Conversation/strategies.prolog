@@ -1,11 +1,17 @@
 strategy(say_something,
 	 ( retract(TopicNode),
-	   command($me, $addressee,
-		   tell_about($addressee, $me, Topic)) )) :-
+	   Topic )) :-
    /pending_conversation_topics/ $addressee/Topic>>TopicNode.
 
 default_strategy(say_something,
 		 null).
+
+strategy(ask_about($me, $addressee, Topic),
+	 command($me, $addressee,
+		 tell_about($addressee, $me, Topic))).
+strategy(ask_about($me, Who, Topic),
+	 add_conversation_topic(Who, Topic)) :-
+   Who \= $addressee.
 
 %%
 %% Top-level strategies for responding to different kinds of dialog acts
@@ -95,7 +101,7 @@ strategy(add_conversation_topic(Person, Topic),
    var(Topic) ->
       S = null
       ;
-      S = assert(/pending_conversation_topics/Person/Topic).
+      S = assert(/pending_conversation_topics/Person/ask_about($me, Person, Topic)).
 
 %%
 %% Questions
