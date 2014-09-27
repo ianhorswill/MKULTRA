@@ -386,29 +386,42 @@ public class SimController : PhysicalObject
         }
     }
 
+    private readonly Symbol brainwashedSymbol = Symbol.Intern("brainwashed");
     private void UpdateLocations()
     {
         foreach (var p in Registry<PhysicalObject>())
         {
             var o = p.gameObject;
-            // Determine if it's inside something
-            if (p.Container == null)
+            var n = this.locationRoot.ChildWithKey(o);
+            // Don't do anything if /perception/location/O:Location:override in database,
+            // which would mean the character is brainwashed about O's position.
+            if (n == null || n.Children.Count == 0 || !n.Children[0].ContainsKey(this.brainwashedSymbol))
             {
-                // It's not inside another object, so find what room it's in.
-                var n = locationRoot.ChildWithKey(o);
-                if (n == null || !n.ExclusiveKeyValue<GameObject>().GetComponent<Room>().Contains(o))
+                // Determine if it's inside something
+                if (p.Container == null)
                 {
-                    foreach (var r in Registry<Room>())
-                        if (r.Contains(o))
+                    // It's not inside another object, so find what room it's in.
+                    
+                    if (n == null || !n.ExclusiveKeyValue<GameObject>().GetComponent<Room>().Contains(o))
+                    {
+                        foreach (var r in Registry<Room>())
                         {
-                            ELNode.Store(locationRoot / o % (r.gameObject));
-                            if (o == gameObject)
-                                myCurrentRoom = r;
+                            if (r.Contains(o))
+                            {
+                                ELNode.Store(this.locationRoot / o % (r.gameObject));
+                                if (o == this.gameObject)
+                                {
+                                    this.myCurrentRoom = r;
+                                }
+                            }
                         }
+                    }
+                }
+                else
+                {
+                    ELNode.Store((this.locationRoot / o % p.Container));
                 }
             }
-            else
-                ELNode.Store((this.locationRoot/o%p.Container));
         }
     }
 

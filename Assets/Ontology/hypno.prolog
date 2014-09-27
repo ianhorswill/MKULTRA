@@ -25,3 +25,5 @@ hypnotically_believable(thirsty($me),
 			/physiological_states/thirsty).
 hypnotically_believable(is_a(Thing, Kind),
 			/brainwash/Thing/kind/Kind).
+hypnotically_believable(location(Thing, Place),
+			/perception/location/Thing:Place:brainwashed).
