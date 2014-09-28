@@ -2,6 +2,25 @@
 
 public abstract class PhysicalObject : BindingBehaviour
 {
+    /// <summary>
+    /// If true, Sims won't notice this object unless they explicitly search for it.
+    /// Also, suppresses rendering of the object until it's unhidden.
+    /// </summary>
+    public bool IsHidden;
+
+    public void SetHidden(bool state)
+    {
+        this.renderer.enabled = !state;
+        this.IsHidden = state;
+    }
+
+    public override void Awake()
+    {
+        base.Awake();
+        if (IsHidden)
+            this.renderer.enabled = false;
+    }
+
     [HideInInspector]
     public GameObject Container;
 

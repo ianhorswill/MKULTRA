@@ -6,9 +6,12 @@ strategy(say_something,
 default_strategy(say_something,
 		 null).
 
+strategy(ask_about($me, $addressee, $addressee),
+	 question($me, $addressee, X:manner(be($addressee), X))).
 strategy(ask_about($me, $addressee, Topic),
 	 command($me, $addressee,
-		 tell_about($addressee, $me, Topic))).
+		 tell_about($addressee, $me, Topic))) :-
+   Topic \= $addressee.
 strategy(ask_about($me, Who, Topic),
 	 add_conversation_topic(Who, Topic)) :-
    Who \= $addressee.
@@ -97,11 +100,10 @@ strategy(talk($me, ConversationalPartner, Topic),
    ConversationalPartner \= $addressee.
 
 strategy(add_conversation_topic(Person, Topic),
-	 S) :-
-   var(Topic) ->
-      S = null
-      ;
-      S = assert(/pending_conversation_topics/Person/ask_about($me, Person, Topic)).
+	 assert(/pending_conversation_topics/Person/ask_about($me,
+							      Person,
+							      Topic))) :-
+   var(Topic) -> Topic = Person ; true.
 
 %%
 %% Questions

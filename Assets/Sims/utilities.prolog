@@ -113,6 +113,24 @@ after_time(Time) :-
    $now > Time.
 
 %%%
+%%% Hidden objects
+%%%
+
+hidden(X) :-
+   component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
+   PhysicalObject.'IsHidden'.
+
+reveal(X) :-
+   component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
+   PhysicalObject.'SetHidden'(false).
+
+hidden_contents(Container, HiddenObject) :-
+   parent_of_gameobject(HiddenObject, Container),
+   hidden(HiddenObject).
+
+
+
+%%%
 %%% Character initialization.
 %%%
 

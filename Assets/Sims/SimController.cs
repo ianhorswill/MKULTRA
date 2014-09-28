@@ -419,7 +419,8 @@ public class SimController : PhysicalObject
                 }
                 else
                 {
-                    ELNode.Store((this.locationRoot / o % p.Container));
+                    if (!p.IsHidden)
+                        ELNode.Store((this.locationRoot / o % p.Container));
                 }
             }
         }

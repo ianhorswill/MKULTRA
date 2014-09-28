@@ -60,6 +60,6 @@ public static class GameObjectExtensions
     /// <returns>The parent GameObject</returns>
     public static GameObject GetParent(this GameObject o)
     {
-        return o.transform.gameObject;
+        return o.transform.parent.gameObject;
     }
 }

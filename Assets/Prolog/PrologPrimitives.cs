@@ -170,6 +170,9 @@ namespace Prolog
             DefinePrimitive("component_of_gameobject_with_type", ComponentOfGameObjectWithTypeImplementation, ".net interoperation",
                             "True if component is a component of gameobject with type class.",
                             "?component", "?gameobject", "+class");
+            DefinePrimitive("parent_of_gameobject", ParentOfGameObjectImplementation, ".net interoperation",
+                            "True if CHILD is a child of PARENT in the game's rendering hierarchy.",
+                            "?child", "?parent");
             DefinePrimitive("discontiguous", (args1, context1) => CutStateSequencer.Succeed(), "declarations",
                             "Declares that the specified predicate is allowed to be scattered through a file.  Currently unused but provided for compatibility with other Prolog implementation.",
                             ":predicateIndicator", "..."); // noop
@@ -2010,6 +2013,36 @@ namespace Prolog
             }
         }
 
+        private static IEnumerable<CutState> ParentOfGameObjectImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 2) throw new ArgumentCountException("parent_of_gameobject", args, "?child", "?parent");
+            object childArg = Term.Deref(args[0]);
+            object parentArg = Term.Deref(args[1]);
+            var v = childArg as LogicVariable;
+            if (v == null)
+            {
+                var child = childArg as GameObject;
+                if (child == null) throw new ArgumentTypeException("parent_of_gameobject", "child", childArg, typeof(GameObject));
+                // Child is known; solve for the parent.
+                return Term.UnifyAndReturnCutState(child.GetParent(), parentArg);
+            }
+            // ChildArg is a variable
+            var parent = parentArg as GameObject;
+            if (parent != null)
+                return EnumerateChildren(v, parent);
+            throw new InstantiationException(v, "At least one argument of parent_of_game_object must be instantiated.");
+        }
+
+        private static IEnumerable<CutState> EnumerateChildren(LogicVariable child, GameObject parent)
+        {
+            var transform = parent.transform;
+            for (int i=0; i<transform.childCount; i++)
+#pragma warning disable 414, 168, 219
+                // ReSharper disable once UnusedVariable
+                foreach (var ignore in child.Unify(transform.GetChild(i).gameObject))
+#pragma warning restore 414, 168, 219
+                    yield return CutState.Continue;
+        }
 
         private static IEnumerable<CutState> EqualsImplementation(object[] args, PrologContext context)
         {
