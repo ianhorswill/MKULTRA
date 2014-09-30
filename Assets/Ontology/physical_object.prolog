@@ -15,4 +15,11 @@ top_level_container(PhysicalObject, Container) :-
        ;
        top_level_container(C, Container) ).
 
+contained_in(PhysicalObject, Location) :-
+   location(PhysicalObject, Location),
+   !.
+contained_in(PhysicalObject, Location) :-
+   location(PhysicalObject, Container),
+   contained_in(Container, Location).
+
 

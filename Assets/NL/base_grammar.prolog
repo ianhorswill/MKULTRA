@@ -226,6 +226,23 @@ s(S, interrogative, Polarity, present, simple) -->
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    ap(Noun^S).
 
+% Is X in/on Container?
+s(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
+   aux_be(Tense, Agreement),
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   opt_not(Polarity),
+   [in],
+   np((Container^_)^_, object, _, nogap, nogap),
+   { is_a(Container, enclosing_container) }.
+
+s(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
+   aux_be(Tense, Agreement),
+   np((S^_)^_, subject, Agreement, nogap, nogap),
+   opt_not(Polarity),
+   [on],
+   np((Container^_)^_, object, _, nogap, nogap),
+   { is_a(Container, work_surface) }.
+
 % why did he X?
 s(X:explanation(S, X), interrogative, Polarity, Tense, Aspect) -->
    [why],
