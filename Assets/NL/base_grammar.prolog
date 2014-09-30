@@ -160,13 +160,13 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
-inverted_sentence(S, Polarity, Tense, Aspect) -->
-   { lf_subject(S, Subject) },
-   aux(np((Subject^S1)^S, subject, Agreement),
-       Polarity, Agreement, Tense, Aspect, Form, Predication^Modal),
-   copula(Form, Tense, Agreement),
-   copular_relation(Subject^Object^Predication), 
-   np((Object^Modal)^S1, object, _, nogap, nogap).
+% inverted_sentence(S, Polarity, Tense, Aspect) -->
+%    { lf_subject(S, Subject) },
+%    aux(np((Subject^S1)^S, subject, Agreement),
+%        Polarity, Agreement, Tense, Aspect, Form, Predication^Modal),
+%    copula(Form, Tense, Agreement),
+%    copular_relation(Subject^Object^Predication), 
+%    np((Object^Modal)^S1, object, _, nogap, nogap).
 
 inverted_sentence(S, Polarity, Tense, simple) -->
    { lf_subject(S, Subject) },
