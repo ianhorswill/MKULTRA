@@ -82,6 +82,8 @@ precondition(ingest(Edible),
 postcondition(ingest(X),
 	      ~exists(X)).
 
+action_functor(flash, 4).
+
 true_after(Action, Condition) :-
    postcondition(Action, Condition).
 true_after(Action, Condition) :-
