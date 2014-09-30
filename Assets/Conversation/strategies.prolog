@@ -134,19 +134,35 @@ strategy(add_conversation_topic(Person, Topic),
 %%
 
 % Dispatch on question type
-strategy(respond_to_dialog_act(question(_, $me, Question, present, simple)),
+strategy(respond_to_dialog_act(question(Asker, $me, Question, present, simple)),
 	 S) :-
    (Question = Answer:Constraint) ->
       ( lf_main_predicate(Constraint, Core),
 	S=answer_wh(Answer, Core, Constraint)
       )
       ;
-      (S=answer_yes_no(Question)).
+      (S=answer_yes_no(Asker, Question)).
+
+:- external cover_story/3.
 
 %% Yes/no quetsions
-strategy(answer_yes_no(Q),
-	 Answer) :-
-   Q -> (Answer = agree($me, $addressee, Q)) ; (Answer = disagree($me, $addressee, Q)).
+strategy(answer_yes_no(Asker, Q),
+	 generate_answer(Q, Answer)) :-
+   yn_question_answer(Asker, Q, Answer).
+
+yn_question_answer(Asker, Q, Answer) :-
+   cover_story(Asker, Q, Answer),
+   !.
+yn_question_answer(_Asker, Q, Answer) :-
+   Q -> Answer=yes ; Answer=no.
+
+strategy(generate_answer(Q, yes),
+	 agree($me, $addressee, Q)).
+strategy(generate_answer(Q, no),
+	 disagree($me, $addressee, Q)).
+strategy(generate_answer(_Q, unknown),
+	 speech(["Don't know."])).
+
 
 %% Wh-questions
 
