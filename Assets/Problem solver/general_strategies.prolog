@@ -69,6 +69,65 @@ strategy(goto(Object),
    $task/priority:Priority.
 
 %%
+%% Spatial search
+%%
+
+strategy(search_container(Room, CriterionLambda, SuccessLambda, FailTask),
+	 S) :-
+   is_a(Room, room),
+   ( nearest(Container,
+	     ( location(Container, Room),
+	       \+ $task/searched/Container,
+	       is_a(Container, container) )) ->
+       S = search_container(Container,
+			    CriterionLambda,
+			    SuccessLambda,
+			    ( assert($task/searched/Container),
+			      mental_monologue(["Not here."]),
+			      search_container(Room,
+					       CriterionLambda,
+					       SuccessLambda, FailTask)))
+       ;
+       S = FailTask ).
+
+strategy(search_container(Container, CriterionLambda, SuccessLambda, FailTask),
+	 ( achieve(docked_with(Container)),
+	   search_docked_container(CriterionLambda, SuccessLambda, FailTask) )
+	) :-
+   is_a(Container, container),
+   \+ is_a(Container, room).
+
+strategy(search_docked_container(Item^Criterion,
+				 Item^SuccessTask,
+				 FailTask),
+	 S) :-
+   docked_with(Container),
+    ((location(Item, Container), Criterion) ->
+        S = SuccessTask
+        ;
+        S = search_for_hidden_items(Item^Criterion,
+				    Item^SuccessTask,
+				    FailTask) ).
+
+strategy(search_for_hidden_items(CriterionLambda, SuccessLambda, FailTask),
+	 S) :-
+   reveal_hidden_item(_Item) ->
+        S = ( mental_monologue(["Wait, there's something here"]),
+	      search_docked_container(CriterionLambda,
+				      SuccessLambda,
+				      FailTask) )
+        ;
+	S = FailTask.
+
+reveal_hidden_item(Item) :-
+   docked_with(Container),
+   hidden_contents(Container, Item),
+   reveal(Item),
+   % Don't wait for update loop to update Item's position.
+   assert(/perception/location/Item:Container),
+   !.
+
+%%
 %% Ingestion (eating and drinking)
 %%
 
