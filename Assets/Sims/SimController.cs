@@ -36,6 +36,11 @@ public class SimController : PhysicalObject
     public string CharacterName;
     [Popup("woman", "man")]
     public string Type="woman";
+
+    /// <summary>
+    /// If true, the things the character says to themselves are displayed
+    /// </summary>
+    public bool ShowMentalMonologue;
     #endregion
 
     #region Constants
@@ -93,6 +98,8 @@ public class SimController : PhysicalObject
     #endregion
 
     #region Private fields
+
+    private static Texture2D greyOutTexture;
 
     private ELNode elRoot;
 
@@ -255,6 +262,10 @@ public class SimController : PhysicalObject
             CharacterName = name;
         if (!KB.Global.IsTrue("register_character", gameObject, Symbol.Intern(CharacterName), Symbol.Intern((Type))))
             throw new Exception("Can't register character " + name);
+        if (greyOutTexture == null) {
+            greyOutTexture = new Texture2D(1,1);
+            greyOutTexture.SetPixel(0,0, new Color(0,0,0, 128));
+        }
     }
 
     private bool prologInitializationsExecuted;
@@ -274,8 +285,29 @@ public class SimController : PhysicalObject
         }
     }
 
+    private Color flashColorA = Color.red;
+    private Color flashColorB = Color.green;
+
+    private float flashStartTime;
+
+    private float flashEndTime;
+
+    private float flashPeriod;
+
     internal void Update()
     {
+        var t = Time.time;
+        if (t < flashEndTime)
+        {
+            var dT = t - flashStartTime;
+            var phase = (dT / flashPeriod) % 1;
+            ((SpriteRenderer)renderer).color = phase < 0.5f ? this.flashColorA : this.flashColorB;
+        }
+        else
+        {
+            ((SpriteRenderer)renderer).color = Color.white;
+        }
+
         if (!PauseManager.Paused)
         {
             this.UpdateSpeechBubble();
@@ -542,47 +574,59 @@ public class SimController : PhysicalObject
                     break;
                 }
 
-
-
+                case "flash":
+                {
+                    this.flashColorA = structure.Argument<Color>(0);
+                    this.flashColorB = structure.Argument<Color>(1);
+                    flashPeriod = Convert.ToSingle(structure.Argument(2));
+                    flashStartTime = Time.time;
+                    flashEndTime = flashStartTime + Convert.ToSingle(structure.Argument(3));
+                    break;
+                }
 
                 default:
                     // Assume it's dialog
-                    var textVar = new LogicVariable("DialogText");
-                    object text = null;
-                    try
+                    var talkingToSelf = structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), gameObject);
+                    if (!talkingToSelf || ShowMentalMonologue)
                     {
-                        text = gameObject.SolveFor(textVar, "generate_text", structure, textVar);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogError(string.Format("Exception while generating text for {0}", gameObject.name));
-                        Debug.LogException(e);
-                    }
-                    var textString = text as string;
-                    if (textString == null)
-                        throw new Exception(
-                            "generate_text returned " + ISOPrologWriter.WriteToString(text) + " for "
-                            + ISOPrologWriter.WriteToString(structure));
-                    var talkingToPlayer = structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), playerSymbol);
-                    if (talkingToPlayer)
-                        // Character is talking to zhimself
-                    {
-                        if (nlPrompt != null)
-                            nlPrompt.OutputToPlayer(textString);
-                        else
-                            this.Say(string.Format("({0})", textString));
-                    }
-                    else
-                        this.Say(textString);
-
-                    if (!talkingToPlayer)
-                    {
-                        // Tell the other characters
-                        foreach (var node in this.socialSpace.Children)
+                        var textVar = new LogicVariable("DialogText");
+                        object text = null;
+                        try
                         {
-                            var character = (GameObject)(node.Key);
-                            if (character != this.gameObject)
-                                character.QueueEvent((Structure)Term.CopyInstantiation(structure));
+                            text = gameObject.SolveFor(textVar, "generate_text", structure, textVar);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError(string.Format("Exception while generating text for {0}", gameObject.name));
+                            Debug.LogException(e);
+                        }
+                        var textString = text as string;
+                        if (textString == null)
+                            throw new Exception(
+                                "generate_text returned " + ISOPrologWriter.WriteToString(text) + " for "
+                                + ISOPrologWriter.WriteToString(structure));
+                        var talkingToPlayer = structure.Arity >= 2
+                                              && ReferenceEquals(structure.Argument(1), playerSymbol);
+                        if (talkingToPlayer)
+                            // Character is talking to zhimself
+                        {
+                            if (nlPrompt != null)
+                                nlPrompt.OutputToPlayer(textString);
+                            else
+                                this.Say(string.Format("({0})", textString));
+                        }
+                        else
+                            this.Say(textString);
+
+                        if (!talkingToPlayer && !talkingToSelf)
+                        {
+                            // Tell the other characters
+                            foreach (var node in this.socialSpace.Children)
+                            {
+                                var character = (GameObject)(node.Key);
+                                if (character != this.gameObject)
+                                    character.QueueEvent((Structure)Term.CopyInstantiation(structure));
+                            }
                         }
                     }
                     break;
@@ -731,6 +775,7 @@ public class SimController : PhysicalObject
     #endregion
 
     #region Speech bubbles
+
     public GUIStyle SpeechBubbleStyle;
 
     internal void OnGUI()
@@ -738,7 +783,11 @@ public class SimController : PhysicalObject
         if (Camera.current != null && !string.IsNullOrEmpty(this.currentSpeechBubbleText))
         {
             var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
-            GUI.Label(new Rect(bubblelocation.x, Camera.current.pixelHeight-bubblelocation.y, 300, 300), this.currentSpeechBubbleText, SpeechBubbleStyle);
+            var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);
+            var size = SpeechBubbleStyle.CalcSize(new GUIContent(this.currentSpeechBubbleText));
+            var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
+            GUI.Box(bubbleRect, greyOutTexture);
+            GUI.Label(bubbleRect, this.currentSpeechBubbleText, SpeechBubbleStyle);
         }
     }
     #endregion

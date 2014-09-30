@@ -10,14 +10,15 @@ public abstract class PhysicalObject : BindingBehaviour
 
     public void SetHidden(bool state)
     {
-        this.renderer.enabled = !state;
+        if (this.renderer != null)
+            this.renderer.enabled = !state;
         this.IsHidden = state;
     }
 
     public override void Awake()
     {
         base.Awake();
-        if (IsHidden)
+        if (IsHidden && this.renderer != null)
             this.renderer.enabled = false;
     }
 
