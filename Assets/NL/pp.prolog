@@ -51,6 +51,7 @@ preposition(about).
 preposition(with).
 preposition(on).
 preposition(in).
+preposition(for).
 
 %% prepositional_slot(?Preposition, ?Referrent, ?Predication
 %  True when the slot of Predication corresponding to Preposition

@@ -72,6 +72,17 @@ strategy(goto(Object),
 %% Spatial search
 %%
 
+strategy(search_for($me, Container, Target),
+	 search_container(Container, X^(X=Target),
+			  X^mental_monologue(["Got it!"]),
+			  mental_monologue(["Couldn't find it."]))) :-
+   nonvar(Target).
+strategy(search_for($me, Container, Target),
+	 search_container(Container, X^hidden(X),
+			  X^mental_monologue(["Got ", np(X)]),
+			  mental_monologue(["Nothing seems to be hidden."]))) :-
+   var(Target).
+
 strategy(search_container(Room, CriterionLambda, SuccessLambda, FailTask),
 	 S) :-
    is_a(Room, room),
