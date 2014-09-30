@@ -175,6 +175,8 @@ strategy(speech(Items),
    $task/partner/P,
    P \= player.
 
+strategy(mental_monologue(Items),
+	 (discourse_increment($me, $me, Items), sleep(1))).
 
 %%
 %% Utilities
