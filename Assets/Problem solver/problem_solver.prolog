@@ -11,7 +11,7 @@ test_file(problem_solver(_), "Problem solver/ps_tests").
 
 :- indexical task=null.
 
-:- external veto_strategy/1.
+:- external veto_strategy/1, personal_strategy/2.
 
 %% within_task(+TaskConcern, :Code)
 %  Runs Code within the task TaskConcern.
@@ -44,6 +44,11 @@ polled_builtin(wait_event(_)).
 polled_builtin(wait_event(_,_)).
 
 %% strategy(+Task, -CandidateStrategy)
+%  CandidateStrategy is a possible way to solve Task.
+%  CandidateStrategy may be another task, null, or a sequence of tasks
+%  constructed using ,/2.
+
+%% personaly_strategy(+Task, -CandidateStrategy)
 %  CandidateStrategy is a possible way to solve Task.
 %  CandidateStrategy may be another task, null, or a sequence of tasks
 %  constructed using ,/2.
@@ -157,7 +162,7 @@ matching_strategies(Strategies, Task) :-
        Strategies).
 
 matching_strategy(S, Task) :-
-   strategy(Task, S),
+   (personal_strategy(Task, S) ; strategy(Task, S)),
    \+ veto_strategy(Task).
 
 %% select_strategy(+Step, StrategyList)
