@@ -6,6 +6,7 @@ launch_conversation(Parent, Partner, Event) :-
 
 conversation_handler_task(Concern, Input) :-
    kill_children(Concern),
+   ignore(retract(Concern/location_bids)),
    Concern/partner/P,
    start_task(Concern, Input, 100, T, [T/partner/P]).
 
@@ -29,6 +30,12 @@ on_enter_state(start, conversation, C) :-
        assert(C/greeted)
        ;
        conversation_handler_task(C, respond_to_dialog_act(Event)) ).
+
+on_event(exit_conversational_space(Partner),
+	 conversation,
+	 C,
+	 kill_concern(C)) :-
+   C/partner/Partner.
 
 % KLUGE: when polling for actions, check if the conversation is idle, and if so try to say something.
 propose_action(_, conversation, C) :-

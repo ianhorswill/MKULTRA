@@ -10355,7 +10355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Map: {fileID: 0}
-  DisplayOverlays: 1
+  DisplayOverlays: 0
 --- !u!1 &1411697433
 GameObject:
   m_ObjectHideFlags: 0

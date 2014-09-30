@@ -20,6 +20,19 @@ strategy(ask_about($me, Who, Topic),
 %% Top-level strategies for responding to different kinds of dialog acts
 %%
 
+strategy(respond_to_dialog_act(parting(Them, $me)),
+	 ( assert(Parent/generated_parting),
+	   parting($me, Them),
+	   sleep(1),
+	   call(kill_concern(Parent)) )) :-
+   parent_concern_of($task, Parent),
+   \+ Parent/generated_parting.
+
+strategy(respond_to_dialog_act(parting(_Them, $me)),
+	 ( call(kill_concern(Parent)) )) :-
+   parent_concern_of($task, Parent),
+   Parent/generated_parting.
+
 %%
 %% Uninterpretable inputs
 %%
@@ -171,6 +184,15 @@ strategy(answer_with_list([ ], _, Var, Constraint),
 
 strategy(answer_with_list(ItemList, Termination, Var, Constraint),
 	 say_list(ItemList, Termination, Var^s(Constraint))).
+
+%%
+%% Agreement/disagreement
+%%
+
+strategy(respond_to_dialog_act(agree(_, _, _)),
+	 null).
+strategy(respond_to_dialog_act(disagree(_, _, _)),
+	 null).
 
 %%
 %% Hypnotic commands
