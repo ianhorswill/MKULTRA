@@ -8,11 +8,18 @@ character_initialization :-
    start_task($root, everyday_life, 100, T, [T/repeating_task]).
 
 strategy(everyday_life,
+	 (retract(Node), T)) :-
+   /goals/pending_tasks/T>>Node.
+
+strategy(everyday_life,
 	 achieve(P) ) :-
-   maintenance_goal(P),
-   \+ P,
+   unsatisfied_maintenance_goal(P),
    % Make sure that P isn't obviously unachievable.
-   once(strategy(achieve(P), _)).
+   once(matching_strategy(_, achieve(P))).
+
+unsatisfied_maintenance_goal(P) :-
+   maintenance_goal(P),
+   \+ P.
 
 strategy(everyday_life,
 	 engage_in_conversation(Person)) :-
@@ -20,7 +27,14 @@ strategy(everyday_life,
    \+ currently_in_conversation.
 
 default_strategy(everyday_life,
-		 wait_event_with_timeout(_, 60)).
+		 wait_event_with_timeout(_, PollTime)) :-
+   everyday_life_polling_time(PollTime).
+
+everyday_life_polling_time(T) :-
+   /parameters/poll_time:T -> true ; T = 60.
+
+maintenance_goal(P) :-
+   /goals/maintain/P.
 
 maintenance_goal(~hungry($me)).
 hungry($me) :- /physiological_states/hungry.
