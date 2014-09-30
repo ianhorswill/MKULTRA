@@ -1393,14 +1393,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: radio
+  Plural: radioes
   Adjectives: []
 --- !u!61 &169465494
 BoxCollider2D:
@@ -1494,14 +1495,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 1
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: refridgerator
+  Plural: refridgerators
   Adjectives: []
 --- !u!61 &182778213
 BoxCollider2D:
@@ -2522,14 +2524,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: sofa
+  Plural: sofas
   Adjectives: []
 --- !u!61 &325868713
 BoxCollider2D:
@@ -2751,11 +2754,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d1a7a89e2e80443b203945ce6fa384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   CharacterName: Kavi
   Type: man
+  ShowMentalMonologue: 0
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -2763,7 +2768,7 @@ MonoBehaviour:
     m_Name: 
     m_Normal:
       m_Background: {fileID: 0}
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_TextColor: {r: 1, g: 1, b: 0, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -2829,7 +2834,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a4216bfab58207459df4beb86bd6c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SourceFiles: []
+  SourceFiles:
+  - Characters/Kavi
 --- !u!114 &338102935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3656,14 +3662,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: plant
+  Plural: plants
   Adjectives: []
 --- !u!61 &415999062
 BoxCollider2D:
@@ -4239,14 +4246,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: plant
+  Plural: plants
   Adjectives: []
 --- !u!61 &489320534
 BoxCollider2D:
@@ -4440,14 +4448,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
-  IsContainer: 0
+  IsContainer: 1
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: sink
+  Plural: sinks
   Adjectives: []
 --- !u!61 &496305891
 BoxCollider2D:
@@ -5785,14 +5794,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: plant
+  Plural: plants
   Adjectives: []
 --- !u!61 &692668634
 BoxCollider2D:
@@ -6427,6 +6437,55 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300078, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &811978775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 811978776}
+  - 114: {fileID: 811978777}
+  m_Layer: 10
+  m_Name: macguffin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &811978776
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 811978775}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .643086672, y: .716222525, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1616970359}
+  m_RootOrder: 0
+--- !u!114 &811978777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 811978775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsHidden: 1
+  Container: {fileID: 1616970354}
+  Exists: 1
+  ContentsVisible: 0
+  IsContainer: 0
+  IsFood: 0
+  IsBeverage: 0
+  CommonNoun: macguffin
+  Plural: macguffins
+  Adjectives: []
 --- !u!1 &820061754
 GameObject:
   m_ObjectHideFlags: 0
@@ -6877,12 +6936,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Container: {fileID: 0}
+  IsHidden: 1
+  Container: {fileID: 1454032856}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
-  IsBeverage: 0
+  IsBeverage: 1
   CommonNoun: beer
   Plural: beer
   Adjectives: []
@@ -6892,7 +6952,7 @@ SpriteRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 861427263}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_LightmapIndex: 255
@@ -7955,6 +8015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
@@ -8194,12 +8255,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Container: {fileID: 0}
+  IsHidden: 0
+  Container: {fileID: 1466407112}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
-  IsBeverage: 0
+  IsBeverage: 1
   CommonNoun: beer
   Plural: beer
   Adjectives: []
@@ -10741,14 +10803,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
-  ContentsVisible: 0
+  ContentsVisible: 1
   IsContainer: 1
   IsFood: 0
   IsBeverage: 0
   CommonNoun: desk
-  Plural: 
+  Plural: desks
   Adjectives: []
 --- !u!61 &1454032859
 BoxCollider2D:
@@ -10893,14 +10956,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
-  ContentsVisible: 0
+  ContentsVisible: 1
   IsContainer: 1
   IsFood: 0
   IsBeverage: 0
   CommonNoun: table
-  Plural: 
+  Plural: tables
   Adjectives: []
 --- !u!61 &1466407115
 BoxCollider2D:
@@ -11127,6 +11191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
@@ -11328,14 +11393,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: computer
+  Plural: computers
   Adjectives: []
 --- !u!61 &1541256197
 BoxCollider2D:
@@ -11922,14 +11988,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
-  IsContainer: 0
+  IsContainer: 1
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: bookshelf
+  Plural: bookshelves
   Adjectives: []
 --- !u!61 &1616970357
 BoxCollider2D:
@@ -11973,7 +12040,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.20562935, y: .693950891, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 811978776}
   m_Father: {fileID: 1036973645}
   m_RootOrder: 2
 --- !u!1 &1622433801
@@ -13375,14 +13443,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: machine
+  Plural: machines
   Adjectives: []
 --- !u!61 &1841301717
 BoxCollider2D:
@@ -13504,14 +13573,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: toilet
+  Plural: toilets
   Adjectives: []
 --- !u!114 &1846938672
 MonoBehaviour:
@@ -14611,14 +14681,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
-  IsContainer: 0
+  IsContainer: 1
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: sink
+  Plural: sinks
   Adjectives: []
 --- !u!61 &1985965125
 BoxCollider2D:
@@ -14790,11 +14861,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d1a7a89e2e80443b203945ce6fa384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   CharacterName: Bruce
   Type: man
+  ShowMentalMonologue: 1
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -14802,7 +14875,7 @@ MonoBehaviour:
     m_Name: 
     m_Normal:
       m_Background: {fileID: 0}
-      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+      m_TextColor: {r: 1, g: 1, b: 0, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -15306,14 +15379,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: microphone
+  Plural: microphones
   Adjectives: []
 --- !u!61 &2003787084
 BoxCollider2D:
@@ -15997,14 +16071,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsHidden: 0
   Container: {fileID: 0}
   Exists: 1
   ContentsVisible: 0
   IsContainer: 0
   IsFood: 0
   IsBeverage: 0
-  CommonNoun: 
-  Plural: 
+  CommonNoun: plant
+  Plural: plants
   Adjectives: []
 --- !u!61 &2085652203
 BoxCollider2D:

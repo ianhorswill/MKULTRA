@@ -2,7 +2,7 @@ launch_conversation(Parent, Partner, Event) :-
    begin_child_concern(Parent, conversation, 1, Child,
 		       [ Child/partner/Partner,
 			 Child/initial_history/Event ]),
-   (Partner \= player -> assert(Child/location_bids/Partner:200);true).
+   (Partner \= player -> assert(Child/location_bids/Partner:20);true).
 
 conversation_handler_task(Concern, Input) :-
    kill_children(Concern),
