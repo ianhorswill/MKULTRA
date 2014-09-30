@@ -178,16 +178,19 @@ inverted_sentence(S, Polarity, Tense, simple) -->
 
 % Wh-questions about the subject.
 s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
-   { lf_subject(S, Subject) },
+   { lf_subject(S, Subject), var(Subject) },
    whpron(Kind),
    aux_vp(Subject^S, Polarity, _Agreement, Tense, Aspect).
+
 % Wh-questions about the object.
 s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    whpron(Kind),
-   aux(np((NP^S1)^S, subject, Agreement),
-       Polarity, Agreement, Tense, Aspect, Form, Modality),
+   aux(nogap, Polarity, Agreement, Tense, Aspect, Form, Modality),
+   np((NP^S1)^S, subject, Agreement, nogap, nogap),
    vp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
+
+% WHO is X relation of?
 s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, simple) -->
    { lf_subject(S, Subject) },
    whpron(Kind),
@@ -236,7 +239,7 @@ s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
    np((S^S)^S, subject, Agreement, nogap, nogap).
 
 % Who has  NP
-s(Character:location(Object, Character), interrogative, Polarity, Tense, simple) -->
+s((Character:location(Object, Character), is_a(Character, person)), interrogative, Polarity, Tense, simple) -->
    [who],
    aux_have(Tense, third:singular),
    opt_not(Polarity),

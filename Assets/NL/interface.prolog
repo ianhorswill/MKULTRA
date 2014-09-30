@@ -1,5 +1,7 @@
 :- public generate_text/2, input_completion/3.
-:- indexical input_from_player=false, generating_nl=false, discourse_variables=null.
+:- indexical input_from_player=false,
+   generating_nl=false,
+   discourse_variables=null.
 
 %% generate_text(?SpeechAct, ?Text)
 %  The string Text is a possible realization of SpeechAct.
@@ -57,3 +59,6 @@ bind_dialog_indexicals_for_output(SpeechAct) :-
 
 generating_nl :-
    X = $generating_nl, X.
+
+input_from_player :-
+   X = $input_from_player, X.

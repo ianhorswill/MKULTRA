@@ -9,7 +9,9 @@
 :- external declare_value/3, default_value/3, declare_related/3.
 
 :- randomizable declare_kind/2.
-
+%is_a(Object, entity) :-
+%   var(Object),
+%   throw(error(enumerating_entities)).
 is_a(Object, Kind) :-
    var(Object),
    var(Kind),
