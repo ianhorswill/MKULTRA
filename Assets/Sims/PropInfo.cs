@@ -61,6 +61,18 @@ public class PropInfo : PhysicalObject
             throw new Exception("Can't register prop "+name);
     }
 
+    internal void OnGUI()
+    {
+        if (Camera.current != null && renderer == null && !IsHidden)
+        {
+            var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
+            var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);
+            var size = new Vector2(300, 3000);
+            var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
+            GUI.Label(bubbleRect, name);
+        }
+    }
+
     #region Container operations
     public IEnumerable<PhysicalObject> Contents
     {
