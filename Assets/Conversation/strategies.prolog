@@ -71,14 +71,25 @@ default_strategy(respond_to_assertion(Speaker, ModalLF),
 %% Imperatives
 %%
 
-strategy(respond_to_dialog_act(command(_, $me, LF)),
-	 follow_command(LF, Morality)) :-
-   (@immoral(LF)) -> (Morality = immoral) ; (Morality = moral).
-strategy(follow_command(LF, moral),
+strategy(respond_to_dialog_act(command(Requestor, $me, LF)),
+	 follow_command(LF, RequestStatus)) :-
+   request_status(Requestor, LF, RequestStatus).
+
+request_status(_Requestor, LF, immoral) :-
+   @immoral(LF),
+   !.
+request_status(_Requestor, LF, non_normative) :-
+   \+ well_typed(LF, action, _),
+   !.
+request_status(_Requestor, _LF, normal).
+
+strategy(follow_command(LF, normal),
 	 ( %assertion($me, $addressee, LF, future, simple),
 	   LF )).
 strategy(follow_command(_, immoral),
 	 say_string("That would be immoral.")).
+strategy(follow_command(_, non_normative),
+	 say_string("That would be weird.")).
 
 strategy(tell_about($me, $addressee, Topic),
 	 describe(Topic, general)).
@@ -166,4 +177,14 @@ strategy(answer_with_list(ItemList, Termination, Var, Constraint),
 %%
 
 strategy(respond_to_dialog_act(hypno_command(_, $me, LF, present, simple)),
-	 call(hypnotically_believe(LF))).
+	 do_hypnotically_believe(LF)).
+
+strategy(do_hypnotically_believe(LF),
+	 flash(Yellow, Green, 0.3, 1.5)) :-
+   hypnotically_believe(LF),
+   Yellow is $'Color'.yellow,
+   Green is $'Color'.green.
+
+default_strategy(do_hypnotically_believe(_LF),
+		 % No effect
+		 null).
