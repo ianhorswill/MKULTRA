@@ -33,6 +33,7 @@ public abstract class PhysicalObject : BindingBehaviour
     public void MoveTo(GameObject newContainer)
     {
         Container = newContainer;
+        IsHidden = false;
         // Reparent our gameObject to newContainer
         // Because Unity is braindamaged, this has to be done by way of the transform.
         transform.parent = newContainer.transform;
