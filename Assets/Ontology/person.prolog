@@ -45,7 +45,6 @@ implies_relation(member_of, knows_about).
 		    job=spy ],
 		  [ knows_about: spying,
 		    interested_in: cia,
-		    member_of: illuminati,
 		    friend_of: $'Kavi',
 		    roommate_of: $'Kavi',
 		    loves: $'Kavi' ]).
@@ -59,5 +58,6 @@ implies_relation(member_of, knows_about).
 		    job=barista ],
 		  [ knows_about: coffee,
 		    interested_in: tamping,
+		    member_of: illuminati,
 		    friend_of: $'Bruce',
 		    roommate_of: $'Bruce' ]).

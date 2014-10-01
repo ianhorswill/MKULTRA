@@ -147,22 +147,14 @@ strategy(respond_to_dialog_act(question(Asker, $me, Question, present, simple)),
       ;
       (S=answer_yes_no(Asker, Question)).
 
-:- external cover_story/3.
-
 %% Yes/no quetsions
 strategy(answer_yes_no(Asker, Q),
 	 generate_answer(Q, Answer)) :-
-   yn_question_answer(Asker, Q, Answer).
+   admitted_truth_value(Asker, Q, Answer).
 
-yn_question_answer(Asker, Q, Answer) :-
-   cover_story(Asker, Q, Answer),
-   !.
-yn_question_answer(_Asker, Q, Answer) :-
-   Q -> Answer=yes ; Answer=no.
-
-strategy(generate_answer(Q, yes),
+strategy(generate_answer(Q, true),
 	 agree($me, $addressee, Q)).
-strategy(generate_answer(Q, no),
+strategy(generate_answer(Q, false),
 	 disagree($me, $addressee, Q)).
 strategy(generate_answer(_Q, unknown),
 	 speech(["Don't know."])).
@@ -191,11 +183,12 @@ strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
 strategy(answer_wh(M, _, manner(be($me), M)),
 	 say(okay($me))).
 
-default_strategy(generate_unique_answer(_Asker, _Answer, Core, Constraint),
+default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
 		 S) :-
    nonvar(Constraint),
    $task/partner/Partner,
-   ( Constraint ->
+   admitted_truth_value(Asker, Constraint, Truth),
+   ( (Truth = true) ->
         S = assertion($me, Partner, Core, present, simple)
         ;
         S = speech(["Don't know"]) ).

@@ -27,3 +27,5 @@ hypnotically_believable(is_a(Thing, Kind),
 			/brainwash/Thing/kind/Kind).
 hypnotically_believable(location(Thing, Place),
 			/perception/location/Thing:Place:brainwashed).
+hypnotically_believable(related(Object, Relation, Relatum),
+			/brainwash/relations/Object/Relation/Relatum).

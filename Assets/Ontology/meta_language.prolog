@@ -146,6 +146,8 @@ related_nondefault(Object, Relation, Relatum) :-
 %% related(?Object, ?Relation, ?Relatum)
 %  Object and Relatum are related by Relation.
 related(Object, Relation, Relatum) :-
+   /brainwash/relations/Object/Relation/Relatum.
+related(Object, Relation, Relatum) :-
    decendant_relation(D, Relation),
    declare_related(Object, D, Relatum).
 

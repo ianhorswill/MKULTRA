@@ -2,14 +2,17 @@
 /perception/location/ $macguffin : $bookshelf.
 /parameters/poll_time:3.
 
-:- public cover_story/2.
-cover_story(_,
-	    location($macguffin, _),
-	    no).
-cover_story(_,
-	    contained_in($macguffin, _),
-	    no).
-
+pretend_truth_value(Asker,
+		    location($macguffin, Loc),
+		    T) :-
+   \+ related(Asker, member_of, illuminati),
+   (var(Loc) -> T = unknown ; T = false).
+pretend_truth_value(Asker,
+		    contained_in($macguffin, Loc),
+		    T) :-
+   \+ related(Asker, member_of, illuminati),
+   (var(Loc) -> T = unknown ; T = false).
+   
 :- public bedroom_empty/0.
 bedroom_empty :-
    \+ intruder(_Intruder, $bedroom).
@@ -17,10 +20,10 @@ bedroom_empty :-
 intruder(Intruder, Room) :-
    location(Intruder, Room),
    is_a(Intruder, person),
-   Intruder \= $me.
+   \+ related(Intruder, member_of, illuminati).
 
 personal_strategy(achieve(bedroom_empty),
 		  ( ingest(Intruder),
 		    discourse_increment($me, Intruder,
-					["I told you to stay out of my bedroom!"]) )) :-
+					["Stay out of my bedroom!"]) )) :-
    intruder(Intruder, $bedroom).
