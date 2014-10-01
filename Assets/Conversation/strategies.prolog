@@ -97,6 +97,11 @@ request_status(_Requestor, Task, non_normative) :-
 request_status(_Requestor, Task, unachievable) :-
    \+ have_strategy(Task),
    !.
+request_status(Requestor, Task, incriminating(P)) :-
+   guard_condition(Task, P),
+   pretend_truth_value(Requestor, P, Value),
+   Value \= true,
+   !.
 request_status(_Requestor, _Task, normal).
 
 strategy(follow_command(Task, normal),
@@ -107,6 +112,8 @@ strategy(follow_command(_, non_normative),
 	 say_string("That would be weird.")).
 strategy(follow_command(_, unachievable),
 	 say_string("I don't know how.")).
+strategy(follow_command(_, incriminating(_)),
+	 say_string("Sorry, I can't.")).
 
 strategy(tell_about($me, $addressee, Topic),
 	 describe(Topic, general)).

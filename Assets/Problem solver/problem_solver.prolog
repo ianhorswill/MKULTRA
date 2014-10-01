@@ -156,17 +156,33 @@ switch_to_task(Task) :-
    begin(matching_strategies(Strategies, Task),
 	 select_strategy(Task, Strategies)).
 
+%% matching_strategies(-Strategies, +Task)
+%  Strategies is the set of strategies for Task.
 matching_strategies(Strategies, Task) :-
    all(S,
        matching_strategy(S, Task),
        Strategies).
 
+%% matching_strategy(-S, +Task)
+%  S is a strategy for Task.
 matching_strategy(S, Task) :-
    (personal_strategy(Task, S) ; strategy(Task, S)),
    \+ veto_strategy(Task).
 
+%% have_strategy(+Task)
+%  True when we have at least some candidate reduction for this task.
 have_strategy(Task) :-
    once(matching_strategy(_, Task)).
+
+%% canonical_form_of_task(+Task, -Canonical)
+%  Repeatedly reducing Task until there are no further unique reductions
+%  results in Canonical.
+canonical_form_of_task(Task, Canonical) :-
+   matching_strategies([Reduced], Task),
+   \+ functor(Reduced, ',', 2),
+   canonical_form_of_task(Reduced, Canonical),
+   !.
+canonical_form_of_task(Task, Task).
 
 %% select_strategy(+Step, StrategyList)
 %  If StrategyList is a singleton, it runs it, else subgoals

@@ -70,6 +70,14 @@ strategy(goto(Object),
 
 strategy(bring($me, Recipient, Object),
 	 move($me, Object, Recipient)).
+strategy(give($me, Object, Recipient),
+	 move($me, Object, Recipient)).
+task_interacts_with_objects(bring(_, A, B), [A, B]).
+task_interacts_with_objects(give(_, A, B), [A, B]).
+
+guard_condition(Task, location(Object, _Loc)) :-
+   task_interacts_with_objects(Task, Objects),
+   member(Object, Objects).
 
 %%
 %% Spatial search

@@ -13,6 +13,7 @@ truth_value(P, Value) :-
 :- external pretend_truth_value/3.
 
 admitted_truth_value(Listener, P, Value) :-
+   Listener \= $me,
    pretend_truth_value(Listener, P, PretendValue),
    !,
    Value=PretendValue.
