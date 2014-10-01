@@ -77,7 +77,7 @@ start_task(Parent, Task, Priority) :-
 start_task(Task, Priority) :-
    start_task($root, Task, Priority, _, [ ]).
 
-:- external trace_task/1.
+:- external trace_task/2.
 
 %% switch_to_task(+Task)
 %  Stop running current step and instead run Task followed by our continuation.
@@ -87,7 +87,7 @@ start_task(Task, Priority) :-
 % Check for immediate builtins
 switch_to_task(Task) :-
    assert($task/log/Task),
-   trace_task(Task),
+   trace_task($me, Task),
    ($task/current:CurrentStep ->
       ($task/continuation:K ->
            log($me:(CurrentStep -> (Task, K)))
@@ -164,6 +164,9 @@ matching_strategies(Strategies, Task) :-
 matching_strategy(S, Task) :-
    (personal_strategy(Task, S) ; strategy(Task, S)),
    \+ veto_strategy(Task).
+
+have_strategy(Task) :-
+   once(matching_strategy(_, Task)).
 
 %% select_strategy(+Step, StrategyList)
 %  If StrategyList is a singleton, it runs it, else subgoals

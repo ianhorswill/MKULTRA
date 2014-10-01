@@ -15,7 +15,7 @@ strategy(everyday_life,
 	 achieve(P) ) :-
    unsatisfied_maintenance_goal(P),
    % Make sure that P isn't obviously unachievable.
-   once(matching_strategy(_, achieve(P))).
+   have_strategy(achieve(P)).
 
 unsatisfied_maintenance_goal(P) :-
    maintenance_goal(P),

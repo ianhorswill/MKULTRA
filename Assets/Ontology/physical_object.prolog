@@ -4,6 +4,12 @@ has_relation(physical_object, commonly_found_at).
 location(PhysicalObject, Location) :-
    /perception/location/PhysicalObject:Location.
 
+unique_answer(X, location(_Object, X)).
+
+incompatible(location(X, Y),
+	     location(X, Z)) :-
+   Y \= Z.
+
 in_room(PhysicalObject, Room) :-
    location(PhysicalObject, Room),
    room(Room).
@@ -21,5 +27,3 @@ contained_in(PhysicalObject, Location) :-
 contained_in(PhysicalObject, Location) :-
    location(PhysicalObject, Container),
    contained_in(Container, Location).
-
-

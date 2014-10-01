@@ -68,6 +68,9 @@ strategy(goto(Object),
 		 retract($task/location_bids/Place)) ) )) :-
    $task/priority:Priority.
 
+strategy(bring($me, Recipient, Object),
+	 move($me, Object, Recipient)).
+
 %%
 %% Spatial search
 %%
@@ -78,7 +81,7 @@ strategy(search_for($me, Container, Target),
 			  mental_monologue(["Couldn't find it."]))) :-
    nonvar(Target).
 strategy(search_for($me, Container, Target),
-	 search_container(Container, X^hidden(X),
+	 search_container(Container, X^previously_hidden(X),
 			  X^mental_monologue(["Got ", np(X)]),
 			  mental_monologue(["Nothing seems to be hidden."]))) :-
    var(Target).
@@ -113,12 +116,12 @@ strategy(search_docked_container(Item^Criterion,
 				 FailTask),
 	 S) :-
    docked_with(Container),
-    ((location(Item, Container), Criterion) ->
+   once(((location(Item, Container), Criterion) ->
         S = SuccessTask
         ;
         S = search_for_hidden_items(Item^Criterion,
 				    Item^SuccessTask,
-				    FailTask) ).
+				    FailTask) )).
 
 strategy(search_for_hidden_items(CriterionLambda, SuccessLambda, FailTask),
 	 S) :-
@@ -134,9 +137,14 @@ reveal_hidden_item(Item) :-
    docked_with(Container),
    hidden_contents(Container, Item),
    reveal(Item),
+   assert($task/previously_hidden_items/Item),
    % Don't wait for update loop to update Item's position.
    assert(/perception/location/Item:Container),
    !.
+
+:- public previously_hidden/1.
+previously_hidden(Item) :-
+   $task/previously_hidden_items/Item.
 
 %%
 %% Ingestion (eating and drinking)

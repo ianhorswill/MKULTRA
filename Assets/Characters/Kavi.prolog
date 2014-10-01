@@ -2,6 +2,14 @@
 /perception/location/ $macguffin : $bookshelf.
 /parameters/poll_time:3.
 
+:- public cover_story/2.
+cover_story(_,
+	    location($macguffin, _),
+	    no).
+cover_story(_,
+	    contained_in($macguffin, _),
+	    no).
+
 :- public bedroom_empty/0.
 bedroom_empty :-
    \+ intruder(_Intruder, $bedroom).

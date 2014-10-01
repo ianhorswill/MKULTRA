@@ -84,25 +84,29 @@ default_strategy(respond_to_assertion(Speaker, ModalLF),
 %% Imperatives
 %%
 
-strategy(respond_to_dialog_act(command(Requestor, $me, LF)),
-	 follow_command(LF, RequestStatus)) :-
-   request_status(Requestor, LF, RequestStatus).
+strategy(respond_to_dialog_act(command(Requestor, $me, Task)),
+	 follow_command(Task, RequestStatus)) :-
+   request_status(Requestor, Task, RequestStatus).
 
-request_status(_Requestor, LF, immoral) :-
-   @immoral(LF),
+request_status(_Requestor, Task, immoral) :-
+   @immoral(Task),
    !.
-request_status(_Requestor, LF, non_normative) :-
-   \+ well_typed(LF, action, _),
+request_status(_Requestor, Task, non_normative) :-
+   \+ well_typed(Task, action, _),
    !.
-request_status(_Requestor, _LF, normal).
+request_status(_Requestor, Task, unachievable) :-
+   \+ have_strategy(Task),
+   !.
+request_status(_Requestor, _Task, normal).
 
-strategy(follow_command(LF, normal),
-	 ( %assertion($me, $addressee, LF, future, simple),
-	   LF )).
+strategy(follow_command(Task, normal),
+	 assert(/goals/pending_tasks/Task)).
 strategy(follow_command(_, immoral),
 	 say_string("That would be immoral.")).
 strategy(follow_command(_, non_normative),
 	 say_string("That would be weird.")).
+strategy(follow_command(_, unachievable),
+	 say_string("I don't know how.")).
 
 strategy(tell_about($me, $addressee, Topic),
 	 describe(Topic, general)).
@@ -138,7 +142,7 @@ strategy(respond_to_dialog_act(question(Asker, $me, Question, present, simple)),
 	 S) :-
    (Question = Answer:Constraint) ->
       ( lf_main_predicate(Constraint, Core),
-	S=answer_wh(Answer, Core, Constraint)
+	S=answer_wh(Asker, Answer, Core, Constraint)
       )
       ;
       (S=answer_yes_no(Asker, Question)).
@@ -166,24 +170,37 @@ strategy(generate_answer(_Q, unknown),
 
 %% Wh-questions
 
-default_strategy(answer_wh(Answer, Core, Constraint),
-		 enumerate_answers(Answer, Core, Constraint)).
+default_strategy(answer_wh(Asker, Answer, Core, Constraint),
+		 S) :-
+   unique_answer(Answer, Core) ->
+      S = generate_unique_answer(Asker, Answer, Core, Constraint)
+      ;
+      S = enumerate_answers(Asker, Answer, Core, Constraint).
 
-strategy(answer_wh(Identity, _, (be(Person, Identity), is_a(Person, person))),
+strategy(answer_wh(_Asker, Identity, _, (be(Person, Identity), is_a(Person, person))),
 	 introduce_person(Person)) :-
    character(Person).
 
-strategy(answer_wh(Identity, _, (be(player, Identity), is_a(player, person))),
+strategy(answer_wh(_Asker, Identity, _, (be(player, Identity), is_a(player, person))),
 	 say(be(player, $me))).
 
-strategy(answer_wh(Answer, can(Action), Constraint),
+strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
 	 answer_with_list(List, "or", Type, (can(Action), is_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
 
 strategy(answer_wh(M, _, manner(be($me), M)),
 	 say(okay($me))).
 
-default_strategy(enumerate_answers(Answer, Core, Constraint),
+default_strategy(generate_unique_answer(_Asker, _Answer, Core, Constraint),
+		 S) :-
+   nonvar(Constraint),
+   $task/partner/Partner,
+   ( Constraint ->
+        S = assertion($me, Partner, Core, present, simple)
+        ;
+        S = speech(["Don't know"]) ).
+
+default_strategy(enumerate_answers(_Asker, Answer, Core, Constraint),
 	 answer_with_list(List, Connective, Answer, Core)) :-
    nonvar(Constraint),
    all(Answer, Constraint, List),
@@ -218,10 +235,12 @@ strategy(respond_to_dialog_act(hypno_command(_, $me, LF, present, simple)),
 	 do_hypnotically_believe(LF)).
 
 strategy(do_hypnotically_believe(LF),
-	 flash(Yellow, Green, 0.3, 1.5)) :-
+	 ( flash(Yellow, Green, 0.3, 1.5),
+	   assertion($me, Partner, LF, present, simple) )) :-
    hypnotically_believe(LF),
    Yellow is $'Color'.yellow,
-   Green is $'Color'.green.
+   Green is $'Color'.green,
+   $task/partner/Partner.
 
 default_strategy(do_hypnotically_believe(_LF),
 		 % No effect
