@@ -12,7 +12,9 @@ public class CharacterSteeringController : BindingBehaviour
     Material debugArrowShader;
     [Bind]
 #pragma warning disable 649
-    private Animator animator;
+#pragma warning disable 169
+    private SpriteSheetAnimationController spriteController;
+#pragma warning restore 169
 #pragma warning restore 649
 
     /// <summary>
@@ -206,7 +208,6 @@ public class CharacterSteeringController : BindingBehaviour
         this.UpdateWalkAnimation(this.rigidbody2D.velocity);
         if (mySpriteRenderer == null)
              mySpriteRenderer = GetComponent<SpriteRenderer>();
-        TileMap.UpdateSortingOrder(mySpriteRenderer);
     }
 
     Vector3 NearestCardinalDirection(Vector2 direction)
@@ -225,11 +226,7 @@ public class CharacterSteeringController : BindingBehaviour
 
         if (characterVelocity.magnitude < 0.01)
         {
-            if (!this.currentState.StartsWith("Face"))
-            {
-                this.currentState = "Face" + this.currentState;
-                this.animator.CrossFade(this.currentState, 0f);
-            }
+            spriteController.StopAnimation();
         }
         else
         {
@@ -247,7 +244,7 @@ public class CharacterSteeringController : BindingBehaviour
                 currentState = "North";
             else
                 currentState = "South";
-            this.animator.CrossFade(currentState, 0);
+            spriteController.StartPositionalAnimation(currentState, currentDirection);
         }
     }
 
@@ -255,14 +252,14 @@ public class CharacterSteeringController : BindingBehaviour
     {
         currentDirection = direction;
         if (this.currentDirection.x > 0)
-            currentState = "FaceEast";
+            currentState = "East";
         else if (this.currentDirection.x < 0)
-            currentState = "FaceWest";
+            currentState = "West";
         else if (this.currentDirection.y > 0)
-            currentState = "FaceNorth";
+            currentState = "North";
         else
-            currentState = "FaceSouth";
-        this.animator.CrossFade(currentState,0);
+            currentState = "South";
+        spriteController.StartIdleAnimation(currentState);
     }
     #endregion
 

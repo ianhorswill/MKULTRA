@@ -72,7 +72,6 @@ public class TileMap : BindingBehaviour
                 {
                     this[tile].Type = TileType.Obstacle;
                 }
-                UpdateSortingOrder(sprite);
             }
         }
     }

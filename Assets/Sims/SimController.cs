@@ -86,6 +86,9 @@ public class SimController : PhysicalObject
     [Bind]
     private CharacterSteeringController steering;
 
+    [Bind]
+    private SpriteSheetAnimationController spriteController;
+
     [Bind(BindingScope.GameObject, BindingDefault.Ignore)]
     private NLPrompt nlPrompt;
 
@@ -301,11 +304,11 @@ public class SimController : PhysicalObject
         {
             var dT = t - flashStartTime;
             var phase = (dT / flashPeriod) % 1;
-            ((SpriteRenderer)renderer).color = phase < 0.5f ? this.flashColorA : this.flashColorB;
+            spriteController.Color = phase < 0.5f ? this.flashColorA : this.flashColorB;
         }
         else
         {
-            ((SpriteRenderer)renderer).color = Color.white;
+            spriteController.Color = Color.white;
         }
 
         if (!PauseManager.Paused)

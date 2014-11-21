@@ -61,6 +61,10 @@ public abstract class PhysicalObject : BindingBehaviour
         Exists = false;
         this.MoveTo(GameObject.Find("DestroyedObjects"));
         this.enabled = false;
-        this.renderer.enabled = false;
+        var spriteController = this.GetComponent<SpriteSheetAnimationController>();
+        if (spriteController != null)
+            spriteController.enabled = false;
+        else
+            this.renderer.enabled = false;
     }
 }
