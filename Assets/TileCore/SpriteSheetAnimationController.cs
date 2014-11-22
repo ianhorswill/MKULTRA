@@ -200,10 +200,10 @@ public class SpriteSheetAnimationController : MonoBehaviour
         var frame = CurrentFrame;
         var column = frame.Column;
         var row = frame.Row;
-
+        Material.color = Color;
         Material.SetPass(0);
         GL.Begin(GL.QUADS);
-        GL.Color(new Color(2,2,2,1));
+        GL.Color(Color);
         GL.TexCoord2(column*uSize, row*vSize);
         GL.Vertex3(p.x, p.y, p.z);
         GL.TexCoord2(column * uSize, (row+1) * vSize);

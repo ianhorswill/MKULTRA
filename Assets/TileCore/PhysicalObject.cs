@@ -53,6 +53,14 @@ public abstract class PhysicalObject : BindingBehaviour
             if (sr != null && ContentsVisible)
                 sr.sortingLayerName = "PlacedOnSurface";
         }
+        else
+        {
+            var spriteController = newObject.GetComponent<SpriteSheetAnimationController>();
+            if (spriteController != null)
+            {
+                spriteController.enabled = ContentsVisible;
+            }
+        }
         newObject.transform.localPosition = Vector3.zero;
     }
 
