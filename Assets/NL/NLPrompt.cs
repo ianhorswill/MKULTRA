@@ -113,7 +113,10 @@ public class NLPrompt : BindingBehaviour
             case KeyCode.Tab:
                 this.input = string.Format("{0}{1}{2}",
                                            this.input,
-                                           (this.input.EndsWith(" ") || !char.IsLetterOrDigit(completion[0])) ? "" : " ",
+                                           ( this.input.EndsWith(" ")
+                                             || ( !string.IsNullOrEmpty(completion)
+                                                  && !char.IsLetterOrDigit(completion[0])))
+                                           ? "" : " ",
                                            this.completion);
                 break;
 
