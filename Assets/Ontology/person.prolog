@@ -7,7 +7,7 @@ property_extension(gender,
 has_property(human, job).
 nominal_property(job).
 valid_property_value(job, X) :-
-   atom(X).
+   kind_of(X, job).
 has_property(human, age).
 adjectival_property(age).
 valid_property_value(age, X) :-

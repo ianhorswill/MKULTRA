@@ -154,6 +154,7 @@ s(S, interrogative, Polarity, Tense, Aspect) -->
    { var(S) ; S \= (_:_) },  % don't try if we already know it's a wh-question.
    inverted_sentence(S, Polarity, Tense, Aspect).
 
+% Normal inverted sentence
 inverted_sentence(S, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    aux(np((NP^S1)^S, subject, Agreement),
@@ -168,6 +169,7 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
 %    copular_relation(Subject^Object^Predication), 
 %    np((Object^Modal)^S1, object, _, nogap, nogap).
 
+% Is Subject a RELATION of Object?
 inverted_sentence(S, Polarity, Tense, simple) -->
    { lf_subject(S, Subject) },
    copula(simple, Tense, Agreement),
@@ -175,6 +177,15 @@ inverted_sentence(S, Polarity, Tense, simple) -->
    np((Subject^S1)^S, subject, Agreement, nogap, nogap),
    copular_relation(Subject^Object^Predication), 
    np((Object^Predication)^S1, object, _, nogap, nogap).
+
+% Is Subject a PROPERTYVALUE?
+inverted_sentence(property_value(Subject, Property, Value), Polarity, Tense, simple) -->
+   copula(simple, Tense, Agreement),
+   opt_not(Polarity),
+   np((Subject^_)^_, subject, Agreement, nogap, nogap),
+   { nominal_property(Property),
+     valid_property_value(Property, Value) },
+   [ a, Value ].
 
 % Wh-questions about the subject.
 s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
