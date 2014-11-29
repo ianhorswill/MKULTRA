@@ -12,9 +12,7 @@ public class CharacterSteeringController : BindingBehaviour
     Material debugArrowShader;
     [Bind]
 #pragma warning disable 649
-#pragma warning disable 169
     private SpriteSheetAnimationController spriteController;
-#pragma warning restore 169
 #pragma warning restore 649
 
     /// <summary>
@@ -81,48 +79,48 @@ public class CharacterSteeringController : BindingBehaviour
         return offset * MaxForce / distanceToTarget;
     }
 
-    //private float collisionTime;
-    //private bool collisionDetected;
+#if CollisionAvoidance
+    private float collisionTime;
+    private bool collisionDetected;
     Vector2? CollisionAvoidanceSteering()
     {
-        return null;
-        //float firstCollisionTime = 4;
-        //Vector2 firstCollisionOffset = Vector2.zero;
-        //foreach (var otherCharacter in Registry<CharacterSteeringController>())
-        //{
-        //    if (otherCharacter != this)
-        //    {
-        //        var time = TimeOfClosestApproach(this, otherCharacter);
-        //        //collisionTime = time;
-        //        if (time > 0 && time < firstCollisionTime)
-        //        {
-        //            var myPosition = PredictedPosition(this, time);
-        //            var theirPosition = this.PredictedPosition(otherCharacter, time);
-        //            var offset = myPosition - theirPosition;
-        //            if (offset.magnitude < 1.5)
-        //            {
-        //                firstCollisionTime = time;
-        //                firstCollisionOffset = offset;
-        //            }
-        //        }
-        //    }
-        //}
+        float firstCollisionTime = 4;
+        Vector2 firstCollisionOffset = Vector2.zero;
+        foreach (var otherCharacter in Registry<CharacterSteeringController>())
+        {
+            if (otherCharacter != this)
+            {
+                var time = TimeOfClosestApproach(this, otherCharacter);
+                //collisionTime = time;
+                if (time > 0 && time < firstCollisionTime)
+                {
+                    var myPosition = PredictedPosition(this, time);
+                    var theirPosition = this.PredictedPosition(otherCharacter, time);
+                    var offset = myPosition - theirPosition;
+                    if (offset.magnitude < 1.5)
+                    {
+                        firstCollisionTime = time;
+                        firstCollisionOffset = offset;
+                    }
+                }
+            }
+        }
 
-        ////collisionDetected = false;
-        //if (firstCollisionTime > 3)
-        //    return null;
+        //collisionDetected = false;
+        if (firstCollisionTime > 3)
+            return null;
 
-        ////collisionDetected = true;
-        //if (this.rigidbody2D.velocity == Vector2.zero)
-        //{
-        //    return firstCollisionOffset.normalized.PerpCounterClockwise();
-        //}
-        //var separation = firstCollisionOffset.magnitude;
-        //var escapeDirection = firstCollisionOffset / separation;
-        //if (separation < 2)
-        //    escapeDirection += escapeDirection.PerpClockwise().normalized;
+        //collisionDetected = true;
+        if (this.rigidbody2D.velocity == Vector2.zero)
+        {
+            return firstCollisionOffset.normalized.PerpCounterClockwise();
+        }
+        var separation = firstCollisionOffset.magnitude;
+        var escapeDirection = firstCollisionOffset / separation;
+        if (separation < 2)
+            escapeDirection += escapeDirection.PerpClockwise().normalized;
 
-        //return 0.5f * this.MaxForce * escapeDirection;
+        return 0.5f * this.MaxForce * escapeDirection;
     }
 
     private Vector2 PredictedPosition(Component sprite, float time)
@@ -140,6 +138,19 @@ public class CharacterSteeringController : BindingBehaviour
         var deltaV = c1.rigidbody2D.velocity - c2.rigidbody2D.velocity;
         return -Vector2.Dot(i, deltaV) / deltaV.sqrMagnitude;
     }
+    
+    Vector2 MaybeAdd(Vector2 v1, Vector2? v2)
+    {
+        if (v2 == null)
+            return v1;
+        return v1 + v2.Value;
+    }
+#else
+    private Vector2? CollisionAvoidanceSteering()
+    {
+        return null;
+    }
+#endif
 
     /// <summary>
     /// Connection to physics system.
@@ -183,13 +194,6 @@ public class CharacterSteeringController : BindingBehaviour
         rb.AddForce(force);
         if (collisionAvoidanceSteering.HasValue)
             rb.AddForce(collisionAvoidanceSteering.Value);
-    }
-
-    Vector2 MaybeAdd(Vector2 v1, Vector2? v2)
-    {
-        if (v2 == null)
-            return v1;
-        return v1 + v2.Value;
     }
     #endregion
 

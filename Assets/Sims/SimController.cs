@@ -587,6 +587,10 @@ public class SimController : PhysicalObject
                     break;
                 }
 
+                case "end_game":
+                    Application.Quit();
+                    break;
+
                 default:
                     // Assume it's dialog
                     var talkingToSelf = structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), gameObject);

@@ -140,6 +140,8 @@ strategy(add_conversation_topic(Person, Topic),
 							      Topic))) :-
    var(Topic) -> Topic = Person ; true.
 
+strategy(end_game(_,_), end_game(null)).
+
 %%
 %% Questions
 %%

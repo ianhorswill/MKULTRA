@@ -84,6 +84,8 @@ postcondition(ingest(X),
 
 action_functor(flash, 4).
 
+action_functor(end_game, 1).
+
 true_after(Action, Condition) :-
    postcondition(Action, Condition).
 true_after(Action, Condition) :-

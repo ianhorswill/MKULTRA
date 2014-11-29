@@ -51,6 +51,8 @@ stock_phrase(parting($speaker, $addressee)) --> [X], { member(X, [bye, byebye, g
 stock_phrase(parting($speaker, $addressee)) --> [see, you].
 stock_phrase(parting($speaker, $addressee)) --> [be, seeing, you].
 
+stock_phrase(command($speaker, $addressee, end_game($addressee, $addressee))) --> [ end, game ].
+
 %
 % Increments produced by the discourse generator
 %
