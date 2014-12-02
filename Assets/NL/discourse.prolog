@@ -172,7 +172,7 @@ strategy(speech(Items),
    $task/partner/player.
 strategy(speech(Items),
 	 ( wait_condition(/perception/nobody_speaking), discourse_increment($me, $addressee, Items))) :-
-   $task/partner/P,
+   assertion($task/partner/P, $me:"Conversation partner undefined."),
    P \= player.
 
 strategy(mental_monologue(Items),

@@ -105,7 +105,14 @@ request_status(Requestor, Task, incriminating(P)) :-
 request_status(_Requestor, _Task, normal).
 
 strategy(follow_command(Task, normal),
-	 assert(/goals/pending_tasks/Task)).
+	 Strategy) :-
+   dialog_task(Task) ->
+      (Strategy = Task)
+      ;
+      (Strategy = assert(/goals/pending_tasks/Task)).
+
+dialog_task(tell_about(_,_,_)).
+
 strategy(follow_command(_, immoral),
 	 say_string("That would be immoral.")).
 strategy(follow_command(_, non_normative),
@@ -115,7 +122,7 @@ strategy(follow_command(_, unachievable),
 strategy(follow_command(_, incriminating(_)),
 	 say_string("Sorry, I can't.")).
 
-strategy(tell_about($me, $addressee, Topic),
+strategy(tell_about($me, _, Topic),
 	 describe(Topic, general)).
 
 strategy(go($me, Location),
