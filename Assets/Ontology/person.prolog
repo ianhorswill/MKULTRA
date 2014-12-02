@@ -28,15 +28,6 @@ has_relation(human, likes).
 has_relation(human, loves).
 has_relation(human, hates).
 
-implies_relation(interested_in, knows_about).
-implies_relation(loves, friend_of).
-implies_relation(friend_of, likes).
-implies_relation(knows, knows_about).
-implies_relation(roommate_of, knows).
-implies_relation(likes, knows).
-implies_relation(member_of, knows_about).
-
-
 :- declare_object($'Bruce',
 		  [ age=23,
 		    given_name="Bruce",
@@ -48,7 +39,6 @@ implies_relation(member_of, knows_about).
 		    friend_of: $'Kavi',
 		    roommate_of: $'Kavi',
 		    loves: $'Kavi' ]).
-
 
 :- declare_object($'Kavi',
 		  [ age=23,

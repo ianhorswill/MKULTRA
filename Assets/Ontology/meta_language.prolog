@@ -4,9 +4,12 @@
 :- public process_kind_hierarchy/0.
 :- public has_property/2, has_relation/2.
 :- public declare_object/3.
+:- public property_type/3, relation_type/3.
 :- public kind_lub/3, kind_glb/3.
 
 :- external declare_value/3, default_value/3, declare_related/3.
+
+test_file(integrity(_), "Ontology/integrity_checks").
 
 :- randomizable declare_kind/2.
 %is_a(Object, entity) :-
@@ -109,6 +112,9 @@ kind_glb(Kind1, Kind2, GLB) :-
    array_member(GLB, A2),
    !.
 
+%% property_type(+Property, ?ObjectType, ?ValueType)
+%  Property applies to objects of type ObjectType and its values are of type ValueType.
+
 %% property_nondefault_value(?Object, ?Property, ?Value)
 %  Object has this property value explicitly declared, rather than inferred.
 property_nondefault_value(Object, Property, Value) :-
@@ -136,6 +142,9 @@ lookup_property_value(Object, Property, Value) :-
 valid_property_value(P, V) :-
    property_extension(P, L),
    member(V, L).
+
+%% relation_type(+Relation, ?ObjectType, ?RelatumType)
+%  Relation relates objects of type ObjectType to objects of type RelatumType
 
 %% related_nondefault(?Object, ?Relation, ?Relatum)
 %  Object and Relatum are related by Relation through an explicit declaration.
@@ -215,4 +224,12 @@ check_predicate_signature(_Type, ArgTypes) :-
    ArgTypes =.. [_Functor | Types],
    forall(member(AType, Types),
 	  ((kind(AType),!) ; log(bad_declared_argument_type(AType, ArgTypes)))).
-	  
+
+load_special_csv_row(_RowNumber, properties(Name, ObjectType, ValueType)) :-
+   assert(property_type(Name, ObjectType, ValueType)).
+
+load_special_csv_row(_RowNumber,
+		     relations(Name, ObjectType, ValueType, Generalizations)) :-
+   assert(relation_type(Name, ObjectType, ValueType)),
+   forall(member(Gen, Generalizations),
+	  assert(implies_relation(Name, Gen))).
