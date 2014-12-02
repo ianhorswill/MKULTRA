@@ -1,6 +1,3 @@
-has_property(physical_object, location).
-has_relation(physical_object, commonly_found_at).
-
 location(PhysicalObject, Location) :-
    /perception/location/PhysicalObject:Location.
 

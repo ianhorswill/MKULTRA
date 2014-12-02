@@ -2,7 +2,6 @@
 :- public kind/1, leaf_kind/1.
 :- public property_value/3, related/3.
 :- public process_kind_hierarchy/0.
-:- public has_property/2, has_relation/2.
 :- public declare_object/3.
 :- public property_type/3, relation_type/3.
 :- public kind_lub/3, kind_glb/3.
@@ -12,6 +11,11 @@
 test_file(integrity(_), "Ontology/integrity_checks").
 
 :- randomizable declare_kind/2.
+
+%% is_a(?Object, ?Kind)
+%  Object is of kind Kind.
+%  Kinds are simple atoms, and exist in a lattice with entity at the top.
+
 %is_a(Object, entity) :-
 %   var(Object),
 %   throw(error(enumerating_entities)).
@@ -44,6 +48,8 @@ valid_kind(Kind) :-
 valid_kind(Kind) :-
    atomic(Kind),
    kind(Kind).
+valid_kind(number).
+valid_kind(string).
 
 kind_of(K, K).
 kind_of(Sub, Super) :-
@@ -128,7 +134,7 @@ property_value(Object, Property, Value) :-
    lookup_property_value(Object, Property, Value).
 property_value(Object, Property, Value) :-
    is_a(Object, Kind),
-   has_property(Kind, Property),
+   property_type(Property, Kind, _ValueType),
    lookup_property_value(Object, Property, Value).
 
 lookup_property_value(Object, Property, Value) :-
@@ -140,8 +146,27 @@ lookup_property_value(Object, Property, Value) :-
 %% valid_property_value(?Property, ?Value)
 %  True if Value is a valid value for Property.
 valid_property_value(P, V) :-
-   property_extension(P, L),
-   member(V, L).
+   property_type(P, _OType, VType),
+   is_type(V, VType).
+
+%% is_type(?Object, ?Type)
+%  Object is of type Type.
+%  Types are a super-set of kinds.
+is_type(Object, number) :-
+   number(Object), !.
+is_type(Object, string) :-
+   string(Object), !.
+is_type(Object, kind) :-
+   kind(Object).
+is_type(Object, List) :-
+   list(List),
+   member(Object, List).
+is_type(Object, kind_of(Kind)) :-
+   kind_of(Object, Kind).
+is_type(Object, Kind) :-
+   atom(Kind),
+   is_a(Object, Kind).
+
 
 %% relation_type(+Relation, ?ObjectType, ?RelatumType)
 %  Relation relates objects of type ObjectType to objects of type RelatumType

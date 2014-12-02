@@ -8,31 +8,15 @@ known_type(string).
 known_type(List) :-
    list(List).
 known_type(kind_of(Kind)) :-
-   known_kind(Kind).
+   kind(Kind).
 known_type(Kind) :-
-   known_kind(Kind).
-known_kind(Kind) :-
-   kind_of(Kind, entity).
+   kind(Kind).
 
 known_property(Property) :-
    for_all_unique(Property, property_type(Property, _, _)).
 
 known_relation(Relation) :-
    for_all_unique(Relation, relation_type(Relation, _, _)).
-
-is_type(Object, number) :-
-   number(Object), !.
-is_type(Object, string) :-
-   string(Object), !.
-is_type(Object, kind) :-
-   known_kind(Object).
-is_type(Object, List) :-
-   list(List),
-   member(Object, List).
-is_type(Object, kind_of(Kind)) :-
-   kind_of(Object, Kind).
-is_type(Object, Kind) :-
-   is_a(Object, Kind).
 
 test(integrity(property_declarations_well_formed),
      [ true(Malformed == []) ]) :-
