@@ -6,12 +6,13 @@ on_event(player_input(X),
 	 player_interaction,
 	 C,
 	 Response) :-
-   agent(X,player) ->
+   normalize_dialog_act(X, Normalized),
+   (agent(X,player) ->
       % This is the player talking to the PC.
-      Response = player_input_task(C, respond_to_dialog_act(X))
+      Response = player_input_task(C, respond_to_dialog_act(Normalized))
       ;
       % This is the player proposing a PC action.
-      Response = assert(C/propose_action:X).
+      Response = assert(C/propose_action:X)).
 
 on_event(DialogAct,
 	 player_interaction,
