@@ -163,6 +163,7 @@ strategy(respond_to_dialog_act(question(Asker, $me, Question, present, simple)),
       ;
       (S=answer_yes_no(Asker, Question)).
 
+
 %% Yes/no quetsions
 strategy(answer_yes_no(Asker, Q),
 	 generate_answer(Q, Answer)) :-
@@ -185,18 +186,23 @@ default_strategy(answer_wh(Asker, Answer, Core, Constraint),
       ;
       S = enumerate_answers(Asker, Answer, Core, Constraint).
 
-strategy(answer_wh(_Asker, Identity, _, (be(Person, Identity), is_a(Person, person))),
+strategy(answer_wh(_Asker, Identity, _,
+		   (be(Person, Identity), is_a(Person, person))),
 	 introduce_person(Person)) :-
    character(Person).
 
-strategy(answer_wh(_Asker, Identity, _, (be(player, Identity), is_a(player, person))),
+strategy(answer_wh(_Asker, Identity, _,
+		   (be(player, Identity), is_a(player, person))),
 	 say(be(player, $me))).
 
 strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
-	 answer_with_list(List, "or", Type, (can(Action), is_a(Answer, Type)))) :-
+	 answer_with_list(List, "or", Type,
+			  (can(Action), is_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
 
-strategy(answer_wh(M, _, manner(be($me), M)),
+strategy(answer_wh(M, _,
+		   manner(be($me), M),
+		   _),
 	 say(okay($me))).
 
 default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
