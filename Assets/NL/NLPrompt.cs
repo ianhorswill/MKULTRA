@@ -164,7 +164,9 @@ public class NLPrompt : BindingBehaviour
             var lastSpace = this.input.LastIndexOf(' ');
             var lastWord = lastSpace < 0 ? this.input : this.input.Substring(lastSpace + 1);
             lastWord = lastWord.Trim('(', ')', '.', ',', '?', '!', ';', ':', '\'', '"');
-            if (Symbol.IsInterned(lastWord))
+            if (lastWord == "i")
+                lastWord = "I";
+            if (Symbol.IsInternedIgnoringEnglishCase(lastWord))
             {
                 this.TryCompletion();
             }

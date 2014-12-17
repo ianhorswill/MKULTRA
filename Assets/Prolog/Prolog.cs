@@ -50,7 +50,7 @@ namespace Prolog
                     case '\t':
                         if (b.Length > 0)
                         {
-                            words.Add(Symbol.Intern(b.ToString()));
+                            words.Add(WordSymbol(b));
                             b.Length = 0;
                         }
                         break;
@@ -65,7 +65,7 @@ namespace Prolog
                     case '"':
                         if (b.Length > 0)
                         {
-                            words.Add(Symbol.Intern(b.ToString()));
+                            words.Add(WordSymbol(b));
                             b.Length = 0;
                         }
                         words.Add(Symbol.Intern(new string(c, 1)));
@@ -79,10 +79,16 @@ namespace Prolog
 
             if (b.Length > 0)
             {
-                words.Add(Symbol.Intern(b.ToString()));
+                words.Add(WordSymbol(b));
             }
 
             return IListToPrologList(words);
+        }
+
+        private static Symbol WordSymbol(StringBuilder b)
+        {
+            var name = b.ToString();
+            return Symbol.InternWordIgnoringEnglishCase(name);
         }
 
         /// <summary>
