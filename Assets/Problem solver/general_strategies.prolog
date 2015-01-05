@@ -70,7 +70,7 @@ strategy(goto(Object),
 
 strategy(bring($me, Recipient, Object),
 	 move($me, Object, Recipient)).
-strategy(give($me, Object, Recipient),
+strategy(give($me, Recipient, Object),
 	 move($me, Object, Recipient)).
 task_interacts_with_objects(bring(_, A, B), [A, B]).
 task_interacts_with_objects(give(_, A, B), [A, B]).
