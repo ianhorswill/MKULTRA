@@ -1,5 +1,7 @@
-:- public truth_value/2, admitted_truth_value/3.
+:- public truth_value/2, admitted_truth_value/3, know_that/1.
 :- external know_whether/1, pretend_truth_value/3.
+:- external know_property/3, know_relation/3,
+            know_about_kind/1.
 
 truth_value(P, Value) :-
    know_whether(P) ->
@@ -11,7 +13,7 @@ know_that(P) :-
    know_whether(P),
    P.
 
-know_whether(is_a(Object, Kind)) :-
+know_whether(is_a(Object, _Kind)) :-
    !,
    know_about_object(Object).
 
@@ -36,6 +38,7 @@ admitted_truth_value(Listener, P, Value) :-
    Listener \= $me,
    pretend_truth_value(Listener, P, PretendValue),
    !,
+   emit_grain("lie", 100),
    Value=PretendValue.
 admitted_truth_value(_, P, Value) :-
    truth_value(P, Value).

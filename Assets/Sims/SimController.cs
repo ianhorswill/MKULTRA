@@ -97,6 +97,9 @@ public class SimController : PhysicalObject
 
     [Bind(BindingScope.Global)]
     private TileMap tileMap;
+
+    [Bind(BindingScope.GameObjectOrChildren, BindingDefault.Ignore)]
+    private Sonifier sonifier;
 #pragma warning restore 649
     #endregion
 
@@ -796,6 +799,14 @@ public class SimController : PhysicalObject
             GUI.Box(bubbleRect, greyOutTexture);
             GUI.Label(bubbleRect, this.currentSpeechBubbleText, SpeechBubbleStyle);
         }
+    }
+    #endregion
+
+    #region Sonification
+    public void EmitGrain(string patchName, int ms)
+    {
+        if (sonifier != null)
+            sonifier.EmitGrain(patchName, ms);
     }
     #endregion
 

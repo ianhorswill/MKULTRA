@@ -215,10 +215,10 @@ default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
         ;
         S = speech(["Don't know"]) ).
 
-default_strategy(enumerate_answers(_Asker, Answer, Core, Constraint),
+default_strategy(enumerate_answers(Asker, Answer, Core, Constraint),
 	 answer_with_list(List, Connective, Answer, Core)) :-
    nonvar(Constraint),
-   all(Answer, Constraint, List),
+   all(Answer, admitted_truth_value(Asker, Constraint, true), List),
    connective_for_answer(Constraint, Connective).
 
 connective_for_answer((can(_), _), "or") :- !.

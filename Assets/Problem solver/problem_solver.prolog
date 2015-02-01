@@ -79,6 +79,12 @@ start_task(Task, Priority) :-
 
 :- external trace_task/2.
 
+emit_grain(Name, Duration) :-
+   $this \= $me,
+   $this.'EmitGrain'(Name, Duration),
+   !.
+emit_grain(_,_).
+
 %% switch_to_task(+Task)
 %  Stop running current step and instead run Task followed by our continuation.
 %  If Task decomposes to a (,) expression, this will update both current and
@@ -87,6 +93,7 @@ start_task(Task, Priority) :-
 % Check for immediate builtins
 switch_to_task(Task) :-
    assert($task/log/Task),
+   emit_grain("task", 10),
    trace_task($me, Task),
    ($task/current:CurrentStep ->
       ($task/continuation:K ->
@@ -167,6 +174,7 @@ matching_strategies(Strategies, Task) :-
 %  S is a strategy for Task.
 matching_strategy(S, Task) :-
    (personal_strategy(Task, S) ; strategy(Task, S)),
+   emit_grain("Default", 3),
    \+ veto_strategy(Task).
 
 %% have_strategy(+Task)
@@ -191,11 +199,14 @@ canonical_form_of_task(Task, Task).
 select_strategy(_, [S]) :-
    begin(switch_to_task(S)).
 select_strategy(resolve_match_failure(resolve_match_failure(resolve_match_failure(X))), []) :-
+   emit_grain("task fail", 100),
    kill_concern($task),
    throw(repeated_match_failure($me, X)).
 select_strategy(Task, [ ]) :-
+   emit_grain("match fail", 10),
    begin(switch_to_task(resolve_match_failure(Task))).
 select_strategy(Task, Strategies) :-
+   emit_grain("match conflict", 10),
    begin(switch_to_task(resolve_conflict(Task, Strategies))).
 
 %% step_completed
