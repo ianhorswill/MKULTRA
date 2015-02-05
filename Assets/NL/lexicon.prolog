@@ -27,12 +27,6 @@ whpron( what, entity ).
 
 noun([living, room], [living, rooms], X^is_a(X,living_room)).
 
-proper_noun([the, cia], cia).
-proper_noun(spying, spying).
-proper_noun([the, illuminati], illuminati).
-proper_noun(tamping, tamping).
-proper_noun(coffee, coffee).
-
 noun(action, actions, X^is_a(X, action)).
 noun(assertion, assertions, X^is_a(X, assertion)).
 noun(question, questions, X^is_a(X, question)).
