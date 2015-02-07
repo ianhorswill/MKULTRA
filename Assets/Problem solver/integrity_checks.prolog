@@ -37,7 +37,7 @@ bad_reduction(G/GA, R/RA) :-
 test(problem_solver(undeclared_tasks),
      [ true(BadReductions == []) ]) :-
    all(Reduction,
-       bad_reduction(Goal, Reduction),
+       bad_reduction(_Goal, Reduction),
        BadReductions).
 
 primitive_task(reduction_is_a_variable, 0).
