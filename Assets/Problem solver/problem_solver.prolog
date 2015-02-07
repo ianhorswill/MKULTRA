@@ -2,6 +2,7 @@
 %% Simple problem solver in the general tradition of NASL
 %%
 
+test_file(problem_solver(_), "Problem solver/integrity_checks").
 test_file(problem_solver(_), "Problem solver/ps_tests").
 
 % Problem solver state is stored in:
