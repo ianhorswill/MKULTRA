@@ -61,11 +61,12 @@ strategy(move($me, X,Y),
 
 strategy(achieve(docked_with(WorldObject)),
 	 goto(WorldObject)).
-strategy(goto(Object),
-	 ( let(top_level_container(Object, Place),
+strategy(goto(Target),
+	 ( let(top_level_container(Target, Place),
 	       ( assert($task/location_bids/Place:Priority),
 		 wait_event(arrived_at(Place)),
 		 retract($task/location_bids/Place)) ) )) :-
+   assertion(atom(Target), bad_target:goto(Target)),
    $task/priority:Priority.
 
 strategy(bring($me, Recipient, Object),

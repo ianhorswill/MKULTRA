@@ -11,6 +11,8 @@ in_room(PhysicalObject, Room) :-
    location(PhysicalObject, Room),
    room(Room).
 
+top_level_container(Room, Room) :-
+   room(Room).
 top_level_container(PhysicalObject, Container) :-
    location(PhysicalObject, C),
    (room(C) ->

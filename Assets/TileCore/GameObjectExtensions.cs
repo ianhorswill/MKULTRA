@@ -49,6 +49,10 @@ public static class GameObjectExtensions
     /// <returns>The docking region</returns>
     public static TileRect DockingTiles(this GameObject o)
     {
+        var room = o.GetComponent<Room>();
+        if (room != null)
+            return room.TileRect;
+
         var dr = o.GetComponent<DockingRegion>();
         return dr == null ? o.FootprintTiles().Grow(1) : dr.DockingTiles;
     }

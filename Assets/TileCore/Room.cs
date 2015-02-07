@@ -32,6 +32,14 @@ public class Room : BindingBehaviour
     /// </summary>
     private TileRect tileRect;
 
+    public TileRect TileRect
+    {
+        get
+        {
+            return tileRect;
+        }
+    }
+
     /// <summary>
     /// True iff the room contains this object.
     /// </summary>
