@@ -35,6 +35,18 @@ well_typed(Atom, Kind, Bindings, Bindings) :-
 well_typed((Expression, is_a(Var, VKind)), Kind, BIn, BOut) :-
    well_typed(Expression, Kind, [Var:VKind | BIn], BOut).
 
+well_typed(related(Object, Relation, Relatum), proposition, BIn, BOut) :-
+   nonvar(Relation),
+   relation_type(Relation, ObjectType, RelatumType),
+   well_typed(Object, ObjectType, BIn, BIntermediate),
+   well_typed(Relatum, RelatumType, BIntermediate, BOut).
+
+well_typed(property_value(Object, Property, Value), proposition, BIn, BOut) :-
+   nonvar(Property),
+   property_type(Property, ObjectType, ValueType),
+   well_typed(Object, ObjectType, BIn, BIntermediate),
+   well_typed(Value, ValueType, BIntermediate, BOut).
+
 well_typed(Event, Kind, BindingsIn, BindingsOut) :-
    Event =.. [Functor | ActualArgs],
    copy_list_as_variables(ActualArgs, ArgTypes),
