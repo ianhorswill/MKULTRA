@@ -3,11 +3,13 @@
 :- external know_property/3, know_relation/3,
             know_about_kind/1.
 
-truth_value(P, Value) :-
-   know_whether(P) ->
-      (P -> Value = true ; Value = false)
-      ;
-      P = unknown.
+truth_value(P, unknown) :-
+   \+ know_whether(P),
+   !.
+truth_value(P, true) :-
+   P.
+truth_value(P, false) :-
+   \+ P.
 
 know_that(P) :-
    know_whether(P),
@@ -36,9 +38,9 @@ know_about_object(Object) :-
 
 admitted_truth_value(Listener, P, Value) :-
    Listener \= $me,
-   pretend_truth_value(Listener, P, PretendValue),
+   pretend_truth_value(Listener, P, _),
    !,
-   emit_grain("lie", 100),
-   Value=PretendValue.
+   pretend_truth_value(Listener, P, Value),
+   emit_grain("lie", 100).
 admitted_truth_value(_, P, Value) :-
    truth_value(P, Value).
