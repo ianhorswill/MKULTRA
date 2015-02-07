@@ -41,6 +41,11 @@ bind_dialog_indexicals_for_input :-
 bind_indexicals_for_addressing_character_named(Name) :-
    proper_noun(Name, Character),
    character(Character),
+   bind_indexicals_for_addressing_character(Character).
+
+bind_indexicals_for_addressing_character($me) :-
+   !.
+bind_indexicals_for_addressing_character(Character) :-
    bind(speaker, $me),
    bind(addressee, Character).
 
