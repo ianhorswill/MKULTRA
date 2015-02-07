@@ -25,11 +25,7 @@ public class PropInfo : PhysicalObject
     /// <summary>
     /// The word for this type of object
     /// </summary>
-    public string CommonNoun;
-    /// <summary>
-    /// The plural form of the word for this type of object
-    /// </summary>
-    public string Plural;
+    public string Kind;
 
     /// <summary>
     /// Any adjectives to attach to this object
@@ -41,19 +37,12 @@ public class PropInfo : PhysicalObject
         base.Awake();
         foreach (var o in Contents)
             o.Container = gameObject;
-
-        if (string.IsNullOrEmpty(CommonNoun))
-            CommonNoun = name.ToLower();
-        CommonNoun = StringUtils.LastWordOf(CommonNoun);
-        if (string.IsNullOrEmpty(Plural) && !string.IsNullOrEmpty(CommonNoun))
-            Plural = StringUtils.PluralForm(CommonNoun);
     }
 
     public void Start()
     {
         if (!KB.Global.IsTrue("register_prop",
-                                gameObject, Symbol.Intern(CommonNoun),
-                                Symbol.Intern(Plural),
+                                gameObject, Symbol.Intern(Kind),
                                 // Mono can't infer the type on this, for some reason
                                 // ReSharper disable once RedundantTypeArgumentsOfMethod
                                 Prolog.Prolog.IListToPrologList(new List<Symbol>(Adjectives.Select<string,Symbol>(Symbol.Intern))))

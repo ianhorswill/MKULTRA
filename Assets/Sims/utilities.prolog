@@ -4,7 +4,7 @@
 
 :- public prop/1, character/1, world_object/1, nearest/2, docked_with/1, after_time/1.
 
-:- public register_room/3, register_prop/4, register_character/3.
+:- public register_room/3, register_prop/3, register_character/3.
 
 %% register_room(*Room, *CommonNoun, *Plural)
 %  Add Room to the database, ensuring its singular and plural nouns are registered in the lexicon
@@ -17,15 +17,13 @@ register_room(Room, CommonNoun, Plural) :-
 
 %% register_prop(*Prop, *CommonNoun, *Plural, Adjectives)
 %  Add Prop to the database, ensuring its singular and plural nouns are registered in the lexicon
-register_prop(Prop, CommonNoun, Plural, Adjectives) :-
-   Predication =.. [CommonNoun, X],
-   ensure(noun(CommonNoun, Plural, X^Predication)),
+register_prop(Prop, Kind, Adjectives) :-
+   assertion(kind(Kind), prop_has_unknown_kind(Prop, Kind)),
    ensure(prop(Prop)),
-   ensure([CommonNoun, Prop]),
-   ensure(declare_kind(Prop, CommonNoun)),
+   ensure(declare_kind(Prop, Kind)),
    forall(member(A, Adjectives), ensure([A, Prop])),
-   forall(is_a(Prop, Kind),
-	  ignore(initialize_prop(Prop, Kind))).
+   forall(is_a(Prop, K),
+	  ignore(initialize_prop(Prop, K))).
 
 %% register_character(*Character, *Name, *Kind)
 %  Add Character to database with the specified Name and Kind (male or female).

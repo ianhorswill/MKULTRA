@@ -1,10 +1,13 @@
-location(player, Location) :-
+location(X, Location) :-
+   X == player,
    !,
    location($me, Location).
 location(PhysicalObject, Location) :-
    /perception/location/PhysicalObject:Location.
 
-unique_answer(X, location(_Object, X)).
+unique_answer(X, location(Object, X)) :-
+   var(X),
+   nonvar(Object).
 
 incompatible(location(X, Y),
 	     location(X, Z)) :-
