@@ -137,6 +137,11 @@ property_value(Object, Property, Value) :-
    property_type(Property, Kind, _ValueType),
    lookup_property_value(Object, Property, Value).
 
+unique_answer(Value, property_value(Object, Property, Value)) :-
+   var(Value),
+   nonvar(Object),
+   nonvar(Property).
+
 lookup_property_value(Object, Property, Value) :-
    declare_value(Object, Property, Value), !.
 lookup_property_value(Object, Property, Value) :-
