@@ -1,3 +1,6 @@
+location(player, Location) :-
+   !,
+   location($me, Location).
 location(PhysicalObject, Location) :-
    /perception/location/PhysicalObject:Location.
 
