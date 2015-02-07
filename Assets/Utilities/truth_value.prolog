@@ -29,6 +29,9 @@ know_whether(related(Object, Relation, Relatum)) :-
 
 know_whether(_).
 
+know_relation(_, $me, _).
+know_property(_, $me, _).
+
 know_about_object(Object) :-
    atomic(Object),
    is_a(Object, Kind),
