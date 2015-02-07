@@ -4,7 +4,7 @@
 
 strategy(introduce_person(Person),
 	 ( say(be(Person, Name)),
-	   describe(Person, introduction) )
+	   describe(Person, introduction, null) )
 	) :-
    property_value(Person, given_name, Name).
 
@@ -18,8 +18,8 @@ relation_relevant_to_purpose(introduction, _, Relation, _) :-
 %% Describing objects
 %%
 
-strategy(describe(Object, Purpose),
-	 describe_attributes(Object, Attributes)) :-
+strategy(describe(Object, Purpose, NullContinuation),
+	 describe_attributes(Object, Attributes, NullContinuation)) :-
    all(Attribute,
        interesting_attribute(Purpose, Object, Attribute),
        AllAttributes),
@@ -58,9 +58,9 @@ interesting_relation(Purpose, Object, Relation/Relatum) :-
    \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
    relation_relevant_to_purpose(Purpose, Object, Relation, Relatum).
 
-strategy(describe_attributes(_Object, []),
-	 speech(["Sorry; I don't know anything."])).
-strategy(describe_attributes(Object, Attributes),
+strategy(describe_attributes(_Object, [], NullContinuation),
+	 NullContinuation).
+strategy(describe_attributes(Object, Attributes, _NullK),
 	 generate_list(Attributes, attribute_of(Object))) :-
    Attributes \= [ ].
 
