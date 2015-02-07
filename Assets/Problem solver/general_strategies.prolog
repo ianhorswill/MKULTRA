@@ -66,7 +66,7 @@ strategy(goto(Target),
 	       ( assert($task/location_bids/Place:Priority),
 		 wait_event(arrived_at(Place)),
 		 retract($task/location_bids/Place)) ) )) :-
-   assertion(atom(Target), bad_target:goto(Target)),
+   assertion(atomic(Target), bad_target:goto(Target)),
    $task/priority:Priority.
 
 strategy(bring($me, Recipient, Object),
