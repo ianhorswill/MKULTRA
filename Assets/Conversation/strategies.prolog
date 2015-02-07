@@ -1,3 +1,5 @@
+:- external explanation/2.
+
 strategy(say_something,
 	 ( retract(TopicNode),
 	   Topic )) :-
@@ -207,6 +209,16 @@ strategy(answer_wh(M, _,
 		   manner(be($me), M),
 		   _),
 	 say(okay($me))).
+
+strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
+	 S) :-
+   admitted_truth_value(Asker, P, true) ->
+      (admitted_truth_value(Asker, explanation(P, E), true) ->
+         (S = assertion($me, Asker, E, present, simple))
+         ;
+         (S = speech(["I couldn't speculate."])))
+      ;
+      (S = assertion($me, Asker, not(P), present, simple)).
 
 default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
 		 S) :-
