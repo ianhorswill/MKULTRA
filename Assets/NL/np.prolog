@@ -27,11 +27,12 @@ np((X^S)^S, _C, _Agreement, np(X), nogap) -->
 
 % Pronouns
 np(NP, Case, Agreement, Gap, Gap) -->
-   pronoun(Case, Agreement, NP).
+   pronoun(Case, Agreement,NP).
 
 % Proper nouns
-np(NP, _C, third:Number, Gap, Gap) -->
-   proper_noun(Number, NP).
+np((E^S)^S, _C, third:Number, Gap, Gap) -->
+   { \+ bound_discourse_variable(E) },
+   proper_noun(Number, E).
 
 % PARSE/COMPLETE ONLY
 % "a KIND" from unbound variables with declared types

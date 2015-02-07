@@ -3,16 +3,14 @@
 %det(LF) --> [D], {det(D, LF)}.
 
 :- randomizable proper_noun/2, proper_noun/4.
-proper_noun(singular, (E^S)^S) -->
+proper_noun(singular, E) -->
    [PN],
-   { \+ bound_discourse_variable(E),
-     proper_noun(PN, E),
+   { proper_noun(PN, E),
      atomic(PN) }.
 
-proper_noun(singular, (E^S)^S) -->
+proper_noun(singular, E) -->
    [PN1, PN2],
-   { \+ bound_discourse_variable(E),
-     proper_noun([PN1, PN2], E)}.
+   { proper_noun([PN1, PN2], E)}.
 
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],
