@@ -7,7 +7,9 @@ default_strategy(say_something,
 		 null).
 
 strategy(ask_about($me, $addressee, $addressee),
-	 question($me, $addressee, X:manner(be($addressee), X))).
+	 question($me, $addressee,
+		  X:manner(be($addressee), X),
+		  present, simple)).
 strategy(ask_about($me, $addressee, Topic),
 	 command($me, $addressee,
 		 tell_about($addressee, $me, Topic))) :-
