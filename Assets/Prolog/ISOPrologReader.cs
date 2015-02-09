@@ -2127,7 +2127,8 @@ namespace Prolog
         static private object ResolveNamedString(string name)
         {
             var result =
-                (object)UnityEngine.GameObject.Find(name)
+                UnityEngine.GameObject.Find(name)
+                ?? (object)UnityEngine.GameObject.Find(char.ToUpper(name[0])+name.Substring(1))
                 ?? TypeUtils.FindType(name);
             if (result == null)
             {
