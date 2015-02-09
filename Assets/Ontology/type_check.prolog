@@ -11,6 +11,9 @@ variable_type_given_constraint(Var, Expression, Type) :-
    well_typed(Expression, _, Bindings),
    lookup_variable_type(Var, Type, Bindings).
 
+well_typed(Expression, Kind) :-
+   well_typed(Expression, Kind, _).
+
 %% well_typed(=Expression, ?Kind, -Bindings)
 %  Expression is well typed as of type Kind.
 %  Types of any free variables of it are given by Bindings.

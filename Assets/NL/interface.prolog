@@ -25,6 +25,17 @@ input_completion(InputText, CompletionText, SpeechAct) :-
    contracted_form(CompletionUncontracted, CompletionWords),
    word_list(CompletionText, CompletionWords).
 
+:- public well_formed_dialog_act/1.
+well_formed_dialog_act(question(_, _, LF, _, _)) :-
+   (LF = _:Y) ->
+      well_typed(Y, condition)
+      ;
+      well_typed(LF, condition).
+well_formed_dialog_act(command(_, _, LF)) :-
+   well_typed(LF, action).
+well_formed_dialog_act(assertion(_, _, LF)) :-
+   well_typed(LF, condition).
+
 bind_dialog_indexicals_for_input :-
    in_conversation_with_npc(NPC),
    !,

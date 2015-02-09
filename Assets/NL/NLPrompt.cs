@@ -182,11 +182,11 @@ public class NLPrompt : BindingBehaviour
     private void TryCompletion()
     {
         var completionVar = new LogicVariable("Output");
-        var commentaryVar = new LogicVariable("Commentary");
+        var dialogActVar = new LogicVariable("DialogAct");
         bool completionSuccess = false;
         try
         {
-            completionSuccess = this.IsTrue("input_completion", this.input, completionVar, commentaryVar);
+            completionSuccess = this.IsTrue("input_completion", this.input, completionVar, dialogActVar);
         }
         catch (InferenceStepsExceededException e)
         {
@@ -196,18 +196,51 @@ public class NLPrompt : BindingBehaviour
         if (completionSuccess)
         {
             this.completion = (string)completionVar.Value;
-            this.dialogAct = Term.CopyInstantiation(commentaryVar.Value);
-            this.commentary = ISOPrologWriter.WriteToString(commentaryVar.Value);
-            this.formatted = this.completion=="" ?
-                                string.Format("<b><color=lime>{0}</color></b>", this.input)
-                                : string.Format("<color=lime>{0}{1}</color><color=grey><i>{2}</i></color>",
-                                                this.input,
-                                                (this.input.EndsWith(" ") || !char.IsLetterOrDigit(completion[0]))?"":" ",
-                                                this.completion);
+            this.dialogAct = Term.CopyInstantiation(dialogActVar.Value);
+            if (this.IsTrue("well_formed_dialog_act", this.dialogAct))
+            {
+                this.formatted = this.completion == "" ?
+                    string.Format("<b><color=lime>{0}</color></b>", this.input)
+                    : string.Format("<color=lime>{0}{1}<i>{2}</i></color>",
+                                    this.input,
+                                    (this.input.EndsWith(" ") || !char.IsLetterOrDigit(this.completion[0])) ? "" : " ",
+                                    this.completion);
+                var da = this.dialogAct as Structure;
+                if (da != null && da.Arity > 1)
+                {
+                    var a = da.Argument<GameObject>(1);
+                    this.commentary = string.Format("{0} to {1}\n{2}", da.Functor, (a == this) ? "myself" : a.name,
+                                                    ISOPrologWriter.WriteToString(dialogActVar.Value));
+                }
+                else
+                {
+                    this.commentary = ISOPrologWriter.WriteToString(dialogActVar.Value);
+                }
+            }
+            else
+            {
+                // Input is grammatical but not well formed.
+                this.formatted = this.completion == "" ?
+                    string.Format("<b><color=yellow>{0}</color></b>", this.input)
+                    : string.Format("<color=yellow>{0}{1}</color><color=grey><i>{2}</i></color>",
+                                    this.input,
+                                    (this.input.EndsWith(" ") || !char.IsLetterOrDigit(this.completion[0])) ? "" : " ",
+                                    this.completion);
+                if (this.completion == "")
+                    this.commentary = string.Format(
+                        "This input is grammatical, but doesn't make sense to me\n{0}",
+                        ISOPrologWriter.WriteToString(dialogActVar.Value));
+                else
+                {
+                    this.commentary = "This is grammatical but nonsensical\n" + ISOPrologWriter.WriteToString(dialogActVar.Value);
+                }
+            }
+
         }
         else
         {
             this.formatted = string.Format("<color=red>{0}</color>", this.input);
+            this.commentary = "Sorry; I don't understand any sentences beginning with those words.";
         }
     }
 }
