@@ -18,10 +18,12 @@ aux_vp(Subject^S, Polarity, Agreement, Tense, Aspect) -->
    copular_relation(Subject^Object^Predication), 
    np((Object^Modal)^S, object, _, nogap, nogap).
 
-copula(base, _, _) -->
-   [be].
+copula(past_participle, _, _) -->
+   [been].
+copula(present_participle, _, _) -->
+   [being].
 copula(Form, Tense, Agreement) -->
-   { Form \= base },
+   { \+ memberchk(Form, [past_participle, present_participle]) },
    aux_be(Tense, Agreement).
 
 opt_not_if_unbound(Polarity) -->
