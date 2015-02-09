@@ -206,9 +206,9 @@ strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
    possible_types_given_constraint(Answer, Constraint, List).
 
 strategy(answer_wh(M, _,
-		   manner(be($me), M),
+		   manner(be(Who), M),
 		   _),
-	 say(okay($me))).
+	 say(okay(Who))).
 
 strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
 	 S) :-
