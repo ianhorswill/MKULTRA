@@ -83,3 +83,47 @@ test(integrity(implied_relations_must_be_type_consistent),
 	      kind_of(RTO, STO),
 	      kind_of(RTR, STR) ) ),
        UndeclaredRelations).
+
+test(integrity(intransitive_verb_semantics_defined),
+     [ true(UndefinedPredicates = []) ]) :-
+   all(Spec:Word,
+       ( intransitive_verb(Word, _, _, _, _, _, Semantics),
+	 lambda_contains_undefined_predicate(Semantics, Spec) ),
+       UndefinedPredicates).
+
+test(integrity(transitive_verb_semantics_defined),
+     [ true(UndefinedPredicates = []) ]) :-
+   all(Spec:Word,
+       ( transitive_verb(Word, _, _, _, _, _, Semantics),
+	 lambda_contains_undefined_predicate(Semantics, Spec) ),
+       UndefinedPredicates).
+
+test(integrity(ditransitive_verb_semantics_defined),
+     [ true(UndefinedPredicates = []) ]) :-
+   all(Spec:Word,
+       ( ditransitive_verb(Word, _, _, _, _, _, Semantics),
+	 lambda_contains_undefined_predicate(Semantics, Spec) ),
+       UndefinedPredicates).
+
+test(integrity(adjective_semantics_defined),
+     [ true(UndefinedPredicates = []) ]) :-
+   all(Spec:Word,
+       ( adjective(Word, Semantics),
+	 lambda_contains_undefined_predicate(Semantics, Spec) ),
+       UndefinedPredicates).
+
+lambda_contains_undefined_predicate(_^P, Spec) :-
+   !,
+   lambda_contains_undefined_predicate(P, Spec).
+lambda_contains_undefined_predicate(related(_, Relation, _),
+				    relation(Relation)) :-
+   !,
+   \+ relation_type(Relation, _, _).
+lambda_contains_undefined_predicate(property_value(_, Property, _),
+				    property(Property)) :-
+   !,
+   \+ property_type(Property, _, _).
+lambda_contains_undefined_predicate(P,Name/Arity) :-
+   functor(P, Name, Arity),
+   functor(Copy, Name, Arity),
+   \+ predicate_type(_, Copy).
