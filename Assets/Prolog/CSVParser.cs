@@ -24,7 +24,9 @@ namespace Prolog
                 // This is a string - wrap it in double quotes
                 String,
                 // This is a list of prolog expressions - wrap it in  [ ]
-                List
+                List,
+                // This is a list of prolog expressions, but separated by spaces rather than commas
+                WordList
             }
             private readonly FormatType type;
 
@@ -49,6 +51,12 @@ namespace Prolog
                     case FormatType.List:
                         b.Append('[');
                         b.Append(item);
+                        b.Append(']');
+                        break;
+
+                    case FormatType.WordList:
+                        b.Append('[');
+                        b.Append(item.Trim().Replace(' ', ','));
                         b.Append(']');
                         break;
 
@@ -128,6 +136,8 @@ namespace Prolog
                     return new ColumnFormat(ColumnFormat.FormatType.String, null);
                 if (headerItem.EndsWith("(list)"))
                     return new ColumnFormat(ColumnFormat.FormatType.List, null);
+                if (headerItem.EndsWith("(word list)"))
+                    return new ColumnFormat(ColumnFormat.FormatType.WordList, null);
 
                 // ReSharper disable once StringIndexOfIsCultureSpecific.1
                 var prefixSpec = headerItem.IndexOf(PrefixHeader);
