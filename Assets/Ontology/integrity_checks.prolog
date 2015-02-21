@@ -86,22 +86,22 @@ test(integrity(implied_relations_must_be_type_consistent),
 
 test(integrity(intransitive_verb_semantics_defined),
      [ true(UndefinedPredicates = []) ]) :-
-   all(Spec:Word,
-       ( intransitive_verb(Word, _, _, _, _, _, Semantics),
+   all(Spec:Phrase,
+       ( iv(past_participle, _, Semantics, _, _, Phrase, [ ]),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
 
 test(integrity(transitive_verb_semantics_defined),
      [ true(UndefinedPredicates = []) ]) :-
-   all(Spec:Word,
-       ( transitive_verb(Word, _, _, _, _, _, Semantics),
+   all(Spec:Phrase,
+       ( tv(past_participle, _, Semantics, _, _, Phrase, [ ]),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
 
 test(integrity(ditransitive_verb_semantics_defined),
      [ true(UndefinedPredicates = []) ]) :-
-   all(Spec:Word,
-       ( ditransitive_verb(Word, _, _, _, _, _, Semantics),
+   all(Spec:Phrase,
+       ( dtv(past_participle, _, Semantics, _, _, Phrase, [ ]),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
 

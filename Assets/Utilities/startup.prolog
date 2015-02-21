@@ -17,6 +17,17 @@ assert_phrase_rule(Phrase, Words) :-
    term_append(Phrase, [WordsWithTail, Tail], DCGRule),
    assertz(DCGRule).
 
+%% assert_phrase_rule(Phrase, Words, Guard) is det
+%  Asserts that Phrase can be matched by Words (a list of symbols) if
+%  Guard is true.
+%  Asserts the DCG rule: Phrase --> Words, {Guard}.
+assert_phrase_rule(Phrase, Words, Guard) :-
+   assertion(\+ (member(X, Words), \+ atomic(X)),
+	     Words:"Phrase must be a list of symbols"),
+   append(Words, Tail, WordsWithTail),
+   term_append(Phrase, [WordsWithTail, Tail], DCGRule),
+   assertz((DCGRule :- Guard)).
+
 %% assert_proper_name(+Object, +Name, +Number) is det
 %  Asserts that Object has proper name Name (a list of words) with
 %  gramatical number Number (singular or plural).

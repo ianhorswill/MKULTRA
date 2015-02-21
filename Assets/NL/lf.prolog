@@ -64,11 +64,11 @@ lf_core_predicate_subject(be(Subject), Subject) :-
 lf_core_predicate_subject(related(Subject, _, _), Subject):-
    !.
 lf_core_predicate_subject(S, Subject) :-
-   intransitive_verb(_, _, _, _, _, _, Subject^S).
+   iv(past_participle, _, Subject^S, _, _, _, _).
 lf_core_predicate_subject(S, Subject) :-
-   transitive_verb(_, _, _, _, _, _, Subject^_^S).
+   tv(past_participle, _, Subject^_^S, _, _, _, _).
 lf_core_predicate_subject(S, Subject) :-
-   ditransitive_verb(_, _, _, _, _, _, Subject^_^_^S).
+   dtv(past_participle, _, Subject^_^_^S, _, _, _, _).
 lf_core_predicate_subject(S, Subject) :-
    adjective(_, Subject^S).
 
