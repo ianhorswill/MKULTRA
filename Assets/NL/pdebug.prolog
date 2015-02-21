@@ -20,11 +20,6 @@ parse(Nonterminal, WordList, Completion) :-
    term_append(Nonterminal, [ WordList, Completion ], Full),
    Full.
 
-term_append(Term, AdditionalArgs, ExtendedTerm) :-
-   Term =.. List,
-   append(List, AdditionalArgs, ExtendedList),
-   ExtendedTerm =.. ExtendedList.
-
 nonterminal(np(_LF, _C, _A, nogap, nogap)).
 nonterminal(aux(_, _P, _A, _T, _A, _F, _M)).
 nonterminal(vp(_F, _LF, _S, _T, _A, nogap)).

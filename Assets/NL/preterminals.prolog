@@ -2,6 +2,8 @@
 
 %det(LF) --> [D], {det(D, LF)}.
 
+:- randomizable proper_name/4, proper_name/2.
+
 %% proper_name(?Object, ?Name) is nondet
 %  Object has proper name Name (a list of words)
 proper_name(Object, Name) :-

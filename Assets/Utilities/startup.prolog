@@ -7,7 +7,15 @@ load_csv_row(Row, Assertion) :-
 load_csv_row(_, Assertion) :-
    assertz(Assertion).
 
-:- randomizable proper_name/4, proper_name/2.
+%% assert_phrase_rule(Phrase, Words) is det
+%  Asserts that Phrase can be matched by Words (a list of symbols).
+%  Asserts the DCG rule: Phrase --> Words.
+assert_phrase_rule(Phrase, Words) :-
+   assertion(\+ (member(X, Words), \+ atomic(X)),
+	     Words:"Phrase must be a list of symbols"),
+   append(Words, Tail, WordsWithTail),
+   term_append(Phrase, [WordsWithTail, Tail], DCGRule),
+   assertz(DCGRule).
 
 %% assert_proper_name(+Object, +Name, +Number) is det
 %  Asserts that Object has proper name Name (a list of words) with
@@ -18,13 +26,10 @@ assert_proper_name(Object, [ ], NumberSpec) :-
    !,
    assert_proper_name(Object, [Object], NumberSpec).
 assert_proper_name(Object, Name, NumberSpec) :-
-   assertion(\+ (member(X, Name), \+ atomic(X)),
-	     Name:"Proper name must be a list of symbols"),
-   append(Name, Tail, NameWithTail),
-   (number_spec_number(NumberSpec, Number) -> 
-       assertz(proper_name(Object, Number, NameWithTail, Tail))
-       ;
-       log(bad_grammatical_number(NumberSpec:Name))).
+   number_spec_number(NumberSpec, Number) -> 
+      assert_phrase_rule(proper_name(Object, Number), Name)
+      ;
+      log(bad_grammatical_number(NumberSpec:Name)).
 
 % This is just to handle defaulting of number to singular, and to
 % catch mistyped number.

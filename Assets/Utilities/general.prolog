@@ -8,6 +8,13 @@ arguments_unbound(In, Out) :-
    functor(In, Name, Arity),
    functor(Out, Name, Arity).
 
+%% term_append(+Structure, +List, -ExtendedStructure) is det
+%  ExtendedStructure is Structure with the extra arguments List appended.
+term_append(Term, AdditionalArgs, ExtendedTerm) :-
+   Term =.. List,
+   append(List, AdditionalArgs, ExtendedList),
+   ExtendedTerm =.. ExtendedList.
+
 %% assertion(:P. +Message)
 %  Throw exception if P is unprovable.
 assertion(P, _) :-
