@@ -30,7 +30,7 @@ register_prop(Prop, Kind, Adjectives) :-
 register_character(Character, Name, Type) :-
    ensure(character(Character)),
    ensure(declare_kind(Character, Type)),
-   ensure(proper_noun(Name, Character)).
+   assert_proper_name(Character, [Name], singular).
 
 %% ensure(+Fact)
 %  Adds Fact to database, if it is not already there.
@@ -41,7 +41,7 @@ ensure([Functor | Arguments]) :-
 ensure(Assertion) :-
    functor(Assertion, F, A),
    external(F/A),
-   Assertion ; assertz(Assertion).
+   (Assertion ; assertz(Assertion)).
 
 %% world_object(?GameObject)
 %  GameObject is a prop or character.

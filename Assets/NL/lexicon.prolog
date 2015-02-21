@@ -9,7 +9,7 @@ pronoun_word(you, _, second, singular, $addressee).
 pronoun_word(we, subject, first, plural, $dialog_group).
 pronoun_word(us, object, first, plural, $dialog_group).
 
-:- randomizable noun/3, proper_noun/2.
+:- randomizable noun/3.
 
 :- randomizable whpron/2.
 whpron( who, person  ).

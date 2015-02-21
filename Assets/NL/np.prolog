@@ -29,10 +29,10 @@ np((X^S)^S, _C, _Agreement, np(X), nogap) -->
 np(NP, Case, Agreement, Gap, Gap) -->
    pronoun(Case, Agreement,NP).
 
-% Proper nouns
+% Proper names
 np((E^S)^S, _C, third:Number, Gap, Gap) -->
    { \+ bound_discourse_variable(E) },
-   proper_noun(Number, E).
+   proper_name(E, Number).
 
 % PARSE/COMPLETE ONLY
 % "a KIND" from unbound variables with declared types
@@ -64,7 +64,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { nonvar(X),
      % If it has a proper name or a bound variable, then don't use this rule.
-     \+ proper_noun(_, X),
+     \+ proper_name(X, _),
      is_a(X, Kind),
      leaf_kind(Kind),
      kind_noun(Kind, Singular, _) },

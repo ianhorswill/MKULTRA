@@ -63,7 +63,8 @@ namespace Prolog
                     default:
                     if (this.prefix != null)
                         b.Append(this.prefix);
-                    b.Append(item);
+
+                    b.Append((item.Trim()=="")?"null":item);
                         break;
                 }
             }

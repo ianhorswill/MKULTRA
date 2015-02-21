@@ -265,21 +265,13 @@ load_special_csv_row(_RowNumber,
 	  assert(implies_relation(Name, Gen))).
 
 load_special_csv_row(_RowNumber,
-		     entities(EntityName, KindList, ProperNoun,
+		     entities(EntityName, KindList,
+			      ProperName, GramaticalNumber,
 			      PropertyList, RelationList)) :-
    forall(member(Kind, KindList),
 	  assert(declare_kind(EntityName, Kind))),
-   assert_proper_noun_for_entity(ProperNoun, EntityName),
+   assert_proper_name(EntityName, ProperName, GramaticalNumber),
    forall(member(PropertyName=Value, PropertyList),
 	  assert(declare_value(EntityName, PropertyName, Value))),
    forall(member(RelationName:Relatum, RelationList),
 	  assert(delclare_related(EntityName, RelationName, Relatum))).
-
-assert_proper_noun_for_entity([], EntityName) :-
-   assert(proper_noun(EntityName, EntityName)),
-   !.
-assert_proper_noun_for_entity([OneWord], EntityName) :-
-   assert(proper_noun(OneWord, EntityName)),
-   !.
-assert_proper_noun_for_entity(WordList, EntityName) :-
-   assert(proper_noun(WordList, EntityName)).

@@ -2,15 +2,10 @@
 
 %det(LF) --> [D], {det(D, LF)}.
 
-:- randomizable proper_noun/2, proper_noun/4.
-proper_noun(singular, E) -->
-   [PN],
-   { proper_noun(PN, E),
-     atomic(PN) }.
-
-proper_noun(singular, E) -->
-   [PN1, PN2],
-   { proper_noun([PN1, PN2], E)}.
+%% proper_name(?Object, ?Name) is nondet
+%  Object has proper name Name (a list of words)
+proper_name(Object, Name) :-
+   proper_name(Object, _, Name, [ ]).
 
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],

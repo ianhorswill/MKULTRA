@@ -50,7 +50,7 @@ bind_dialog_indexicals_for_input :-
    bind(dialog_group, $me).
 
 bind_indexicals_for_addressing_character_named(Name) :-
-   proper_noun(Name, Character),
+   proper_name(Character, [Name]),
    character(Character),
    bind_indexicals_for_addressing_character(Character).
 
