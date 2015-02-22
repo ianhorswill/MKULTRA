@@ -6,12 +6,6 @@ adjectival_property(age).
 valid_property_value(age, X) :-
    number(X).
 
-copular_relation([interested, in], interested_in).
-copular_relation([a, member, of], member_of).
-copular_relation([a, friend, of], friend_of).
-copular_relation([a, roommate, of], roommate_of).
-copular_relation([the, roommate, of], roommate_of).
-
 :- declare_object($'Bruce',
 		  [ age=23,
 		    given_name="Bruce",

@@ -259,10 +259,21 @@ load_special_csv_row(_RowNumber, properties(Name, ObjectType, ValueType)) :-
    assert(property_type(Name, ObjectType, ValueType)).
 
 load_special_csv_row(_RowNumber,
-		     relations(Name, ObjectType, ValueType, Generalizations)) :-
+		     relations(Name, ObjectType, ValueType,
+			       CopularForm,
+			       Generalizations)) :-
    assert(relation_type(Name, ObjectType, ValueType)),
+   assert_copular_form(Name, CopularForm),
    forall(member(Gen, Generalizations),
 	  assert(implies_relation(Name, Gen))).
+
+assert_copular_form(_Name, [ ]).
+assert_copular_form(Name, [be | CopularForm]) :-
+   assert_phrase_rule(copular_relation(Name), CopularForm).
+assert_copular_form(Name, CopularForm) :-
+   % Copular forms must start with the word "be"
+   % (the English copula is the verb "to be").
+   log(malformed_copular_form_of_relation(Name, CopularForm)).
 
 load_special_csv_row(_RowNumber,
 		     entities(EntityName, KindList,

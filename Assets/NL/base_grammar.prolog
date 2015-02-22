@@ -83,24 +83,6 @@ s(is_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
    [a, Singular],
    { kind_noun(Kind, Singular, _Plural) }.
 
-% NP is [not] PropertyValue
-s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { valid_property_value(Property, Value),
-     adjectival_property(Property) },
-   np((Noun^_)^_, subject, Agreement, nogap, nogap),
-   aux_be(Tense, Agreement),
-   opt_not(Polarity),
-   [Value].
-
-% NP is [not] a PropertyValue
-s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { valid_property_value(Property, Value),
-     nominal_property(Property) },
-   np((Noun^_)^_, subject, Agreement, nogap, nogap),
-   aux_be(Tense, Agreement),
-   opt_not(Polarity),
-   [a, Value].
-
 % NP is [not] NP
 s(be(S, O), indicative, Polarity, Tense, simple) -->
    np((S^_)^_, subject, Agreement, nogap, nogap),
@@ -134,6 +116,24 @@ s(location(Object, Character), indicative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    np((Object^_)^_, object, _, nogap, nogap).
 
+% NP is [not] PropertyValue
+s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+   { valid_property_value(Property, Value),
+     adjectival_property(Property) },
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [Value].
+
+% NP is [not] a PropertyValue
+s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+   { valid_property_value(Property, Value),
+     nominal_property(Property) },
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   aux_be(Tense, Agreement),
+   opt_not(Polarity),
+   [a, Value].
+
 %%%
 %%% Imperative mood
 %%%
@@ -161,32 +161,6 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
-% inverted_sentence(S, Polarity, Tense, Aspect) -->
-%    { lf_subject(S, Subject) },
-%    aux(np((Subject^S1)^S, subject, Agreement),
-%        Polarity, Agreement, Tense, Aspect, Form, Predication^Modal),
-%    copula(Form, Tense, Agreement),
-%    copular_relation(Subject^Object^Predication), 
-%    np((Object^Modal)^S1, object, _, nogap, nogap).
-
-% Is Subject a RELATION of Object?
-inverted_sentence(S, Polarity, Tense, simple) -->
-   { lf_subject(S, Subject) },
-   copula(simple, Tense, Agreement),
-   opt_not(Polarity),
-   np((Subject^S1)^S, subject, Agreement, nogap, nogap),
-   copular_relation(Subject^Object^Predication), 
-   np((Object^Predication)^S1, object, _, nogap, nogap).
-
-% Is Subject a PROPERTYVALUE?
-inverted_sentence(property_value(Subject, Property, Value), Polarity, Tense, simple) -->
-   copula(simple, Tense, Agreement),
-   opt_not(Polarity),
-   np((Subject^_)^_, subject, Agreement, nogap, nogap),
-   { nominal_property(Property),
-     valid_property_value(Property, Value) },
-   [ a, Value ].
-
 % Wh-questions about the subject.
 s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, Subject), var(Subject) },
@@ -200,15 +174,6 @@ s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, Aspect) -->
    aux(nogap, Polarity, Agreement, Tense, Aspect, Form, Modality),
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
    vp(Form, Modality, NP^S1, Tense, Agreement, np(Object)).
-
-% WHO is X relation of?
-s(Object:(S, is_a(Object, Kind)), interrogative, Polarity, Tense, simple) -->
-   { lf_subject(S, Subject) },
-   whpron(Kind),
-   copula(simple, Tense, Agreement),
-   np((Subject^Predication)^S, subject, Agreement, nogap, nogap),
-   opt_not(Polarity),
-   copular_relation(Subject^Object^Predication).
 
 % Who is/what is Subject
 s(Object:(be(Subject, Object), is_a(Subject, Kind)), interrogative, affirmative, present, simple) -->
@@ -253,6 +218,15 @@ s(contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    [on],
    np((Container^_)^_, object, _, nogap, nogap),
    { is_a(Container, work_surface) }.
+
+% Is Subject a PROPERTYVALUE?
+inverted_sentence(property_value(Subject, Property, Value), Polarity, Tense, simple) -->
+   copula(simple, Tense, Agreement),
+   opt_not(Polarity),
+   np((Subject^_)^_, subject, Agreement, nogap, nogap),
+   { nominal_property(Property),
+     valid_property_value(Property, Value) },
+   [ a, Value ].
 
 % why did he X?
 s(X:explanation(S, X), interrogative, Polarity, Tense, Aspect) -->

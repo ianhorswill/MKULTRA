@@ -33,7 +33,7 @@ well_formed_dialog_act(question(_, _, LF, _, _)) :-
       well_typed(LF, condition).
 well_formed_dialog_act(command(_, _, LF)) :-
    well_typed(LF, action).
-well_formed_dialog_act(assertion(_, _, LF)) :-
+well_formed_dialog_act(assertion(_, _, LF, _, _)) :-
    well_typed(LF, condition).
 
 bind_dialog_indexicals_for_input :-

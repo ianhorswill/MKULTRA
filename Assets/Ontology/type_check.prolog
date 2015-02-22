@@ -30,21 +30,21 @@ well_typed(Var, Kind, BIn, BOut) :-
    !,
    variable_well_typed(Var, Kind, BIn, BOut).
 
-well_typed(Atom, Kind, Bindings, Bindings) :-
+well_typed(Atom, Type, Bindings, Bindings) :-
    atomic(Atom),
    !,
-   is_a(Atom, Kind).
+   is_type(Atom, Type).
 
 well_typed((Expression, is_a(Var, VKind)), Kind, BIn, BOut) :-
    well_typed(Expression, Kind, [Var:VKind | BIn], BOut).
 
-well_typed(related(Object, Relation, Relatum), proposition, BIn, BOut) :-
+well_typed(related(Object, Relation, Relatum), condition, BIn, BOut) :-
    nonvar(Relation),
    relation_type(Relation, ObjectType, RelatumType),
    well_typed(Object, ObjectType, BIn, BIntermediate),
    well_typed(Relatum, RelatumType, BIntermediate, BOut).
 
-well_typed(property_value(Object, Property, Value), proposition, BIn, BOut) :-
+well_typed(property_value(Object, Property, Value), condition, BIn, BOut) :-
    nonvar(Property),
    property_type(Property, ObjectType, ValueType),
    well_typed(Object, ObjectType, BIn, BIntermediate),

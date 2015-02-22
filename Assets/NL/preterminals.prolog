@@ -81,6 +81,23 @@ load_special_csv_row(_RowNumber,
 end_csv_loading(transitive_verb) :-
    check_lexicon_typing(LF^tv(past_participle, _, LF, _, _, _, _)).
 
+%
+% Relations and properties disguised as transitive verbs
+%
+
+% Uninverted sentence
+tv(Form, Agreement, S^O^related(S, Relation, O), Tense, [ ]) -->
+   {Form \== present_participle ; Tense \== present },
+   copula(Form, Tense, Agreement),
+   copular_relation(Relation).
+% Inverted sentence
+tv(present_participle, _Agreement, S^O^related(S, Relation, O), present, [ ])
+   -->
+   copular_relation(Relation).
+
+%tv(Form, Agreement, S^O^property_value(S, Property, O), Tense, [ ]) -->
+%   property_verb(Property, Form, Agreement, Tense).
+
 
 :- randomizable dtv//5.
 

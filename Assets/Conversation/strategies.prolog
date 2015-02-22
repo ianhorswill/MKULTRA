@@ -159,7 +159,8 @@ strategy(end_game(_,_), end_game(null)).
 %%
 
 % Dispatch on question type
-strategy(respond_to_dialog_act(question(Asker, $me, Question, present, simple)),
+strategy(respond_to_dialog_act(question(Asker, $me, Question,
+					present, _Aspect)),
 	 S) :-
    (Question = Answer:Constraint) ->
       ( lf_main_predicate(Constraint, Core),

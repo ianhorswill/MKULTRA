@@ -5,18 +5,10 @@ test_file(complete(vp, _), "NL/vp_tests").
 test_file(parse(vp, _), "NL/vp_tests").
 
 %% aux_vp(LF, Person, Number, Tense, Progressive, Perfect)
-%  Verb phrases, optionally augmented with auxilliaries and/or negative particle.
-
-%test_aux_vp(LF) :-
-%   aux_vp(LF, _, _, _, _, [can, halt], []).
+%  Verb phrases, optionally augmented with auxilliaries and/or
+%  negative particle.
 
 :- randomizable aux_vp/7.
-aux_vp(Subject^S, Polarity, Agreement, Tense, Aspect) -->
-   aux_without_do_support(nogap, Polarity, Agreement, Tense, Aspect, Form, Predication^Modal),
-   copula(Form, Tense, Agreement),
-   opt_not_if_unbound(Polarity),
-   copular_relation(Subject^Object^Predication), 
-   np((Object^Modal)^S, object, _, nogap, nogap).
 
 copula(past_participle, _, _) -->
    [been].
@@ -25,24 +17,6 @@ copula(present_participle, _, _) -->
 copula(Form, Tense, Agreement) -->
    { \+ memberchk(Form, [past_participle, present_participle]) },
    aux_be(Tense, Agreement).
-
-opt_not_if_unbound(Polarity) -->
-   { var(Polarity) }, opt_not(Polarity).
-opt_not_if_unbound(Polarity) -->
-   { nonvar(Polarity) }, [ ].
-
-:- randomizable copular_relation//1, copular_relation/2.
-% copular_relation(Subject^Object^related(Subject, Relation, Object)) -->
-%    [R1],
-%    { copular_relation([R1], Relation) }.
-
-copular_relation(Subject^Object^related(Subject, Relation, Object)) -->
-   [R1, R2],
-   { copular_relation([R1, R2], Relation) }.
-
-copular_relation(Subject^Object^related(Subject, Relation, Object)) -->
-   [R1, R2, R3],
-   { copular_relation([R1, R2, R3], Relation) }.
 
 aux_vp(VP, Polarity, Agreement, Tense, Aspect) --> 
    aux(nogap, Polarity, Agreement, Tense, Aspect, Form, M),
@@ -74,3 +48,4 @@ vp(Form, Predication^Modal, Subject^S2, Tense, Agreement, GapInfo) -->
    tv(Form, Agreement, Subject^Object^Predication, Tense, ForcePPs), 
    np((Object^Modal)^S1, object, _, GapInfo, GapOut),
    opt_pp(ForcePPs, Predication, GapOut, S1, S2).
+
