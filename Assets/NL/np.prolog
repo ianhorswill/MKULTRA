@@ -77,6 +77,7 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    % don't generate something that has a proper name.
    [the, SingularNoun],
    { var(X),
+     var(SingularNoun),
      input_from_player,
      \+ bound_discourse_variable(X),
      object_matching_selectional_constraint(X, SingularNoun) }.
