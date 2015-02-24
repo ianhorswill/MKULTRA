@@ -3,10 +3,17 @@
 %%
 
 strategy(introduce_person(Person),
-	 ( say(be(Person, Name)),
+	 ( maybe_give_name(Person),
 	   describe(Person, introduction, null) )
-	) :-
-   property_value(Person, given_name, Name).
+	).
+
+strategy(maybe_give_name($me),
+	 say(be($me, Name))) :-
+   property_value($me, given_name, Name).
+
+strategy(maybe_give_name(X),
+	 null) :-
+   X \= $me.
 
 property_relevant_to_purpose(introduction, _, Property, _) :-
    memberchk(Property, [age, gender, job]).

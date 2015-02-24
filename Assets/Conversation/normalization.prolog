@@ -5,5 +5,5 @@ normalize_dialog_act(Act, Normalized) :-
       (Normalized=Act).
 
 % Indirect request - "can you hand me that screwdriver?"
-da_normal_form(question(Speaker, Addressee, can(Addressee, X)),
+da_normal_form(question(Speaker, Addressee, can(X), present, simple),
 	       command(Speaker, Addressee, X)).
