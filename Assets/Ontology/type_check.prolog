@@ -72,6 +72,8 @@ variable_well_typed(V, Kind, BIn, BOut) :-
    variable_well_typed(V, Kind, PreviousKind, BIn, BOut).
 variable_well_typed(V, Kind, B, [V:Kind | B]).  % haven't seen this var before.
 
+variable_well_typed(V, Kind, entity, B, [V:Kind | B]) :-
+   !.
 variable_well_typed(_V, Kind, PreviousKind, B, B) :-
    kind_of(PreviousKind, Kind),  % We already have a type that's at least as specific.
    !.

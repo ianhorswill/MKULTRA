@@ -9,6 +9,8 @@ known_type(List) :-
    list(List).
 known_type(kind_of(Kind)) :-
    kind(Kind).
+known_type(subkind_of(Kind)) :-
+   kind(Kind).
 known_type(Kind) :-
    kind(Kind).
 

@@ -5,9 +5,13 @@
 
 pronoun_word('I', subject, first, singular, $speaker).
 pronoun_word(me, object, first, singular, $speaker).
-pronoun_word(you, _, second, singular, $addressee).
+pronoun_word(my, genitive, first, singular, $speaker).
+pronoun_word(you, subject, second, singular, $addressee).
+pronoun_word(you, object, second, singular, $addressee).
+pronoun_word(your, genitive, second, singular, $addressee).
 pronoun_word(we, subject, first, plural, $dialog_group).
 pronoun_word(us, object, first, plural, $dialog_group).
+pronoun_word(our, genitive, first, plural, $dialog_group).
 
 :- randomizable noun/3.
 

@@ -169,7 +169,6 @@ strategy(respond_to_dialog_act(question(Asker, $me, Question,
       ;
       (S=answer_yes_no(Asker, Question)).
 
-
 %% Yes/no quetsions
 strategy(answer_yes_no(Asker, Q),
 	 generate_answer(Q, Answer)) :-

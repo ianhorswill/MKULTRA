@@ -30,9 +30,15 @@ np(NP, Case, Agreement, Gap, Gap) -->
    pronoun(Case, Agreement,NP).
 
 % Proper names
-np((E^S)^S, _C, third:Number, Gap, Gap) -->
+np((E^S)^S, Case, third:Number, Gap, Gap) -->
    { \+ bound_discourse_variable(E) },
-   proper_name(E, Number).
+   proper_name(E, Number),
+   opt_genitive(Case).
+
+opt_genitive(subject) --> [].
+opt_genitive(object) --> [].
+opt_genitive(genitive) --> ['\'', s].
+
 
 % PARSE/COMPLETE ONLY
 % "a KIND" from unbound variables with declared types
@@ -126,3 +132,10 @@ resolve_definite_description(Object, Constraint) :-
 resolve_definite_description(_Object, Constraint) :-
    % Punt, and choose whatever Prolog gives us first.
    Constraint.
+
+%%%
+%%% Realizing property values
+%%%
+
+property_value_np(_Property, Value) --> [Value].
+

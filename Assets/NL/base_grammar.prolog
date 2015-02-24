@@ -2,7 +2,7 @@ test_file(completion(s, _), "NL/base_grammar_test").
 test_file(generate(s, _), "NL/base_grammar_test").
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
-   { call($input_from_player) },
+   { input_from_player },
    ['('],
    { bind(speaker, player), bind(addressee, $me) },
    s(S, Mood, Polarity, Tense, Aspect),
@@ -11,7 +11,7 @@ sentence(S, Mood, Polarity, Tense, Aspect) -->
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
    [ Name, ',' ],     
-   { X = $input_from_player, X },
+   { input_from_player },
    { bind_indexicals_for_addressing_character_named(Name) },
    s(S, Mood, Polarity, Tense, Aspect),
    opt_stop(Mood).
@@ -116,6 +116,21 @@ s(location(Object, Character), indicative, Polarity, Tense, simple) -->
    opt_not(Polarity),
    np((Object^_)^_, object, _, nogap, nogap).
 
+% NP's Property is [not] PropertyValue
+s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
+   { valid_property_value(Property, Value),
+     % Prefer other forms of realization, when available
+     % But always let the user type this version if they want.
+     ( input_from_player
+       ;
+       ( \+ adjectival_property(Property),
+	 \+ nominal_property(Property) ) ) },
+   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   property_name(Property),
+   copula(simple, Tense, third:singular),
+   opt_not(Polarity),
+   property_value_np(Property, Value).
+
 % NP is [not] PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
    { valid_property_value(Property, Value),
@@ -160,6 +175,25 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
    aux(np((NP^S1)^S, subject, Agreement),
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
+
+% Wh-questions about properties
+
+% Whose property is Value?
+s(Noun:property_value(Noun, Property, Value),
+  interrogative, affirmative, Tense, simple) -->
+   { valid_property_value(Property, Value) },
+   [ whose ],
+   property_name(Property),
+   copula(simple, Tense, third:singular),
+   property_value_np(Property, Value).
+
+% NP's Property is [not] PropertyValue
+s((Value:(property_value(Noun, Property, Value), is_a(Value, Kind))),
+  interrogative, affirmative, Tense, simple) -->
+   whpron(Kind),
+   copula(simple, Tense, third:singular),
+   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   property_name(Property).
 
 % Wh-questions about the subject.
 s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
