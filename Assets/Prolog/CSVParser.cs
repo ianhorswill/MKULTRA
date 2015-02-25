@@ -102,15 +102,33 @@ namespace Prolog
         {
 
             var row = 1;
-            this.ReadHeaderRow();
-            row++;
-            while (reader.Peek() >= 0)
+            try
             {
-                if (reader.Peek() == '%')
-                    SkipLine();    // Skip comment lines
-                else
-                    rowHandler(row, this.ReadFactRow());
+                this.ReadHeaderRow();
                 row++;
+                while (reader.Peek() >= 0)
+                {
+                    if (reader.Peek() == '%')
+                        SkipLine(); // Skip comment lines
+                    else
+                        rowHandler(row, this.ReadFactRow());
+                    row++;
+                }
+            }
+            catch (InferenceStepsExceededException e)
+            {
+                Repl.RecordExceptionSourceLocation(e, row);
+                throw;
+            }
+            catch (Exception e)
+            {
+                var wrapper = new PrologError(e,
+                    string.Format("{0} row {1}",
+                                  Path.GetFileName(Prolog.CurrentSourceFile),
+                                  row));
+                UnityEngine.Debug.LogException(wrapper);
+                Repl.RecordExceptionSourceLocation(e, row);
+                throw wrapper;
             }
         }
 
