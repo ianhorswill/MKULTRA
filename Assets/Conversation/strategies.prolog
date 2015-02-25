@@ -70,8 +70,8 @@ strategy(respond_to_dialog_act(discourse_increment(Sender, Receiver, [ Act | Act
 
 default_strategy(respond_to_increment(_, _, _),
 		 null).
-strategy(respond_to_increment(Speaker, _, s(LF)),
-	 respond_to_assertion(Speaker, LF)).
+strategy(respond_to_increment(Speaker, Addressee, s(LF)),
+	 respond_to_dialog_act(assertion(Speaker, Addressee, LF, present, simple))).
 
 %%
 %% Assertions

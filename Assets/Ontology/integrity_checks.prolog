@@ -59,6 +59,13 @@ test(integrity(relations_declared),
 	 \+ relation_type(Relation, _, _) ),
        UndeclaredRelations).
 
+test(integrity(inverse_relations_must_be_declared_in_their_canonical_form),
+     [ true(Malformed == []) ]) :-
+   all(related(X, R, Y),
+       ( declare_related(X, R, Y),
+	 inverse_relation(R, _) ),
+       Malformed).
+
 test(integrity(valid_relation_types),
      [ true(InvalidValues == []) ]) :-
    all(Object:Relation:Value,

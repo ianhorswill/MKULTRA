@@ -5,7 +5,7 @@
 :- public declare_object/3.
 :- public property_type/3, relation_type/3.
 :- public kind_lub/3, kind_glb/3.
-
+:- public implies_relation/2, inverse_relation/2.
 :- external declare_value/3, default_value/3, declare_related/3.
 
 test_file(integrity(_), "Ontology/integrity_checks").
@@ -197,6 +197,12 @@ related_nondefault(Object, Relation, Relatum) :-
 related(Object, Relation, Relatum) :-
    /brainwash/relations/Object/Relation/Relatum.
 related(Object, Relation, Relatum) :-
+   % This relation is canonically stored as its inverse
+   inverse_relation(Relation, Inverse),
+   related(Relatum, Inverse, Object).
+related(Object, Relation, Relatum) :-
+   % This relation has no inverse or is the canonical form.
+   \+ inverse_relation(Relation, _Inverse),
    decendant_relation(D, Relation),
    declare_related(Object, D, Relatum).
 
@@ -272,11 +278,13 @@ load_special_csv_row(_RowNumber, properties(Name, SurfaceForm, ObjectType, Value
 load_special_csv_row(_RowNumber,
 		     relations(Name, ObjectType, ValueType,
 			       CopularForm,
-			       Generalizations)) :-
+			       Generalizations,
+			       Inverse)) :-
    assert(relation_type(Name, ObjectType, ValueType)),
    assert_copular_form(Name, CopularForm),
    forall(member(Gen, Generalizations),
-	  assert(implies_relation(Name, Gen))).
+	  assert(implies_relation(Name, Gen))),
+   (Inverse \= null -> assert(inverse_relation(Name, Inverse)) ; true).
 
 assert_copular_form(_Name, [ ]).
 assert_copular_form(Name, [be | CopularForm]) :-

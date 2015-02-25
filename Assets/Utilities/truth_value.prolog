@@ -28,6 +28,10 @@ know_whether(related(Object, Relation, Relatum)) :-
    !,
    know_relation(Relation, Object, Relatum).
 
+know_about_object($me).
+know_about_object(Person) :-
+   related($me, know, Person).
+
 know_whether(_).
 
 know_relation(_, $me, _).
