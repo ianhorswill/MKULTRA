@@ -195,6 +195,27 @@ s((Value:(property_value(Noun, Property, Value), is_a(Value, Kind))),
    np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
    property_name(Property).
 
+% Wh-questions about relations
+
+% Whose relation is Value?
+s(Noun:related(Noun, Relation, Value),
+  interrogative, affirmative, Tense, simple) -->
+   [ whose ],
+   genitive_form_of_relation(Relation, Number),
+   copula(simple, Tense, Person:Number),
+   np((Value^_)^_, subject, Person:Number, nogap, nogap).
+
+% NP's Relation is [not] RelationValue
+s((Value:(related(Noun, Relation, Value), is_a(Value, Kind))),
+  interrogative, affirmative, Tense, simple) -->
+   whpron(Kind),
+   copula(simple, Tense, third:Number),
+   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   genitive_form_of_relation(Relation, Number).
+
+
+
+
 % Wh-questions about the subject.
 s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->
    { lf_subject(S, Subject), var(Subject) },
