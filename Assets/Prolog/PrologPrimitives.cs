@@ -359,6 +359,8 @@ namespace Prolog
                             "Runs GOAL repeatedly, COUNT times.", "+goal", "*count");
             DefinePrimitive("word_list", WordListImplementation, "definite clause grammars",
                             "Parses/unparses STRING into a LIST of word.", "?string", "?list");
+            DefinePrimitive("register_lexical_item", RegisterLexicalItemImplementation, "definite clause grammars",
+                            "Adds WORD to list of words recognized by word_list.", "+word");
             DefinePrimitive("string_representation", StringRepresentationImplementation, "other predicates",
                             "Parses/unparses between TERM and STRING.", "?term", "?string");
             DefinePrimitive("starts_with", StartsWithImplementation, "other predicates",
@@ -2659,6 +2661,19 @@ namespace Prolog
                     "First argument must be a string (or uninstantiated) and second argument must be a list of words (or uninstantiated).");
             }
             return Term.UnifyAndReturnCutState(Prolog.StringToWordList(s), args[1]);
+        }
+
+        private static IEnumerable<CutState> RegisterLexicalItemImplementation(object[] args, PrologContext context)
+        {
+            if (args.Length != 1) throw new ArgumentCountException("register_lexical_item", args, "word");
+            object arg0 = Term.Deref(args[0]);
+            var s = arg0 as Symbol;
+            if (s == null)
+            {
+                throw new ArgumentTypeException("register_lexical_item", "word", Term.Deref(args[0]), typeof(Symbol));
+            }
+            Prolog.RegisterLexicalItem(s);
+            return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> StringRepresentationImplementation(object[] args, PrologContext context)

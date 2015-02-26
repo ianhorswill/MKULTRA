@@ -13,6 +13,8 @@ load_csv_row(_, Assertion) :-
 assert_phrase_rule(Phrase, Words) :-
    assertion(\+ (member(X, Words), \+ atomic(X)),
 	     Words:"Phrase must be a list of symbols"),
+   forall(member(Word, Words),
+	  register_lexical_item(Word)),
    append(Words, Tail, WordsWithTail),
    term_append(Phrase, [WordsWithTail, Tail], DCGRule),
    assertz(DCGRule).

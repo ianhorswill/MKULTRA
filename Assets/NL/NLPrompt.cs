@@ -164,9 +164,8 @@ public class NLPrompt : BindingBehaviour
             var lastSpace = this.input.LastIndexOf(' ');
             var lastWord = lastSpace < 0 ? this.input : this.input.Substring(lastSpace + 1);
             lastWord = lastWord.Trim('(', ')', '.', ',', '?', '!', ';', ':', '\'', '"');
-            if (lastWord == "i")
-                lastWord = "I";
-            if (Symbol.IsInternedIgnoringEnglishCase(lastWord))
+
+            if (Prolog.Prolog.IsLexicalItem(lastWord))
             {
                 this.TryCompletion();
             }
@@ -203,7 +202,9 @@ public class NLPrompt : BindingBehaviour
                     string.Format("<b><color=lime>{0}</color></b>", this.input)
                     : string.Format("<color=lime>{0}{1}<i>{2}</i></color>",
                                     this.input,
-                                    (this.input.EndsWith(" ") || !char.IsLetterOrDigit(this.completion[0])) ? "" : " ",
+                                    ( this.input.EndsWith(" ") || this.input.EndsWith("'") 
+                                      || !char.IsLetterOrDigit(this.completion[0])) 
+                                    ? "" : " ",
                                     this.completion);
                 var da = this.dialogAct as Structure;
                 if (da != null && da.Arity > 1)

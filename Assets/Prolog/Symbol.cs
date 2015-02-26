@@ -108,46 +108,6 @@ namespace Prolog
         {
             return SymbolTable.ContainsKey(name);
         }
-
-        /// <summary>
-        /// Returns Symbol corresponding to the string WORD, assuming it is an English word,
-        /// and ignoring case as much as possible.
-        /// </summary>
-        /// <param name="word">The word to search for</param>
-        /// <returns>The symbol corresponding to it.</returns>
-        public static Symbol InternWordIgnoringEnglishCase(string word)
-        {
-            return Intern(InternedFormOfEnglishWord(word)??word);
-        }
-
-        /// <summary>
-        /// True if there is Symbol in the symbol table that looks like WORD modulo
-        /// case.
-        /// </summary>
-        /// <param name="word">The string to look for</param>
-        /// <returns>True if WORD appears in the symbol table.</returns>
-        public static bool IsInternedIgnoringEnglishCase(string word)
-        {
-            return InternedFormOfEnglishWord(word) != null;
-        }
-
-        private static string InternedFormOfEnglishWord(string word)
-        {
-            if (string.IsNullOrEmpty(word))
-                return null;
-            if (word == "i")
-                return "I";
-            if (IsInterned(word))
-                return word;
-            var down = word.ToLower();
-            if (IsInterned(down))
-                return down;
-            // Not exactly efficient :(
-            var up = char.ToUpper(down[0]) + down.Substring(1);
-            if (IsInterned(up))
-                return up;
-            return null;
-        }
         #endregion
 
         #region Constructor - private -

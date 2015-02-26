@@ -1,3 +1,4 @@
+:- register_lexical_item('I').
 
 %% relpron( that ).
 %% relpron( who  ).
@@ -30,3 +31,4 @@ noun([living, room], [living, rooms], X^is_a(X,living_room)).
 noun(action, actions, X^is_a(X, action)).
 noun(assertion, assertions, X^is_a(X, assertion)).
 noun(question, questions, X^is_a(X, question)).
+

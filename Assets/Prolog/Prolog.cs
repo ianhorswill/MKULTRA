@@ -50,7 +50,7 @@ namespace Prolog
                     case '\t':
                         if (b.Length > 0)
                         {
-                            words.Add(WordSymbol(b));
+                            words.Add(GetLexicalItem(b.ToString()));
                             b.Length = 0;
                         }
                         break;
@@ -65,10 +65,10 @@ namespace Prolog
                     case '"':
                         if (b.Length > 0)
                         {
-                            words.Add(WordSymbol(b));
+                            words.Add(GetLexicalItem(b.ToString()));
                             b.Length = 0;
                         }
-                        words.Add(Symbol.Intern(new string(c, 1)));
+                        words.Add(GetLexicalItem(new string(c, 1)));
                         break;
 
                     default:
@@ -79,17 +79,33 @@ namespace Prolog
 
             if (b.Length > 0)
             {
-                words.Add(WordSymbol(b));
+                words.Add(GetLexicalItem(b.ToString()));
             }
 
             return IListToPrologList(words);
         }
 
-        private static Symbol WordSymbol(StringBuilder b)
+        static readonly Dictionary<string, Symbol> LexicalItems = new Dictionary<string, Symbol>();
+        public static Symbol GetLexicalItem(string p)
         {
-            var name = b.ToString();
-            return Symbol.InternWordIgnoringEnglishCase(name);
+            var l = p.ToLower();
+            Symbol s;
+            if (LexicalItems.TryGetValue(l, out s))
+                return s;
+            return Symbol.Intern(l);
         }
+
+        public static bool IsLexicalItem(string s)
+        {
+            var l = s.ToLower();
+            return LexicalItems.ContainsKey(l) || Symbol.IsInterned(l);
+        }
+
+        public static void RegisterLexicalItem(Symbol s)
+        {
+            LexicalItems[s.Name.ToLower()] = s;
+        }
+
 
         /// <summary>
         /// Convert Prolog list of words into one text string.
@@ -98,18 +114,15 @@ namespace Prolog
         public static string WordListToString(Structure wordList)
         {
             var s = new StringBuilder();
-            bool firstOne = true;
+            string lastToken = null;
             foreach (var word in PrologListToIList(wordList))
             {
                 string str = word.ToString();
-                if (!string.IsNullOrEmpty(str))
-                {
-                    if (firstOne || !char.IsLetterOrDigit(str[0]))  // don't generate a space for the first word or for punctuation.
-                        firstOne = false;
-                    else
-                        s.Append(' ');
-                    s.Append(str);
-                }
+                if (lastToken != null && char.IsLetterOrDigit(str[0]) && !(lastToken == "'" && str == "s"))
+                    s.Append(' ');
+                s.Append(str);
+
+                lastToken = str;
             }
             return s.ToString();
         }
