@@ -80,8 +80,8 @@ s(is_a(Noun, Kind), indicative, Polarity, Tense, simple) -->
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
-   [a, Singular],
-   { kind_noun(Kind, Singular, _Plural) }.
+   [a],
+   kind_noun(Kind, singular).
 
 % NP is [not] NP
 s(be(S, O), indicative, Polarity, Tense, simple) -->
@@ -220,9 +220,6 @@ s((Value:(related(Noun, Relation, Value), is_a(Value, Kind))),
    copula(simple, Tense, third:Number),
    np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
    genitive_form_of_relation(Relation, Number).
-
-
-
 
 % Wh-questions about the subject.
 s(Subject:(S, is_a(Subject, Kind)), interrogative, Polarity, Tense, Aspect) -->

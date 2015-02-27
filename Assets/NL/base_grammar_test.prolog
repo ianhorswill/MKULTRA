@@ -34,6 +34,7 @@ test(parse(s, imperative),
        true(LF == go($'Bruce', $bed)),
        true(Mood == imperative),
        nondet]):-
+   bind(input_from_player, true),
    s_test(LF, Mood, [go, to, the, bed]).
 
 test(parse(s, adjectival_property),
@@ -47,7 +48,7 @@ test(parse(s, wh_transitive),
    s_test(LF, interrogative, [what, can, 'I', type]).
 
 test(generate(s, wh_transitive),
-     [ true(Generated == [what, things, can, 'I', type]),
+     [ true(Generated == [what, can, 'I', type]),
        nondet ]) :-
    s_test(X:(can(type(unknown_speaker, X)), is_a(X, entity)), interrogative, Generated).
 

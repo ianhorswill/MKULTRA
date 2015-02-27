@@ -16,9 +16,10 @@ pronoun(Case, Person:Number, (E^S)^S) -->
 
 %relpron --> [RP], {relpron(RP)}.
 whpron(Kind) -->
-   { Kind \== person },
-   [what, Plural],
-   { kind_noun(Kind, _, Plural) }.
+   { Kind \== person,		% Use who for persons
+     Kind \= entity },		% Just say what, rather than "what entities"
+   [what],
+   kind_noun(Kind, _).
 
 whpron(Kind) --> [WH], {whpron(WH, Kind)}.
 

@@ -44,26 +44,26 @@ opt_genitive(genitive) --> ['\'', s].
 % "a KIND" from unbound variables with declared types
 np(LF, _, third:singular, Gap, Gap) -->
    { var(LF) }, 
-   [a, Singular],
-   { kind_noun(Kind, Singular, _),
-     LF = ((X^S)^(S, is_a(X, Kind))) }.
+   [a],
+   kind_noun(Kind, singular),
+   { LF = ((X^S)^(S, is_a(X, Kind))) }.
 
 % GENERATE ONLY
 % "a KIND" from unbound variables with declared types
 np((X^S)^S, _, third:singular, Gap, Gap) -->
    { var(X) },
-   [a, Singular],
-   { discourse_variable_type(X, Kind),
-     kind_noun(Kind, Singular, _) }.
+   [a ],
+   { discourse_variable_type(X, Kind) },
+   kind_noun(Kind, singular).
 
 % PARSE ONLY
 % "the NOUN"
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
-   [ the, Noun ],
-   { nonvar(Noun),
-     noun(Noun, _, X^P),
-     atomic(Noun),
-     resolve_definite_description(X, P) }.
+   [ the ],
+   { var(X),
+     input_from_player},	% filter for parsing
+   kind_noun(Kind, singular),
+   { resolve_definite_description(X, is_a(X, Kind)) }.
 
 % GENERATE ONLY
 % "the NOUN"
@@ -71,37 +71,27 @@ np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { nonvar(X),
      % If it has a proper name or a bound variable, then don't use this rule.
      \+ proper_name(X, _),
-     is_a(X, Kind),
-     leaf_kind(Kind),
-     kind_noun(Kind, Singular, _) },
-   [the, Singular].
+     base_kind(X, Kind) },
+   [the],
+   kind_noun(Kind, singular).
 
 % COMPLETE ONLY
 % "the NOUN"
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    % If we're generating (nonvar(X)) rather than completing (var(X)),
    % don't generate something that has a proper name.
-   [the, SingularNoun],
+   [the],
    { var(X),
-     var(SingularNoun),
      input_from_player,
-     \+ bound_discourse_variable(X),
-     object_matching_selectional_constraint(X, SingularNoun) }.
+     \+ bound_discourse_variable(X) },
+   kind_noun(Kind, singular),
+   { leaf_kind(Kind),
+     object_matching_selectional_constraint(X, Kind) }.
 
-object_matching_selectional_constraint(X, SingularNoun) :-
+object_matching_selectional_constraint(X, Kind) :-
    selectional_constraint(X, ConstraintKind),
-   is_a(X, ConstraintKind),
-   noun_describing(X, SingularNoun).
-
-noun_describing(X, SingularNoun) :-
-   is_a(X, SpecificKind),
-   kind_noun(SpecificKind, SingularNoun, _).
-
-np((X^S)^S, _C, third:singular, Gap, Gap) -->
-   [ the, N1, N2 ],
-   { (nonvar(N1) ; nonvar(X)),
-     noun([N1, N2], _, X^P),
-     resolve_definite_description(X, P) }.
+   kind_of(Kind, ConstraintKind),
+   is_a(X, Kind).
 
 % GENERATE ONLY
 % Fixed strings.

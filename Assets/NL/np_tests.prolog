@@ -80,6 +80,7 @@ test(parse(np, kind),
 test(parse(np, prop),
      [ true(LF == $bed),
        nondet ]) :-
+   bind(input_from_player, true),
    np_test(LF, subject, third:singular, [the, bed]).
 
 

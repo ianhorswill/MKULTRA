@@ -32,3 +32,8 @@ contained_in(PhysicalObject, Location) :-
 contained_in(PhysicalObject, Location) :-
    location(PhysicalObject, Container),
    contained_in(Container, Location).
+
+%% room(?X) is nondet
+%  X is a room.
+room(X) :-
+   is_a(X, room).
