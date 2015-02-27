@@ -206,6 +206,10 @@ strategy(answer_wh(_Asker, Identity, _,
 	 introduce_person(Person)) :-
    character(Person).
 
+strategy(answer_wh(Asker, Identity, _,
+		   (be(Entity, Identity), is_a(Entity, entity))),
+	 tell_about($me, Asker, Entity)).
+
 strategy(answer_wh(_Asker, Identity, _,
 		   (be(player, Identity), is_a(player, person))),
 	 say(be(player, $me))).
@@ -241,7 +245,7 @@ default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
         S = speech(["Don't know"]) ).
 
 default_strategy(enumerate_answers(Asker, Answer, Core, Constraint),
-	 answer_with_list(List, Connective, Answer, Core)) :-
+		 answer_with_list(List, Connective, Answer, Core)) :-
    nonvar(Constraint),
    all(Answer, admitted_truth_value(Asker, Constraint, true), List),
    connective_for_answer(Constraint, Connective).
@@ -253,7 +257,10 @@ strategy(answer_with_list([ ], _, Var, Constraint),
 	 say_string(S)) :-
    !,
    begin(variable_type_given_constraint(Var, Constraint, Kind)),
-   (kind_of(Kind, actor) -> S="Nobody"; S="Nothing").
+         ( kind_of(Kind, actor) ->
+	      S="Nobody"
+	      ;
+	      S="Nothing" ).
 
 strategy(answer_with_list(ItemList, Termination, Var, Constraint),
 	 say_list(ItemList, Termination, Var^s(Constraint))).

@@ -7,6 +7,9 @@ possible_types_given_constraint(Var, Expression, Types) :-
 
 %% possibile_types_given_constraint(-Var, :Expression, -Types)
 %  Gives all the possible types for Var within Expression.
+variable_type_given_constraint(Object, _, Type) :-
+   nonvar(Object),
+   is_a(Object, Type).
 variable_type_given_constraint(Var, Expression, Type) :-
    well_typed(Expression, _, Bindings),
    lookup_variable_type(Var, Type, Bindings).

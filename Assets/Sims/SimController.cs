@@ -30,14 +30,6 @@ public class SimController : PhysicalObject
 {
     #region Public fields
     /// <summary>
-    /// Name the character will go by.
-    /// Should be a single word.
-    /// </summary>
-    public string CharacterName;
-    [Popup("woman", "man")]
-    public string Type="woman";
-
-    /// <summary>
     /// If true, the things the character says to themselves are displayed
     /// </summary>
     public bool ShowMentalMonologue;
@@ -264,9 +256,7 @@ public class SimController : PhysicalObject
         this.eventHistory = elRoot / Symbol.Intern("event_history");
         this.lastDestination = elRoot / Symbol.Intern("last_destination");
         ELNode.Store(lastDestination % null);  // Need a placeholder last destination so that /last_destination/X doesn't fail.
-        if (string.IsNullOrEmpty(CharacterName))
-            CharacterName = name;
-        if (!KB.Global.IsTrue("register_character", gameObject, Symbol.Intern(CharacterName), Symbol.Intern((Type))))
+        if (!KB.Global.IsTrue("register_character", gameObject))
             throw new Exception("Can't register character " + name);
         if (greyOutTexture == null) {
             greyOutTexture = new Texture2D(1,1);

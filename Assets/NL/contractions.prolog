@@ -39,7 +39,9 @@ contraction(we, are, 'we','re').
 contraction(they, are, 'they','re').
 
 contraction(what, is, what, s).
+contraction(what, are, what, re).
 contraction(who, is, who, s).
+contraction(who, are, who, re).
 
 contraction('I', will, 'I','ll').
 contraction(let, us, 'let','s').

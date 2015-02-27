@@ -25,12 +25,10 @@ register_prop(Prop, Kind, Adjectives) :-
    forall(is_a(Prop, K),
 	  ignore(initialize_prop(Prop, K))).
 
-%% register_character(*Character, *Name, *Kind)
-%  Add Character to database with the specified Name and Kind (male or female).
-register_character(Character, Name, Type) :-
-   ensure(character(Character)),
-   ensure(declare_kind(Character, Type)),
-   assert_proper_name(Character, [Name], singular).
+%% register_character(*Character)
+%  Add Character to database.
+register_character(Character) :-
+   ensure(character(Character)).
 
 %% ensure(+Fact)
 %  Adds Fact to database, if it is not already there.

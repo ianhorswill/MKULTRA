@@ -32,10 +32,14 @@ know_about_object($me).
 know_about_object(Person) :-
    related($me, know, Person).
 
+know_about_object(illuminati).
+
 know_whether(_).
 
-know_relation(_, $me, _).
-know_property(_, $me, _).
+know_relation(_Relation, Object, _Relatum) :-
+   know_about_object(Object).
+know_property(_Property, Object, _Value) :-
+   know_about_object(Object).
 
 know_about_object(Object) :-
    atomic(Object),

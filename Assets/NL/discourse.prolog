@@ -17,20 +17,31 @@ strategy(maybe_give_name(X),
 
 property_relevant_to_purpose(introduction, _, Property, _) :-
    memberchk(Property, [age, gender, job]).
+property_relevant_to_purpose(general, _, _, _).
 
 relation_relevant_to_purpose(introduction, _, Relation, _) :-
    memberchk(Relation, [ interested_in, knows_about, roommate_of ]).
+relation_relevant_to_purpose(general, _, _, _).
 
 %%
 %% Describing objects
 %%
 
 strategy(describe(Object, Purpose, NullContinuation),
-	 describe_attributes(Object, Attributes, NullContinuation)) :-
+	 ( describe_type(Object),
+	   describe_attributes(Object, Attributes, NullContinuation) )) :-
    all(Attribute,
        interesting_attribute(Purpose, Object, Attribute),
        AllAttributes),
    remove_redundant_attributes(AllAttributes, Attributes).
+
+strategy(describe_type(Object),
+	 null) :-
+   is_a(Object, person).
+strategy(describe_type(Object),
+	 say(is_a(Object, Kind))) :-
+   \+ is_a(Object, person),
+   base_kind(Object, Kind).
 
 remove_redundant_attributes([ ], [ ]).
 remove_redundant_attributes([Relation/Relatum | Rest], RestRemoved) :-

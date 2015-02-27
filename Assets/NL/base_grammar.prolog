@@ -149,6 +149,14 @@ s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) --
    opt_not(Polarity),
    [a, Value].
 
+% NP's Relation is [not] Relatum
+s(related(Noun, Relation, Relatum), indicative, Polarity, Tense, simple) -->
+   np((Noun^_)^_, genitive, _Agreement, nogap, nogap),
+   genitive_form_of_relation(Relation, singular),
+   copula(simple, Tense, third:singular),
+   opt_not(Polarity),
+   np((Relatum^_)^_, object, _Agreement, nogap, nogap).
+
 %%%
 %%% Imperative mood
 %%%

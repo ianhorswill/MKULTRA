@@ -37,7 +37,8 @@ test(parse(s, imperative),
    s_test(LF, Mood, [go, to, the, bed]).
 
 test(parse(s, adjectival_property),
-     [ true(Generated == ['Bruce', is, male]) ]) :-
+     [ true(Generated == ['Bruce', is, male]),
+       nondet ]) :-
    s(property_value($'Bruce', gender, male), indicative, affirmative, present, simple, Generated, []).
 
 test(parse(s, wh_transitive),
