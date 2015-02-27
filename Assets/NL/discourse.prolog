@@ -3,9 +3,8 @@
 %%
 
 strategy(introduce_person(Person),
-	 ( maybe_give_name(Person),
-	   describe(Person, introduction, null) )
-	).
+	 begin(maybe_give_name(Person),
+	       describe(Person, introduction, null))).
 
 strategy(maybe_give_name($me),
 	 say(be($me, Name))) :-
@@ -28,20 +27,19 @@ relation_relevant_to_purpose(general, _, _, _).
 %%
 
 strategy(describe(Object, Purpose, NullContinuation),
-	 ( describe_type(Object),
-	   describe_attributes(Object, Attributes, NullContinuation) )) :-
+	 begin(describe_type(Object),
+	       describe_attributes(Object, Attributes, NullContinuation))) :-
    all(Attribute,
        interesting_attribute(Purpose, Object, Attribute),
        AllAttributes),
    remove_redundant_attributes(AllAttributes, Attributes).
 
 strategy(describe_type(Object),
-	 null) :-
-   is_a(Object, person).
-strategy(describe_type(Object),
-	 say(is_a(Object, Kind))) :-
-   \+ is_a(Object, person),
-   base_kind(Object, Kind).
+	 if(is_a(Object, person),
+	    null,
+	    let(base_kind(Object, Kind),
+		say(is_a(Object, Kind))))).
+
 
 remove_redundant_attributes([ ], [ ]).
 remove_redundant_attributes([Relation/Relatum | Rest], RestRemoved) :-
@@ -76,11 +74,10 @@ interesting_relation(Purpose, Object, Relation/Relatum) :-
    \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
    relation_relevant_to_purpose(Purpose, Object, Relation, Relatum).
 
-strategy(describe_attributes(_Object, [], NullContinuation),
-	 NullContinuation).
-strategy(describe_attributes(Object, Attributes, _NullK),
-	 generate_list(Attributes, attribute_of(Object))) :-
-   Attributes \= [ ].
+strategy(describe_attributes(Object, Attributes, NullContinuation),
+	 if(Attributes=[ ],
+	    NullContinuation,
+	    generate_list(Attributes, attribute_of(Object)))).
 
 strategy(generate_next(Property:Value, attribute_of(Object)),
 	 describe_property("", Object, Property, Value, ", ...")).
@@ -125,13 +122,13 @@ strategy(generate_list([ ], GenerationInfo),
 strategy(generate_list([X], GenerationInfo),
 	 generate_singleton(X, GenerationInfo)).
 strategy(generate_list([H | T], GenerationInfo),
-	 ( generate_first(H, GenerationInfo),
-	   generate_rest(T, GenerationInfo) )) :-
+	 begin(generate_first(H, GenerationInfo),
+	       generate_rest(T, GenerationInfo))) :-
    T \= [ ].
 
 strategy(generate_rest([H | T], GenerationInfo),
-	 ( generate_next(H, GenerationInfo),
-	   generate_rest(T, GenerationInfo) )) :-
+	 begin(generate_next(H, GenerationInfo),
+	       generate_rest(T, GenerationInfo))) :-
    T \= [ ].
 strategy(generate_rest([X], GenerationInfo),
 	 generate_last(X, GenerationInfo)).
@@ -157,13 +154,13 @@ strategy(say_list([X], _, SurfaceLambda),
 	 speech([Surface])) :-
    reduce(SurfaceLambda, X, Surface).
 strategy(say_list([H | T], Termination, SurfaceLambda),
-	 ( say_first(H, SurfaceLambda),
-	   say_rest(T, Termination, SurfaceLambda) )) :-
+	 begin(say_first(H, SurfaceLambda),
+	       say_rest(T, Termination, SurfaceLambda))) :-
    T \= [ ].
 
 strategy(say_rest([H | T], Termination, SurfaceLambda),
-	 ( say_next(H),
-	   say_rest(T, Termination, SurfaceLambda) )) :-
+	 begin(say_next(H),
+	       say_rest(T, Termination, SurfaceLambda))) :-
    T \= [ ].
 strategy(say_rest([X], Termination, SurfaceLambda),
 	 say_last(X, Termination, SurfaceLambda)).
@@ -173,9 +170,6 @@ strategy(say_first(Object, SurfaceLambda),
    reduce(SurfaceLambda, Object, Surface).
 strategy(say_next(Object),
 	 speech([ np(Object), "," ])).
-% strategy(say_last(Object, Termination, SurfaceLambda),
-% 	 speech([ Termination, Surface ])) :-
-%    reduce(SurfaceLambda, Object, Surface).
 strategy(say_last(Object, Termination, _SurfaceLambda),
 	 speech([ Termination, np(Object), "."])).
 strategy(say_object(Object),
@@ -186,15 +180,18 @@ strategy(say(Assertion),
 	 speech([ s(Assertion) ])).
 
 strategy(speech(Items),
-	 ( discourse_increment($me, $addressee, Items), sleep(1))) :-
+	 begin(discourse_increment($me, $addressee, Items),
+	       sleep(1))) :-
    $task/partner/player.
 strategy(speech(Items),
-	 ( wait_condition(/perception/nobody_speaking), discourse_increment($me, $addressee, Items))) :-
+	 begin(wait_condition(/perception/nobody_speaking),
+	       discourse_increment($me, $addressee, Items))) :-
    assertion($task/partner/P, $me:"Conversation partner undefined."),
    P \= player.
 
 strategy(mental_monologue(Items),
-	 (discourse_increment($me, $me, Items), sleep(1))).
+	 begin(discourse_increment($me, $me, Items),
+	       sleep(1))).
 
 %%
 %% Utilities

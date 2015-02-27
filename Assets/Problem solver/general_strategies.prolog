@@ -8,6 +8,40 @@ strategy(resolve_match_failure(X), S) :-
    default_strategy(X, S).
 
 %%
+%% if(Condition, ThenStrategy, ElseStrategy)
+%% A simple conditional to make strategy code more readable
+%% Reduces to T if C is true, else E.
+%%
+strategy(if(C, T, E),
+	 S) :-
+   C -> (S=T);(S=E).
+
+%%
+%% cases([C1:S1, C2:S2, ...])
+%% Reduces to the first Si whose corresponding Ci is true.
+%%
+strategy(cases(CaseList),
+	 S) :-
+   member(C:S, CaseList),
+   C,
+   !.
+
+%%
+%% begin(Tasks, ...)
+%% this is just syntactic sugar for (A, B) to make things more readable.
+%%
+strategy(begin(A, B),
+	 (A, B)).
+strategy(begin(A, B, C),
+	 (A, B, C)).
+strategy(begin(A, B, C, D),
+	 (A, B, C, D)).
+strategy(begin(A, B, C, D, E),
+	 (A, B, C, D, E)).
+strategy(begin(A, B, C, D, E, F),
+	 (A, B, C, D, E, F)).
+
+%%
 %% achieve(P)
 %% Task to make P become true.
 %%
@@ -62,10 +96,10 @@ strategy(move($me, X,Y),
 strategy(achieve(docked_with(WorldObject)),
 	 goto(WorldObject)).
 strategy(goto(Target),
-	 ( let(top_level_container(Target, Place),
-	       ( assert($task/location_bids/Place:Priority),
-		 wait_event(arrived_at(Place)),
-		 retract($task/location_bids/Place)) ) )) :-
+	 let(top_level_container(Target, Place),
+	     begin(assert($task/location_bids/Place:Priority),
+		   wait_event(arrived_at(Place)),
+		   retract($task/location_bids/Place)))) :-
    assertion(atomic(Target), bad_target:goto(Target)),
    $task/priority:Priority.
 
@@ -95,52 +129,53 @@ strategy(search_for($me, Container, Target),
 			  mental_monologue(["Nothing seems to be hidden."]))) :-
    var(Target).
 
-strategy(search_container(Room, CriterionLambda, SuccessLambda, FailTask),
-	 S) :-
-   is_a(Room, room),
-   ( nearest(Container,
-	     ( location(Container, Room),
-	       \+ $task/searched/Container,
-	       is_a(Container, container) )) ->
-       S = search_container(Container,
-			    CriterionLambda,
-			    SuccessLambda,
-			    ( assert($task/searched/Container),
-			      mental_monologue(["Not here."]),
-			      search_container(Room,
-					       CriterionLambda,
-					       SuccessLambda, FailTask)))
-       ;
-       S = FailTask ).
-
 strategy(search_container(Container, CriterionLambda, SuccessLambda, FailTask),
-	 ( achieve(docked_with(Container)),
-	   search_docked_container(CriterionLambda, SuccessLambda, FailTask) )
-	) :-
-   is_a(Container, container),
-   \+ is_a(Container, room).
+	 if(is_a(Container, room),
+	    search_room(Container,
+			CriterionLambda, SuccessLambda, FailTask),
+	    search_nonroom(Container,
+			   CriterionLambda, SuccessLambda, FailTask))).
+
+strategy(search_room(Room, CriterionLambda, SuccessLambda, FailTask),
+	  if(nearest(Container,
+		     ( location(Container, Room),
+		       \+ $task/searched/Container,
+		       is_a(Container, container) )),
+	     search_container(Container,
+			      CriterionLambda,
+			      SuccessLambda,
+			      begin(assert($task/searched/Container),
+				    mental_monologue(["Not here."]),
+				    search_container(Room,
+						     CriterionLambda,
+						     SuccessLambda, FailTask))),
+	     FailTask)).
+
+strategy(search_nonroom(Container, CriterionLambda, SuccessLambda, FailTask),
+	 begin(achieve(docked_with(Container)),
+	       search_docked_container(CriterionLambda,
+				       SuccessLambda, FailTask))) :-
+   is_a(Container, container).
 
 strategy(search_docked_container(Item^Criterion,
 				 Item^SuccessTask,
 				 FailTask),
-	 S) :-
-   docked_with(Container),
-   once(((location(Item, Container), Criterion) ->
-        S = SuccessTask
-        ;
-        S = search_for_hidden_items(Item^Criterion,
+	 if((location(Item, Container), Criterion),
+	    SuccessTask,
+	    search_for_hidden_items(Item^Criterion,
 				    Item^SuccessTask,
-				    FailTask) )).
+				    FailTask) )) :-
+   docked_with(Container).
 
 strategy(search_for_hidden_items(CriterionLambda, SuccessLambda, FailTask),
-	 S) :-
-   reveal_hidden_item(_Item) ->
-        S = ( mental_monologue(["Wait, there's something here"]),
-	      search_docked_container(CriterionLambda,
-				      SuccessLambda,
-				      FailTask) )
-        ;
-	S = FailTask.
+	 if(reveal_hidden_item(_Item),
+            begin(mental_monologue(["Wait, there's something here"]),
+		  search_docked_container(CriterionLambda,
+					  SuccessLambda,
+					  FailTask)),
+	    FailTask)).
+
+:- public reveal_hidden_item/1.
 
 reveal_hidden_item(Item) :-
    docked_with(Container),

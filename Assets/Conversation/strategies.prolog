@@ -64,9 +64,10 @@ strategy(respond_to_dialog_act(greet($addressee, $me)),
 
 strategy(respond_to_dialog_act(discourse_increment(_Sender, _Receiver, [ ])),
 	 null).
-strategy(respond_to_dialog_act(discourse_increment(Sender, Receiver, [ Act | Acts])),
-	 ( respond_to_increment(Sender, Receiver, Act),
-	   respond_to_dialog_act(discourse_increment(Sender, Receiver, Acts)) )).
+strategy(respond_to_dialog_act(discourse_increment(Sender, Receiver,
+						   [ Act | Acts])),
+	 begin(respond_to_increment(Sender, Receiver, Act),
+	       respond_to_dialog_act(discourse_increment(Sender, Receiver, Acts)))).
 
 default_strategy(respond_to_increment(_, _, _),
 		 null).
@@ -119,12 +120,11 @@ request_status(Requestor, Task, incriminating(P)) :-
 request_status(_Requestor, _Task, normal).
 
 strategy(follow_command(Task, normal),
-	 Strategy) :-
-   dialog_task(Task) ->
-      (Strategy = Task)
-      ;
-      (Strategy = assert(/goals/pending_tasks/Task)).
+	 if(dialog_task(Task),
+	    Task,
+	    assert(/goals/pending_tasks/Task))).
 
+:- public dialog_task/1.
 dialog_task(tell_about(_,_,_)).
 
 strategy(follow_command(_, immoral),
@@ -170,14 +170,11 @@ strategy(end_game(_,_), end_game(null)).
 
 % Dispatch on question type
 strategy(respond_to_dialog_act(question(Asker, $me, Question,
-					present, _Aspect)),
-	 S) :-
-   (Question = Answer:Constraint) ->
-      ( lf_main_predicate(Constraint, Core),
-	S=answer_wh(Asker, Answer, Core, Constraint)
-      )
-      ;
-      (S=answer_yes_no(Asker, Question)).
+					_Tense, _Aspect)),
+	 if((Question = Answer:Constraint),
+	    let(lf_main_predicate(Constraint, Core),
+		answer_wh(Asker, Answer, Core, Constraint)),
+	    answer_yes_no(Asker, Question))).
 
 %% Yes/no quetsions
 strategy(answer_yes_no(Asker, Q),
@@ -194,12 +191,12 @@ strategy(generate_answer(_Q, unknown),
 
 %% Wh-questions
 
+:- public unique_answer/2.
+:- external unique_answer/2.
 default_strategy(answer_wh(Asker, Answer, Core, Constraint),
-		 S) :-
-   unique_answer(Answer, Core) ->
-      S = generate_unique_answer(Asker, Answer, Core, Constraint)
-      ;
-      S = enumerate_answers(Asker, Answer, Core, Constraint).
+		 if(unique_answer(Answer, Core),
+		    generate_unique_answer(Asker, Answer, Core, Constraint),
+		    enumerate_answers(Asker, Answer, Core, Constraint))).
 
 strategy(answer_wh(_Asker, Identity, _,
 		   (be(Person, Identity), is_a(Person, person))),
@@ -225,24 +222,18 @@ strategy(answer_wh(M, _,
 	 say(okay(Who))).
 
 strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
-	 S) :-
-   admitted_truth_value(Asker, P, true) ->
-      (admitted_truth_value(Asker, explanation(P, E), true) ->
-         (S = assertion($me, Asker, E, present, simple))
-         ;
-         (S = speech(["I couldn't speculate."])))
-      ;
-      (S = assertion($me, Asker, not(P), present, simple)).
+	 cases([admitted_truth_value(Asker, P, false):
+	          assertion($me, Asker, not(P), present, simple),
+		admitted_truth_value(Asker, explanation(P, E), true):
+	          assertion($me, Asker, E, present, simple),
+	        true:speech(["I couldn't speculate."])])).
 
 default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
-		 S) :-
+		 if(admitted_truth_value(Asker, Constraint, true),
+		    assertion($me, Partner, Core, present, simple),
+		    speech(["Don't know"]))) :-
    nonvar(Constraint),
-   $task/partner/Partner,
-   admitted_truth_value(Asker, Constraint, Truth),
-   ( (Truth = true) ->
-        S = assertion($me, Partner, Core, present, simple)
-        ;
-        S = speech(["Don't know"]) ).
+   $task/partner/Partner.
 
 default_strategy(enumerate_answers(Asker, Answer, Core, Constraint),
 		 answer_with_list(List, Connective, Answer, Core)) :-
@@ -282,8 +273,8 @@ strategy(respond_to_dialog_act(hypno_command(_, $me, LF, present, simple)),
 	 do_hypnotically_believe(LF)).
 
 strategy(do_hypnotically_believe(LF),
-	 ( flash(Yellow, Green, 0.3, 1.5),
-	   assertion($me, Partner, LF, present, simple) )) :-
+	 begin(flash(Yellow, Green, 0.3, 1.5),
+	       assertion($me, Partner, LF, present, simple))) :-
    hypnotically_believe(LF),
    Yellow is $'Color'.yellow,
    Green is $'Color'.green,
