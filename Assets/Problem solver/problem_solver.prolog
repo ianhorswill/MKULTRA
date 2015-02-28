@@ -193,6 +193,29 @@ canonical_form_of_task(Task, Canonical) :-
    !.
 canonical_form_of_task(Task, Task).
 
+:- public show_decomposition/1.
+
+%% show_decomposition(+Task)
+%  Prints the series of decompositions of Task until it reaches a point where
+%  it's not further decomposable, or the decomposition is non-unique.
+show_decomposition(Task) :-
+   writeln(Task),
+   matching_strategies(Reductions, Task),
+   show_decomposition_aux(Reductions).
+show_decomposition_aux([]) :-
+   writeln('-> no further decompositions possible').
+show_decomposition_aux([UniqueDecomposition]) :-
+   write('-> '),
+   writeln(UniqueDecomposition),
+   matching_strategies(Reductions, UniqueDecomposition),
+   show_decomposition_aux(Reductions).
+show_decomposition_aux(ListOfReductions) :-
+   writeln('->'),
+   forall(member(R, ListOfReductions),
+	  begin(write('   '),
+		writeln(R))).
+   
+
 %% select_strategy(+Step, StrategyList)
 %  If StrategyList is a singleton, it runs it, else subgoals
 %  to a metastrategy.
