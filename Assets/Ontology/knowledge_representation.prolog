@@ -1,8 +1,12 @@
+%%%
+%%% Knowledge representation langauge used in the KB
+%%% Kinds, types, properties, relations, defaults, and is_a.
+%%%
+
 :- public is_a/2, kind_of/2.
 :- public kind/1, leaf_kind/1.
 :- public property_value/3, related/3.
 :- public process_kind_hierarchy/0.
-:- public declare_object/3.
 :- public property_type/3, relation_type/3.
 :- public kind_lub/3, kind_glb/3.
 :- public implies_relation/2, inverse_relation/2.
@@ -11,6 +15,11 @@
 test_file(integrity(_), "Ontology/integrity_checks").
 
 :- randomizable declare_kind/2.
+
+%%%
+%%% is_a
+%%% Tests for what entities are of what kinds.
+%%%
 
 %% is_a(?Object, ?Kind)
 %  Object is of kind Kind.
@@ -57,6 +66,10 @@ is_a_aux(Object, Kind) :-
 base_kind(Object, Kind) :-
    atomic(Object),
    is_a_aux(Object, Kind).
+
+%%%
+%%% Kinds and the kind hierarchy
+%%%
 
 valid_kind(Kind) :-
    var(Kind),
@@ -138,6 +151,57 @@ kind_glb(Kind1, Kind2, GLB) :-
    array_member(GLB, A2),
    !.
 
+%%%
+%%% Types
+%%% This is a kluge, similar to the one in Java and C# that distinguish
+%%% between types and classes.  We essentially want everything in the KB
+%%% to be described in terms of kinds.
+%%%
+%%% The one exception is that some properties have types like string
+%%% or number and is_a doesn't understand strings and numbers to be
+%%% kinds.  So when checking the type of a property, we need a richer
+%%% notion of types than the kind system above.  Hence "types" as an
+%%% adjunct to kinds.
+%%%
+%%% Arguably, we should just change is_a to thing that number is a kind.
+%%% The two arguments against that are that (1) it adds more special cases
+%%% to is_a, and slows it down a little.  More importantly, (2), with is_a
+%%% the way it is now, you can always call it with a variable for its first
+%%% argument and a kind as its second, and it will start enumerating objects
+%%% of that kind.  We don't want to any code that tries to enumerate all the
+%%% integers, nor do we want is_a to word for enumerating objects for most
+%%% kinds but not all kinds (too dangerous).
+%%%
+%%% Note: the one exception to the behavior of is_a is that it's been hacked
+%%% to accept strings and numbers as entities because the parser just really
+%%% needs that.
+%%%
+
+%% is_type(?Object, ?Type)
+%  Object is of type Type.
+%  Types are a super-set of kinds.
+is_type(Object, number) :-
+   number(Object), !.
+is_type(Object, string) :-
+   string(Object), !.
+is_type(Object, kind) :-
+   kind(Object).
+is_type(Object, List) :-
+   list(List),
+   member(Object, List).
+is_type(Object, kind_of(Kind)) :-
+   kind_of(Object, Kind).
+is_type(Object, subkind_of(Kind)) :-
+   subkind_of(Object, Kind).
+is_type(Object, Kind) :-
+   atom(Kind),
+   is_a(Object, Kind).
+
+
+%%%
+%%% Properties
+%%%
+
 %% property_type(+Property, ?ObjectType, ?ValueType)
 %  Property applies to objects of type ObjectType and its values are of type ValueType.
 
@@ -174,26 +238,9 @@ valid_property_value(P, V) :-
    property_type(P, _OType, VType),
    is_type(V, VType).
 
-%% is_type(?Object, ?Type)
-%  Object is of type Type.
-%  Types are a super-set of kinds.
-is_type(Object, number) :-
-   number(Object), !.
-is_type(Object, string) :-
-   string(Object), !.
-is_type(Object, kind) :-
-   kind(Object).
-is_type(Object, List) :-
-   list(List),
-   member(Object, List).
-is_type(Object, kind_of(Kind)) :-
-   kind_of(Object, Kind).
-is_type(Object, subkind_of(Kind)) :-
-   subkind_of(Object, Kind).
-is_type(Object, Kind) :-
-   atom(Kind),
-   is_a(Object, Kind).
-
+%%%
+%%% Relations
+%%%
 
 %% relation_type(+Relation, ?ObjectType, ?RelatumType)
 %  Relation relates objects of type ObjectType to objects of type RelatumType
@@ -232,119 +279,3 @@ ancestor_relation(R,R).
 ancestor_relation(A, R) :-
    implies_relation(R, I),
    ancestor_relation(A, I).
-
-declare_object(Object,
-	       Properties,
-	       Relations) :-
-   begin(forall(member((Property=Value), Properties),
-		assert(declare_value(Object, Property, Value))),
-	 forall(member((Relation:Relatum), Relations),
-		assert(declare_related(Object, Relation, Relatum)))).
-
-load_special_csv_row(RowNumber,
-		     kinds(Kind, Parents,
-			   Description,
-			   SingularSpec, PluralSpec,
-			   DefaultProperties,
-			   DefaultRelations)) :-
-   define_kind(RowNumber, Kind, Parents),
-   assert_default_description(Kind, Description),
-   decode_kind_name(SingularSpec, [Kind], Singular),
-   decode_kind_name(PluralSpec, Singular, Plural),
-   assert_kind_noun(Kind, Singular, Plural),
-   forall(member(Prop=Value, DefaultProperties),
-	  assert(default_value(Kind, Prop, Value))),
-   forall(member(Relation:Relatum, DefaultRelations),
-	  assert(default_related(Kind, Relation, Relatum))).
-
-assert_default_description(_, null).
-assert_default_description(Kind, Description) :-
-   assert(default_value(Kind, description, Description)).
-
-decode_kind_name([-], _, []).
-decode_kind_name([], Default, Default).
-decode_kind_name(Name, _, Name).
-
-assert_kind_noun(_, _, []).
-assert_kind_noun(Kind, Singular, Plural) :-
-   assert_phrase_rule(kind_noun(Kind, singular), Singular),
-   assert_phrase_rule(kind_noun(Kind, plural), Plural).
-
-define_kind(RowNumber, Kind, _) :-
-   kind(Kind),
-   throw(error(row:RowNumber:kind_already_defined:Kind)).
-define_kind(RowNumber, Kind, [ ]) :-
-   Kind \= entity,
-   throw(error(row:RowNumber:kind_has_no_parents:Kind)).
-define_kind(_, Kind, Parents) :-
-   assert(kind(Kind)),
-   forall(member(P, Parents),
-	  assert(immediate_kind_of(Kind, P))).
-
-end_csv_loading(kinds) :-
-   % Find all the leaf kinds
-   forall((kind(K), \+ immediate_kind_of(_, K)),
-	   assert(leaf_kind(K))).
-
-end_csv_loading(predicate_type) :-
-   forall(predicate_type(Type, ArgTypes),
-	  check_predicate_signature(Type, ArgTypes)).
-
-check_predicate_signature(Type, ArgTypes) :-
-   \+ kind(Type),
-   log(bad_declared_type(ArgTypes, Type)).
-check_predicate_signature(_Type, ArgTypes) :-
-   ArgTypes =.. [_Functor | Types],
-   forall(member(AType, Types),
-	  ((kind(AType),!) ; log(bad_declared_argument_type(AType, ArgTypes)))).
-
-load_special_csv_row(_RowNumber, properties(Name, SurfaceForm, ObjectType, ValueType)) :-
-   assert(declare_kind(Name, property)),
-   assert(property_type(Name, ObjectType, ValueType)),
-   assert_phrase_rule(property_name(Name), SurfaceForm).
-
-load_special_csv_row(_RowNumber,
-		     relations(Name, ObjectType, ValueType,
-			       CopularForm,
-			       SingularForm,
-			       PluralForm,
-			       Generalizations,
-			       Inverse)) :-
-   assert(declare_kind(Name, relation)),
-   assert(relation_type(Name, ObjectType, ValueType)),
-   assert_copular_form(Name, CopularForm),
-   assert_genitive_form(Name, singular, SingularForm),
-   assert_genitive_form(Name, plural, PluralForm),
-   forall(member(Gen, Generalizations),
-	  assert(implies_relation(Name, Gen))),
-   (Inverse \= null -> assert(inverse_relation(Name, Inverse)) ; true).
-
-assert_copular_form(_Name, [ ]).
-assert_copular_form(Name, [be | CopularForm]) :-
-   assert_phrase_rule(copular_relation(Name), CopularForm).
-assert_copular_form(Name, CopularForm) :-
-   % Copular forms must start with the word "be"
-   % (the English copula is the verb "to be").
-   log(malformed_copular_form_of_relation(Name, CopularForm)).
-
-assert_genitive_form(_Name, _Number, []).
-assert_genitive_form(Name, Number, Phrase) :-
-   assert_phrase_rule(genitive_form_of_relation(Name, Number), Phrase).
-
-load_special_csv_row(_RowNumber,
-		     entities(EntityName, KindList,
-			      Description,
-			      ProperName, GramaticalNumber,
-			      PropertyList, RelationList)) :-
-   assert_description(EntityName, Description),
-   forall(member(Kind, KindList),
-	  assert(declare_kind(EntityName, Kind))),
-   assert_proper_name(EntityName, ProperName, GramaticalNumber),
-   forall(member(PropertyName=Value, PropertyList),
-	  assert(declare_value(EntityName, PropertyName, Value))),
-   forall(member(RelationName:Relatum, RelationList),
-	  assert(declare_related(EntityName, RelationName, Relatum))).
-
-assert_description(_, null).
-assert_description(Entity, Description) :-
-   assert(declare_value(Entity, description, Description)).
