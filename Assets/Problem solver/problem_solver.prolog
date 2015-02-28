@@ -222,10 +222,14 @@ show_decomposition_aux(ListOfReductions) :-
 
 select_strategy(_, [S]) :-
    begin(switch_to_task(S)).
-select_strategy(resolve_match_failure(resolve_match_failure(resolve_match_failure(X))), []) :-
+
+select_strategy(resolve_match_failure(resolve_match_failure(resolve_match_failure(FailedTask))), []) :-
+   $task/type:task:TopLevelTask,
+   asserta($global::failed_task($me, (TopLevelTask-> FailedTask))),
    emit_grain("task fail", 100),
    kill_concern($task),
-   throw(repeated_match_failure($me, X)).
+   throw(repeated_match_failure($me, (TopLevelTask->FailedTask))).
+
 select_strategy(Task, [ ]) :-
    emit_grain("match fail", 10),
    begin(switch_to_task(resolve_match_failure(Task))).
