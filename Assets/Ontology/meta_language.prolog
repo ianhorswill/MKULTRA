@@ -241,11 +241,25 @@ declare_object(Object,
 	 forall(member((Relation:Relatum), Relations),
 		assert(declare_related(Object, Relation, Relatum)))).
 
-load_special_csv_row(RowNumber, kinds(Kind, Parents, SingularSpec, PluralSpec)) :-
+load_special_csv_row(RowNumber,
+		     kinds(Kind, Parents,
+			   Description,
+			   SingularSpec, PluralSpec,
+			   DefaultProperties,
+			   DefaultRelations)) :-
    define_kind(RowNumber, Kind, Parents),
+   assert_default_description(Kind, Description),
    decode_kind_name(SingularSpec, [Kind], Singular),
    decode_kind_name(PluralSpec, Singular, Plural),
-   assert_kind_noun(Kind, Singular, Plural).
+   assert_kind_noun(Kind, Singular, Plural),
+   forall(member(Prop=Value, DefaultProperties),
+	  assert(default_value(Kind, Prop, Value))),
+   forall(member(Relation:Relatum, DefaultRelations),
+	  assert(default_related(Kind, Relation, Relatum))).
+
+assert_default_description(_, null).
+assert_default_description(Kind, Description) :-
+   assert(default_value(Kind, description, Description)).
 
 decode_kind_name([-], _, []).
 decode_kind_name([], Default, Default).
@@ -285,6 +299,7 @@ check_predicate_signature(_Type, ArgTypes) :-
 	  ((kind(AType),!) ; log(bad_declared_argument_type(AType, ArgTypes)))).
 
 load_special_csv_row(_RowNumber, properties(Name, SurfaceForm, ObjectType, ValueType)) :-
+   assert(declare_kind(Name, property)),
    assert(property_type(Name, ObjectType, ValueType)),
    assert_phrase_rule(property_name(Name), SurfaceForm).
 
@@ -295,6 +310,7 @@ load_special_csv_row(_RowNumber,
 			       PluralForm,
 			       Generalizations,
 			       Inverse)) :-
+   assert(declare_kind(Name, relation)),
    assert(relation_type(Name, ObjectType, ValueType)),
    assert_copular_form(Name, CopularForm),
    assert_genitive_form(Name, singular, SingularForm),
@@ -317,8 +333,10 @@ assert_genitive_form(Name, Number, Phrase) :-
 
 load_special_csv_row(_RowNumber,
 		     entities(EntityName, KindList,
+			      Description,
 			      ProperName, GramaticalNumber,
 			      PropertyList, RelationList)) :-
+   assert_description(EntityName, Description),
    forall(member(Kind, KindList),
 	  assert(declare_kind(EntityName, Kind))),
    assert_proper_name(EntityName, ProperName, GramaticalNumber),
@@ -326,3 +344,7 @@ load_special_csv_row(_RowNumber,
 	  assert(declare_value(EntityName, PropertyName, Value))),
    forall(member(RelationName:Relatum, RelationList),
 	  assert(declare_related(EntityName, RelationName, Relatum))).
+
+assert_description(_, null).
+assert_description(Entity, Description) :-
+   assert(declare_value(Entity, description, Description)).

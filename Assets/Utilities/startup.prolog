@@ -10,6 +10,7 @@ load_csv_row(_, Assertion) :-
 %% assert_phrase_rule(Phrase, Words) is det
 %  Asserts that Phrase can be matched by Words (a list of symbols).
 %  Asserts the DCG rule: Phrase --> Words.
+assert_phrase_rule(_, []) :- !.
 assert_phrase_rule(Phrase, Words) :-
    assertion(\+ (member(X, Words), \+ atomic(X)),
 	     Words:"Phrase must be a list of symbols"),
