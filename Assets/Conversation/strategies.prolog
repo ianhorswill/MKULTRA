@@ -43,7 +43,7 @@ strategy(respond_to_dialog_act(parting(_Them, $me)),
 
 default_strategy(respond_to_dialog_act(Act),
 		 speech(["huh?"])) :-
-   log(not_understood:Act).
+   asserta($global::not_understood($me, Act)).
 
 %%
 %% Greetings and closings

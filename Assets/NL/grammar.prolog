@@ -39,7 +39,7 @@ current_dialog_pair($speaker, $addressee).
 % Stock phrases
 %
 
-stock_phrase(do_not_understand($me, _)) --> [ huh, '?'].
+stock_phrase(do_not_understand($speaker, $addressee, _)) --> [ huh, '?'].
 stock_phrase(prompt_player($me, $me)) --> [type, something].
 
 stock_phrase(greet($speaker, $addressee)) --> [X], { member(X, [hey, hello, hi]) }.

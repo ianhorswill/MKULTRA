@@ -1,4 +1,27 @@
 %%
+%% Logging of dialog
+%%
+
+:- public log_dialog_act/1.
+:- external recent_dialog/1, transcript/1.
+log_dialog_act(DA) :-
+   asserta($global::recent_dialog(DA)),
+   assertz($global::transcript(DA)).
+
+:- public transcript/0, recent_dialog/2.
+% Generates a listing of all dialog
+transcript :-
+   forall(transcript(DA),
+	  writeln(DA)).
+
+%% recent_dialog(+Speaker, -DA) is nondet
+%  Generates all the recent dialog by Speaker in order of decreasing recency.
+recent_dialog(Speaker, DA) :-
+   recent_dialog(DA),
+   agent(DA, Speaker).
+   
+
+%%
 %% Discourse generation strategies for problem solver
 %%
 

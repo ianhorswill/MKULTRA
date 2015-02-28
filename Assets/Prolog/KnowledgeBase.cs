@@ -351,7 +351,7 @@ namespace Prolog
                                  : structure;
             if (head.IsFunctor(Symbol.ColonColon, 2))
             {
-                var kb = head.Argument<KnowledgeBase>(0);
+                var kb = head.Argument(0) as KnowledgeBase;
                 if (kb == null)
                     throw new ArgumentTypeException("assert", "knowledgebase", head.Argument(0), typeof(KnowledgeBase));
                 if (structure.IsFunctor(Symbol.Implication, 2))

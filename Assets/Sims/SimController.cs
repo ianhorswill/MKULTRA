@@ -586,6 +586,7 @@ public class SimController : PhysicalObject
 
                 default:
                     // Assume it's dialog
+                    this.IsTrue("log_dialog_act", structure);
                     var talkingToSelf = structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), gameObject);
                     if (!talkingToSelf || ShowMentalMonologue)
                     {

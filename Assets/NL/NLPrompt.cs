@@ -125,6 +125,7 @@ public class NLPrompt : BindingBehaviour
                 if (this.dialogAct != null)
                 {
                     simController.QueueEvent("player_input", dialogAct);
+                    this.IsTrue("log_dialog_act", dialogAct);
                     this.formatted = this.input = this.completion = this.commentary = "";
                     this.dialogAct = null;
                     PauseManager.Paused = false;
