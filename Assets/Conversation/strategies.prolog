@@ -1,9 +1,12 @@
 :- external explanation/2.
 
 strategy(say_something,
-	 ( retract(TopicNode),
-	   Topic )) :-
-   /pending_conversation_topics/ $addressee/Topic>>TopicNode.
+	 begin(retract(TopicNode),
+	       if(string(Topic),
+		  speech([Topic]),
+		  Topic))) :-
+   % Need the once to prevent it from generating all topics at once.
+   once(/pending_conversation_topics/ $addressee/Topic>>TopicNode).
 
 default_strategy(say_something,
 		 null).

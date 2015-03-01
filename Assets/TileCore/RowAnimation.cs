@@ -4,7 +4,8 @@ using UnityEngine;
 [Serializable]
 public class RowSpriteAnimation : SpriteAnimation
 {
-    public RowSpriteAnimation(int row, int columns, float stride, float seconds)
+    public RowSpriteAnimation(string name, int row, int columns, float stride, float seconds)
+        : base(name)
     {
         this.row = row;
         this.columns = columns;

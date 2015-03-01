@@ -100,10 +100,10 @@ public class SpriteSheetAnimationController : MonoBehaviour
     static SpriteSheetAnimationController()
     {
         const float Stride = 0.75f;
-        Animations["North"] = new RowSpriteAnimation(0, 4, Stride, 0);
-        Animations["East"] = new RowSpriteAnimation(1, 4, Stride, 0);
-        Animations["West"] = new RowSpriteAnimation(2, 4, Stride, 0);
-        Animations["South"] = new RowSpriteAnimation(3, 4, Stride, 0);
+        Animations["North"] = new RowSpriteAnimation("North", 0, 4, Stride, 0);
+        Animations["East"] = new RowSpriteAnimation("East", 1, 4, Stride, 0);
+        Animations["West"] = new RowSpriteAnimation("West", 2, 4, Stride, 0);
+        Animations["South"] = new RowSpriteAnimation("South", 3, 4, Stride, 0);
     }
 
     #region User-callable procedures for controling animation.

@@ -1,6 +1,342 @@
 fileFormatVersion: 2
 guid: f68bb1969f57aa540ab4fd8198d49358
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: Black
+    21300002: free_tileset_version_10_1
+    21300004: Floor tile white
+    21300006: Floor tile pink
+    21300008: Floor tile checked white
+    21300010: Floor tile checked tan
+    21300012: Floor tile wood dark
+    21300014: Glass door 1
+    21300016: Glass door 2
+    21300018: Glass door 3
+    21300020: Wall side stone horizontal
+    21300022: free_tileset_version_10_11
+    21300024: free_tileset_version_10_12
+    21300026: free_tileset_version_10_13
+    21300028: Floor tile wood light
+    21300030: free_tileset_version_10_15
+    21300032: Wall top pink end E
+    21300034: Wall top pink end W
+    21300036: Wall top horizontal
+    21300038: Wall top white end W
+    21300040: Wall top tee N
+    21300042: Wall top tee W
+    21300044: Wall top white end S
+    21300046: Wall top corner NW
+    21300048: Wall top corner NE
+    21300050: Wall top horizontal 2
+    21300052: free_tileset_version_10_26
+    21300054: free_tileset_version_10_27
+    21300056: free_tileset_version_10_28
+    21300058: free_tileset_version_10_30
+    21300060: free_tileset_version_10_31
+    21300062: free_tileset_version_10_32
+    21300064: free_tileset_version_10_33
+    21300066: Wall top white end E
+    21300068: Wall top tee E
+    21300070: Wall top tee S
+    21300072: Wall top white end N
+    21300074: Wall top corner SW
+    21300076: Wall top corner SE
+    21300078: Wall top vertical
+    21300080: Wall stone end S
+    21300082: free_tileset_version_10_42
+    21300084: free_tileset_version_10_43
+    21300086: Refridgerator
+    21300088: Stove
+    21300090: Kitchen table
+    21300094: Radio table
+    21300096: Shelf 1
+    21300098: Shelf 2
+    21300100: Television
+    21300102: Desk
+    21300104: Bed
+    21300106: Vending machine
+    21300108: Refridgerator case (meat)
+    21300110: Refridgerator case (apples)
+    21300112: Cash register (floating)
+    21300114: Cash register (on stand
+    21300116: Small checkout counter N
+    21300118: Floor plant
+    21300120: Pet dish
+    21300122: Rug small
+    21300124: Rug medium
+    21300126: Refridgerator case (bananas)
+    21300128: free_tileset_version_10_93
+    21300130: Small checkout counter S
+    21300132: Telephone (wall)
+    21300134: Sofa
+    21300136: Computer tape drive
+    21300138: Computer mainframe
+    21300140: Blackboard
+    21300142: Cage
+    21300144: Lab bench empty W
+    21300146: Lab bench empty interior
+    21300148: Lab bench empty E
+    21300150: Microphone
+    21300152: PA
+    21300154: Mixer
+    21300156: free_tileset_version_10_115
+    21300158: free_tileset_version_10_116
+    21300160: free_tileset_version_10_117
+    21300162: Computer terminal
+    21300164: free_tileset_version_10_121
+    21300166: Lab bench stuff W
+    21300168: Lab bench stuff interior
+    21300170: Lab bench stuff E
+    21300172: free_tileset_version_10_127
+    21300174: free_tileset_version_10_128
+    21300176: Toilet
+    21300178: Bathroom sink
+    21300180: Shower head
+    21300182: free_tileset_version_10_132
+    21300184: free_tileset_version_10_133
+    21300186: free_tileset_version_10_134
+    21300188: Rug big
+    21300190: Candelabra
+    21300192: Throne
+    21300194: Chest
+    21300196: Shower drain
+    21300198: free_tileset_version_10_156
+    21300200: free_tileset_version_10_157
+    21300202: free_tileset_version_10_158
+    21300204: free_tileset_version_10_159
+    21300206: free_tileset_version_10_160
+    21300208: free_tileset_version_10_161
+    21300210: free_tileset_version_10_162
+    21300212: free_tileset_version_10_167
+    21300214: Shelf (bottles)
+    21300216: free_tileset_version_10_170
+    21300218: Check out counter N
+    21300220: Beer mug
+    21300222: Bananas
+    21300224: Barrel (empty)
+    21300226: Barrel (apples)
+    21300228: Barrel (bananas)
+    21300230: Barrel (green peppers)
+    21300232: free_tileset_version_10_180
+    21300234: Bottle (blue)
+    21300236: Apple (uneaten)
+    21300238: Kitchen table (natural wood)
+    21300240: Kitchen table (tablecloth)
+    21300242: Kitchen stool
+    21300244: free_tileset_version_10_189
+    21300246: free_tileset_version_10_190
+    21300248: free_tileset_version_10_191
+    21300250: free_tileset_version_10_192
+    21300252: Check out counter S
+    21300254: Bottle (green)
+    21300256: Apple (with bite out)
+    21300258: Kitchen chair
+    21300260: free_tileset_version_10_204
+    21300262: free_tileset_version_10_205
+    21300264: free_tileset_version_10_206
+    21300266: free_tileset_version_10_207
+    21300268: tree
+    21300270: free_tileset_version_10_211
+    21300272: free_tileset_version_10_212
+    21300274: free_tileset_version_10_213
+    21300276: free_tileset_version_10_214
+    21300278: free_tileset_version_10_215
+    21300280: free_tileset_version_10_216
+    21300282: Tree (top)
+    21300284: Stump
+    21300286: free_tileset_version_10_228
+    21300288: Tree (base)
+    21300290: free_tileset_version_10_242
+    21300292: free_tileset_version_10_243
+    21300294: Bush (large)
+    21300296: Bush (small)
+    21300298: free_tileset_version_10_254
+    21300300: free_tileset_version_10_255
+    21300302: free_tileset_version_10_256
+    21300304: free_tileset_version_10_257
+    21300306: free_tileset_version_10_258
+    21300308: free_tileset_version_10_259
+    21300310: Dock
+    21300312: free_tileset_version_10_262
+    21300314: free_tileset_version_10_263
+    21300316: free_tileset_version_10_269
+    21300318: free_tileset_version_10_270
+    21300320: free_tileset_version_10_271
+    21300322: free_tileset_version_10_272
+    21300324: free_tileset_version_10_273
+    21300326: free_tileset_version_10_274
+    21300328: free_tileset_version_10_279
+    21300330: free_tileset_version_10_280
+    21300332: free_tileset_version_10_281
+    21300334: free_tileset_version_10_282
+    21300336: free_tileset_version_10_283
+    21300338: free_tileset_version_10_284
+    21300340: free_tileset_version_10_285
+    21300342: free_tileset_version_10_286
+    21300344: free_tileset_version_10_287
+    21300346: free_tileset_version_10_288
+    21300348: free_tileset_version_10_289
+    21300350: free_tileset_version_10_291
+    21300352: free_tileset_version_10_292
+    21300354: free_tileset_version_10_293
+    21300356: free_tileset_version_10_294
+    21300358: free_tileset_version_10_295
+    21300360: free_tileset_version_10_296
+    21300362: free_tileset_version_10_297
+    21300364: free_tileset_version_10_298
+    21300366: free_tileset_version_10_301
+    21300368: free_tileset_version_10_302
+    21300370: free_tileset_version_10_303
+    21300372: free_tileset_version_10_304
+    21300374: free_tileset_version_10_305
+    21300376: free_tileset_version_10_306
+    21300378: free_tileset_version_10_307
+    21300380: free_tileset_version_10_308
+    21300382: free_tileset_version_10_312
+    21300384: free_tileset_version_10_319
+    21300386: free_tileset_version_10_320
+    21300388: free_tileset_version_10_321
+    21300390: free_tileset_version_10_322
+    21300392: free_tileset_version_10_323
+    21300394: free_tileset_version_10_324
+    21300396: free_tileset_version_10_325
+    21300398: free_tileset_version_10_326
+    21300400: free_tileset_version_10_327
+    21300402: free_tileset_version_10_328
+    21300404: free_tileset_version_10_329
+    21300406: free_tileset_version_10_330
+    21300408: free_tileset_version_10_331
+    21300410: free_tileset_version_10_332
+    21300412: free_tileset_version_10_333
+    21300414: free_tileset_version_10_334
+    21300416: free_tileset_version_10_335
+    21300418: free_tileset_version_10_336
+    21300420: free_tileset_version_10_337
+    21300422: free_tileset_version_10_338
+    21300424: free_tileset_version_10_339
+    21300426: free_tileset_version_10_340
+    21300428: free_tileset_version_10_341
+    21300430: free_tileset_version_10_342
+    21300432: free_tileset_version_10_343
+    21300434: free_tileset_version_10_344
+    21300436: free_tileset_version_10_345
+    21300438: free_tileset_version_10_346
+    21300440: free_tileset_version_10_347
+    21300442: free_tileset_version_10_348
+    21300444: free_tileset_version_10_349
+    21300446: free_tileset_version_10_350
+    21300448: free_tileset_version_10_351
+    21300450: free_tileset_version_10_352
+    21300452: free_tileset_version_10_353
+    21300454: free_tileset_version_10_354
+    21300456: free_tileset_version_10_355
+    21300458: free_tileset_version_10_356
+    21300460: free_tileset_version_10_357
+    21300462: free_tileset_version_10_358
+    21300464: free_tileset_version_10_359
+    21300466: free_tileset_version_10_360
+    21300468: free_tileset_version_10_361
+    21300470: free_tileset_version_10_362
+    21300472: free_tileset_version_10_363
+    21300474: free_tileset_version_10_364
+    21300476: free_tileset_version_10_365
+    21300478: free_tileset_version_10_366
+    21300480: free_tileset_version_10_367
+    21300482: free_tileset_version_10_368
+    21300484: free_tileset_version_10_369
+    21300486: free_tileset_version_10_370
+    21300488: free_tileset_version_10_371
+    21300490: free_tileset_version_10_372
+    21300492: free_tileset_version_10_373
+    21300494: free_tileset_version_10_374
+    21300496: free_tileset_version_10_375
+    21300498: free_tileset_version_10_376
+    21300500: free_tileset_version_10_377
+    21300502: free_tileset_version_10_378
+    21300504: free_tileset_version_10_379
+    21300506: free_tileset_version_10_380
+    21300508: free_tileset_version_10_381
+    21300510: free_tileset_version_10_382
+    21300512: free_tileset_version_10_383
+    21300514: free_tileset_version_10_384
+    21300516: free_tileset_version_10_385
+    21300518: free_tileset_version_10_386
+    21300520: free_tileset_version_10_387
+    21300522: free_tileset_version_10_388
+    21300524: free_tileset_version_10_389
+    21300526: free_tileset_version_10_390
+    21300528: free_tileset_version_10_391
+    21300530: free_tileset_version_10_392
+    21300532: free_tileset_version_10_393
+    21300534: free_tileset_version_10_394
+    21300536: free_tileset_version_10_395
+    21300538: free_tileset_version_10_396
+    21300540: free_tileset_version_10_397
+    21300542: free_tileset_version_10_398
+    21300544: free_tileset_version_10_399
+    21300546: free_tileset_version_10_400
+    21300548: free_tileset_version_10_401
+    21300550: free_tileset_version_10_402
+    21300552: free_tileset_version_10_403
+    21300554: free_tileset_version_10_404
+    21300556: free_tileset_version_10_405
+    21300558: free_tileset_version_10_406
+    21300560: free_tileset_version_10_407
+    21300562: free_tileset_version_10_408
+    21300564: free_tileset_version_10_409
+    21300566: free_tileset_version_10_410
+    21300568: free_tileset_version_10_411
+    21300570: free_tileset_version_10_412
+    21300572: free_tileset_version_10_413
+    21300574: free_tileset_version_10_414
+    21300576: free_tileset_version_10_415
+    21300578: free_tileset_version_10_416
+    21300580: free_tileset_version_10_417
+    21300582: free_tileset_version_10_418
+    21300584: free_tileset_version_10_419
+    21300586: free_tileset_version_10_420
+    21300588: free_tileset_version_10_421
+    21300590: free_tileset_version_10_422
+    21300592: free_tileset_version_10_423
+    21300594: free_tileset_version_10_424
+    21300596: free_tileset_version_10_425
+    21300598: free_tileset_version_10_426
+    21300600: free_tileset_version_10_427
+    21300602: free_tileset_version_10_428
+    21300604: free_tileset_version_10_429
+    21300606: free_tileset_version_10_430
+    21300608: free_tileset_version_10_431
+    21300610: free_tileset_version_10_432
+    21300612: free_tileset_version_10_433
+    21300614: free_tileset_version_10_434
+    21300616: free_tileset_version_10_435
+    21300618: free_tileset_version_10_436
+    21300620: free_tileset_version_10_437
+    21300622: free_tileset_version_10_438
+    21300624: free_tileset_version_10_439
+    21300626: free_tileset_version_10_440
+    21300628: free_tileset_version_10_441
+    21300630: free_tileset_version_10_442
+    21300632: free_tileset_version_10_443
+    21300634: free_tileset_version_10_444
+    21300636: free_tileset_version_10_445
+    21300638: free_tileset_version_10_446
+    21300640: free_tileset_version_10_447
+    21300642: free_tileset_version_10_448
+    21300644: free_tileset_version_10_449
+    21300646: free_tileset_version_10_450
+    21300648: free_tileset_version_10_451
+    21300650: free_tileset_version_10_452
+    21300652: free_tileset_version_10_453
+    21300654: free_tileset_version_10_454
+    21300656: free_tileset_version_10_455
+    21300658: free_tileset_version_10_456
+    21300660: free_tileset_version_10_457
+    21300662: free_tileset_version_10_458
+    21300664: free_tileset_version_10_459
+    21300666: free_tileset_version_10_460
+    21300668: free_tileset_version_10_471
+    21300670: free_tileset_version_10_475
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -35,6 +371,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 32
   alphaIsTransparency: 1
   textureType: 8
@@ -54,6 +391,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_1
       rect:
         serializedVersion: 2
@@ -63,6 +401,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Floor tile white
       rect:
         serializedVersion: 2
@@ -72,6 +411,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Floor tile pink
       rect:
         serializedVersion: 2
@@ -81,6 +421,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Floor tile checked white
       rect:
         serializedVersion: 2
@@ -90,6 +431,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Floor tile checked tan
       rect:
         serializedVersion: 2
@@ -99,6 +441,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Floor tile wood dark
       rect:
         serializedVersion: 2
@@ -108,6 +451,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Glass door 1
       rect:
         serializedVersion: 2
@@ -117,6 +461,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Glass door 2
       rect:
         serializedVersion: 2
@@ -126,6 +471,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Glass door 3
       rect:
         serializedVersion: 2
@@ -135,6 +481,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall side stone horizontal
       rect:
         serializedVersion: 2
@@ -144,6 +491,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_11
       rect:
         serializedVersion: 2
@@ -153,6 +501,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_12
       rect:
         serializedVersion: 2
@@ -162,6 +511,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_13
       rect:
         serializedVersion: 2
@@ -171,6 +521,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Floor tile wood light
       rect:
         serializedVersion: 2
@@ -180,6 +531,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_15
       rect:
         serializedVersion: 2
@@ -189,6 +541,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top pink end E
       rect:
         serializedVersion: 2
@@ -198,6 +551,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top pink end W
       rect:
         serializedVersion: 2
@@ -207,6 +561,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top horizontal
       rect:
         serializedVersion: 2
@@ -216,6 +571,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top white end W
       rect:
         serializedVersion: 2
@@ -225,6 +581,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top tee N
       rect:
         serializedVersion: 2
@@ -234,6 +591,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top tee W
       rect:
         serializedVersion: 2
@@ -243,6 +601,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top white end S
       rect:
         serializedVersion: 2
@@ -252,6 +611,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top corner NW
       rect:
         serializedVersion: 2
@@ -261,6 +621,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top corner NE
       rect:
         serializedVersion: 2
@@ -270,6 +631,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top horizontal 2
       rect:
         serializedVersion: 2
@@ -279,6 +641,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_26
       rect:
         serializedVersion: 2
@@ -288,6 +651,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_27
       rect:
         serializedVersion: 2
@@ -297,6 +661,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_28
       rect:
         serializedVersion: 2
@@ -306,6 +671,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_30
       rect:
         serializedVersion: 2
@@ -315,6 +681,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_31
       rect:
         serializedVersion: 2
@@ -324,6 +691,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_32
       rect:
         serializedVersion: 2
@@ -333,6 +701,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_33
       rect:
         serializedVersion: 2
@@ -342,6 +711,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top white end E
       rect:
         serializedVersion: 2
@@ -351,6 +721,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top tee E
       rect:
         serializedVersion: 2
@@ -360,6 +731,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top tee S
       rect:
         serializedVersion: 2
@@ -369,6 +741,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top white end N
       rect:
         serializedVersion: 2
@@ -378,6 +751,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top corner SW
       rect:
         serializedVersion: 2
@@ -387,6 +761,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top corner SE
       rect:
         serializedVersion: 2
@@ -396,6 +771,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall top vertical
       rect:
         serializedVersion: 2
@@ -405,6 +781,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Wall stone end S
       rect:
         serializedVersion: 2
@@ -414,6 +791,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_42
       rect:
         serializedVersion: 2
@@ -423,6 +801,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_43
       rect:
         serializedVersion: 2
@@ -432,6 +811,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Refridgerator
       rect:
         serializedVersion: 2
@@ -441,6 +821,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Stove
       rect:
         serializedVersion: 2
@@ -450,6 +831,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Kitchen table
       rect:
         serializedVersion: 2
@@ -459,15 +841,17 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
-    - name: Kitchen sink
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: 
       rect:
         serializedVersion: 2
         x: 128
         y: 1056
         width: 64
         height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 2
+      pivot: {x: .5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Radio table
       rect:
         serializedVersion: 2
@@ -477,6 +861,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Shelf 1
       rect:
         serializedVersion: 2
@@ -486,6 +871,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Shelf 2
       rect:
         serializedVersion: 2
@@ -495,6 +881,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Television
       rect:
         serializedVersion: 2
@@ -504,6 +891,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Desk
       rect:
         serializedVersion: 2
@@ -513,6 +901,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Bed
       rect:
         serializedVersion: 2
@@ -522,6 +911,7 @@ TextureImporter:
         height: 96
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Vending machine
       rect:
         serializedVersion: 2
@@ -531,6 +921,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Refridgerator case (meat)
       rect:
         serializedVersion: 2
@@ -540,6 +931,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Refridgerator case (apples)
       rect:
         serializedVersion: 2
@@ -549,6 +941,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Cash register (floating)
       rect:
         serializedVersion: 2
@@ -558,6 +951,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Cash register (on stand
       rect:
         serializedVersion: 2
@@ -567,6 +961,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Small checkout counter N
       rect:
         serializedVersion: 2
@@ -576,6 +971,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Floor plant
       rect:
         serializedVersion: 2
@@ -585,6 +981,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Pet dish
       rect:
         serializedVersion: 2
@@ -594,6 +991,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Rug small
       rect:
         serializedVersion: 2
@@ -603,6 +1001,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Rug medium
       rect:
         serializedVersion: 2
@@ -612,6 +1011,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Refridgerator case (bananas)
       rect:
         serializedVersion: 2
@@ -621,6 +1021,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_93
       rect:
         serializedVersion: 2
@@ -630,6 +1031,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Small checkout counter S
       rect:
         serializedVersion: 2
@@ -639,6 +1041,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Telephone (wall)
       rect:
         serializedVersion: 2
@@ -648,6 +1051,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Sofa
       rect:
         serializedVersion: 2
@@ -657,6 +1061,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Computer tape drive
       rect:
         serializedVersion: 2
@@ -666,6 +1071,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Computer mainframe
       rect:
         serializedVersion: 2
@@ -675,6 +1081,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Blackboard
       rect:
         serializedVersion: 2
@@ -684,6 +1091,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Cage
       rect:
         serializedVersion: 2
@@ -693,6 +1101,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Lab bench empty W
       rect:
         serializedVersion: 2
@@ -702,6 +1111,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Lab bench empty interior
       rect:
         serializedVersion: 2
@@ -711,6 +1121,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Lab bench empty E
       rect:
         serializedVersion: 2
@@ -720,6 +1131,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Microphone
       rect:
         serializedVersion: 2
@@ -729,6 +1141,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: PA
       rect:
         serializedVersion: 2
@@ -738,6 +1151,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Mixer
       rect:
         serializedVersion: 2
@@ -747,6 +1161,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_115
       rect:
         serializedVersion: 2
@@ -756,6 +1171,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_116
       rect:
         serializedVersion: 2
@@ -765,6 +1181,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_117
       rect:
         serializedVersion: 2
@@ -774,6 +1191,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Computer terminal
       rect:
         serializedVersion: 2
@@ -783,6 +1201,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_121
       rect:
         serializedVersion: 2
@@ -792,6 +1211,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Lab bench stuff W
       rect:
         serializedVersion: 2
@@ -801,6 +1221,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Lab bench stuff interior
       rect:
         serializedVersion: 2
@@ -810,6 +1231,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Lab bench stuff E
       rect:
         serializedVersion: 2
@@ -819,6 +1241,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_127
       rect:
         serializedVersion: 2
@@ -828,6 +1251,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_128
       rect:
         serializedVersion: 2
@@ -837,6 +1261,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Toilet
       rect:
         serializedVersion: 2
@@ -846,6 +1271,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Bathroom sink
       rect:
         serializedVersion: 2
@@ -855,6 +1281,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Shower head
       rect:
         serializedVersion: 2
@@ -864,6 +1291,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_132
       rect:
         serializedVersion: 2
@@ -873,6 +1301,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_133
       rect:
         serializedVersion: 2
@@ -882,6 +1311,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_134
       rect:
         serializedVersion: 2
@@ -891,6 +1321,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Rug big
       rect:
         serializedVersion: 2
@@ -900,6 +1331,7 @@ TextureImporter:
         height: 96
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Candelabra
       rect:
         serializedVersion: 2
@@ -909,6 +1341,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Throne
       rect:
         serializedVersion: 2
@@ -918,6 +1351,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Chest
       rect:
         serializedVersion: 2
@@ -927,6 +1361,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Shower drain
       rect:
         serializedVersion: 2
@@ -936,6 +1371,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_156
       rect:
         serializedVersion: 2
@@ -945,6 +1381,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_157
       rect:
         serializedVersion: 2
@@ -954,6 +1391,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_158
       rect:
         serializedVersion: 2
@@ -963,6 +1401,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_159
       rect:
         serializedVersion: 2
@@ -972,6 +1411,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_160
       rect:
         serializedVersion: 2
@@ -981,6 +1421,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_161
       rect:
         serializedVersion: 2
@@ -990,6 +1431,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_162
       rect:
         serializedVersion: 2
@@ -999,6 +1441,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_167
       rect:
         serializedVersion: 2
@@ -1008,6 +1451,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Shelf (bottles)
       rect:
         serializedVersion: 2
@@ -1017,6 +1461,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_170
       rect:
         serializedVersion: 2
@@ -1026,6 +1471,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Check out counter N
       rect:
         serializedVersion: 2
@@ -1035,6 +1481,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Beer mug
       rect:
         serializedVersion: 2
@@ -1044,6 +1491,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Bananas
       rect:
         serializedVersion: 2
@@ -1053,6 +1501,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Barrel (empty)
       rect:
         serializedVersion: 2
@@ -1062,6 +1511,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Barrel (apples)
       rect:
         serializedVersion: 2
@@ -1071,6 +1521,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Barrel (bananas)
       rect:
         serializedVersion: 2
@@ -1080,6 +1531,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Barrel (green peppers)
       rect:
         serializedVersion: 2
@@ -1089,6 +1541,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_180
       rect:
         serializedVersion: 2
@@ -1098,6 +1551,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Bottle (blue)
       rect:
         serializedVersion: 2
@@ -1107,6 +1561,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Apple (uneaten)
       rect:
         serializedVersion: 2
@@ -1116,6 +1571,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Kitchen table (natural wood)
       rect:
         serializedVersion: 2
@@ -1125,6 +1581,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Kitchen table (tablecloth)
       rect:
         serializedVersion: 2
@@ -1134,6 +1591,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Kitchen stool
       rect:
         serializedVersion: 2
@@ -1143,6 +1601,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_189
       rect:
         serializedVersion: 2
@@ -1152,6 +1611,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_190
       rect:
         serializedVersion: 2
@@ -1161,6 +1621,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_191
       rect:
         serializedVersion: 2
@@ -1170,6 +1631,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_192
       rect:
         serializedVersion: 2
@@ -1179,6 +1641,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Check out counter S
       rect:
         serializedVersion: 2
@@ -1188,6 +1651,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Bottle (green)
       rect:
         serializedVersion: 2
@@ -1197,6 +1661,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Apple (with bite out)
       rect:
         serializedVersion: 2
@@ -1206,6 +1671,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Kitchen chair
       rect:
         serializedVersion: 2
@@ -1215,6 +1681,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_204
       rect:
         serializedVersion: 2
@@ -1224,6 +1691,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_205
       rect:
         serializedVersion: 2
@@ -1233,6 +1701,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_206
       rect:
         serializedVersion: 2
@@ -1242,6 +1711,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_207
       rect:
         serializedVersion: 2
@@ -1251,6 +1721,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: tree
       rect:
         serializedVersion: 2
@@ -1260,6 +1731,7 @@ TextureImporter:
         height: 96
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_211
       rect:
         serializedVersion: 2
@@ -1269,6 +1741,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_212
       rect:
         serializedVersion: 2
@@ -1278,6 +1751,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_213
       rect:
         serializedVersion: 2
@@ -1287,6 +1761,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_214
       rect:
         serializedVersion: 2
@@ -1296,6 +1771,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_215
       rect:
         serializedVersion: 2
@@ -1305,6 +1781,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_216
       rect:
         serializedVersion: 2
@@ -1314,6 +1791,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Tree (top)
       rect:
         serializedVersion: 2
@@ -1323,6 +1801,7 @@ TextureImporter:
         height: 96
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Stump
       rect:
         serializedVersion: 2
@@ -1332,6 +1811,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_228
       rect:
         serializedVersion: 2
@@ -1341,6 +1821,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Tree (base)
       rect:
         serializedVersion: 2
@@ -1350,6 +1831,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_242
       rect:
         serializedVersion: 2
@@ -1359,6 +1841,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_243
       rect:
         serializedVersion: 2
@@ -1368,6 +1851,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Bush (large)
       rect:
         serializedVersion: 2
@@ -1377,6 +1861,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Bush (small)
       rect:
         serializedVersion: 2
@@ -1386,6 +1871,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_254
       rect:
         serializedVersion: 2
@@ -1395,6 +1881,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_255
       rect:
         serializedVersion: 2
@@ -1404,6 +1891,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_256
       rect:
         serializedVersion: 2
@@ -1413,6 +1901,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_257
       rect:
         serializedVersion: 2
@@ -1422,6 +1911,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_258
       rect:
         serializedVersion: 2
@@ -1431,6 +1921,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_259
       rect:
         serializedVersion: 2
@@ -1440,6 +1931,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: Dock
       rect:
         serializedVersion: 2
@@ -1449,6 +1941,7 @@ TextureImporter:
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_262
       rect:
         serializedVersion: 2
@@ -1458,6 +1951,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_263
       rect:
         serializedVersion: 2
@@ -1467,6 +1961,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_269
       rect:
         serializedVersion: 2
@@ -1476,6 +1971,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_270
       rect:
         serializedVersion: 2
@@ -1485,6 +1981,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_271
       rect:
         serializedVersion: 2
@@ -1494,6 +1991,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_272
       rect:
         serializedVersion: 2
@@ -1503,6 +2001,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_273
       rect:
         serializedVersion: 2
@@ -1512,6 +2011,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_274
       rect:
         serializedVersion: 2
@@ -1521,6 +2021,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_279
       rect:
         serializedVersion: 2
@@ -1530,6 +2031,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_280
       rect:
         serializedVersion: 2
@@ -1539,6 +2041,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_281
       rect:
         serializedVersion: 2
@@ -1548,6 +2051,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_282
       rect:
         serializedVersion: 2
@@ -1557,6 +2061,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_283
       rect:
         serializedVersion: 2
@@ -1566,6 +2071,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_284
       rect:
         serializedVersion: 2
@@ -1575,6 +2081,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_285
       rect:
         serializedVersion: 2
@@ -1584,6 +2091,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_286
       rect:
         serializedVersion: 2
@@ -1593,6 +2101,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_287
       rect:
         serializedVersion: 2
@@ -1602,6 +2111,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_288
       rect:
         serializedVersion: 2
@@ -1611,6 +2121,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_289
       rect:
         serializedVersion: 2
@@ -1620,6 +2131,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_291
       rect:
         serializedVersion: 2
@@ -1629,6 +2141,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_292
       rect:
         serializedVersion: 2
@@ -1638,6 +2151,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_293
       rect:
         serializedVersion: 2
@@ -1647,6 +2161,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_294
       rect:
         serializedVersion: 2
@@ -1656,6 +2171,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_295
       rect:
         serializedVersion: 2
@@ -1665,6 +2181,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_296
       rect:
         serializedVersion: 2
@@ -1674,6 +2191,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_297
       rect:
         serializedVersion: 2
@@ -1683,6 +2201,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_298
       rect:
         serializedVersion: 2
@@ -1692,6 +2211,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_301
       rect:
         serializedVersion: 2
@@ -1701,6 +2221,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_302
       rect:
         serializedVersion: 2
@@ -1710,6 +2231,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_303
       rect:
         serializedVersion: 2
@@ -1719,6 +2241,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_304
       rect:
         serializedVersion: 2
@@ -1728,6 +2251,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_305
       rect:
         serializedVersion: 2
@@ -1737,6 +2261,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_306
       rect:
         serializedVersion: 2
@@ -1746,6 +2271,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_307
       rect:
         serializedVersion: 2
@@ -1755,6 +2281,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_308
       rect:
         serializedVersion: 2
@@ -1764,6 +2291,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_312
       rect:
         serializedVersion: 2
@@ -1773,6 +2301,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_319
       rect:
         serializedVersion: 2
@@ -1782,6 +2311,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_320
       rect:
         serializedVersion: 2
@@ -1791,6 +2321,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_321
       rect:
         serializedVersion: 2
@@ -1800,6 +2331,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_322
       rect:
         serializedVersion: 2
@@ -1809,6 +2341,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_323
       rect:
         serializedVersion: 2
@@ -1818,6 +2351,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_324
       rect:
         serializedVersion: 2
@@ -1827,6 +2361,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_325
       rect:
         serializedVersion: 2
@@ -1836,6 +2371,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_326
       rect:
         serializedVersion: 2
@@ -1845,6 +2381,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_327
       rect:
         serializedVersion: 2
@@ -1854,6 +2391,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_328
       rect:
         serializedVersion: 2
@@ -1863,6 +2401,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_329
       rect:
         serializedVersion: 2
@@ -1872,6 +2411,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_330
       rect:
         serializedVersion: 2
@@ -1881,6 +2421,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_331
       rect:
         serializedVersion: 2
@@ -1890,6 +2431,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_332
       rect:
         serializedVersion: 2
@@ -1899,6 +2441,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_333
       rect:
         serializedVersion: 2
@@ -1908,6 +2451,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_334
       rect:
         serializedVersion: 2
@@ -1917,6 +2461,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_335
       rect:
         serializedVersion: 2
@@ -1926,6 +2471,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_336
       rect:
         serializedVersion: 2
@@ -1935,6 +2481,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_337
       rect:
         serializedVersion: 2
@@ -1944,6 +2491,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_338
       rect:
         serializedVersion: 2
@@ -1953,6 +2501,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_339
       rect:
         serializedVersion: 2
@@ -1962,6 +2511,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_340
       rect:
         serializedVersion: 2
@@ -1971,6 +2521,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_341
       rect:
         serializedVersion: 2
@@ -1980,6 +2531,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_342
       rect:
         serializedVersion: 2
@@ -1989,6 +2541,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_343
       rect:
         serializedVersion: 2
@@ -1998,6 +2551,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_344
       rect:
         serializedVersion: 2
@@ -2007,6 +2561,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_345
       rect:
         serializedVersion: 2
@@ -2016,6 +2571,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_346
       rect:
         serializedVersion: 2
@@ -2025,6 +2581,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_347
       rect:
         serializedVersion: 2
@@ -2034,6 +2591,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_348
       rect:
         serializedVersion: 2
@@ -2043,6 +2601,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_349
       rect:
         serializedVersion: 2
@@ -2052,6 +2611,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_350
       rect:
         serializedVersion: 2
@@ -2061,6 +2621,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_351
       rect:
         serializedVersion: 2
@@ -2070,6 +2631,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_352
       rect:
         serializedVersion: 2
@@ -2079,6 +2641,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_353
       rect:
         serializedVersion: 2
@@ -2088,6 +2651,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_354
       rect:
         serializedVersion: 2
@@ -2097,6 +2661,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_355
       rect:
         serializedVersion: 2
@@ -2106,6 +2671,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_356
       rect:
         serializedVersion: 2
@@ -2115,6 +2681,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_357
       rect:
         serializedVersion: 2
@@ -2124,6 +2691,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_358
       rect:
         serializedVersion: 2
@@ -2133,6 +2701,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_359
       rect:
         serializedVersion: 2
@@ -2142,6 +2711,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_360
       rect:
         serializedVersion: 2
@@ -2151,6 +2721,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_361
       rect:
         serializedVersion: 2
@@ -2160,6 +2731,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_362
       rect:
         serializedVersion: 2
@@ -2169,6 +2741,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_363
       rect:
         serializedVersion: 2
@@ -2178,6 +2751,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_364
       rect:
         serializedVersion: 2
@@ -2187,6 +2761,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_365
       rect:
         serializedVersion: 2
@@ -2196,6 +2771,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_366
       rect:
         serializedVersion: 2
@@ -2205,6 +2781,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_367
       rect:
         serializedVersion: 2
@@ -2214,6 +2791,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_368
       rect:
         serializedVersion: 2
@@ -2223,6 +2801,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_369
       rect:
         serializedVersion: 2
@@ -2232,6 +2811,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_370
       rect:
         serializedVersion: 2
@@ -2241,6 +2821,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_371
       rect:
         serializedVersion: 2
@@ -2250,6 +2831,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_372
       rect:
         serializedVersion: 2
@@ -2259,6 +2841,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_373
       rect:
         serializedVersion: 2
@@ -2268,6 +2851,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_374
       rect:
         serializedVersion: 2
@@ -2277,6 +2861,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_375
       rect:
         serializedVersion: 2
@@ -2286,6 +2871,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_376
       rect:
         serializedVersion: 2
@@ -2295,6 +2881,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_377
       rect:
         serializedVersion: 2
@@ -2304,6 +2891,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_378
       rect:
         serializedVersion: 2
@@ -2313,6 +2901,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_379
       rect:
         serializedVersion: 2
@@ -2322,6 +2911,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_380
       rect:
         serializedVersion: 2
@@ -2331,6 +2921,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_381
       rect:
         serializedVersion: 2
@@ -2340,6 +2931,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_382
       rect:
         serializedVersion: 2
@@ -2349,6 +2941,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_383
       rect:
         serializedVersion: 2
@@ -2358,6 +2951,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_384
       rect:
         serializedVersion: 2
@@ -2367,6 +2961,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_385
       rect:
         serializedVersion: 2
@@ -2376,6 +2971,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_386
       rect:
         serializedVersion: 2
@@ -2385,6 +2981,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_387
       rect:
         serializedVersion: 2
@@ -2394,6 +2991,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_388
       rect:
         serializedVersion: 2
@@ -2403,6 +3001,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_389
       rect:
         serializedVersion: 2
@@ -2412,6 +3011,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_390
       rect:
         serializedVersion: 2
@@ -2421,6 +3021,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_391
       rect:
         serializedVersion: 2
@@ -2430,6 +3031,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_392
       rect:
         serializedVersion: 2
@@ -2439,6 +3041,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_393
       rect:
         serializedVersion: 2
@@ -2448,6 +3051,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_394
       rect:
         serializedVersion: 2
@@ -2457,6 +3061,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_395
       rect:
         serializedVersion: 2
@@ -2466,6 +3071,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_396
       rect:
         serializedVersion: 2
@@ -2475,6 +3081,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_397
       rect:
         serializedVersion: 2
@@ -2484,6 +3091,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_398
       rect:
         serializedVersion: 2
@@ -2493,6 +3101,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_399
       rect:
         serializedVersion: 2
@@ -2502,6 +3111,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_400
       rect:
         serializedVersion: 2
@@ -2511,6 +3121,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_401
       rect:
         serializedVersion: 2
@@ -2520,6 +3131,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_402
       rect:
         serializedVersion: 2
@@ -2529,6 +3141,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_403
       rect:
         serializedVersion: 2
@@ -2538,6 +3151,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_404
       rect:
         serializedVersion: 2
@@ -2547,6 +3161,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_405
       rect:
         serializedVersion: 2
@@ -2556,6 +3171,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_406
       rect:
         serializedVersion: 2
@@ -2565,6 +3181,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_407
       rect:
         serializedVersion: 2
@@ -2574,6 +3191,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_408
       rect:
         serializedVersion: 2
@@ -2583,6 +3201,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_409
       rect:
         serializedVersion: 2
@@ -2592,6 +3211,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_410
       rect:
         serializedVersion: 2
@@ -2601,6 +3221,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_411
       rect:
         serializedVersion: 2
@@ -2610,6 +3231,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_412
       rect:
         serializedVersion: 2
@@ -2619,6 +3241,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_413
       rect:
         serializedVersion: 2
@@ -2628,6 +3251,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_414
       rect:
         serializedVersion: 2
@@ -2637,6 +3261,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_415
       rect:
         serializedVersion: 2
@@ -2646,6 +3271,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_416
       rect:
         serializedVersion: 2
@@ -2655,6 +3281,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_417
       rect:
         serializedVersion: 2
@@ -2664,6 +3291,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_418
       rect:
         serializedVersion: 2
@@ -2673,6 +3301,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_419
       rect:
         serializedVersion: 2
@@ -2682,6 +3311,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_420
       rect:
         serializedVersion: 2
@@ -2691,6 +3321,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_421
       rect:
         serializedVersion: 2
@@ -2700,6 +3331,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_422
       rect:
         serializedVersion: 2
@@ -2709,6 +3341,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_423
       rect:
         serializedVersion: 2
@@ -2718,6 +3351,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_424
       rect:
         serializedVersion: 2
@@ -2727,6 +3361,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_425
       rect:
         serializedVersion: 2
@@ -2736,6 +3371,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_426
       rect:
         serializedVersion: 2
@@ -2745,6 +3381,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_427
       rect:
         serializedVersion: 2
@@ -2754,6 +3391,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_428
       rect:
         serializedVersion: 2
@@ -2763,6 +3401,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_429
       rect:
         serializedVersion: 2
@@ -2772,6 +3411,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_430
       rect:
         serializedVersion: 2
@@ -2781,6 +3421,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_431
       rect:
         serializedVersion: 2
@@ -2790,6 +3431,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_432
       rect:
         serializedVersion: 2
@@ -2799,6 +3441,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_433
       rect:
         serializedVersion: 2
@@ -2808,6 +3451,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_434
       rect:
         serializedVersion: 2
@@ -2817,6 +3461,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_435
       rect:
         serializedVersion: 2
@@ -2826,6 +3471,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_436
       rect:
         serializedVersion: 2
@@ -2835,6 +3481,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_437
       rect:
         serializedVersion: 2
@@ -2844,6 +3491,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_438
       rect:
         serializedVersion: 2
@@ -2853,6 +3501,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_439
       rect:
         serializedVersion: 2
@@ -2862,6 +3511,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_440
       rect:
         serializedVersion: 2
@@ -2871,6 +3521,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_441
       rect:
         serializedVersion: 2
@@ -2880,6 +3531,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_442
       rect:
         serializedVersion: 2
@@ -2889,6 +3541,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_443
       rect:
         serializedVersion: 2
@@ -2898,6 +3551,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_444
       rect:
         serializedVersion: 2
@@ -2907,6 +3561,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_445
       rect:
         serializedVersion: 2
@@ -2916,6 +3571,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_446
       rect:
         serializedVersion: 2
@@ -2925,6 +3581,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_447
       rect:
         serializedVersion: 2
@@ -2934,6 +3591,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_448
       rect:
         serializedVersion: 2
@@ -2943,6 +3601,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_449
       rect:
         serializedVersion: 2
@@ -2952,6 +3611,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_450
       rect:
         serializedVersion: 2
@@ -2961,6 +3621,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_451
       rect:
         serializedVersion: 2
@@ -2970,6 +3631,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_452
       rect:
         serializedVersion: 2
@@ -2979,6 +3641,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_453
       rect:
         serializedVersion: 2
@@ -2988,6 +3651,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_454
       rect:
         serializedVersion: 2
@@ -2997,6 +3661,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_455
       rect:
         serializedVersion: 2
@@ -3006,6 +3671,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_456
       rect:
         serializedVersion: 2
@@ -3015,6 +3681,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_457
       rect:
         serializedVersion: 2
@@ -3024,6 +3691,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_458
       rect:
         serializedVersion: 2
@@ -3033,6 +3701,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_459
       rect:
         serializedVersion: 2
@@ -3042,6 +3711,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_460
       rect:
         serializedVersion: 2
@@ -3051,6 +3721,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_471
       rect:
         serializedVersion: 2
@@ -3060,6 +3731,7 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
     - name: free_tileset_version_10_475
       rect:
         serializedVersion: 2
@@ -3069,5 +3741,6 @@ TextureImporter:
         height: 32
       alignment: 6
       pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

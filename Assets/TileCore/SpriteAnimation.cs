@@ -3,6 +3,11 @@
 /// </summary>
 public abstract class SpriteAnimation
 {
+    protected SpriteAnimation(string name)
+    {
+        Name = name;
+    }
+
     /// <summary>
     /// Name of the animation
     /// </summary>

@@ -16,39 +16,9 @@ strategy(describe_type(Object),
 	    let(base_kind(Object, Kind),
 		say(is_a(Object, Kind))))).
 
-
-remove_redundant_attributes([ ], [ ]).
-remove_redundant_attributes([Relation/Relatum | Rest], RestRemoved) :-
-   decendant_relation(Antecedant, Relation),
-   member(Antecedant/Relatum, Rest),
-   !,
-   remove_redundant_attributes(Rest, RestRemoved).
-remove_redundant_attributes([X | Rest], [X | Final]) :-
-   remove_implicants(X, Rest, WithoutImplicants),
-   remove_redundant_attributes(WithoutImplicants, Final).
-
-remove_implicants(_, [ ], [ ]).
-remove_implicants(Rel/Object, [Implicant/Object | Rest], Rest) :-
-   ancestor_relation(Implicant, Rel),
-   !.
-remove_implicants(Attribute, [X | Rest] , [X | RestRemoved]) :-
-   remove_implicants(Attribute, Rest, RestRemoved).
-
-
-interesting_attribute(Purpose, Object, Attribute) :-
-   interesting_property(Purpose, Object, Attribute)
-   ;
-   interesting_relation(Purpose, Object, Attribute).
-
-interesting_property(Purpose, Object, Prop:Value) :-
-   property_nondefault_value(Object, Prop, Value),
-   \+ /mentioned_to/ $addressee /Object/Prop:Value,
-   property_relevant_to_purpose(Purpose, Object, Prop, Value).
-
-interesting_relation(Purpose, Object, Relation/Relatum) :-
-   related_nondefault(Object, Relation, Relatum),
-   \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
-   relation_relevant_to_purpose(Purpose, Object, Relation, Relatum).
+%%
+%% Describing lists of attributes
+%%
 
 strategy(describe_attributes(Object, Attributes, NullContinuation),
 	 if(Attributes=[ ],
@@ -81,4 +51,41 @@ surface_form(property_value(Object, Property, Value),
 
 surface_form(related(Object, Relation, Relatum),
 	     s(related(Object, Relation, Relatum))).
+
+%%
+%% Determining lists of relevant attributes
+%%
+
+remove_redundant_attributes([ ], [ ]).
+remove_redundant_attributes([Relation/Relatum | Rest], RestRemoved) :-
+   decendant_relation(Antecedant, Relation),
+   member(Antecedant/Relatum, Rest),
+   !,
+   remove_redundant_attributes(Rest, RestRemoved).
+remove_redundant_attributes([X | Rest], [X | Final]) :-
+   remove_implicants(X, Rest, WithoutImplicants),
+   remove_redundant_attributes(WithoutImplicants, Final).
+
+remove_implicants(_, [ ], [ ]).
+remove_implicants(Rel/Object, [Implicant/Object | Rest], Rest) :-
+   ancestor_relation(Implicant, Rel),
+   !.
+remove_implicants(Attribute, [X | Rest] , [X | RestRemoved]) :-
+   remove_implicants(Attribute, Rest, RestRemoved).
+
+interesting_attribute(Purpose, Object, Attribute) :-
+   interesting_property(Purpose, Object, Attribute)
+   ;
+   interesting_relation(Purpose, Object, Attribute).
+
+interesting_property(Purpose, Object, Prop:Value) :-
+   property_nondefault_value(Object, Prop, Value),
+   \+ /mentioned_to/ $addressee /Object/Prop:Value,
+   property_relevant_to_purpose(Purpose, Object, Prop, Value).
+
+interesting_relation(Purpose, Object, Relation/Relatum) :-
+   related_nondefault(Object, Relation, Relatum),
+   \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
+   relation_relevant_to_purpose(Purpose, Object, Relation, Relatum).
+
 

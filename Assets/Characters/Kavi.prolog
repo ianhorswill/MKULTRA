@@ -4,6 +4,13 @@
 % I know the secret location of the macguffin
 /perception/location/ $macguffin : $bookshelf.
 
+/pending_conversation_topics/ $bruce/"Sorry to hear your macguffin was stolen.".
+/pending_conversation_topics/ $bruce/"Make yourself at home.".
+/pending_conversation_topics/ $bruce/"But um.".
+/pending_conversation_topics/ $bruce/"Stay out of my bedroom.".
+/pending_conversation_topics/ $bruce/"It's a personal thing.".
+/pending_conversation_topics/ $bruce/assert(/goals/pending_tasks/goto($'kitchen sink')).
+
 % Monitor goals quickly
 /parameters/poll_time:3.
 
@@ -25,7 +32,6 @@ pretend_truth_value(Asker,
 		    related($me, member_of, illuminati),
 		    false) :-
    \+ related(Asker, member_of, illuminati).
-
    
 :- public bedroom_empty/0.
 bedroom_empty :-
