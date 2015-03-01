@@ -118,15 +118,21 @@ guard_condition(Task, location(Object, _Loc)) :-
 %% Spatial search
 %%
 
+strategy(search_for($me, Unspecified, Target),
+	 search_for($me, CurrentRoom, Target)) :-
+   var(Unspecified),
+   in_room($me, CurrentRoom).
 strategy(search_for($me, Container, Target),
 	 search_container(Container, X^(X=Target),
 			  X^mental_monologue(["Got it!"]),
 			  mental_monologue(["Couldn't find it."]))) :-
+   nonvar(Container),
    nonvar(Target).
 strategy(search_for($me, Container, Target),
 	 search_container(Container, X^previously_hidden(X),
 			  X^mental_monologue(["Got ", np(X)]),
 			  mental_monologue(["Nothing seems to be hidden."]))) :-
+   nonvar(Container),
    var(Target).
 
 strategy(search_container(Container, CriterionLambda, SuccessLambda, FailTask),

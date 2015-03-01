@@ -164,8 +164,6 @@ switch_to_task(Task) :-
    begin(matching_strategies(Strategies, Task),
 	 select_strategy(Task, Strategies)).
 
-%% matching_strategies(-Strategies, +Task)
-%  Strategies is the set of strategies for Task.
 matching_strategies(Strategies, Task) :-
    all(S,
        matching_strategy(S, Task),
