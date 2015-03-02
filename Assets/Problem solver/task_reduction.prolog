@@ -10,8 +10,20 @@ reduce_canonical_form(Task, Task) :-
    !.
 reduce_canonical_form(Canonical, Reduction) :-
    begin(matching_strategies(Strategies, Canonical),
-	 selected_reduction(Canonical, Strategies, Reduction)).
+	 selected_reduction_with_before_after(Canonical, Strategies, Reduction)).
 
+% Select method and attach befor and after
+selected_reduction_with_before_after(Canonical, Strategies, Joined) :-
+   begin(selected_reduction(Canonical, Strategies, Selected),
+	 all(Method,
+	     before(Canonical, Method),
+	     BeforeMethods),
+	 all(Method,
+	     after(Canonical, Method),
+	     AfterMethods),
+	 append_task_lists(BeforeMethods, Selected, AfterMethods, Joined)).
+
+% Select the reduced method from available methods.
 selected_reduction(_, [S], S).
 selected_reduction(Task, [ ], resolve_match_failure(Task)) :-
    emit_grain("match fail", 10).
@@ -101,3 +113,22 @@ show_decomposition_aux(UniqueDecomposition) :-
    writeln(UniqueDecomposition),
    task_reduction(UniqueDecomposition, Reductions),
    show_decomposition_aux(Reductions).
+
+%%%
+%%% General utilities
+%%%
+
+%% append_task_lists(+Start, +End, -Joined) is det
+append_task_lists(X, null, X).
+append_task_lists(null, X, Y) :-
+   % We have to do this to comafy X :(
+   append_task_lists(X, null, Y).
+append_task_lists([First], X, (First, X)).
+append_task_lists([First | Rest], X, (First, Y)) :-
+   append_task_lists(Rest, X, Y).
+append_task_lists(First, X, [First | Y]) :-
+   append_task_lists(X, null, Y).
+
+append_task_lists(X, Y, Z, Joined) :-
+   append_task_lists(Y, Z, Intermediate),
+   append_task_lists(X, Intermediate, Joined).

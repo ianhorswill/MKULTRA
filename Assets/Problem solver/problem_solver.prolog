@@ -37,7 +37,7 @@ start_task(Task, Priority) :-
 
 :- indexical task=null.
 
-:- external veto_strategy/1, personal_strategy/2.
+:- external veto_strategy/1, personal_strategy/2, before/2, after/2.
 
 %% within_task(+TaskConcern, :Code)
 %  Runs Code within the task TaskConcern.

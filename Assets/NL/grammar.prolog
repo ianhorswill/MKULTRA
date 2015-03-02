@@ -49,6 +49,7 @@ stock_phrase(greet($speaker, $addressee)) -->
 stock_phrase(greet($speaker, $addressee)) --> [hi, there].
 
 stock_phrase(apology($speaker, $addressee)) --> [sorry].
+stock_phrase(excuse_self($speaker, $addressee)) --> [excuse, me].
 
 stock_phrase(parting($speaker, $addressee)) --> [X], { member(X, [bye, byebye, goodbye]) }.
 stock_phrase(parting($speaker, $addressee)) --> [see, you].

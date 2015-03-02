@@ -1,5 +1,9 @@
 :- external explanation/2.
 
+before(goto(_),
+       excuse_self($me, Partner)) :-
+   in_conversation_with(Partner).
+
 strategy(say_something,
 	 begin(retract(TopicNode),
 	       if(string(Topic),

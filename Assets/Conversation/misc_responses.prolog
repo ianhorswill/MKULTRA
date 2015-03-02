@@ -36,6 +36,11 @@ strategy(respond_to_dialog_act(parting(_Them, $me)),
    parent_concern_of($task, Parent),
    Parent/generated_parting.
 
+strategy(respond_to_dialog_act(excuse_self(Them, $me)),
+	 call(kill_concern(Parent))) :-
+   $task/partner/Them,
+   parent_concern_of($task, Parent).
+
 %%
 %% Discourse increments
 %%
