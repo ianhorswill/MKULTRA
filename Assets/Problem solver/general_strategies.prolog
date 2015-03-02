@@ -8,40 +8,6 @@ strategy(resolve_match_failure(X), S) :-
    default_strategy(X, S).
 
 %%
-%% if(Condition, ThenStrategy, ElseStrategy)
-%% A simple conditional to make strategy code more readable
-%% Reduces to T if C is true, else E.
-%%
-strategy(if(C, T, E),
-	 S) :-
-   C -> (S=T);(S=E).
-
-%%
-%% cases([C1:S1, C2:S2, ...])
-%% Reduces to the first Si whose corresponding Ci is true.
-%%
-strategy(cases(CaseList),
-	 S) :-
-   member(C:S, CaseList),
-   C,
-   !.
-
-%%
-%% begin(Tasks, ...)
-%% this is just syntactic sugar for (A, B) to make things more readable.
-%%
-strategy(begin(A, B),
-	 (A, B)).
-strategy(begin(A, B, C),
-	 (A, B, C)).
-strategy(begin(A, B, C, D),
-	 (A, B, C, D)).
-strategy(begin(A, B, C, D, E),
-	 (A, B, C, D, E)).
-strategy(begin(A, B, C, D, E, F),
-	 (A, B, C, D, E, F)).
-
-%%
 %% achieve(P)
 %% Task to make P become true.
 %%
@@ -103,10 +69,10 @@ strategy(goto(Target),
    assertion(atomic(Target), bad_target:goto(Target)),
    $task/priority:Priority.
 
-strategy(bring($me, Recipient, Object),
-	 move($me, Object, Recipient)).
-strategy(give($me, Recipient, Object),
-	 move($me, Object, Recipient)).
+normalize_task(bring($me, Recipient, Object),
+	       move($me, Object, Recipient)).
+normalize_task(give($me, Recipient, Object),
+	       move($me, Object, Recipient)).
 task_interacts_with_objects(bring(_, A, B), [A, B]).
 task_interacts_with_objects(give(_, A, B), [A, B]).
 
@@ -118,21 +84,19 @@ guard_condition(Task, location(Object, _Loc)) :-
 %% Spatial search
 %%
 
-strategy(search_for($me, Unspecified, Target),
-	 search_for($me, CurrentRoom, Target)) :-
+normalize_task(search_for($me, Unspecified, Target),
+	       search_for($me, CurrentRoom, Target)) :-
    var(Unspecified),
    in_room($me, CurrentRoom).
 strategy(search_for($me, Container, Target),
 	 search_container(Container, X^(X=Target),
 			  X^mental_monologue(["Got it!"]),
 			  mental_monologue(["Couldn't find it."]))) :-
-   nonvar(Container),
    nonvar(Target).
 strategy(search_for($me, Container, Target),
 	 search_container(Container, X^previously_hidden(X),
 			  X^mental_monologue(["Got ", np(X)]),
 			  mental_monologue(["Nothing seems to be hidden."]))) :-
-   nonvar(Container),
    var(Target).
 
 strategy(search_container(Container, CriterionLambda, SuccessLambda, FailTask),

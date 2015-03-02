@@ -5,6 +5,31 @@
 test_file(problem_solver(_), "Problem solver/integrity_checks").
 test_file(problem_solver(_), "Problem solver/ps_tests").
 
+%%
+%% Interface to external code
+%% Task creation, strategy specification
+%%
+
+:- public start_task/5, start_task/3, start_task/2.
+
+%% start_task(+Parent, +Task, +Priority, TaskConcern, +Assertions) is det
+%  Adds a task to Parent's subconcerns.  Priority is
+%  The score to be given by the task to any actions it attempts
+%  to perform.
+start_task(Parent, Task, Priority, TaskConcern, Assertions) :-
+   begin_child_concern(Parent, task, Priority, TaskConcern,
+   		       [TaskConcern/type:task:Task,
+   			TaskConcern/continuation:done]),
+   forall(member(A, Assertions),
+   	  assert(A)),
+   within_task(TaskConcern, switch_to_task(Task)).
+
+start_task(Parent, Task, Priority) :-
+   start_task(Parent, Task, Priority, _, [ ]).
+start_task(Task, Priority) :-
+   start_task($root, Task, Priority, _, [ ]).
+
+
 % Problem solver state is stored in:
 %   TaskConcern/type:task:TopLevelTask         
 %   TaskConcern/current:CurrentStep     (always an action or polled_builtin)
@@ -21,25 +46,18 @@ within_task(TaskConcern, Code) :-
    (TaskConcern/partner/P -> bind(addressee, P) ; true),
    Code.
 
-% Ontology:
-% event => task
-% task => compound_task | primitive_task
-% compound_task => simple_compound_task | (task, task) | let(PrologCode, task)
-% primitive_task => builtins | actions
-% builtins => immediate_builtin | polled_builtin | wait_event_with_timeout(Event, TimeoutPeriod)
-% immediate_builtin => null | done | call(PrologCode) | assert(Fact) | retract(Fact) | invoke_continuation(K)
-% polled_builtin => wait_condition(PrologCode) | wait_event(Event) | wait_event(Event, Deadline). 
-%
-% Primitives are executable, compound tasks need to be decomposed using
-% strategies, which map simple compound tasks to other tasks.
-
-% primitive_task(T) :-
-%    builtin_task(T) ; action(T).
-% builtin_task(T) :-
-%    immediate_builtin(T) ; polled_builtin(T).
-% immediate_builtin(null).
-% immediate_builtin(done).
-% immediate_builtin(call(_)).
+primitive_task(T) :-
+   builtin_task(T) ; action(T).
+builtin_task(T) :-
+   immediate_builtin(T) ; polled_builtin(T).
+immediate_builtin(null).
+immediate_builtin(done).
+immediate_builtin(call(_)).
+immediate_builtin(assert(_)).
+immediate_builtin(retract(_)).
+immediate_builtin(invoke_continuation(_)).
+immediate_builtin((_,_)).
+immediate_builtin(let(_,_)).
 polled_builtin(wait_condition(_)).
 polled_builtin(wait_event(_)).
 polled_builtin(wait_event(_,_)).
@@ -54,45 +72,15 @@ polled_builtin(wait_event(_,_)).
 %  CandidateStrategy may be another task, null, or a sequence of tasks
 %  constructed using ,/2.
 
-%%
-%% Interface to external code
-%% Task creation, strategy specification
-%%
-
-:- public start_task/5, start_task/3, start_task/2.
-
-%% start_task(+Parent, +Task, +Priority, TaskConcern, +Assertions) is det
-%  Adds a task to Parent's subconcerns.  Priority is
-%  The score to be given by the task to any actions it attempts
-%  to perform.
-start_task(Parent, Task, Priority, TaskConcern, Assertions) :-
-   begin_child_concern(Parent, task, Priority, TaskConcern,
-		       [TaskConcern/type:task:Task,
-			TaskConcern/continuation:done]),
-   forall(member(A, Assertions),
-	  assert(A)),
-   within_task(TaskConcern, switch_to_task(Task)).
-
-start_task(Parent, Task, Priority) :-
-   start_task(Parent, Task, Priority, _, [ ]).
-start_task(Task, Priority) :-
-   start_task($root, Task, Priority, _, [ ]).
-
 :- external trace_task/2.
-
-emit_grain(Name, Duration) :-
-   $this \= $me,
-   $this.'EmitGrain'(Name, Duration),
-   !.
-emit_grain(_,_).
 
 %% switch_to_task(+Task)
 %  Stop running current step and instead run Task followed by our continuation.
 %  If Task decomposes to a (,) expression, this will update both current and
 %  continuation, otherwise just current.
 
-% Check for immediate builtins
 switch_to_task(Task) :-
+   % This clause just logs Task and fails over to the next clause.
    assert($task/log/Task),
    emit_grain("task", 10),
    trace_task($me, Task),
@@ -104,6 +92,7 @@ switch_to_task(Task) :-
       ;
       log($me:(null->Task))),
    fail.
+% Check for immediate builtins
 switch_to_task(done) :-
    $task/repeating_task ->
       ( $task/type:task:Goal, invoke_continuation(Goal) )
@@ -139,11 +128,6 @@ switch_to_task(let(BindingCode, Task)) :-
       throw(let_failed(let(BindingCode, Task))).
 
 % All other primitive tasks
-switch_to_task(wait_event_with_timeout(E, TimeoutPeriod)) :-
-   % Translate wait_event_with_timeout into wait_event/2,
-   % which has a deadline rather than a timeout period.
-   Deadline is $now + TimeoutPeriod,
-   switch_to_task(wait_event(E, Deadline)).
 switch_to_task(B) :-
    polled_builtin(B),
    !,
@@ -158,83 +142,30 @@ switch_to_task(A) :-
       % It's an action and it's ready to run.
       assert($task/current:A:action)).
 
-% Simple compound task, so decompose it.
-switch_to_task(Task) :-
-   !,
-   begin(matching_strategies(Strategies, Task),
-	 select_strategy(Task, Strategies)).
-
-matching_strategies(Strategies, Task) :-
-   all(S,
-       matching_strategy(S, Task),
-       Strategies).
-
-%% matching_strategy(-S, +Task)
-%  S is a strategy for Task.
-matching_strategy(S, Task) :-
-   (personal_strategy(Task, S) ; strategy(Task, S)),
-   emit_grain("Default", 3),
-   \+ veto_strategy(Task).
-
-%% have_strategy(+Task)
-%  True when we have at least some candidate reduction for this task.
-have_strategy(Task) :-
-   once(matching_strategy(_, Task)).
-
-%% canonical_form_of_task(+Task, -Canonical)
-%  Repeatedly reducing Task until there are no further unique reductions
-%  results in Canonical.
-canonical_form_of_task(Task, Canonical) :-
-   matching_strategies([Reduced], Task),
-   \+ functor(Reduced, ',', 2),
-   canonical_form_of_task(Reduced, Canonical),
-   !.
-canonical_form_of_task(Task, Task).
-
-:- public show_decomposition/1.
-
-%% show_decomposition(+Task)
-%  Prints the series of decompositions of Task until it reaches a point where
-%  it's not further decomposable, or the decomposition is non-unique.
-show_decomposition(Task) :-
-   writeln(Task),
-   matching_strategies(Reductions, Task),
-   show_decomposition_aux(Reductions).
-show_decomposition_aux([]) :-
-   writeln('-> no further decompositions possible').
-show_decomposition_aux([UniqueDecomposition]) :-
-   write('-> '),
-   writeln(UniqueDecomposition),
-   matching_strategies(Reductions, UniqueDecomposition),
-   show_decomposition_aux(Reductions).
-show_decomposition_aux(ListOfReductions) :-
-   writeln('->'),
-   forall(member(R, ListOfReductions),
-	  begin(write('   '),
-		writeln(R))).
-   
-
-%% select_strategy(+Step, StrategyList)
-%  If StrategyList is a singleton, it runs it, else subgoals
-%  to a metastrategy.
-
-select_strategy(_, [S]) :-
-   begin(switch_to_task(S)).
-
-select_strategy(resolve_match_failure(resolve_match_failure(resolve_match_failure(FailedTask))), []) :-
+%% We have a task we don't know what to do with.
+switch_to_task(resolve_match_failure(resolve_match_failure(resolve_match_failure(FailedTask)))) :-
    $task/type:task:TopLevelTask,
    asserta($global::failed_task($me, (TopLevelTask-> FailedTask))),
    emit_grain("task fail", 100),
    kill_concern($task),
    throw(repeated_match_failure($me, (TopLevelTask->FailedTask))).
 
-select_strategy(Task, [ ]) :-
-   emit_grain("match fail", 10),
-   begin(switch_to_task(resolve_match_failure(Task))).
-select_strategy(Task, Strategies) :-
-   emit_grain("match conflict", 10),
-   begin(switch_to_task(resolve_conflict(Task, Strategies))).
+% Simple compound task, so decompose it.
+switch_to_task(Task) :-
+   !,
+   begin(task_reduction(Task, Reduced),
+	 switch_to_task(Reduced)).
 
+%% have_strategy(+Task)
+%  True when we have at least some candidate reduction for this task.
+have_strategy(Task) :-
+%   once(matching_strategy(_, Task)).
+   task_reduction(Task, Reduct),
+   !,
+   Reduct \= resolve_match_failure(_).
+
+:- public show_decomposition/1.
+   
 %% step_completed
 %  Current task has completed its current step; run continuation.
 step_completed :-
@@ -258,37 +189,6 @@ invoke_continuation(K) :-
 	 switch_to_task(K)).
 
 %%
-%% Driver code - called from action_selection.prolog
-%%
-
-%% poll_tasks
-%  Polls all tasks of all concerns.
-poll_tasks :-
-   forall(concern(Task, task),
-	  poll_task(Task)).
-
-%% poll_task(+Task)
-%  Attempts to make forward progress on Task's current step.
-poll_task(T) :-
-   (T/current:A)>>ActionNode,
-   ((ActionNode:action) ->
-      poll_action(T, A)
-      ;
-      poll_builtin(T, A)).
-
-poll_action(T, A) :-
-   % Make sure it's still runnable
-   runnable(A) ; interrupt_step(T, achieve(runnable(A))).
-
-poll_builtin(T, wait_condition(Condition)) :-
-   !,
-   (Condition -> step_completed(T) ; true).
-poll_builtin(_, wait_event(_)).   % nothing to do.
-poll_builtin(T, wait_event(_, Timeout)) :-
-   ($now > Timeout) ->
-      step_completed(T) ; true.
-
-%%
 %% Interrupts
 %%
 
@@ -300,19 +200,3 @@ interrupt_step(TaskConcern, InterruptingTask) :-
 		     TaskConcern/continuation:K,
 		     assert(TaskConcern/continuation:(C,K)),
 		     switch_to_task(InterruptingTask))).
-
-%%
-%%  Interface to mundane action selection
-%%
-
-propose_action(A, task, T) :-
-   T/current:A:action.
-
-score_action(A, task, T, Score) :-
-   T/current:X:action,
-   A=X,
-   T/priority:Score.
-
-on_event(E, task, T, step_completed(T)) :-
-   T/current:X,
-   (X=E ; X=wait_event(E) ; X=wait_event(E,_)).
