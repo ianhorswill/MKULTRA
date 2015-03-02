@@ -21,9 +21,19 @@ recent_dialog(Speaker, DA) :-
    agent(DA, Speaker).
    
 
+%%%
+%%% Discourse generation strategies for problem solver
+%%%
+
 %%
-%% Discourse generation strategies for problem solver
+%% Monologs
+%% Just big chunks of fixed text.
 %%
+
+strategy(monolog([ ]),
+	 null).
+strategy(monolog([String | MoreMonolog]),
+	 ( say_string(String), monolog(MoreMonolog) )).   
 
 %%
 %% Enumerating lists

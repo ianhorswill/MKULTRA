@@ -57,6 +57,27 @@ stock_phrase(parting($speaker, $addressee)) --> [be, seeing, you].
 stock_phrase(command($speaker, $addressee, end_game($addressee, $addressee))) --> [ end, game ].
 
 %
+% Help queries from the player
+%
+
+stock_phrase(general_help(player, $me)) -->
+   [help].
+stock_phrase(general_help(player, $me)) -->
+   [what, do, 'I', do, '?'].
+stock_phrase(how_do_i(player, $me, Q)) -->
+   [how, do, Us],
+   { member(Us, ['I', you, we]) },
+   player_question(Q),
+   ['?'].
+
+stock_phrase(objective_query(player, $me)) -->
+   [what, am, 'I', trying, to, do, '?'].
+stock_phrase(objective_query(player, $me)) -->
+   [what, are, Us],
+   { member(Us, [we, you]) },
+   [trying, to, do, '?'].
+
+%
 % Increments produced by the discourse generator
 %
 
