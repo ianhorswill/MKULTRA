@@ -3,12 +3,17 @@
 %%
 
 strategy(describe(Object, Purpose, NullContinuation),
-	 begin(describe_type(Object),
+	 begin(preface_description(Object),
 	       describe_attributes(Object, Attributes, NullContinuation))) :-
    all(Attribute,
        interesting_attribute(Purpose, Object, Attribute),
        AllAttributes),
    remove_redundant_attributes(AllAttributes, Attributes).
+
+default_strategy(preface_description(Object),
+		 if(property_value(Object, description, Description),
+		    monolog(Description),
+		    describe_type(Object))).
 
 strategy(describe_type(Object),
 	 if(is_a(Object, person),

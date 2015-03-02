@@ -9,6 +9,8 @@ reduction_clause(Goal, Reduction) :-
 reduction_clause(Goal, Reduction) :-
    clause(default_strategy(Goal, Reduction),
 	  _Guard).
+reduction_clause(Goal, Reduction) :-
+   clause(normalize_task(Goal, Reduction), _Guard).
 
 assert_reductions(Goal, Subgoal) :-
    var(Subgoal),
@@ -46,22 +48,13 @@ bad_reduction(G/GA, R/RA) :-
    \+ primitive_task(R, RA),
    \+ reduces_to_aux(R, RA, _, _).
 
+primitive_task(reduction_is_a_variable, 0).
+primitive_task(R, RA) :-
+   functor(S, R, RA),
+   primitive_task(S).
+
 test(problem_solver(undeclared_tasks),
      [ true(BadReductions == []) ]) :-
    all(Reduction,
        bad_reduction(_Goal, Reduction),
        BadReductions).
-
-primitive_task(reduction_is_a_variable, 0).
-primitive_task(null, 0).
-primitive_task(call, 1).
-primitive_task(invoke_continuation, 1).
-primitive_task(assert, 1).
-primitive_task(retract, 1).
-primitive_task(let, 2).
-primitive_task(wait_condition, 1).
-primitive_task(wait_event, 1).
-primitive_task(wait_event_with_timeout, 2).
-primitive_task(Name, Arity) :-
-   action_functor(Name, Arity).
-

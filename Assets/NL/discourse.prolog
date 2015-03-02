@@ -30,10 +30,13 @@ recent_dialog(Speaker, DA) :-
 %% Just big chunks of fixed text.
 %%
 
-strategy(monolog([ ]),
-	 null).
-strategy(monolog([String | MoreMonolog]),
-	 ( say_string(String), monolog(MoreMonolog) )).   
+normalize_task(monolog([ ]),
+	       null).
+normalize_task(monolog([String | MoreMonolog]),
+	       ( say_string(String), monolog(MoreMonolog) )).
+normalize_task(monolog(String),
+	       say_string(String)) :-
+   string(String).
 
 %%
 %% Enumerating lists
