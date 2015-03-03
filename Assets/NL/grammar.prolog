@@ -78,6 +78,26 @@ stock_phrase(objective_query(player, $me)) -->
    { member(Us, [we, you]) },
    [trying, to, do, '?'].
 
+stock_phrase(color_query(player, $me, red)) -->
+   [what, does, red, text, mean, '?'].
+stock_phrase(color_query(player, $me, red)) -->
+   [why, does, my, text, turn, red, '?'].
+
+stock_phrase(color_query(player, $me, yellow)) -->
+   [what, does, yellow, text, mean, '?'].
+stock_phrase(color_query(player, $me, yellow)) -->
+   [why, does, my, text, turn, yellow, '?'].
+
+stock_phrase(color_query(player, $me, green)) -->
+   [what, does, green, text, mean, '?'].
+stock_phrase(color_query(player, $me, green)) -->
+   [why, does, my, text, turn, green, '?'].
+
+stock_phrase(color_query(player, $me, white)) -->
+   [what, does, white, text, mean, '?'].
+stock_phrase(color_query(player, $me, white)) -->
+   [why, does, my, text, turn, white, '?'].
+
 %
 % Increments produced by the discourse generator
 %

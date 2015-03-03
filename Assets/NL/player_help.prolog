@@ -4,6 +4,8 @@ normalize_task(respond_to_dialog_act(how_do_i(player, $me, Question)),
 	       how_do_i(Question)).
 normalize_task(respond_to_dialog_act(objective_query(player, $me)),
 	       objective_query).
+normalize_task(respond_to_dialog_act(color_query(player, $me, Color)),
+	       color_query(Color)).
 
 strategy(general_help,
 	 monolog(["Okay, I'm going to break character for a minute.",
@@ -49,3 +51,28 @@ strategy(how_do_i(read_minds),
 strategy(objective_query,
 	 monolog(ObjectiveSpeech)) :-
    /goals/player_objective_monolog:ObjectiveSpeech.
+
+strategy(color_query(red),
+	 monolog(["Red text means I don't understand what you're typing.",
+		 "If you see this and you aren't in the middle of typing a word",
+		 "Then you either used a word I don't know,",
+		 "Or you're using more complicated grammar than I understand."])).
+strategy(color_query(yellow),
+	 monolog(["Yellow text means you typed something grammatical,",
+		  "but that I'm not sure I understand."])).
+strategy(color_query(white),
+	 monolog(["White text means I think you're in the middle of typing a word,",
+		  "and so I can't tell yet whether I understand what you're typing.",
+		  "That's often because I've generated a candidate completion for you",
+		  "and the completion I generated was grammatical, but stupid.",
+		  "Sorry about that.",
+		  "In that case, just keep typing what you meant."])).
+strategy(color_query(green),
+	 monolog(["Green text means I understand what you typed.",
+		  "If there there are extra words displayed in <i>italics</i>,",
+		  "then they form a possible completion for what you can type.",
+		  "If you hit return, I will assume you want me to include them",
+		  "in your text.",
+		  "If you don't want to include the completion,",
+		  "just type what you want instead.",
+		  "Or type a period, or question mark."])).
