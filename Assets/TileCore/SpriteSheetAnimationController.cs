@@ -19,10 +19,11 @@ public class SpriteSheetAnimationController : MonoBehaviour
     #endregion
 
     #region State variables for animation
+
     /// <summary>
     /// Currently playing animation
     /// </summary>
-    protected SpriteAnimation CurrentAnimation;
+    public SpriteAnimation CurrentAnimation { get; protected set; }
 
     /// <summary>
     /// Current state of the current animation.

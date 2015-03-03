@@ -150,6 +150,7 @@ assert_action_functor(Structure) :-
    ( action_functor(Functor, Arity) -> true
      ;
      ( assert(action_functor(Functor, Arity)),
+       assert(precondition(Structure, /perception/nobody_speaking)),
        add_conversation_dispatch_clause(Structure) ) ).
 
 add_conversation_dispatch_clause(Structure) :-

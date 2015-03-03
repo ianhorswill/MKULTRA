@@ -49,10 +49,10 @@ public class SimController : PhysicalObject
     /// </summary>
     private const int MaxConversationalSpaceColliders = 30;
 
-    private const float SpeechDelaySecondsPerChar = 0.075f;
+    private const float SpeechDelaySecondsPerChar = 0.05f;
 
     private const float SpeechDelayMinimum = 1f;
-    private const float SpeechDelayMaximum = 4f;
+    private const float SpeechDelayMaximum = 6f;
 
     private readonly Symbol playerSymbol = Symbol.Intern("player");
     #endregion
@@ -126,6 +126,9 @@ public class SimController : PhysicalObject
     /// Set to null is no active text.
     /// </summary>
     string currentSpeechBubbleText;
+
+    private bool currentlySpeaking;
+    private GameObject addressee;
 
     /// <summary>
     /// Time at which currentSpeechBubbleText should be set to null.
@@ -401,6 +404,8 @@ public class SimController : PhysicalObject
             for (var i = 0; i<characterCount; i++)
                 if (colliders[i].GetComponent<SimController>().IsSpeaking)
                     nobodySpeaking = false;
+            if (currentlySpeaking)
+                nobodySpeaking = false;
             if (nobodySpeaking)
                 ELNode.Store(perceptionRoot/SNobodySpeaking);
             else
@@ -510,7 +515,7 @@ public class SimController : PhysicalObject
 
                 case "say":
                     // Say a fixed string
-                    this.Say(structure.Argument<string>(0));
+                    this.Say(structure.Argument<string>(0), gameObject);
                     break;
 
                 case "cons":
@@ -587,7 +592,11 @@ public class SimController : PhysicalObject
                 default:
                     // Assume it's dialog
                     this.IsTrue("log_dialog_act", structure);
-                    var talkingToSelf = structure.Arity >= 2 && ReferenceEquals(structure.Argument(1), gameObject);
+                    GameObject thisAddressee = 
+                        ((structure.Arity >= 2) ? 
+                            structure.Argument(1) as GameObject
+                            : this.gameObject) ?? this.gameObject;
+                    var talkingToSelf = thisAddressee == gameObject;
                     if (!talkingToSelf || ShowMentalMonologue)
                     {
                         var textVar = new LogicVariable("DialogText");
@@ -608,16 +617,17 @@ public class SimController : PhysicalObject
                                 + ISOPrologWriter.WriteToString(structure));
                         var talkingToPlayer = structure.Arity >= 2
                                               && ReferenceEquals(structure.Argument(1), playerSymbol);
+                        this.SetSpeechTimeout(textString);
                         if (talkingToPlayer)
                             // Character is talking to zhimself
                         {
                             if (nlPrompt != null)
                                 nlPrompt.OutputToPlayer(textString);
                             else
-                                this.Say(string.Format("({0})", textString));
+                                this.Say(string.Format("({0})", textString), thisAddressee);
                         }
                         else
-                            this.Say(textString);
+                            this.Say(textString, thisAddressee);
 
                         if (!talkingToPlayer && !talkingToSelf)
                         {
@@ -643,9 +653,10 @@ public class SimController : PhysicalObject
     private void UpdateSpeechBubble()
     {
         // Clear speech bubble if it's time.
-        if (this.currentSpeechBubbleText != null && Time.time > this.clearSpeechTime)
+        if (currentlySpeaking && Time.time > this.clearSpeechTime)
         {
             this.currentSpeechBubbleText = null;
+            this.currentlySpeaking = false;
             this.motorRoot.DeleteKey(SIAmSpeaking);
         }
     }
@@ -663,15 +674,21 @@ public class SimController : PhysicalObject
     /// Displays the specified string.
     /// </summary>
     /// <param name="speech">String to display</param>
-    public void Say(string speech)
+    /// <param name="thisAddressee">Who the speech is directed to.</param>
+    public void Say(string speech, GameObject thisAddressee)
     {
+        addressee = thisAddressee;
         this.currentSpeechBubbleText = speech;
-        ELNode.Store(motorRoot / SIAmSpeaking);
-        clearSpeechTime = Time.time +
-            Math.Max(
-                SpeechDelayMinimum,
-                Math.Min(SpeechDelayMaximum,
-                         speech.Length * SpeechDelaySecondsPerChar));
+    }
+
+    private void SetSpeechTimeout(string speech)
+    {
+        this.currentlySpeaking = true;
+        ELNode.Store(this.motorRoot / SIAmSpeaking);
+        this.clearSpeechTime = Time.time
+                          + Math.Max(
+                              SpeechDelayMinimum,
+                              Math.Min(SpeechDelayMaximum, speech.Length * SpeechDelaySecondsPerChar));
     }
 
     // ReSharper disable once InconsistentNaming
@@ -779,13 +796,22 @@ public class SimController : PhysicalObject
 
     public GUIStyle SpeechBubbleStyle;
 
+    private const int CharacterWidth = 32;
+
+    private const int CharacterHeight = 2 * CharacterWidth;
     internal void OnGUI()
     {
         if (Camera.current != null && !string.IsNullOrEmpty(this.currentSpeechBubbleText))
         {
             var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
-            var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);
+            var addresseeOffset = addressee.transform.position - transform.position;
+
+            if (addresseeOffset.x > 0 || addresseeOffset.y < 0)
+                bubblelocation.y += 2*CharacterHeight;
             var size = SpeechBubbleStyle.CalcSize(new GUIContent(this.currentSpeechBubbleText));
+            //bubblelocation.x += (addresseeOffset.x<0)?CharacterWidth:-(CharacterWidth+size.x);
+            bubblelocation.x += CharacterWidth;
+            var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);
             var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
             GUI.Box(bubbleRect, greyOutTexture);
             GUI.Label(bubbleRect, this.currentSpeechBubbleText, SpeechBubbleStyle);
