@@ -201,6 +201,9 @@ public class SpriteSheetAnimationController : MonoBehaviour
         var frame = CurrentFrame;
         var column = frame.Column;
         var row = frame.Row;
+        // Kluge
+        if (Color == Color.yellow)
+            return;
         Material.color = Color;
         Material.SetPass(0);
         GL.Begin(GL.QUADS);
