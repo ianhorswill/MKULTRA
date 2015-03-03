@@ -531,6 +531,8 @@ public class SimController : PhysicalObject
                 case "pickup":
                 {
                     var patient = structure.Argument<GameObject>(0);
+                    if (patient == gameObject)
+                        return;
                     if (patient == null)
                         throw new NullReferenceException("Argument to pickup is not a gameobject");
                     var physob = patient.GetComponent<PhysicalObject>();

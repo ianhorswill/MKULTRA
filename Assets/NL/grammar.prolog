@@ -44,12 +44,12 @@ stock_phrase(prompt_player($me, $me)) --> [type, something].
 
 stock_phrase(greet($speaker, $addressee)) -->
    [Salutation, ','],
-   { member(Salutation, [hey, hello, hi]) },
+   { member(Salutation, ['Hey', 'Hello', 'Hi']) },
    proper_name($addressee, singular).
-stock_phrase(greet($speaker, $addressee)) --> [hi, there].
+stock_phrase(greet($speaker, $addressee)) --> ['Hi', there].
 
-stock_phrase(apology($speaker, $addressee)) --> [sorry].
-stock_phrase(excuse_self($speaker, $addressee)) --> [excuse, me].
+stock_phrase(apology($speaker, $addressee)) --> ['Sorry'].
+stock_phrase(excuse_self($speaker, $addressee)) --> ['Excuse', me].
 
 stock_phrase(parting($speaker, $addressee)) --> [X], { member(X, [bye, byebye, goodbye]) }.
 stock_phrase(parting($speaker, $addressee)) --> [see, you].

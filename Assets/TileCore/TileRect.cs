@@ -237,4 +237,9 @@ public struct TileRect : IEnumerable<TilePosition>
             return new Rect(min.x, min.y, Width * Tile.SizeInSceneUnits, Height * Tile.SizeInSceneUnits);
         }
     }
+
+    public override string ToString()
+    {
+        return string.Format("TileRect<{0} {1} {2} {3}>", CMin, RMin, Width, Height);
+    }
 }

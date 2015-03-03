@@ -77,7 +77,8 @@ postcondition(putdown(Object, Dest),
 action_functor(face, 1).
 action_functor(ingest, 1).
 precondition(ingest(Edible),
-	     location(Edible, $me)).
+	     location(Edible, $me)) :-
+   Edible \= $me.
 precondition(ingest(Edible),
 	     exists(Edible)).
 postcondition(ingest(X),
