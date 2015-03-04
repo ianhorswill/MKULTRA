@@ -203,3 +203,9 @@ strategy(sleep(Seconds),
 	 wait_condition(after_time(Time))) :-
    Time is $now + Seconds.
 
+strategy(examine($me, Object),
+	 describe(Object, general, null)).
+
+strategy(read($me, Object),
+	 say_string(Text)) :-
+   property_value(Object, text, Text).

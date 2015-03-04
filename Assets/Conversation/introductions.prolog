@@ -3,14 +3,17 @@
 %%%
 
 strategy(introduce_person(Person),
-	 begin(maybe_give_name(Person),
-	       describe(Person, introduction, null))).
+	 describe(Person, introduction, null)).
 
-strategy(maybe_give_name($me),
+strategy(preface_description(Person),
+	 give_name(Person)) :-
+   is_a(Person, person).
+
+default_strategy(give_name($me),
 	 say(be($me, Name))) :-
    property_value($me, given_name, Name).
 
-strategy(maybe_give_name(X),
+strategy(give_name(X),
 	 null) :-
    X \= $me.
 

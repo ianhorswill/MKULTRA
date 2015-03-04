@@ -11,15 +11,15 @@ strategy(describe(Object, Purpose, NullContinuation),
    remove_redundant_attributes(AllAttributes, Attributes).
 
 default_strategy(preface_description(Object),
-		 if(property_value(Object, description, Description),
-		    monolog(Description),
-		    describe_type(Object))).
+		 describe_type(Object)).
+
+strategy(preface_description(Object),
+	 monolog(Description)) :-
+   property_value(Object, description, Description).
 
 strategy(describe_type(Object),
-	 if(is_a(Object, person),
-	    null,
-	    let(base_kind(Object, Kind),
-		say(is_a(Object, Kind))))).
+	 let(base_kind(Object, Kind),
+	     say(is_a(Object, Kind)))).
 
 %%
 %% Describing lists of attributes

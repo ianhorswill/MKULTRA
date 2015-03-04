@@ -112,18 +112,21 @@ strategy(say(Assertion),
 	 speech([ s(Assertion) ])).
 
 strategy(speech(Items),
-	 begin(discourse_increment($me, $addressee, Items),
-	       sleep(1))) :-
-   $task/partner/player.
-strategy(speech(Items),
-	 begin(wait_condition(/perception/nobody_speaking),
-	       discourse_increment($me, $addressee, Items))) :-
-   assertion($task/partner/P, $me:"Conversation partner undefined."),
-   P \= player.
-
+	 discourse_increment($me, $addressee, Items)).
 strategy(mental_monologue(Items),
-	 begin(discourse_increment($me, $me, Items),
-	       sleep(1))).
+	 discourse_increment($me, $me, Items)).
+
+% When tasks other than conversations try to generate speech, this is where
+% it will be directed.
+default_addressee(player) :-
+   $me = $player_character,
+   !.
+default_addressee(Partner) :-
+   in_conversation_with(Partner),
+   !.
+default_addressee($me).
+
+
 
 %%
 %% Utilities

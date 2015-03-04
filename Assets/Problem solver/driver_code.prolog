@@ -6,6 +6,7 @@
 %% poll_tasks
 %  Polls all tasks of all concerns.
 poll_tasks :-
+   bind_default_task_indexicals,
    forall(concern(Task, task),
 	  poll_task(Task)).
 
@@ -29,6 +30,10 @@ poll_builtin(_, wait_event(_)).   % nothing to do.
 poll_builtin(T, wait_event(_, Timeout)) :-
    ($now > Timeout) ->
       step_completed(T) ; true.
+
+bind_default_task_indexicals :-
+   default_addressee(A),
+   bind(addressee, A).
 
 %%
 %%  Interface to mundane action selection

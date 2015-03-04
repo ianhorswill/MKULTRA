@@ -2,6 +2,10 @@
 :- public begin_csv_loading/1, end_csv_loading/1.
 :- external begin_csv_loading/1, end_csv_loading/1.
 
+%% Figure out who the player character is and stash it in the global name $player_character.
+:- component_of_gameobject_with_type(_Component, PC, $'NLPrompt'),
+   indexical(player_character=PC).
+
 load_csv_row(Row, Assertion) :-
    load_special_csv_row(Row, Assertion).
 load_csv_row(_, Assertion) :-
