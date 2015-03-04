@@ -9,6 +9,7 @@
 %% register_room(*Room, *CommonNoun, *Plural)
 %  Add Room to the database, ensuring its singular and plural nouns are registered in the lexicon
 register_room(Room, Kind) :-
+   assert(declare_value(Room, building, kavis_house)),  %KLUGE
    ensure(declare_kind(Room, Kind)).
 
 %% register_prop(*Prop, *CommonNoun, *Plural, Adjectives)

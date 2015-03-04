@@ -2,6 +2,12 @@ location(X, Location) :-
    X == player,
    !,
    location($me, Location).
+location(Room, Building) :-
+   is_a(Room, room),
+   property_value(Room, building, Building).
+location(Building, the_world) :-
+   is_a(Building, building).
+location(the_world, the_game).
 location(PhysicalObject, Location) :-
    /perception/location/PhysicalObject:Location.
 

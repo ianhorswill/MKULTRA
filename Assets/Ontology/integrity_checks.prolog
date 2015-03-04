@@ -28,7 +28,7 @@ test(integrity(property_declarations_well_formed),
 	      known_type(ValueType) ) ),
        Malformed).
 
-test(integrity(properties_declared),
+test(integrity(properties_have_types_declared),
      [ true(UndeclaredProperties == []) ]) :-
    all(Property,
        ( declare_value(_, Property, _),
@@ -120,6 +120,26 @@ test(integrity(adjective_semantics_defined),
        ( adjective(Word, Semantics),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
+
+test(entities_have_required_properties,
+     [ true(ProblematicEntities = []) ]) :-
+   all(Entity:MissingProperty,
+       ( kind(Kind),
+	 property_value(Kind, required_properties, Required),
+	 is_a(Entity, Kind),
+	 member(MissingProperty, Required),
+	 \+ property_value(Entity, MissingProperty, _) ),
+       ProblematicEntities).
+
+test(entities_have_required_relations,
+     [ true(ProblematicEntities = []) ]) :-
+   all(Entity:MissingRelation,
+       ( kind(Kind),
+	 property_value(Kind, required_relation, Required),
+	 is_a(Entity, Kind),
+	 member(MissingRelation, Required),
+	 \+ related(Entity, MissingRelation, _) ),
+       ProblematicEntities).
 
 lambda_contains_undefined_predicate(_^P, Spec) :-
    !,

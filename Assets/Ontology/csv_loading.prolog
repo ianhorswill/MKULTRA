@@ -12,16 +12,35 @@ load_special_csv_row(RowNumber,
 			   Description,
 			   SingularSpec, PluralSpec,
 			   DefaultProperties,
-			   DefaultRelations)) :-
-   define_kind(RowNumber, Kind, Parents),
-   assert_default_description(Kind, Description),
-   decode_kind_name(SingularSpec, [Kind], Singular),
-   decode_kind_name(PluralSpec, Singular, Plural),
-   assert_kind_noun(Kind, Singular, Plural),
-   forall(member(Prop=Value, DefaultProperties),
-	  assert(default_value(Kind, Prop, Value))),
-   forall(member(Relation:Relatum, DefaultRelations),
-	  assert(default_related(Kind, Relation, Relatum))).
+			   DefaultRelations,
+			   ClassProperties,
+			   ClassRelations)) :-
+   begin(define_kind(RowNumber, Kind, Parents),
+	 assert_default_description(Kind, Description),
+	 decode_kind_name(SingularSpec, [Kind], Singular),
+	 decode_kind_name(PluralSpec, Singular, Plural),
+	 assert_kind_noun(Kind, Singular, Plural),
+	 assert(declare_kind(Kind, kind)),
+	 parse_list(Prop=Value, DefaultProperties,
+		    assert(default_value(Kind, Prop, Value)),
+		    BadElement,
+		    kind_declaration_syntax_error(Kind, row:RowNumber,
+						  default_property_list:BadElement)),
+	 parse_list(Relation:Relatum, DefaultRelations,
+		    assert(default_related(Kind, Relation, Relatum)),
+		    BadElement,
+		    kind_declaration_syntax_error(Kind, row:RowNumber,
+						  default_relation_list:BadElement)),
+	 parse_list(Prop=Value, ClassProperties,
+		    assert(declare_value(Kind, Prop, Value)),
+		    BadElement,
+		    kind_declaration_syntax_error(Kind, row:RowNumber,
+						  class_property_list:BadElement)),
+	 parse_list(Relation:Relatum, ClassRelations,
+		    assert(declare_related(Kind, Relation, Relatum)),
+		    BadElement,
+		    kind_declaration_syntax_error(Kind, row:RowNumber,
+						  class_relation_list:BadElement))).
 
 assert_default_description(_, null).
 assert_default_description(Kind, Description) :-
@@ -126,3 +145,10 @@ load_special_csv_row(_RowNumber,
 assert_description(_, null).
 assert_description(Entity, Description) :-
    assert(declare_value(Entity, description, Description)).
+
+parse_list(Pattern, List, Goal, ListElement, ErrorMessage) :-
+   forall(member(ListElement, List),
+	  ( ListElement=Pattern ->
+	       Goal
+	       ;
+	       throw(error(ErrorMessage)) )).
