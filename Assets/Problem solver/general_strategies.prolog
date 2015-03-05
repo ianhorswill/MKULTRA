@@ -207,5 +207,6 @@ strategy(examine($me, Object),
 	 describe(Object, general, null)).
 
 strategy(read($me, Object),
-	 say_string(Text)) :-
-   property_value(Object, text, Text).
+	 if(property_value(Object, text, Text),
+	    say_string(Text),
+	    say_string("It's blank."))).
