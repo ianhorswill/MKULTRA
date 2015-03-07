@@ -55,6 +55,31 @@ normalize_task(cases(CaseList),
    member(C:S, CaseList),
    C,
    !.
+normalize_task(unless(Condition, Action),
+	       S) :-
+   Condition -> (S=null) ; (S=Action).
+normalize_task(unless(Condition, Action1, Action2),
+	       S) :-
+   Condition -> (S=null) ; (S=(Action1, Action2)).
+normalize_task(unless(Condition, Action1, Action2, Action3, Action4),
+	       S) :-
+   Condition -> (S=null) ; (S=(Action1, Action2, Action3, Action4)).
+normalize_task(unless(Condition, Action1, Action2, Action3, Action4, Action5),
+	       S) :-
+   Condition -> (S=null) ; (S=(Action1, Action2, Action3, Action4, Action5)).
+
+normalize_task(when(Condition, Action),
+	       S) :-
+   Condition -> (S=Action) ; (S=null).
+normalize_task(when(Condition, Action1, Action2),
+	       S) :-
+   Condition -> (S=(Action1, Action2) ; (S=null)).
+normalize_task(when(Condition, Action1, Action2, Action3, Action4),
+	       S) :-
+   Condition -> (S=(Action1, Action2, Action3, Action4) ;  (S=null)).
+normalize_task(when(Condition, Action1, Action2, Action3, Action4, Action5),
+	       S) :-
+   Condition -> (S=(Action1, Action2, Action3, Action4, Action5) ; (S=null)).
 
 normalize_task(begin(A, B),
 	       (A, B)).

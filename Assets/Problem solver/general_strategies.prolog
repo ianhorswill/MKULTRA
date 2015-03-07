@@ -61,13 +61,35 @@ strategy(move($me, X,Y),
 
 strategy(achieve(docked_with(WorldObject)),
 	 goto(WorldObject)).
-strategy(goto(Target),
-	 let(top_level_container(Target, Place),
-	     begin(assert($task/location_bids/Place:Priority),
-		   wait_event(arrived_at(Place)),
-		   retract($task/location_bids/Place)))) :-
-   assertion(atomic(Target), bad_target:goto(Target)),
+
+%%
+%% goto
+%%
+
+strategy(goto(Building),
+	 null) :-
+   is_a(Building, building).
+strategy(goto(Room),
+	 unless(contained_in($me, Room),
+		goto_internal(Room))) :-
+   room(Room).
+strategy(goto(PropOrCharacter),
+	 unless(docked_with(Place),
+		goto_internal(Place))) :-
+   once(( prop(PropOrCharacter)
+	  ;
+	  character(PropOrCharacter))),
+   top_level_container(PropOrCharacter, Place).
+
+strategy(goto_internal(Place),
+	 begin(assert($task/location_bids/Place:Priority),
+	       wait_event(arrived_at(Place)),
+	       retract($task/location_bids/Place))) :-
    $task/priority:Priority.
+
+%%
+%% Transfer of posession
+%%
 
 normalize_task(bring($me, Recipient, Object),
 	       move($me, Object, Recipient)).
@@ -88,67 +110,75 @@ normalize_task(search_for($me, Unspecified, Target),
 	       search_for($me, CurrentRoom, Target)) :-
    var(Unspecified),
    in_room($me, CurrentRoom).
+
 strategy(search_for($me, Container, Target),
 	 search_container(Container, X^(X=Target),
 			  X^mental_monologue(["Got it!"]),
 			  mental_monologue(["Couldn't find it."]))) :-
    nonvar(Target).
 strategy(search_for($me, Container, Target),
-	 search_container(Container, X^previously_hidden(X),
-			  X^mental_monologue(["Got ", np(X)]),
-			  mental_monologue(["Nothing seems to be hidden."]))) :-
+	 search_object(Container, X^previously_hidden(X),
+		       X^mental_monologue(["Got ", np(X)]),
+		       mental_monologue(["Nothing seems to be hidden."]))) :-
    var(Target).
 
-strategy(search_container(Container, CriterionLambda, SuccessLambda, FailTask),
-	 if(is_a(Container, room),
-	    search_room(Container,
-			CriterionLambda, SuccessLambda, FailTask),
-	    search_nonroom(Container,
-			   CriterionLambda, SuccessLambda, FailTask))).
+before(search_object(Object, _, _, _),
+       goto(Object)):-
+   log(searching(Object)),
+   \+ contained_in($me, Object).
 
-strategy(search_room(Room, CriterionLambda, SuccessLambda, FailTask),
-	  if(nearest(Container,
-		     ( location(Container, Room),
-		       \+ $task/searched/Container,
-		       is_a(Container, container) )),
-	     search_container(Container,
-			      CriterionLambda,
-			      SuccessLambda,
-			      begin(assert($task/searched/Container),
-				    mental_monologue(["Not here."]),
-				    search_container(Room,
-						     CriterionLambda,
-						     SuccessLambda, FailTask))),
-	     FailTask)).
+strategy(search_object(ArchitecturalSpace, CriterionLambda, SuccessLambda, FailTask),
+	 if(nearest_unsearched(ArchitecturalSpace, Object),
+	    % Search nearest item
+	    search_object(Object, CriterionLambda, SuccessLambda,
+			  % Try next item, if any
+			  search_object(ArchitecturalSpace,
+					CriterionLambda, SuccessLambda,
+					FailTask)),
+	    % Searched entire contents
+	    begin(assert(/searched/ArchitecturalSpace),
+		  FailTask))) :-
+   is_a(ArchitecturalSpace, architectural_space).
 
-strategy(search_nonroom(Container, CriterionLambda, SuccessLambda, FailTask),
-	 begin(achieve(docked_with(Container)),
-	       search_docked_container(CriterionLambda,
-				       SuccessLambda, FailTask))) :-
-   is_a(Container, container).
+strategy(search_object(Container, CriterionLambda, SuccessLambda, FailTask),
+	 if(nearest_unsearched(Container, Object),
+	    % Search nearest item
+	    search_object(Object,
+			  CriterionLambda, SuccessLambda,
+			  % Try next item, if any
+			  search_object(Container,
+					CriterionLambda, SuccessLambda, FailTask)),
+	    % Searched entire contents
+	    begin(assert(/searched/Container),
+		  FailTask))) :-
+   is_a(Container, container),
+   \+ is_a(Container, architectural_space),
+   % Reveal a hidden item, if there is one.
+   ignore(reveal_hidden_item(Container)).
 
-strategy(search_docked_container(Item^Criterion,
-				 Item^SuccessTask,
-				 FailTask),
-	 if((location(Item, Container), Criterion),
-	    SuccessTask,
-	    search_for_hidden_items(Item^Criterion,
-				    Item^SuccessTask,
-				    FailTask) )) :-
-   docked_with(Container).
+default_strategy(search_object(Object, CriterionLambda, SuccessLambda, FailTask),
+		 if(( reduce(CriterionLambda, Object, Criterion),
+		      Criterion ),
+		    begin(assert(/searched/Object),
+			  let(reduce(SuccessLambda, Object, SuccessTask),
+			      SuccessTask)),
+		    begin(mental_monologue(["Not ", np(Object)]),
+			  assert(/searched/Object),
+			  FailTask))).
 
-strategy(search_for_hidden_items(CriterionLambda, SuccessLambda, FailTask),
-	 if(reveal_hidden_item(_Item),
-            begin(mental_monologue(["Wait, there's something here"]),
-		  search_docked_container(CriterionLambda,
-					  SuccessLambda,
-					  FailTask)),
-	    FailTask)).
+:- public nearest_unsearched/2, unsearched/2.
+nearest_unsearched(Container, Contents) :-
+   nearest(Contents,
+	   unsearched(Container, Contents)).
+
+unsearched(Container, Contents) :-
+   location(Contents, Container),
+   \+ character(Contents), % Don't search characters
+   \+ /searched/Contents.
 
 :- public reveal_hidden_item/1.
 
-reveal_hidden_item(Item) :-
-   docked_with(Container),
+reveal_hidden_item(Container) :-
    hidden_contents(Container, Item),
    reveal(Item),
    assert($task/previously_hidden_items/Item),

@@ -3,8 +3,8 @@ location(X, Location) :-
    !,
    location($me, Location).
 location(Room, Building) :-
-   is_a(Room, room),
-   property_value(Room, building, Building).
+   room(Room),
+   once(property_value(Room, building, Building)).
 location(Building, the_world) :-
    is_a(Building, building).
 location(the_world, the_game).
@@ -23,8 +23,8 @@ in_room(PhysicalObject, Room) :-
    location(PhysicalObject, Room),
    room(Room).
 
-top_level_container(Room, Room) :-
-   room(Room).
+top_level_container(Space, Space) :-
+   is_a(Space, architectural_space).
 top_level_container(PhysicalObject, Container) :-
    location(PhysicalObject, C),
    (room(C) ->

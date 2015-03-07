@@ -63,8 +63,10 @@ elroot(GameObject, Root) :-
 %  The specified game object has not been destroyed
 exists(X) :-
    is_class(X, $'GameObject'),
-   component_of_gameobject_with_type(C, X, $'PhysicalObject'),
-   C.'Exists'.
+   ( component_of_gameobject_with_type(C, X, $'PhysicalObject') ->
+        C.'Exists'
+        ;
+        true ).
 ~exists(X) :-
    is_class(X, $'GameObject'),
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
@@ -94,7 +96,8 @@ alive(X) :- is_a(X, person), exists(X).
 %% docked_with(?GameObject)
 %  The character is currently docked with GameObject or its top-level container.
 docked_with(WorldObject) :-
-   /perception/docked_with:WorldObject.
+   /perception/docked_with:WorldObject,
+   !.
 docked_with(WorldObject) :-
    top_level_container(WorldObject, Container),
    WorldObject \= Container,
