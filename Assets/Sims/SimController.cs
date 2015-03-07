@@ -815,6 +815,21 @@ public class SimController : PhysicalObject
             bubblelocation.x += CharacterWidth;
             var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);
             var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
+            var leftEdgeOfMap = ((Vector2)Camera.current.WorldToScreenPoint(new Vector3(0, Tile.MapXMin, 0))).y;
+            var rightEdgeOfMap = ((Vector2)Camera.current.WorldToScreenPoint(new Vector3(0, Tile.MapXMax, 0))).y;
+
+            // Handle rects that overshoot the map
+            var overshoot = bubbleRect.xMax - rightEdgeOfMap;
+            {
+                bubbleRect.xMin -= overshoot;
+                bubbleRect.xMax -= overshoot;
+                // Extend the background rectangle if need be
+                if (bubbleRect.xMin < leftEdgeOfMap)
+                {
+                    bubbleRect.xMin = leftEdgeOfMap;
+                    bubbleRect.yMin -= size.y;
+                }
+            }
             GUI.Box(bubbleRect, greyOutTexture);
             GUI.Label(bubbleRect, this.currentSpeechBubbleText, SpeechBubbleStyle);
         }

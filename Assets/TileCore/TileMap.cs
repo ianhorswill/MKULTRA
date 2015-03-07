@@ -151,7 +151,9 @@ public class TileMap : BindingBehaviour
 
         Tile.SizeInSceneUnits = tileSize;
         Tile.MapXMin = minX;
+        Tile.MapXMax = maxX;
         Tile.MapYMin = minY;
+        Tile.MapYMax = maxY;
         MapColumns = Mathf.RoundToInt((maxY - minY) / tileSize);
         MapRows = Mathf.RoundToInt((maxX - minX) / tileSize);
         contents = new Tile[MapColumns, MapRows];

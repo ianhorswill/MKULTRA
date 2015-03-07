@@ -17,9 +17,19 @@ public class Tile
     public static float MapXMin = 0;
 
     /// <summary>
+    /// The X coordinate of the right edge of the map, in scene units.
+    /// </summary>
+    public static float MapXMax = 0;
+
+    /// <summary>
     /// The Y coordinate of the bottom edge of the map, in scene units.
     /// </summary>
     public static float MapYMin = 0;
+
+    /// <summary>
+    /// The Y coordinate of the top edge of the map, in scene units.
+    /// </summary>
+    public static float MapYMax = 0;
 
     /// <summary>
     /// Quantizes a scene position to tile units.
