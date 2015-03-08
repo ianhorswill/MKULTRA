@@ -110,7 +110,7 @@ namespace Prolog
         /// <summary>
         /// List of enclitics (suffixes attached by a ') in English
         /// </summary>
-        private static readonly string[] Enclitics = { "s", "m", "t", "d", "re", "ll","ve" };
+        public static readonly string[] EnglishEnclitics = { "s", "m", "t", "d", "re", "ll","ve" };
 
         /// <summary>
         /// Convert Prolog list of words into one text string.
@@ -125,7 +125,7 @@ namespace Prolog
                 string str = word.ToString();
                 if (lastToken != null
                     && char.IsLetterOrDigit(str[0])
-                    && !(lastToken == "'" && Enclitics.Contains(str)))
+                    && !(lastToken == "'" && EnglishEnclitics.Contains(str)))
                     s.Append(' ');
                 s.Append(str);
 

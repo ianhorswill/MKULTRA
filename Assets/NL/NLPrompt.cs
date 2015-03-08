@@ -155,10 +155,32 @@ public class NLPrompt : BindingBehaviour
         this.TryCompletionIfCompleteWord();
     }
 
+    /// <summary>
+    /// True if the input ends with a character that can't be part of a word.
+    /// </summary>
+    bool InputEndsWithCompleteWord
+    {
+        get
+        {
+            if (input == "")
+                return false;
+            if (!input.EndsWith("'")
+                && !char.IsLetterOrDigit(input[input.Length-1]))
+                return true;
+            // Check for cases like "who're"
+            foreach (var e in Prolog.Prolog.EnglishEnclitics)
+            {
+                if (input.EndsWith(e) && input.Length > e.Length && input[input.Length - 1 - e.Length] == '\'')
+                    return true;
+            }
+            return false;
+        }
+    }
+
     private void TryCompletionIfCompleteWord()
     {
         this.formatted = null;
-        if (this.input.EndsWith(" "))
+        if (InputEndsWithCompleteWord)
             this.TryCompletion();
         else
         {
