@@ -11,11 +11,9 @@ strategy(describe(Object, Purpose, NullContinuation),
    remove_redundant_attributes(AllAttributes, Attributes).
 
 default_strategy(preface_description(Object),
-		 describe_type(Object)).
-
-strategy(preface_description(Object),
-	 monolog(Description)) :-
-   property_value(Object, description, Description).
+		 if(property_value(Object, description, Description),
+		    monolog(Description),
+		    describe_type(Object))).
 
 strategy(describe_type(Object),
 	 let(base_kind(Object, Kind),
