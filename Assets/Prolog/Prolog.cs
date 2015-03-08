@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -106,6 +107,10 @@ namespace Prolog
             LexicalItems[s.Name.ToLower()] = s;
         }
 
+        /// <summary>
+        /// List of enclitics (suffixes attached by a ') in English
+        /// </summary>
+        private static readonly string[] Enclitics = { "s", "m", "t", "d", "re", "ll","ve" };
 
         /// <summary>
         /// Convert Prolog list of words into one text string.
@@ -118,7 +123,9 @@ namespace Prolog
             foreach (var word in PrologListToIList(wordList))
             {
                 string str = word.ToString();
-                if (lastToken != null && char.IsLetterOrDigit(str[0]) && !(lastToken == "'" && str == "s"))
+                if (lastToken != null
+                    && char.IsLetterOrDigit(str[0])
+                    && !(lastToken == "'" && Enclitics.Contains(str)))
                     s.Append(' ');
                 s.Append(str);
 
