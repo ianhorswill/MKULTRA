@@ -13,6 +13,11 @@ poll_tasks :-
 %% poll_task(+Task)
 %  Attempts to make forward progress on Task's current step.
 poll_task(T) :-
+   T/monitor/Condition:Continuation,
+   Condition,
+   !,
+   within_task(T, invoke_continuation(Continuation)).
+poll_task(T) :-
    (T/current:A)>>ActionNode,
    ((ActionNode:action) ->
       poll_action(T, A)
