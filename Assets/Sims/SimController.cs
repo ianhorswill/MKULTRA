@@ -820,6 +820,7 @@ public class SimController : PhysicalObject
 
             // Handle rects that overshoot the map
             var overshoot = bubbleRect.xMax - rightEdgeOfMap;
+            if (overshoot>0)
             {
                 bubbleRect.xMin -= overshoot;
                 bubbleRect.xMax -= overshoot;
