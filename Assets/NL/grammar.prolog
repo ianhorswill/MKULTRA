@@ -42,10 +42,10 @@ current_dialog_pair($speaker, $addressee).
 stock_phrase(do_not_understand($speaker, $addressee, _)) --> [ huh, '?'].
 stock_phrase(prompt_player($me, $me)) --> [type, something].
 
-stock_phrase(greet($speaker, $addressee)) -->
+stock_phrase(greet($speaker, Who)) -->
    [Salutation, ','],
    { member(Salutation, ['Hey', 'Hello', 'Hi']) },
-   proper_name($addressee, singular).
+   proper_name(Who, singular).
 stock_phrase(greet($speaker, $addressee)) --> ['Hi', there].
 
 stock_phrase(apology($speaker, $addressee)) --> ['Sorry'].

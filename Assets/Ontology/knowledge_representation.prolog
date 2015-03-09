@@ -108,12 +108,16 @@ subkinds(Kind, Subkinds) :-
 superkind_array(Kind, Array) :-
    call_with_step_limit(10000, superkinds(Kind, List)),
    list_to_array(List, Array),
-   asserta( ( $global::superkind_array(Kind, Array) :- ! ) ).
+   asserta( ( $global::superkind_array(Kind, Array) :- ! ) ),
+   % Don't even think about trying to reexecute this.
+   !.
 
 subkind_array(Kind, Array) :-
    call_with_step_limit(10000, subkinds(Kind, List)),
    list_to_array(List, Array),
-   asserta( ( $global::subkind_array(Kind, Array) :- ! ) ).
+   asserta( ( $global::subkind_array(Kind, Array) :- ! ) ),
+   % Don't even think about trying to reexecute this
+   !.
 
 % This version handles multiple LUBs, but then it turned out the hierarchy doesn't currently have multiple lubs.
 % lub(Kind1, Kind2, LUB) :-

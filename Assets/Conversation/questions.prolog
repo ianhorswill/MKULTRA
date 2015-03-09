@@ -50,6 +50,14 @@ strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
 			  (can(Action), is_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
 
+% Change what is in X queries from location queries to contained_in queries.
+strategy(answer_wh(Asker,
+		   Answer, location(Answer, Container),
+		   (location(Answer, Container), is_a(Answer, Type))),
+	 answer_wh(Asker,
+		   Answer, location(Answer, Container),
+		   (contained_in(Answer, Container), is_a(Answer, Type)))).
+
 strategy(answer_wh(M, _,
 		   manner(be(Who), M),
 		   _),

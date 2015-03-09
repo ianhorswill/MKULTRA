@@ -40,7 +40,7 @@ strategy(follow_command(_, incriminating(_)),
 	 say_string("Sorry, I can't.")).
 
 strategy(tell_about($me, _, Topic),
-	 describe(Topic, general, speech(["Sorry; don't know anything."]))).
+	 describe(Topic, general, null)).
 
 strategy(go($me, Location),
 	 goto(Location)).
@@ -51,8 +51,7 @@ strategy(put($me, Patient, Destination),
    nonvar(Destination).
 
 strategy(talk($me, $addressee, Topic),
-	 describe(Topic, introduction,
-		  say(["Sorry, I don't know anything"]))) :-
+	 describe(Topic, introduction, null)) :-
    nonvar(Topic).
 
 strategy(talk($me, ConversationalPartner, Topic),

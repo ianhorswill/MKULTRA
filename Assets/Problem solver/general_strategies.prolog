@@ -124,7 +124,6 @@ strategy(search_for($me, Container, Target),
 
 before(search_object(Object, _, _, _),
        goto(Object)):-
-   log(searching(Object)),
    \+ contained_in($me, Object).
 
 strategy(search_object(ArchitecturalSpace, CriterionLambda, SuccessLambda, FailTask),
@@ -162,7 +161,7 @@ default_strategy(search_object(Object, CriterionLambda, SuccessLambda, FailTask)
 		    begin(assert(/searched/Object),
 			  let(reduce(SuccessLambda, Object, SuccessTask),
 			      SuccessTask)),
-		    begin(mental_monologue(["Not ", np(Object)]),
+		    begin(mental_monologue(["Not", np(Object)]),
 			  assert(/searched/Object),
 			  FailTask))).
 
