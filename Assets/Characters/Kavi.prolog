@@ -4,13 +4,6 @@
 % I know the secret location of the macguffin
 /perception/location/ $macguffin : $bookshelf.
 
-/pending_conversation_topics/ $bruce/"Sorry to hear your macguffin was stolen.".
-/pending_conversation_topics/ $bruce/"Make yourself at home.".
-/pending_conversation_topics/ $bruce/"But um.".
-/pending_conversation_topics/ $bruce/"Stay out of my bedroom.".
-/pending_conversation_topics/ $bruce/"It's a personal thing.".
-/pending_conversation_topics/ $bruce/assert(/goals/pending_tasks/goto($'kitchen sink')).
-
 % Monitor goals quickly
 /parameters/poll_time:3.
 
@@ -49,3 +42,17 @@ personal_strategy(achieve(bedroom_empty),
 		    discourse_increment($me, Intruder,
 					["Stay out of my bedroom!"]) )) :-
    intruder(Intruder, $bedroom).
+
+%%%
+%%% Intro beat
+%%%
+
+quip(mention_macguffin,
+     ["Sorry to hear your macguffin was stolen.",
+      "Make yourself at home."]).
+quip(mention_keepout,
+     ["By the way,",
+      "Stay out of my bedroom",
+      "It's a personal thing."]).
+
+
