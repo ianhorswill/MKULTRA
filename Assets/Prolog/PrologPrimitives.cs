@@ -556,6 +556,7 @@ namespace Prolog
 
         private static IEnumerable<CutState> ModuleCallImplementation(object[] args, PrologContext context)
         {
+            Component newThis = null;
             if (args.Length != 2)
                 throw new ArgumentCountException("::", args, "*module", ":goal");
             var module = FunctionalExpression.Eval(args[0], context);
@@ -569,7 +570,10 @@ namespace Prolog
                 {
                     var component = module as Component;
                     if (component != null)
+                    {
                         kb = component.KnowledgeBase();
+                        newThis = component;
+                    }
                     else
                     {
                         throw new ArgumentTypeException("::", "module", module, typeof(GameObject));
@@ -577,7 +581,24 @@ namespace Prolog
                 }
             }
             Structure goal = Term.Structurify(args[1], "Invalid goal in :: expression.");
-            return IgnoreCuts(kb.Prove(goal.Functor, goal.Arguments, context, context.CurrentFrame));
+            var oldKB = context.KnowledgeBase;
+            var oldThis = context.This;
+            try
+            {
+                context.KnowledgeBase = kb;
+                context.This = newThis;
+                foreach (var cutstate in kb.Prove(goal.Functor, goal.Arguments, context, context.CurrentFrame))
+                {
+                    if (cutstate == CutState.ForceFail)
+                        yield break;
+                    yield return CutState.Continue;
+                }
+            }
+            finally
+            {
+                context.KnowledgeBase = oldKB;
+                context.This = oldThis;
+            }
         }
 
         private static IEnumerable<CutState> CallImplementation(object[] args, PrologContext context)
