@@ -143,6 +143,7 @@ namespace Prolog
         /// </summary>
         IEnumerable<CutState> TestClausesInOrder(object[] args, PrologContext context, ushort myFrame)
         {
+            var mark = context.MarkTrace();
             var argIndexers = PredicateArgumentIndexer.ArglistIndexers(args);
             entriesListUsed = true;
             foreach (var entry in Entries)
@@ -167,6 +168,7 @@ namespace Prolog
                 }
             }
         fail:
+            context.RestoreVariables(mark);
             if (KnowledgeBase.Trace || Trace)
                 context.TraceOutput("Fail: {0}", new Structure(Name, args));
             //context.UnwindStack(Name, args);
@@ -180,6 +182,7 @@ namespace Prolog
         IEnumerable<CutState> TestShuffledClauses(object[] args, PrologContext context, ushort myFrame)
         {
             entriesListUsed = true;
+            var mark = context.MarkTrace();
             var shuffler = new Shuffler((ushort)Entries.Count);
             var argIndexers = PredicateArgumentIndexer.ArglistIndexers(args);
             while (!shuffler.Done)
@@ -207,6 +210,7 @@ namespace Prolog
                 }
             }
         fail:
+            context.RestoreVariables(mark);
             if (KnowledgeBase.Trace || Trace)
                 context.TraceOutput("Fail: {0}", new Structure(Name, args));
             //context.UnwindStack(Name, args);
