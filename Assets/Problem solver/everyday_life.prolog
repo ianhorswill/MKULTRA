@@ -11,6 +11,9 @@ strategy(everyday_life,
 	 (retract(Node), T)) :-
    /goals/pending_tasks/T>>Node.
 
+add_pending_task(Task) :-
+   assert(/goals/pending_tasks/Task).
+
 strategy(everyday_life,
 	 achieve(P) ) :-
    unsatisfied_maintenance_goal(P),
@@ -27,7 +30,9 @@ strategy(everyday_life,
    \+ currently_in_conversation.
 
 default_strategy(everyday_life,
-		 wait_event_with_timeout(_, PollTime)) :-
+		 if(my_beat_idle_task(Task),
+		    Task,
+		    wait_event_with_timeout(_, PollTime))) :-
    everyday_life_polling_time(PollTime).
 
 everyday_life_polling_time(T) :-

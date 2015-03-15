@@ -87,6 +87,10 @@ strategy(goto_internal(Place),
 	       retract($task/location_bids/Place))) :-
    $task/priority:Priority.
 
+after(goto_internal(Person),
+      greet($me, Person)) :-
+   character(Person).
+
 %%
 %% Transfer of posession
 %%
@@ -113,14 +117,21 @@ normalize_task(search_for($me, Unspecified, Target),
 
 strategy(search_for($me, Container, Target),
 	 search_container(Container, X^(X=Target),
-			  X^mental_monologue(["Got it!"]),
+			  X^handle_discovery(X),
 			  mental_monologue(["Couldn't find it."]))) :-
    nonvar(Target).
 strategy(search_for($me, Container, Target),
 	 search_object(Container, X^previously_hidden(X),
-		       X^mental_monologue(["Got ", np(X)]),
+		       X^handle_discovery(X),
 		       mental_monologue(["Nothing seems to be hidden."]))) :-
    var(Target).
+
+strategy(handle_discovery(X),
+	 mental_monologue(["Found", np(X)])).
+after(handle_discovery(X),
+      begin(pickup(X),
+	    describe(X))) :-
+   is_a(X, key_item).
 
 before(search_object(Object, _, _, _),
        goto(Object)):-

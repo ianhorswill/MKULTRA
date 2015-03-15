@@ -25,7 +25,7 @@ request_status(_Requestor, _Task, normal).
 strategy(follow_command(Task, normal),
 	 if(dialog_task(Task),
 	    Task,
-	    assert(/goals/pending_tasks/Task))).
+	    call(add_pending_task(Task)))).
 
 :- public dialog_task/1.
 dialog_task(tell_about(_,_,_)).

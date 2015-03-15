@@ -21,7 +21,8 @@ selected_reduction_with_before_after(Canonical, Strategies, Joined) :-
 	 all(Method,
 	     after(Canonical, Method),
 	     AfterMethods),
-	 append_task_lists(BeforeMethods, Selected, AfterMethods, Joined)).
+	 append_task_lists(BeforeMethods, [Selected], AfterMethods,
+			   Joined)).
 
 % Select the reduced method from available methods.
 selected_reduction(_, [S], S).
@@ -143,17 +144,13 @@ show_decomposition_aux(UniqueDecomposition) :-
 %%% General utilities
 %%%
 
-%% append_task_lists(+Start, +End, -Joined) is det
-append_task_lists(X, null, X).
-append_task_lists(null, X, Y) :-
-   % We have to do this to comafy X :(
-   append_task_lists(X, null, Y).
-append_task_lists([First], X, (First, X)).
-append_task_lists([First | Rest], X, (First, Y)) :-
-   append_task_lists(Rest, X, Y).
-append_task_lists(First, X, [First | Y]) :-
-   append_task_lists(X, null, Y).
+commafy_task_list([], null).
+commafy_task_list([Singleton], Singleton).
+commafy_task_list([First | Rest], (First, CommafiedRest)) :-
+   commafy_task_list(Rest, CommafiedRest).
 
+append_task_lists([ ], [Singleton], [ ], Singleton).  % fast path
 append_task_lists(X, Y, Z, Joined) :-
-   append_task_lists(Y, Z, Intermediate),
-   append_task_lists(X, Intermediate, Joined).
+   append(Y, Z, Intermediate),
+   append(X, Intermediate, FullList),
+   commafy_task_list(FullList, Joined).

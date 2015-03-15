@@ -52,10 +52,10 @@ is_a(Object, Kind) :-
    is_a_aux(Object, Sub).
 
 is_a_aux(Object, Kind) :-
-   /brainwash/Object/kind ->
-      /brainwash/Object/kind/Kind
-      ;
-      declare_kind(Object, Kind).
+   /brainwash/Object/kind/Kind.
+is_a_aux(Object, Kind) :-
+   \+ /brainwash/Object/kind,
+   declare_kind(Object, Kind).
 
 %% base_kind(+Object, -Kind)
 %  Kind is the most specific type for Object
