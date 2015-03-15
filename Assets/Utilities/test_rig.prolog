@@ -107,18 +107,26 @@ do_test_setup(Name, setup(P)) :-
    displayln("Test setup operation for ", Name, " failed: ", P).
 
 check_test_success(Name, Options) :-
-   % Call P for every true(P) that appears in the test's options.
-   % Succeeds iff all true(P)'s exist.
-   call_on_list(true(_),
-		Options,
-		run_success_test(Name)),
+   forall(( member(Option, Options),
+	    success_test(Option) ),
+	  once(run_success_test(Name, Option))),
    !.
 
 :- public run_success_test/2.
 run_success_test(_Name, true(P)) :-
    P.
 run_success_test(Name, true(P)) :-
-   displayln("Success test for ", Name, " failed: ", P).
+   displayln("Success test for ", Name, " failed; ", P).
+run_success_test(Name, problem_list(Message, List)) :-
+   (List == [ ]) ->
+      true
+      ;
+      begin(displayln(Message, ":              (test ", Name, ")"),
+	    forall(member(X, List),
+		   displayln("   ", X))).
+
+success_test(true(_)).
+success_test(problem_list(_,_)).
 
 
 %%%

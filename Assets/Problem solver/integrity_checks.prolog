@@ -12,6 +12,9 @@ reduction_clause(Goal, Reduction) :-
 reduction_clause(Goal, Reduction) :-
    clause(normalize_task(Goal, Reduction), _Guard).
 
+assert_reductions(Goal, _) :-
+   var(Goal),
+   !.
 assert_reductions(Goal, Subgoal) :-
    var(Subgoal),
    !,
@@ -54,7 +57,8 @@ primitive_task(R, RA) :-
    primitive_task(S).
 
 test(problem_solver(undeclared_tasks),
-     [ true(BadReductions == []) ]) :-
+     [ problem_list("The following tasks have no reductions",
+		    BadReductions) ]) :-
    all(Reduction,
        bad_reduction(_Goal, Reduction),
        BadReductions).
