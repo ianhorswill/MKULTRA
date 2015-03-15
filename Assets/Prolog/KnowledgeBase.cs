@@ -351,9 +351,26 @@ namespace Prolog
                                  : structure;
             if (head.IsFunctor(Symbol.ColonColon, 2))
             {
-                var kb = head.Argument(0) as KnowledgeBase;
+                var argument = head.Argument(0);
+                var kb = argument as KnowledgeBase;
                 if (kb == null)
-                    throw new ArgumentTypeException("assert", "knowledgebase", head.Argument(0), typeof(KnowledgeBase));
+                {
+                    var o = argument as GameObject;
+                    if (o != null)
+                        kb = o.KnowledgeBase();
+                    else
+                    {
+                        var c = argument as Component;
+                        if (c != null)
+                            kb = c.KnowledgeBase();
+                        else
+                            throw new ArgumentTypeException(
+                                "assert",
+                                "knowledgebase",
+                                argument,
+                                typeof(KnowledgeBase));
+                    }
+                }
                 if (structure.IsFunctor(Symbol.Implication, 2))
                     kb.Assert(
                         new Structure(Symbol.Implication, head.Argument(1), structure.Argument(1)),
