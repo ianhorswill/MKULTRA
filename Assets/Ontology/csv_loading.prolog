@@ -87,8 +87,11 @@ check_predicate_signature(_Type, ArgTypes) :-
 %% Properties
 %%
 
-load_special_csv_row(_RowNumber, properties(Name, SurfaceForm, ObjectType, ValueType)) :-
+load_special_csv_row(_RowNumber, properties(Name, Visibility,
+					    SurfaceForm,
+					    ObjectType, ValueType)) :-
    assert(declare_kind(Name, property)),
+   assert(visibility(Name, Visibility)),
    assert(property_type(Name, ObjectType, ValueType)),
    assert_phrase_rule(property_name(Name), SurfaceForm).
 
@@ -97,13 +100,15 @@ load_special_csv_row(_RowNumber, properties(Name, SurfaceForm, ObjectType, Value
 %%
 
 load_special_csv_row(_RowNumber,
-		     relations(Name, ObjectType, ValueType,
+		     relations(Name, Visibility,
+			       ObjectType, ValueType,
 			       CopularForm,
 			       SingularForm,
 			       PluralForm,
 			       Generalizations,
 			       Inverse)) :-
    assert(declare_kind(Name, relation)),
+   assert(visibility(Name, Visibility)),
    assert(relation_type(Name, ObjectType, ValueType)),
    assert_copular_form(Name, CopularForm),
    assert_genitive_form(Name, singular, SingularForm),

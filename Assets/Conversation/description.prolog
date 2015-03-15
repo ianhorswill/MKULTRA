@@ -2,6 +2,9 @@
 %% Describing objects
 %%
 
+normalize_task(describe(X),
+	       describe(X, general, null)).
+
 strategy(describe(Object, Purpose, NullContinuation),
 	 begin(preface_description(Object),
 	       describe_attributes(Object, Attributes, NullContinuation))) :-
@@ -84,11 +87,13 @@ interesting_attribute(Purpose, Object, Attribute) :-
 interesting_property(Purpose, Object, Prop:Value) :-
    property_nondefault_value(Object, Prop, Value),
    \+ /mentioned_to/ $addressee /Object/Prop:Value,
+   \+ visibility(Prop, internal),
    property_relevant_to_purpose(Purpose, Object, Prop, Value).
 
 interesting_relation(Purpose, Object, Relation/Relatum) :-
    related_nondefault(Object, Relation, Relatum),
    \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
+   \+ visibility(Relation, internal),
    relation_relevant_to_purpose(Purpose, Object, Relation, Relatum).
 
 
