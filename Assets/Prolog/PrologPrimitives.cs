@@ -2879,21 +2879,27 @@ namespace Prolog
 
         private static IEnumerable<CutState> DisplayImplementation(object[] args, PrologContext context)
         {
-            foreach (var arg in args)
+            foreach (var a in args)
+            {
+                var arg = Term.Deref(a);
                 if (arg is string)
                     context.Output.Write(arg);
                 else
                     context.Output.Write(Term.ToStringInPrologFormat(arg));
+            }
             return CutStateSequencer.Succeed();
         }
 
         private static IEnumerable<CutState> DisplayLnImplementation(object[] args, PrologContext context)
         {
-            foreach (var arg in args)
+            foreach (var a in args)
+            {
+                var arg = Term.Deref(a);
                 if (arg is string)
                     context.Output.Write(arg);
                 else
                     context.Output.Write(Term.ToStringInPrologFormat(arg));
+            }
             context.Output.WriteLine();
             return CutStateSequencer.Succeed();
         }
