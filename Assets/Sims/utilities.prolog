@@ -37,7 +37,7 @@ ensure([Functor | Arguments]) :-
 ensure(Assertion) :-
    functor(Assertion, F, A),
    external(F/A),
-   (Assertion ; assertz(Assertion)).
+   (Assertion ; assertz($global::Assertion)).
 
 %% world_object(?GameObject)
 %  GameObject is a prop or character.

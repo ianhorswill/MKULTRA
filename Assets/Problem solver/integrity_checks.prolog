@@ -1,5 +1,5 @@
 build_reduction_cross_reference :-
-   retractall(reduces_to(_,_)),
+   $global::retractall(reduces_to_aux(_,_,_,_)),
    forall(reduction_clause(Goal, Reduction),
 	  assert_reductions(Goal, Reduction)).
 
@@ -41,15 +41,16 @@ assert_reductions(Goal, Subgoal) :-
    functor(Subgoal, SN, SA),
    ensure(reduces_to_aux(GN, GA, SN, SA)).
 
-:- build_reduction_cross_reference.
-
 reduces_to(G/GA, S/SA) :-
    reduces_to_aux(G, GA, S, SA).
+
+:- external ignore_undeclared_task/2.
 
 bad_reduction(G/GA, R/RA) :-
    reduces_to_aux(G, GA, R, RA),
    \+ primitive_task(R, RA),
-   \+ reduces_to_aux(R, RA, _, _).
+   \+ reduces_to_aux(R, RA, _, _),
+   \+ ignore_undeclared_task(R, RA).
 
 primitive_task(reduction_is_a_variable, 0).
 primitive_task(R, RA) :-
@@ -57,7 +58,8 @@ primitive_task(R, RA) :-
    primitive_task(S).
 
 test(problem_solver(undeclared_tasks),
-     [ problem_list("The following tasks have no reductions",
+     [ setup(build_reduction_cross_reference),
+       problem_list("The following tasks have no reductions",
 		    BadReductions) ]) :-
    all(Reduction,
        bad_reduction(_Goal, Reduction),

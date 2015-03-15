@@ -2,6 +2,9 @@ strategy(a, b).
 strategy(b, c).
 strategy(b, d).
 
+ignore_undeclared_task(c, 0).
+ignore_undeclared_task(d, 0).
+
 test(problem_solver(single_match),
      [ true(L == [b]) ]) :-
    matching_strategies(L, a).

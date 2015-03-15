@@ -140,6 +140,9 @@ end_beat :-
    set_beat_state(Beat, completed),
    retract($global_root/beats/current).
 
+test_file(problem_solver(_),
+	  "Scripting/beat_task_crossrefs").
+
 %%%
 %%% Exposition beat
 %%%

@@ -116,9 +116,9 @@ normalize_task(search_for($me, Unspecified, Target),
    in_room($me, CurrentRoom).
 
 strategy(search_for($me, Container, Target),
-	 search_container(Container, X^(X=Target),
-			  X^handle_discovery(X),
-			  mental_monologue(["Couldn't find it."]))) :-
+	 search_object(Container, X^(X=Target),
+		       X^handle_discovery(X),
+		       mental_monologue(["Couldn't find it."]))) :-
    nonvar(Target).
 strategy(search_for($me, Container, Target),
 	 search_object(Container, X^previously_hidden(X),

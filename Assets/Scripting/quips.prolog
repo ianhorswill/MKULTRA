@@ -4,9 +4,6 @@
 
 :- external quip/2, quip/3.
 
-quip(QuipName, QuipName, Speech) :-
-   quip(QuipName, Speech).
-
 strategy(Task, run_quip(QuipName)) :-
    quip(Task, QuipName, _).
 strategy(Task, run_quip(Task)) :-
@@ -15,5 +12,7 @@ strategy(Task, run_quip(Task)) :-
 normalize_task(run_quip(Quip),
 	       begin(monolog(Speech),
 		     assert(/quips/spoken/Quip))) :-
-   quip(_, Quip, Speech).
+   quip(_, Quip, Speech)
+   ;
+   quip(Quip, Speech).
 
