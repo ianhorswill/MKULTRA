@@ -39,6 +39,12 @@ on_event(exit_conversational_space(Partner),
 	 kill_concern(C)) :-
    C/partner/Partner.
 
+on_event(die(Partner),
+	 conversation,
+	 C,
+	 kill_concern(C)) :-
+   C/partner/Partner.
+
 % KLUGE: when polling for actions, check if the conversation is idle, and if so try to say something.
 propose_action(_, conversation, C) :-
    conversation_is_idle(C),

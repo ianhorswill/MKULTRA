@@ -849,7 +849,15 @@ public class SimController : PhysicalObject
     public override void Destroy()
     {
         tileMap.SetTileColor(gameObject.DockingTiles(), Color.red);
+
+        var deathEvent = new Structure("die", gameObject);
+        foreach (var character in Registry<SimController>())
+            character.QueueEvent(deathEvent);
+
         base.Destroy();
+
+        steering.CharacterDead();
+        transform.position = new Vector3(-9999999999, -9999999999, 0);
     }
 
     #endregion
