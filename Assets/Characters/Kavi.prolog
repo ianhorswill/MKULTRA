@@ -38,21 +38,5 @@ intruder(Intruder, Room) :-
 
 % Eat all intruders
 personal_strategy(achieve(bedroom_empty),
-		  ( ingest(Intruder),
-		    discourse_increment($me, Intruder,
-					["Stay out of my bedroom!"]) )) :-
+		  ingest(Intruder)) :-
    intruder(Intruder, $bedroom).
-
-%%%
-%%% Intro beat
-%%%
-
-quip(mention_macguffin,
-     ["Sorry to hear your macguffin was stolen.",
-      "Make yourself at home."]).
-quip(mention_keepout,
-     ["By the way,",
-      "Stay out of my bedroom",
-      "It's a personal thing."]).
-
-

@@ -118,9 +118,6 @@ strategy(mental_monologue(Items),
 
 % When tasks other than conversations try to generate speech, this is where
 % it will be directed.
-default_addressee(player) :-
-   $me = $player_character,
-   !.
 default_addressee(Partner) :-
    in_conversation_with(Partner),
    !.

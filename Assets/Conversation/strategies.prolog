@@ -13,7 +13,7 @@ strategy(say_something,
    once(/pending_conversation_topics/ $addressee/Topic>>TopicNode).
 
 default_strategy(say_something,
-		 when(task_advances_current_beat(Task),
+		 when(dialog_task_advances_current_beat(Task),
 		      Task)).
 
 strategy(ask_about($me, $addressee, $addressee),

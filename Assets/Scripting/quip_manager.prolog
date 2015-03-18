@@ -16,3 +16,7 @@ normalize_task(run_quip(Quip),
    ;
    quip(Quip, Speech).
 
+normalize_task(run_quip(String),
+	       begin(monolog([String]),
+		     assert(/quips/spoken/String))) :-
+   string(String).

@@ -60,6 +60,8 @@ elroot(GameObject, Root) :-
    component_of_gameobject_with_type(KB, GameObject, $'KB'),
    Root is KB.'KnowledgeBase'.'ELRoot' .
 
+:- public exists/1.
+
 %% exists(*GameObject)
 %  The specified game object has not been destroyed
 exists(X) :-
@@ -73,11 +75,18 @@ exists(X) :-
    component_of_gameobject_with_type(C, X, $'PhysicalObject'),
    \+ C.'Exists'.
 
-%% existing(*Kind, ?GameObject)
-%  GameObject is an undestroyed instance of Kind
+:- public true_location/2.
+
+%% true_location(+GameObject, -Container)
+%  Returns the true location of GameObject, bypassing the perceptual system.
+true_location(GameObject, Container) :-
+   component_of_gameobject_with_type(C, GameObject, $'PhysicalObject'),
+   property(C, "Container", Container).
 
 :- public existing/2.
 
+%% existing(*Kind, ?GameObject)
+%  GameObject is an undestroyed instance of Kind
 existing(Kind, Object) :-
    is_a(Object, Kind),
    exists(Object).

@@ -1,9 +1,9 @@
 
 Characters/Kavi.prolog,110
 pretend_truth_value(12,295
-bedroom_empty :-bedroom_empty31,840
-intruder(35,952
-personal_strategy(41,1105
+bedroom_empty :-bedroom_empty30,839
+intruder(34,951
+personal_strategy(40,1104
 
 Concerns/be_polite.prolog,57
 score_action(3,34
@@ -30,9 +30,9 @@ still_speaking_to_partner(16,538
 partner_still_speaking_to_me(19,588
 on_enter_state(27,789
 on_event(36,1049
-propose_action(43,1262
-currently_in_conversation :-currently_in_conversation48,1386
-in_conversation_with(51,1451
+propose_action(49,1351
+currently_in_conversation :-currently_in_conversation54,1475
+in_conversation_with(57,1540
 
 Concerns/event_grammar.prolog,46
 next_events(8,180
@@ -68,30 +68,63 @@ Concerns/social_interaction.prolog,37
 standard_concern(1,0
 on_event(3,42
 
+Conversation/assertions.prolog,90
+strategy(5,35
+default_strategy(10,259
+heard_hearsay(18,665
+be(25,832
+strategy(29,913
+
+Conversation/description.prolog,255
+normalize_task(5,29
+strategy(8,95
+default_strategy(16,416
+strategy(21,578
+surface_form(55,1908
+remove_redundant_attributes(65,2161
+remove_implicants(75,2575
+interesting_attribute(82,2834
+interesting_property(87,2998
+interesting_relation(93,3252
+
+Conversation/imperatives.prolog,91
+strategy(5,36
+request_status(9,193
+strategy(25,633
+dialog_task(31,770
+strategy(33,803
+
+Conversation/introductions.prolog,131
+strategy(5,49
+default_strategy(12,214
+strategy(16,315
+property_relevant_to_purpose(20,363
+relation_relevant_to_purpose(25,555
+
+Conversation/misc_responses.prolog,111
+default_strategy(9,113
+strategy(17,263
+default_strategy(55,1485
+strategy(57,1543
+default_strategy(84,2218
+
 Conversation/normalization.prolog,48
 normalize_dialog_act(1,0
 da_normal_form(8,180
 
-Conversation/strategies.prolog,423
-strategy(3,28
-default_strategy(8,155
-strategy(11,198
-default_strategy(44,1075
-strategy(52,1206
-default_strategy(71,1859
-strategy(73,1917
-default_strategy(84,2192
-strategy(91,2310
-request_status(95,2467
-strategy(111,2907
-dialog_task(118,3072
-strategy(120,3105
-default_strategy(188,4940
-strategy(195,5181
-default_strategy(224,6102
-connective_for_answer(240,6684
-strategy(243,6765
-default_strategy(276,7617
+Conversation/questions.prolog,132
+strategy(6,62
+default_strategy(30,725
+strategy(35,945
+default_strategy(73,2288
+connective_for_answer(86,2822
+strategy(89,2903
+
+Conversation/strategies.prolog,71
+before(3,28
+strategy(7,116
+default_strategy(15,369
+strategy(19,467
 
 NL/auxverbs.prolog,214
 aux(9,211
@@ -106,75 +139,68 @@ aux_do(89,2974
 aux_have(97,3162
 aux_be(106,3396
 
-NL/base_grammar.prolog,253
+NL/base_grammar.prolog,254
 test_file(1,0
 sentence(4,105
-bind_discourse_variables(24,694
-discourse_variable_type(43,1236
-bound_discourse_variable(48,1444
-opt_stop(52,1527
-s(65,1808
-inverted_sentence(168,5109
-s(175,5377
-inverted_sentence(233,7444
-s(242,7761
-ap(296,9458
+bind_discourse_variables(24,679
+discourse_variable_type(43,1221
+bound_discourse_variable(48,1429
+opt_stop(52,1512
+s(65,1793
+inverted_sentence(181,5662
+s(190,5956
+inverted_sentence(283,9244
+s(292,9561
+ap(346,11258
 
 NL/base_grammar_test.prolog,45
 test_options(1,0
 test(4,77
-s_test(53,1878
+s_test(55,1919
 
 NL/contractions.prolog,43
 contracted_form(4,197
-contraction(19,813
+contraction(19,841
 
-NL/discourse.prolog,408
-strategy(5,61
-property_relevant_to_purpose(11,218
-relation_relevant_to_purpose(14,325
-strategy(21,486
-remove_redundant_attributes(28,763
-remove_implicants(38,1177
-interesting_attribute(46,1437
-interesting_property(51,1601
-interesting_relation(56,1821
-strategy(61,2058
-surface_form(88,3298
-strategy(105,4017
-default_strategy(121,4555
-strategy(136,4995
-reduce(184,6551
-reduce_aliasing(188,6650
+NL/discourse.prolog,231
+log_dialog_act(7,99
+transcript :-transcript13,276
+recent_dialog(19,454
+normalize_task(33,651
+strategy(52,1398
+default_strategy(68,1950
+strategy(83,2390
+default_addressee(121,3636
+reduce(134,3815
+reduce_aliasing(138,3914
 
-NL/grammar.prolog,304
+NL/grammar.prolog,309
 utterance(8,117
 current_dialog_pair(36,1288
 stock_phrase(42,1353
-utterance(60,2046
-discourse_fragments(66,2299
-discourse_fragment(72,2424
-action_functor(92,2960
-register_utterance_types :-register_utterance_types96,3040
-assert_action_functor(103,3234
-add_conversation_dispatch_clause(110,3464
+utterance(105,3440
+discourse_fragments(111,3693
+discourse_fragment(117,3818
+action_functor(137,4354
+register_utterance_types :-register_utterance_types141,4434
+assert_action_functor(148,4628
+add_conversation_dispatch_clause(156,4927
 
 NL/interface.prolog,424
 generate_text(8,234
 input_completion(17,600
 well_formed_dialog_act(29,1144
-bind_dialog_indexicals_for_input :-bind_dialog_indexicals_for_input39,1441
-bind_indexicals_for_addressing_character_named(52,1777
-bind_indexicals_for_addressing_character(57,1950
-in_conversation_with_npc(63,2115
-bind_dialog_indexicals_for_output(68,2200
-generating_nl :-generating_nl76,2409
-input_from_player :-input_from_player79,2453
+bind_dialog_indexicals_for_input :-bind_dialog_indexicals_for_input43,1615
+bind_indexicals_for_addressing_character_named(56,1951
+bind_indexicals_for_addressing_character(61,2124
+in_conversation_with_npc(67,2289
+bind_dialog_indexicals_for_output(72,2374
+generating_nl :-generating_nl80,2583
+input_from_player :-input_from_player83,2627
 
-NL/lexicon.prolog,47
-pronoun_word(6,62
-whpron(19,624
-noun(28,867
+NL/lexicon.prolog,34
+pronoun_word(7,93
+whpron(20,655
 
 NL/lf.prolog,124
 modalized(8,158
@@ -183,22 +209,22 @@ lf_core_predicate(26,667
 lf_subject(56,1431
 lf_core_predicate_subject(62,1566
 
-NL/np.prolog,254
+NL/np.prolog,256
 test_file(5,43
 impose_selectional_constraint(11,214
 selectional_constraint(14,332
 np(25,560
 opt_genitive(38,848
 np(45,1023
-object_matching_selectional_constraint(91,2278
-noun_describing(96,2449
-np(100,2557
-resolve_definite_description(118,2931
+object_matching_selectional_constraint(91,2257
+np(98,2440
+resolve_definite_description(108,2611
+property_value_np(130,3236
 
 NL/np_tests.prolog,47
 test_options(1,0
 test(8,124
-np_test(86,2381
+np_test(87,2415
 
 NL/pdebug.prolog,198
 pdebug(3,21
@@ -211,6 +237,16 @@ try_completion(45,1069
 run_parser_test(51,1291
 nonterminal_args(60,1669
 
+NL/player_help.prolog,172
+normalize_task(1,0
+strategy(10,383
+player_question(29,1204
+normalize_task(30,1238
+player_question(33,1293
+strategy(34,1363
+player_question(43,1773
+strategy(44,1820
+
 NL/pp.prolog,80
 opt_pp(16,700
 generator_pp(24,962
@@ -221,15 +257,15 @@ NL/preterminals.prolog,294
 proper_name(9,189
 pronoun(12,257
 whpron(18,430
-load_special_csv_row(31,622
-end_csv_loading(53,1545
-load_special_csv_row(59,1682
-end_csv_loading(81,2596
-tv(89,2785
-load_special_csv_row(104,3261
-end_csv_loading(126,4185
-check_lexicon_typing(129,4293
-check_lexical_entry_type(133,4387
+load_special_csv_row(32,692
+end_csv_loading(54,1615
+load_special_csv_row(60,1752
+end_csv_loading(82,2666
+tv(90,2855
+load_special_csv_row(105,3331
+end_csv_loading(127,4255
+check_lexicon_typing(130,4363
+check_lexical_entry_type(134,4457
 
 NL/vp.prolog,57
 test_file(3,35
@@ -271,6 +307,21 @@ possession(30,644
 Ontology/container.prolog,22
 initialize_prop(6,97
 
+Ontology/csv_loading.prolog,370
+load_special_csv_row(10,146
+assert_default_description(45,1498
+decode_kind_name(49,1643
+assert_kind_noun(53,1747
+define_kind(58,1936
+end_csv_loading(69,2284
+check_predicate_signature(78,2541
+load_special_csv_row(90,2857
+assert_copular_form(120,3852
+assert_genitive_form(128,4196
+load_special_csv_row(136,4376
+assert_description(150,4971
+parse_list(154,5104
+
 Ontology/food_drink.prolog,22
 initialize_prop(4,44
 
@@ -281,47 +332,39 @@ hypnotically_believable(22,545
 Ontology/integrity_checks.prolog,140
 known_object(1,0
 known_type(6,91
-known_property(15,246
-known_relation(18,335
-test(21,424
-lambda_contains_undefined_predicate(115,3523
+known_property(17,293
+known_relation(20,382
+test(23,471
+lambda_contains_undefined_predicate(158,5583
 
 Ontology/kinds.prolog,23
 immediate_kind_of(1,0
 
-Ontology/meta_language.prolog,786
-test_file(11,308
-is_a(22,604
-is_a_aux(39,1095
-valid_kind(45,1227
-kind_of(54,1360
-immediate_superkind_of(67,1630
-superkinds(70,1695
-subkinds(74,1805
-superkind_array(78,1914
-subkind_array(83,2096
-kind_lub(103,2845
-kind_glb(112,3033
-property_nondefault_value(126,3493
-property_value(131,3681
-unique_answer(140,3966
-lookup_property_value(145,4087
-valid_property_value(153,4392
-is_type(160,4570
-related_nondefault(181,5165
-related(187,5379
-decendant_relation(193,5581
-ancestor_relation(198,5692
-declare_object(203,5799
-load_special_csv_row(211,6074
-define_kind(215,6237
-define_kind_noun(226,6585
-noun(238,7018
-end_csv_loading(241,7100
-check_predicate_signature(250,7357
-load_special_csv_row(258,7652
-assert_copular_form(270,8098
-load_special_csv_row(278,8442
+Ontology/knowledge_representation.prolog,555
+test_file(15,452
+is_a(31,813
+is_a_aux(54,1528
+base_kind(63,1823
+valid_kind(71,1939
+kind_of(80,2072
+subkind_of(91,2305
+immediate_superkind_of(97,2410
+superkinds(100,2475
+subkinds(104,2585
+superkind_array(108,2694
+subkind_array(115,2936
+kind_lub(137,3744
+kind_glb(146,3932
+is_type(184,5461
+property_nondefault_value(211,6157
+property_value(216,6345
+unique_answer(225,6630
+lookup_property_value(230,6751
+valid_property_value(238,7056
+related_nondefault(251,7433
+related(257,7647
+decendant_relation(274,8278
+ancestor_relation(279,8389
 
 Ontology/person.prolog,130
 adjectival_property(1,0
@@ -330,65 +373,87 @@ valid_property_value(3,52
 adjectival_property(5,104
 valid_property_value(6,130
 
-Ontology/physical_object.prolog,121
+Ontology/physical_object.prolog,136
 location(1,0
-unique_answer(8,163
-incompatible(12,235
-in_room(16,301
-top_level_container(20,385
-contained_in(29,618
+unique_answer(10,228
+incompatible(14,300
+in_room(18,366
+top_level_container(22,450
+contained_in(31,707
+room(48,1231
 
 Ontology/type_check.prolog,218
 possible_types_given_constraint(3,122
 variable_type_given_constraint(10,394
-well_typed(14,538
-well_typed_arguments(60,2221
-copy_list_as_variables(65,2442
-variable_well_typed(69,2556
-lookup_variable_type(82,3073
+well_typed(17,631
+well_typed_arguments(63,2314
+copy_list_as_variables(68,2535
+variable_well_typed(72,2649
+lookup_variable_type(87,3229
 
-Problem solver/everyday_life.prolog,401
+Problem solver/driver_code.prolog,222
+poll_tasks :-poll_tasks8,130
+poll_task(15,311
+poll_action(27,571
+poll_builtin(31,686
+bind_default_task_indexicals :-bind_default_task_indexicals39,932
+propose_action(47,1062
+score_action(50,1116
+on_event(55,1204
+
+Problem solver/everyday_life.prolog,445
 character_initialization :-character_initialization7,81
 strategy(10,175
-unsatisfied_maintenance_goal(20,419
-strategy(24,488
-default_strategy(29,625
-everyday_life_polling_time(33,743
-maintenance_goal(36,822
-hungry(40,900
-maintenance_goal(43,974
-thirsty(44,1007
-maintenance_goal(47,1085
-tired(48,1116
-maintenance_goal(51,1186
-dirty(52,1217
-maintenance_goal(55,1287
-full_bladder(56,1325
+add_pending_task(14,258
+strategy(17,323
+unsatisfied_maintenance_goal(23,484
+strategy(27,553
+default_strategy(32,690
+everyday_life_polling_time(38,855
+maintenance_goal(41,934
+hungry(45,1012
+maintenance_goal(48,1086
+thirsty(49,1119
+maintenance_goal(52,1197
+tired(53,1228
+maintenance_goal(56,1298
+dirty(57,1329
+maintenance_goal(60,1399
+full_bladder(61,1437
 
-Problem solver/general_strategies.prolog,321
+Problem solver/general_strategies.prolog,517
 strategy(7,150
 unachievable(32,641
 strategy(34,667
-task_interacts_with_objects(76,1726
-guard_condition(79,1832
-strategy(87,1982
-reveal_hidden_item(145,3808
-previously_hidden(155,4109
-strategy(162,4218
-postcondition(164,4254
-strategy(170,4379
-postcondition(172,4417
-self_achieving(178,4551
-strategy(184,4626
+after(90,1880
+normalize_task(98,1993
+task_interacts_with_objects(102,2162
+guard_condition(105,2268
+normalize_task(113,2418
+strategy(118,2572
+after(131,3041
+before(135,3111
+strategy(139,3207
+default_strategy(168,4278
+nearest_unsearched(178,4651
+unsearched(182,4754
+reveal_hidden_item(189,4936
+previously_hidden(198,5215
+strategy(205,5324
+postcondition(207,5360
+strategy(213,5485
+postcondition(215,5523
+self_achieving(221,5657
+strategy(227,5732
 
-Problem solver/integrity_checks.prolog,199
+Problem solver/integrity_checks.prolog,202
 build_reduction_cross_reference :-build_reduction_cross_reference1,0
-reduction_clause(6,153
-assert_reductions(13,334
-reduces_to(29,767
-bad_reduction(32,827
-test(37,954
-primitive_task(43,1114
+reduction_clause(6,170
+assert_reductions(15,440
+reduces_to(44,1162
+bad_reduction(49,1261
+primitive_task(55,1425
+test(60,1539
 
 Problem solver/metastrategies.prolog,90
 default_strategy(6,76
@@ -396,32 +461,102 @@ strategy(20,437
 preferred_strategy(34,820
 max_preference(37,925
 
-Problem solver/problem_solver.prolog,528
+Problem solver/problem_solver.prolog,298
 test_file(5,65
-within_task(19,556
-polled_builtin(43,1524
-start_task(68,2353
-emit_grain(83,2839
-switch_to_task(95,3203
-matching_strategies(169,5309
-matching_strategy(176,5477
-have_strategy(183,5711
-canonical_form_of_task(189,5915
-select_strategy(200,6245
-step_completed :-step_completed215,6834
-invoke_continuation(227,7184
-poll_tasks :-poll_tasks241,7499
-poll_task(247,7647
-poll_action(254,7780
-poll_builtin(258,7895
-interrupt_step(272,8273
-propose_action(283,8562
-score_action(286,8616
-on_event(291,8704
+start_task(19,525
+within_task(44,1381
+primitive_task(49,1510
+builtin_task(51,1563
+immediate_builtin(53,1627
+polled_builtin(61,1864
+switch_to_task(82,2607
+have_strategy(161,4913
+step_completed :-step_completed171,5173
+invoke_continuation(183,5523
+interrupt_step(197,5860
 
-Problem solver/ps_tests.prolog,25
+Problem solver/ps_tests.prolog,55
 strategy(1,0
-test(5,49
+ignore_undeclared_task(5,49
+test(8,110
+
+Problem solver/task_reduction.prolog,354
+task_reduction(5,25
+reduce_canonical_form(8,158
+selected_reduction_with_before_after(16,445
+selected_reduction(28,844
+canonical_form_of_task(38,1110
+normalize_task(48,1309
+matching_strategies(106,3141
+matching_strategy(113,3309
+show_decomposition(125,3652
+show_decomposition_aux(130,3769
+commafy_task_list(147,4255
+append_task_lists(152,4432
+
+Script/demo_level.prolog,496
+beat(5,29
+beat_start_task(6,47
+beat_dialog(9,101
+beat(26,474
+beat_sequel(27,494
+beat_start_task(28,533
+beat_monolog(29,594
+beat(43,946
+beat_follows(44,978
+beat_completion_condition(45,1032
+beat_idle_task(48,1182
+after(52,1285
+beat(59,1371
+beat_priority(60,1401
+beat_precondition(61,1443
+beat_monolog(63,1529
+beat(72,1692
+beat_priority(73,1725
+beat_precondition(74,1770
+beat_monolog(76,1862
+beat(85,1996
+beat_priority(86,2019
+beat_precondition(87,2054
+beat_monolog(89,2139
+
+Scripting/beat_manager.prolog,819
+dialog_task_advances_current_beat(36,1291
+dialog_task_advances_beat(43,1561
+can_perform_beat_task(51,1828
+incomplete_beat_task_from_list(57,1951
+beat_dialog_with(67,2392
+my_beat_idle_task(75,2706
+next_beat_monolog_task(82,2922
+monolog_task(89,3142
+current_beat(108,3585
+set_current_beat(117,3824
+beat_state(124,4012
+set_beat_state(126,4079
+best_next_beat(136,4251
+select_new_beat(144,4432
+available_beat(151,4634
+runnable_beat(158,4798
+beat_requirement(162,4866
+beat_score(171,5229
+start_beat(174,5310
+interrupt_beat(180,5475
+check_beat_completion :-check_beat_completion185,5657
+end_beat :-end_beat190,5772
+test_file(197,5953
+standard_concern(204,6065
+on_event(206,6107
+plot_point(225,6552
+react_to_plot_event(232,6799
+maybe_interrupt_current_beat :-maybe_interrupt_current_beat237,6926
+
+Scripting/beat_task_crossrefs.prolog,53
+reduction_clause(1,0
+ignore_undeclared_task(18,495
+
+Scripting/quip_manager.prolog,39
+strategy(7,183
+normalize_task(12,302
 
 Sims/action_selection.prolog,115
 next_action(25,836
@@ -441,12 +576,12 @@ action_functor(68,1414
 precondition(69,1442
 postcondition(73,1572
 action_functor(77,1660
-precondition(78,1687
-postcondition(82,1798
-action_functor(85,1844
-true_after(89,1901
-follows_from(95,2088
-inferrable_postcondition(109,2374
+precondition(79,1712
+postcondition(84,1843
+action_functor(87,1889
+true_after(91,1946
+follows_from(97,2133
+inferrable_postcondition(111,2419
 
 Sims/events.prolog,107
 notify_event(23,580
@@ -455,25 +590,26 @@ maybe_log_event(43,1296
 construals(67,1893
 construal(73,2111
 
-Sims/utilities.prolog,410
+Sims/utilities.prolog,434
 register_room(11,350
-register_prop(20,724
-register_character(30,1131
-ensure(37,1375
-world_object(48,1653
-nearest(53,1827
-elroot(63,2099
-exists(69,2305
-existing(83,2659
-dead(91,2805
-alive(96,2937
-docked_with(101,3129
-after_time(110,3386
-hidden(117,3451
-reveal(121,3571
-hidden_contents(125,3699
-do_all_character_initializations :-do_all_character_initializations141,4014
-allocate_UID(154,4380
+register_prop(18,677
+register_character(28,1020
+ensure(33,1158
+world_object(44,1445
+nearest(49,1619
+elroot(59,1891
+exists(67,2118
+true_location(82,2548
+existing(90,2805
+dead(98,2951
+alive(103,3083
+docked_with(108,3275
+after_time(118,3538
+hidden(125,3603
+reveal(129,3723
+hidden_contents(133,3851
+do_all_character_initializations :-do_all_character_initializations149,4166
+allocate_UID(162,4532
 
 Utilities/data_structures.prolog,96
 list_to_array(3,64
@@ -498,12 +634,12 @@ write_transition(22,540
 gz_command(27,709
 
 Utilities/startup.prolog,103
-load_csv_row(5,129
-assert_phrase_rule(13,411
-assert_proper_name(36,1394
-number_spec_number(47,1806
+load_csv_row(9,325
+assert_phrase_rule(17,607
+assert_proper_name(43,1686
+number_spec_number(54,2098
 
-Utilities/test_rig.prolog,572
+Utilities/test_rig.prolog,595
 running_tests :-running_tests10,273
 run_tests :-run_tests19,462
 test_body(34,915
@@ -516,23 +652,30 @@ check_test_determinism(88,2927
 setup_test(97,3329
 do_test_setup(104,3549
 check_test_success(109,3688
-run_success_test(118,3930
-test_has_option(130,4191
-all_test_options(135,4416
-call_on_list(143,4733
-deterministic(155,5257
-nonempty_instantiated_atom_list(163,5439
-ensure_tests_loaded(184,5891
-ensure_test_file_loaded(188,5997
+run_success_test(116,3870
+success_test(128,4224
+test_has_option(138,4407
+all_test_options(143,4632
+call_on_list(151,4949
+deterministic(163,5473
+nonempty_instantiated_atom_list(171,5655
+ensure_tests_loaded(192,6107
+ensure_test_file_loaded(196,6213
 
-Utilities/truth_value.prolog,157
+Utilities/truth_value.prolog,231
 truth_value(6,191
 know_that(14,312
 know_whether(18,355
-know_relation(32,658
-know_property(33,684
-know_about_object(35,711
-admitted_truth_value(42,845
+know_about_object(31,671
+know_whether(37,788
+know_relation(39,806
+know_property(41,882
+know_about_object(44,957
+admitted_truth_value(51,1091
+and_truth_values(65,1531
+
+Utilities/unity_stuff.prolog,18
+emit_grain(7,165
 
 Utilities/why.prolog,51
 why(3,31
@@ -542,3 +685,5 @@ diagnose_failure(20,372
 Sims/indexicals.prolog,0
 
 Ontology/tort.prolog,0
+
+Characters/Bruce.prolog,0

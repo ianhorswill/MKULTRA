@@ -6,9 +6,9 @@
 %% poll_tasks
 %  Polls all tasks of all concerns.
 poll_tasks :-
-   bind_default_task_indexicals,
-   forall(concern(Task, task),
-	  poll_task(Task)).
+   begin(bind_default_task_indexicals,
+	 forall(concern(Task, task),
+		poll_task(Task))).
 
 %% poll_task(+Task)
 %  Attempts to make forward progress on Task's current step.
@@ -39,7 +39,7 @@ poll_builtin(T, wait_event(_, Timeout)) :-
 bind_default_task_indexicals :-
    default_addressee(A),
    bind(addressee, A).
-
+   
 %%
 %%  Interface to mundane action selection
 %%
@@ -52,6 +52,10 @@ score_action(A, task, T, Score) :-
    A=X,
    T/priority:Score.
 
-on_event(E, task, T, step_completed(T)) :-
+on_event(E, task, T, wait_event_completed(T)) :-
    T/current:X,
    (X=E ; X=wait_event(E) ; X=wait_event(E,_)).
+
+wait_event_completed(T) :-
+   bind_default_task_indexicals,
+   step_completed(T).

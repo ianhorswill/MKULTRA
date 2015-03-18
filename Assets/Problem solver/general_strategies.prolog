@@ -129,8 +129,7 @@ strategy(search_for($me, Container, Target),
 strategy(handle_discovery(X),
 	 mental_monologue(["Found", np(X)])).
 after(handle_discovery(X),
-      begin(pickup(X),
-	    describe(X))) :-
+      pickup(X)) :-
    is_a(X, key_item).
 
 before(search_object(Object, _, _, _),
@@ -172,7 +171,7 @@ default_strategy(search_object(Object, CriterionLambda, SuccessLambda, FailTask)
 		    begin(assert(/searched/Object),
 			  let(reduce(SuccessLambda, Object, SuccessTask),
 			      SuccessTask)),
-		    begin(mental_monologue(["Not", np(Object)]),
+		    begin(sleep(0.75),
 			  assert(/searched/Object),
 			  FailTask))).
 

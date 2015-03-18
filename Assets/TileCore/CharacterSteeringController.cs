@@ -8,6 +8,15 @@ public class CharacterSteeringController : BindingBehaviour
         this.Face(new Vector2(0,-1));
     }
 
+    /// <summary>
+    /// Called when character dies to stop character from moving
+    /// </summary>
+    public void CharacterDead()
+    {
+        enabled = false;
+        rigidbody2D.velocity = Vector2.zero;
+    }
+
     #region Fields and properties
     Material debugArrowShader;
     [Bind]
