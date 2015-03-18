@@ -178,6 +178,8 @@ namespace Prolog
                 gameObjectName = "GlobalKB";
             var newGameObject = GameObject.Find(gameObjectName);
             if (newGameObject == null)
+                newGameObject = GameObject.Find(char.ToUpper(gameObjectName[0]) + gameObjectName.Substring(1));
+            if (newGameObject == null)
             {
                 Output.WriteLine("No GameObject named {0}", gameObjectName);
                 return;
