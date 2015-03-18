@@ -82,3 +82,16 @@ generating_nl :-
 
 input_from_player :-
    X = $input_from_player, X.
+
+%% player_idle_time(-Time)
+%  Time is the number of seconds of game time since the player
+%  last did something (i.e. typed).
+:- public player_idle_time/1.
+
+player_idle_time(Time) :-
+   $global_root/last_player_activity:Last,
+   Time is $now-Last.
+
+player_idle_for_at_least(Time) :-
+   player_idle_time(T),
+   T >= Time.

@@ -14,7 +14,7 @@
 %%
 
 :- external beat/1, beat_priority/2, beat_precondition/2, beat_completion_condition/2,
-            beat_start_task/3, beat_idle_task/3, beat_sequel/2, beat_follows/2.
+            beat_start_task/3, beat_idle_task/3, beat_sequel/2, beat_follows/2, beat_delay/2.
 :- external plot_relevant_assertion/4.
 :- higher_order beat_precondition(0, 1).
 :- public dialog_task_advances_current_beat/1, my_beat_idle_task/1.
@@ -33,8 +33,10 @@
 %  Task is the thing I should run to try to move the beat forward.
 %  If I'm not a participant for this beat or if there's nothing for me
 %  to do right now, this will fail.
+dialog_task_advances_current_beat(sleep(1)) :-
+   beat_waiting_for_timeout.
 dialog_task_advances_current_beat(begin(Task,
-				 assert($global_root/beats/Beat/completed_tasks/Task))) :-
+					assert($global_root/beats/Beat/completed_tasks/Task))) :-
    current_beat(Beat),
    dialog_task_advances_beat(Beat, Task).
 
@@ -72,6 +74,8 @@ beat_dialog_with(Beat, Partner, TaskList) :-
 %% my_beat_idle_task(-Task)
 %  Task is the thing I should do to advance the current beat if
 %  I'm not already involved in dialog.
+my_beat_idle_task(sleep(1)) :-
+   beat_waiting_for_timeout.
 my_beat_idle_task(Task) :-
    \+ in_conversation_with(_),  % we're not idle if we aren't in conversation
    current_beat(Beat),
@@ -97,6 +101,13 @@ monolog_task(Beat,
 	     Task,
 	     begin(Task,
 		   assert($global_root/beats/Beat/completed_tasks/Task))).
+
+beat_waiting_for_timeout :-
+   current_beat(Beat),
+   beat_delay(Beat, Time),
+   ( (\+ beat_running_for_at_least(Beat, Time))
+     ;
+     (\+ player_idle_for_at_least(Time)) ).
 
 %%%
 %%% Beat state
@@ -126,6 +137,13 @@ beat_state(Beat, State) :-
 set_beat_state(Beat, State) :-
    assert($global_root/beats/Beat/state:State).
 
+beat_running_time(Beat, Time) :-
+   $global_root/beats/Beat/start_time:T,
+   Time is $now-T.
+
+beat_running_for_at_least(Beat, Time) :-
+   beat_running_time(Beat, T),
+   T >= Time.
 
 %%%
 %%% Beat selection
@@ -172,6 +190,7 @@ beat_score(Beat, Score) :-
    beat_priority(Beat, Score) -> true ; (Score = 0).
 
 start_beat(Beat) :-
+   assert($global_root/beats/Beat/start_time: $now),
    forall(beat_start_task(Beat, Who, Task),
 	  Who::add_pending_task(Task)).
 

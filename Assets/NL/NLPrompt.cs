@@ -30,6 +30,11 @@ public class NLPrompt : BindingBehaviour
 
     #region Private fields
     /// <summary>
+    /// Database node for storing when the user last typed.
+    /// </summary>
+    private ELNode LastPlayerActivity;
+
+    /// <summary>
     /// What the user has typed so far.
     /// </summary>
     private string input = "";
@@ -59,6 +64,12 @@ public class NLPrompt : BindingBehaviour
     private SimController simController;
 #pragma warning restore 649
     #endregion
+
+    internal void Start()
+    {
+        this.LastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
+        this.LastPlayerActivity.StoreExclusive(-1, true);
+    }
 
     /// <summary>
     /// Display output from the player character to the player.
@@ -93,6 +104,9 @@ public class NLPrompt : BindingBehaviour
 
     private void HandleKeyDown(Event e)
     {
+        // Update last user activity time
+        this.LastPlayerActivity.StoreExclusive(Time.time, true);
+
         switch (e.keyCode)
         {
             case KeyCode.F1:

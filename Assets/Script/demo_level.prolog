@@ -31,9 +31,7 @@ beat_monolog(bruce_reacts,
 	     [ sleep(3),
 	       "I'm sure Kavi stole my macguffin.",
 	       "It must be here someplace.",
-	       "Kavi's a member of the illuminati.",
-	       "He'd kill me if he knew I knew.",
-	       "Or that I'm an agent of WWW.",
+	       "He's a member of the illuminati.",
 	       "I need to search the house." ]).
 
 %%%
@@ -41,6 +39,7 @@ beat_monolog(bruce_reacts,
 %%%
 
 beat(bruce_explores_the_house).
+beat_delay(bruce_explores_the_house, 5).
 beat_follows(bruce_explores_the_house, bruce_reacts).
 beat_completion_condition(bruce_explores_the_house,
 			  ( $bruce::contained_in($macguffin, $bruce),
@@ -63,7 +62,8 @@ beat_precondition(bruce_finds_the_report,
 beat_monolog(bruce_finds_the_report,
 	     $bruce,
 	     ["What's this?",
-	      "I need to find out what MKSPARSE is."]).
+	      "It's a report on project MKSPARSE.",
+	      "I've never heard of it."]).
 
 %%%
 %%% Bruce finds the macguffin
@@ -88,5 +88,8 @@ beat_precondition(kavi_eats_bruce,
 		  $global_root/plot_points/ate/ $kavi/ $bruce).
 beat_monolog(kavi_eats_bruce,
 	     $kavi,
-	     ["Sorry, but I can't let you investigate my house.",
-	      "I don't have a gun, so I had to eat you."]).
+	     ["Sorry, old chap,",
+	      "but I can't let you investigate my house.",
+	      "I know it's horribly rude to eat you,",
+	      "But you see, I don't have a gun.",
+	      "So there's not really an alternative."]).
