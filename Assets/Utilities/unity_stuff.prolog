@@ -10,3 +10,8 @@ emit_grain(Name, Duration) :-
    !.
 emit_grain(_,_).
 
+:- public fkey_command/1.
+:- external fkey_command/1.
+
+%% fkey_command(+FKeySymbol)
+%  Called by UI whenever a given F-key is pressed.

@@ -95,6 +95,21 @@ public class NLPrompt : BindingBehaviour
     {
         switch (e.keyCode)
         {
+            case KeyCode.F1:
+            case KeyCode.F2:
+            case KeyCode.F3:
+            case KeyCode.F4:
+            case KeyCode.F5:
+            case KeyCode.F6:
+            case KeyCode.F7:
+            case KeyCode.F8:
+            case KeyCode.F9:
+            case KeyCode.F10:
+            case KeyCode.F11:
+            case KeyCode.F12:
+                KnowledgeBase.Global.IsTrue(new Structure("fkey_command", Symbol.Intern(e.keyCode.ToString().ToLower())));
+                break;
+
             case KeyCode.Escape:
                 this.input = this.formatted = this.commentary = "";
                 this.dialogAct = null;
