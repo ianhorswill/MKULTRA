@@ -28,7 +28,8 @@ propose_action(A, player_interaction, C) :-
 
 player_input_task(Concern, Input) :-
    kill_children(Concern),
-   start_task(Concern, Input, 100, T, [T/partner/player]).
+   start_task(Concern, Input, 100, T, [T/partner/player]),
+   restart_everyday_life_task.
 
 %%
 %% Question answering KB

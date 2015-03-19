@@ -7,6 +7,14 @@
 character_initialization :-
    start_task($root, everyday_life, 100, T, [T/repeating_task]).
 
+everyday_life_task(TaskConcern) :-
+   concern(TaskConcern, task),
+   TaskConcern/type:task:everyday_life.
+
+restart_everyday_life_task :-
+   everyday_life_task(C),
+   restart_task(C).
+
 strategy(everyday_life,
 	 (retract(Node), T)) :-
    /goals/pending_tasks/T>>Node.

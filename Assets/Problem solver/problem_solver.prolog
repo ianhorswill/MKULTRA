@@ -188,6 +188,17 @@ invoke_continuation(K) :-
    begin(assert($task/continuation:done),
 	 switch_to_task(K)).
 
+invoke_continuation(TaskConcern, K) :-
+   within_task(TaskConcern, invoke_continuation(K)).
+
+%% restart_task(+TaskConcern)
+%  Restarts a repeating task
+restart_task(TaskConcern) :-
+   ignore(retract(TaskConcern/location_bids)),
+   assertion(TaskConcern/repeating_task, "Attempt to restart a non-repeating task"),
+   TaskConcern/type:task:Goal,
+   invoke_continuation(TaskConcern, Goal).
+
 %%
 %% Interrupts
 %%
