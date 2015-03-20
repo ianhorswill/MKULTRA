@@ -9,7 +9,7 @@ strategy(describe(Object, Purpose, NullContinuation),
 	 begin(preface_description(Object),
 	       describe_attributes(Object, Attributes, NullContinuation))) :-
    all(Attribute,
-       interesting_attribute(Purpose, Object, Attribute),
+       interesting_attribute($addressee, Purpose, Object, Attribute),
        AllAttributes),
    remove_redundant_attributes(AllAttributes, Attributes).
 
@@ -79,21 +79,27 @@ remove_implicants(Rel/Object, [Implicant/Object | Rest], Rest) :-
 remove_implicants(Attribute, [X | Rest] , [X | RestRemoved]) :-
    remove_implicants(Attribute, Rest, RestRemoved).
 
-interesting_attribute(Purpose, Object, Attribute) :-
-   interesting_property(Purpose, Object, Attribute)
+interesting_attribute(Listener, Purpose, Object, Attribute) :-
+   interesting_property(Listener, Purpose, Object, Attribute)
    ;
-   interesting_relation(Purpose, Object, Attribute).
+   interesting_relation(Listener, Purpose, Object, Attribute).
 
-interesting_property(Purpose, Object, Prop:Value) :-
+interesting_property(Listener, Purpose, Object, Prop:Value) :-
    property_nondefault_value(Object, Prop, Value),
    \+ /mentioned_to/ $addressee /Object/Prop:Value,
    \+ visibility(Prop, internal),
-   property_relevant_to_purpose(Purpose, Object, Prop, Value).
+   property_relevant_to_purpose(Purpose, Object, Prop, Value),
+   admitted_truth_value(Listener,
+			property_value(Object, Prop, Value),
+			true).
 
-interesting_relation(Purpose, Object, Relation/Relatum) :-
+interesting_relation(Listener, Purpose, Object, Relation/Relatum) :-
    related_nondefault(Object, Relation, Relatum),
    \+ /mentioned_to/ $addressee /Object/Relation/Relatum,
    \+ visibility(Relation, internal),
-   relation_relevant_to_purpose(Purpose, Object, Relation, Relatum).
+   relation_relevant_to_purpose(Purpose, Object, Relation, Relatum),
+   admitted_truth_value(Listener,
+			related(Object, Relation, Relatum),
+			true).
 
 
