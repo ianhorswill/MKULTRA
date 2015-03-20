@@ -3,8 +3,11 @@ test_file(generate(s, _), "NL/base_grammar_test").
 
 sentence(S, Mood, Polarity, Tense, Aspect) -->
    { input_from_player },
-   ['('],
-   { bind(speaker, player), bind(addressee, $me) },
+   [X],
+   { X=='(',
+     !,
+     begin(bind(speaker, player),
+	   bind(addressee, $me)) },
    s(S, Mood, Polarity, Tense, Aspect),
    opt_stop(Mood),
    [')'].
