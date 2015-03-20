@@ -48,19 +48,26 @@ know_about_object(Object) :-
 
 :- external pretend_truth_value/3.
 
+
 admitted_truth_value(Listener, (P1, P2), Value) :-
    !,
    admitted_truth_value(Listener, P1, Value1),
    admitted_truth_value(Listener, P2, Value2),
    and_truth_values(Value1, Value2, Value).
-admitted_truth_value(Listener, P, Value) :-
-   Listener \= $me,
-   pretend_truth_value(Listener, P, _),
+admitted_truth_value($me, P, Value) :-
    !,
-   pretend_truth_value(Listener, P, Value),
-   emit_grain("lie", 100).
-admitted_truth_value(_, P, Value) :-
    truth_value(P, Value).
+admitted_truth_value(Listener, P, Value) :-
+   pretend_truth_value(Listener, P , Value).
+admitted_truth_value(Listener, P, Value) :-
+   truth_value(P, Value),
+   consistent_with_pretend_truth_value(Listener, P, Value).
+
+consistent_with_pretend_truth_value(Listener, P, Value) :-
+   pretend_truth_value(Listener, P, PretendValue) ->
+       (Value=PretendValue)
+       ;
+       true.
 
 and_truth_values(true, true, true) :-
    !.
