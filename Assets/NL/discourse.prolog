@@ -110,6 +110,8 @@ strategy(say_string(String),
 	 speech([ String ])).
 strategy(say(Assertion),
 	 speech([ s(Assertion) ])).
+strategy(say_answer(Assertion),
+	 speech([ question_answer(Assertion) ])).
 
 strategy(speech(Items),
 	 discourse_increment($me, $addressee, Items)).

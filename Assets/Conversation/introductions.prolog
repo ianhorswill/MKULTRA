@@ -10,7 +10,7 @@ strategy(preface_description(Person),
    is_a(Person, person).
 
 default_strategy(give_name($me),
-	 say(be($me, Name))) :-
+	 say_answer(be($me, Name))) :-
    property_value($me, given_name, Name).
 
 strategy(give_name(X),

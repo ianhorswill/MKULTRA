@@ -43,7 +43,7 @@ strategy(answer_wh(Asker, Identity, _,
 
 strategy(answer_wh(_Asker, Identity, _,
 		   (be(player, Identity), is_a(player, person))),
-	 say(be(player, $me))).
+	 say_answer(be(player, $me))).
 
 strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
 	 answer_with_list(List, "or", Type,
@@ -61,7 +61,7 @@ strategy(answer_wh(Asker,
 strategy(answer_wh(M, _,
 		   manner(be(Who), M),
 		   _),
-	 say(okay(Who))).
+	 say_answer(okay(Who))).
 
 strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
 	 cases([admitted_truth_value(Asker, P, false):
