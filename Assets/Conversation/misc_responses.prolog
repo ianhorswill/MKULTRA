@@ -56,6 +56,8 @@ default_strategy(respond_to_increment(_, _, _),
 		 null).
 strategy(respond_to_increment(Speaker, Addressee, s(LF)),
 	 respond_to_dialog_act(assertion(Speaker, Addressee, LF, present, simple))).
+strategy(respond_to_increment(Speaker, Addressee, question_answer(LF)),
+	 respond_to_dialog_act(question_answer(Speaker, Addressee, LF))).
 
 %%
 %% Agreement/disagreement

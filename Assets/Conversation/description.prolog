@@ -53,10 +53,10 @@ strategy(describe_relation(Linkage, Object, Relation, Relatum, Termination),
 	  assert(/mentioned_to/ $addressee /Object/A/Relatum)).
 
 surface_form(property_value(Object, Property, Value),
-	     s(property_value(Object, Property, Value))).
+	     question_answer(property_value(Object, Property, Value))).
 
 surface_form(related(Object, Relation, Relatum),
-	     s(related(Object, Relation, Relatum))).
+	     question_answer(related(Object, Relation, Relatum))).
 
 %%
 %% Determining lists of relevant attributes

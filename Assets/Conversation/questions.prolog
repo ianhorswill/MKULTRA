@@ -65,14 +65,14 @@ strategy(answer_wh(M, _,
 
 strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
 	 cases([admitted_truth_value(Asker, P, false):
-	          assertion($me, Asker, not(P), present, simple),
+	          question_answer($me, Asker, not(P), present, simple),
 		admitted_truth_value(Asker, explanation(P, E), true):
-	          assertion($me, Asker, E, present, simple),
+	       question_answer($me, Asker, E, present, simple),
 	        true:speech(["I couldn't speculate."])])).
 
 default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
 		 if(admitted_truth_value(Asker, Constraint, true),
-		    assertion($me, Partner, Core, present, simple),
+		    question_answer($me, Partner, Core, present, simple),
 		    speech(["Don't know"]))) :-
    nonvar(Constraint),
    $task/partner/Partner.
@@ -96,4 +96,4 @@ strategy(answer_with_list([ ], _, Var, Constraint),
 	      S="Nothing" ).
 
 strategy(answer_with_list(ItemList, Termination, Var, Constraint),
-	 say_list(ItemList, Termination, Var^s(Constraint))).
+	 say_list(ItemList, Termination, Var^question_answer(Constraint))).

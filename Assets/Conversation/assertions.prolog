@@ -18,6 +18,10 @@ default_strategy(respond_to_assertion(Speaker, ModalLF, unknown),
 heard_hearsay(ModalLF) :-
    /hearsay/_/Assertion, Assertion=ModalLF.
 
+strategy(respond_to_dialog_act(question_answer(Speaker,_, LF)),
+	 assert(/hearsay/Speaker/LF)).
+
+
 %%
 %% Kluges to keep characters from inappropriately contradicting other characters answers
 %%

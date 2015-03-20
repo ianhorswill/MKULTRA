@@ -12,6 +12,9 @@ utterance(question(Speaker, Addressee, LF, T, A)) -->
 utterance(assertion(Speaker, Addressee, LF, T, A)) -->
    sentence(LF, indicative, affirmative, T, A),
    { current_dialog_pair(Speaker, Addressee) }.
+utterance(question_answer(Speaker, Addressee, LF, T, A)) -->
+   sentence(LF, indicative, affirmative, T, A),
+   { current_dialog_pair(Speaker, Addressee) }.
 utterance(assertion(Speaker, Addressee, not(LF), T, A)) -->
    sentence(LF, indicative, negative, T, A),
    { current_dialog_pair(Speaker, Addressee) }.
@@ -114,6 +117,8 @@ discourse_fragments([F | Fs]) -->
    discourse_fragment(F),
    discourse_fragments(Fs).
 
+discourse_fragment(question_answer(X)) -->
+   {!}, sentence(X, indicative, affirmative, present, simple).
 discourse_fragment(s(X)) -->
    {!}, sentence(X, indicative, affirmative, present, simple).
 
