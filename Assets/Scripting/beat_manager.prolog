@@ -268,3 +268,23 @@ fkey_command(f1) :-
    current_beat(Beat),
    log(force_beat_completion:Beat),
    end_beat.
+
+fkey_command(b) :-
+   begin(all(BeatInfo,
+	     beat_info(BeatInfo),
+	     List),
+	 display_as_overlay([line("Beat status") | List])).
+
+beat_info(color(Color,
+		line(Beat, ": ", score=Score, " ", state=State))) :-
+   current_beat(Current),
+   beat(Beat),
+   beat_score(Beat, Score),
+   (beat_state(Beat, State) -> true ; State=null),
+   beat_display_color(Beat, Current, State, Color).
+
+beat_display_color(Current, Current, _, lime) :-
+   !.
+beat_display_color(_, _, completed, grey) :-
+   !.
+beat_display_color(_, _, _, white).

@@ -15,3 +15,12 @@ emit_grain(_,_).
 
 %% fkey_command(+FKeySymbol)
 %  Called by UI whenever a given F-key is pressed.
+
+:- public display_as_overlay/1.
+
+%% display_as_overlay(+StuffToDisplay)
+%  Displays StuffToDisplay on overlay.
+display_as_overlay(Stuff) :-
+   begin(component_of_gameobject_with_type(Overlay, _, $'DebugOverlay'),
+	 call_method(Overlay, updatetext(Stuff), _)).
+
