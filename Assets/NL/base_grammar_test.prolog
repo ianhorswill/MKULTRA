@@ -38,9 +38,11 @@ test(parse(s, imperative),
    s_test(LF, Mood, [go, to, the, bed]).
 
 test(parse(s, adjectival_property),
-     [ true(Generated == [pc, is, male]),
+     [ true(Generated == ['Betsy', is, female]),
        nondet ]) :-
-   s(property_value($pc, gender, male), indicative, affirmative, present, simple, Generated, []).
+   s(property_value($pc, gender, female),
+     indicative, affirmative, present, simple,
+     Generated, []).
 
 test(parse(s, wh_transitive),
      [ true(LF = Object:( can(type(unknown_speaker, Object)),

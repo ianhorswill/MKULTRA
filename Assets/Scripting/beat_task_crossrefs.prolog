@@ -3,8 +3,13 @@ reduction_clause(beat_start_task(Beat), StartTask) :-
 reduction_clause(beat_idle_task(Beat), IdleTask) :-
    beat_idle_task(Beat, _, IdleTask).
 reduction_clause(beat_tasks(Beat), Task) :-
-   beat_tasks(Beat, TaskList),
-   member(Task, TaskList).
+   beat_dialog(Beat, _, _, TaskList),
+   member(Task, TaskList),
+   \+ string(Task).
+reduction_clause(beat_tasks(Beat), Task) :-
+   beat_monolog(Beat, _, TaskList),
+   member(Task, TaskList),
+   \+ string(Task).
 
 reduction_clause(Goal, quip) :-
    character(C),
