@@ -30,3 +30,34 @@ thaw(X) :-
    G.
 
 test_file(freeze(_), "Utilities/freeze_tests").
+
+:- public when/2, when/3, when/4, when/5, when/6.
+
+%% when(?Condition, :Imperatives, ...)
+%  Run Imperatives in order if Condition is true, else do nothing
+when(P, Imperative) :-
+   P -> begin(Imperative) ; true.
+when(P, Imperative1, Imperative2) :-
+   P -> begin(Imperative1, Imperative2) ; true.
+when(P, Imperative1, Imperative2, Imperative3) :-
+   P -> begin(Imperative1, Imperative2, Imperative3) ; true.
+when(P, Imperative1, Imperative2, Imperative3, Imperative4) :-
+   P -> begin(Imperative1, Imperative2, Imperative3, Imperative4) ; true.
+when(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
+   P -> begin(Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) ; true.
+
+:- public unless/2, unless/3, unless/4, unless/5, unless/6.
+
+%% unless(?Condition, :Imperatives, ...)
+%  Run Imperatives in order unless Condition is true.
+unless(P, Imperative) :-
+   P -> true ; begin(Imperative).
+unless(P, Imperative1, Imperative2) :-
+   P -> true ; begin(Imperative1, Imperative2).
+unless(P, Imperative1, Imperative2, Imperative3) :-
+   P -> true ; begin(Imperative1, Imperative2, Imperative3).
+unless(P, Imperative1, Imperative2, Imperative3, Imperative4) :-
+   P -> true ; begin(Imperative1, Imperative2, Imperative3, Imperative4).
+unless(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
+   P -> true ; begin(Imperative1, Imperative2, Imperative3, Imperative4, Imperative5).
+

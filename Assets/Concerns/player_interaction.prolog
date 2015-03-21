@@ -37,7 +37,7 @@ player_input_task(Concern, Input) :-
 	 
 :- public manner/2, be/2, okay/1, can/1, type/2.
 
-okay($'Bruce').
-be(player, $'Bruce').
+okay($pc).
+be(player, $pc).
 
 declare_kind(player, actor).

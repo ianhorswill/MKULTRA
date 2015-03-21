@@ -17,30 +17,30 @@ test(generate(s, in_expression)) :-
    Generated == ['Kavi', is, in, the, kitchen ].
 
 test(generate(s, future_indicative),
-     [ setup(bind(speaker, $'Bruce')),
+     [ setup(bind(speaker, $pc)),
        true(Generated == ['I', will, eat, the, plant]),
        nondet ]) :-
-   s(eat($'Bruce', $plant), indicative, affirmative, future, simple, Generated, [ ]).
+   s(eat($pc, $plant), indicative, affirmative, future, simple, Generated, [ ]).
 
 test(generate(s, future_indicative2),
-     [ setup(bind(speaker, $'Bruce')),
+     [ setup(bind(speaker, $pc)),
        true(Generated == ['I', will, talk, to, 'Kavi']),
        nondet ]) :-
    bind(generating_nl, true),
-   s(talk($'Bruce', $'Kavi', _), indicative, affirmative, future, simple, Generated, [ ]).
+   s(talk($pc, $'Kavi', _), indicative, affirmative, future, simple, Generated, [ ]).
 
 test(parse(s, imperative),
-     [ setup(bind(addressee, $'Bruce')),
-       true(LF == go($'Bruce', $bed)),
+     [ setup(bind(addressee, $pc)),
+       true(LF == go($pc, $bed)),
        true(Mood == imperative),
        nondet]):-
    bind(input_from_player, true),
    s_test(LF, Mood, [go, to, the, bed]).
 
 test(parse(s, adjectival_property),
-     [ true(Generated == ['Bruce', is, male]),
+     [ true(Generated == [pc, is, male]),
        nondet ]) :-
-   s(property_value($'Bruce', gender, male), indicative, affirmative, present, simple, Generated, []).
+   s(property_value($pc, gender, male), indicative, affirmative, present, simple, Generated, []).
 
 test(parse(s, wh_transitive),
      [ true(LF = Object:( can(type(unknown_speaker, Object)),

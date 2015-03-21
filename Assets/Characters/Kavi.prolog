@@ -26,6 +26,13 @@ pretend_truth_value(Asker,
 		    false) :-
    \+ related(Asker, member_of, illuminati).
    
+% Don't admit to knowing who's in the illuminati
+pretend_truth_value(Asker,
+		    related(X, member_of, illuminati),
+		    unknown) :-
+   var(X),
+   \+ related(Asker, member_of, illuminati).
+   
 :- public bedroom_empty/0.
 bedroom_empty :-
    \+ intruder(_Intruder, $bedroom).

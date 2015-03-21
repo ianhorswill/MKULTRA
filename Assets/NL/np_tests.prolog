@@ -1,5 +1,5 @@
 test_options(generate(np, _),
-	     [ setup( (bind(speaker, $'Bruce'), bind(addressee, player)) ) ]).
+	     [ setup( (bind(speaker, $pc), bind(addressee, player)) ) ]).
 
 %%
 %% Generation
@@ -7,11 +7,11 @@ test_options(generate(np, _),
 
 test(generate(np, speaker_subject_case),
      [ true(Generated == [ 'I' ]) ]) :-
-   np_test($'Bruce', subject, first:singular, Generated).
+   np_test($pc, subject, first:singular, Generated).
 
 test(generate(np, speaker_object_case),
      [ true(Generated == [ me ]) ]) :-
-   np_test($'Bruce', object, first:singular, Generated).
+   np_test($pc, object, first:singular, Generated).
 
 test(generate(np, character_third_person),
      [ true(Generated == [ 'Kavi' ]) ]) :-
