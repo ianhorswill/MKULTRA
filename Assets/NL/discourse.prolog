@@ -14,6 +14,36 @@ transcript :-
    forall(transcript(DA),
 	  writeln(DA)).
 
+fkey_command(alt-t, "Display transcript") :-
+   generate_unsorted_overlay("Transcript",
+			     ( transcript(DA),
+			       agent(DA, Agent),
+			       (property_value(Agent, given_name, Name) ->
+				   true
+			           ;
+				   Name=Agent),
+			       once(generate_text(DA, Text)),
+			       (Agent = $pc ->
+				   (Color = lime)
+			           ;
+				   (Color = yellow)) ),
+			     color(Color, line(Name, ":\t", Text))).
+		   
+fkey_command(control-alt-t, "Display transcript as dialog acts") :-
+   generate_unsorted_overlay("Dialog acts",
+			     ( transcript(DA),
+			       agent(DA, Agent),
+			       (property_value(Agent, given_name, Name) ->
+				   true
+			           ;
+				   Name=Agent),
+			       (Agent = $pc ->
+				   (Color = lime)
+			           ;
+				   (Color = yellow)) ),
+			     color(Color, line(Name, ":\t", DA))).
+		   
+
 %% recent_dialog(+Speaker, -DA) is nondet
 %  Generates all the recent dialog by Speaker in order of decreasing recency.
 recent_dialog(Speaker, DA) :-

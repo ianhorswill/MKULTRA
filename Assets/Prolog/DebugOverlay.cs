@@ -15,10 +15,12 @@ namespace Prolog
             if (greyOutTexture == null)
             {
                 greyOutTexture = new Texture2D(1, 1);
-                greyOutTexture.SetPixel(0, 0, new Color(0, 0, 0, 128));
+                // For some reason, changing the alpha value here has no effect on the amount of greying out
+                greyOutTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.5f));
             }
         }
 
+        private Vector2 scrollPosition;
         internal void OnGUI()
         {
             switch (Event.current.type)
@@ -29,12 +31,15 @@ namespace Prolog
                     {
                         GUI.depth = -1;
 
-                        var screenRect = new Rect(100, 100, Screen.width-200, Screen.height-200);
+                        var screenRect = new Rect(0, 0, Screen.width, Screen.height);
+                        // For some reason, changing the alpha on greyOutTexture has no effect on the greying out
+                        // but drawing the box twice does :(
+                        GUI.Box(screenRect, greyOutTexture);
                         GUI.Box(screenRect, greyOutTexture);
 
-                        GUILayout.BeginArea(screenRect);
+                        scrollPosition = GUILayout.BeginScrollView(scrollPosition);
                         GUILayout.Label(text);
-                        GUILayout.EndArea();
+                        GUILayout.EndScrollView();
                     }
                     break;
 
@@ -56,6 +61,9 @@ namespace Prolog
         void Render(object renderingOperation)
         {
             renderingOperation = Term.Deref(renderingOperation);
+            if (renderingOperation == null)
+                return;
+
             var op = renderingOperation as Structure;
             if (op != null)
             {
@@ -63,33 +71,56 @@ namespace Prolog
                 {
                     case "cons":
                         this.Render(op.Argument(0));
-                        var cdr = op.Argument(1);
-                        if (cdr != null)
-                            this.Render(cdr);
+                        this.Render(op.Argument(1));
                         break;
 
                     case "line":
                         foreach (var arg in op.Arguments)
                             this.Render(arg);
-                        textBuilder.AppendLine();
+                        this.textBuilder.AppendLine();
                         break;
 
                     case "color":
-                        textBuilder.AppendFormat("<color={0}>", op.Argument(0));
+                        this.textBuilder.AppendFormat("<color={0}>", op.Argument(0));
                         for (int i=1; i<op.Arity; i++)
                             this.Render(op.Argument(i));
-                        textBuilder.Append("</color>");
+                        this.textBuilder.Append("</color>");
+                        break;
+
+                    case "size":
+                        this.textBuilder.AppendFormat("<size={0}>", op.Argument(0));
+                        for (int i = 1; i < op.Arity; i++)
+                            this.Render(op.Argument(i));
+                        this.textBuilder.Append("</size>");
+                        break;
+
+                    case "bold":
+                        this.textBuilder.AppendFormat("<b>", op.Argument(0));
+                        for (int i = 0; i < op.Arity; i++)
+                            this.Render(op.Argument(i));
+                        this.textBuilder.Append("</b>");
+                        break;
+
+                    case "italic":
+                        this.textBuilder.AppendFormat("<i>", op.Argument(0));
+                        for (int i = 0; i < op.Arity; i++)
+                            this.Render(op.Argument(i));
+                        this.textBuilder.Append("</i>");
+                        break;
+                    
+                    case "term":
+                        this.textBuilder.Append(ISOPrologWriter.WriteToString(op.Argument(0)));
                         break;
 
                     default:
-                        textBuilder.Append(ISOPrologWriter.WriteToString(op));
+                        this.textBuilder.Append(ISOPrologWriter.WriteToString(op));
                         break;
                 }
             }
             else
             {
                 var str = renderingOperation as string;
-                textBuilder.Append(str ?? ISOPrologWriter.WriteToString(renderingOperation));
+                this.textBuilder.Append(str ?? ISOPrologWriter.WriteToString(renderingOperation));
             }
         }
     }

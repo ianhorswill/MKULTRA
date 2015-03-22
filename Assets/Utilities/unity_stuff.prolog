@@ -10,11 +10,25 @@ emit_grain(Name, Duration) :-
    !.
 emit_grain(_,_).
 
-:- public fkey_command/1.
-:- external fkey_command/1.
+:- public fkey_command/1, fkey_command/2.
+:- external fkey_command/2.
 
-%% fkey_command(+FKeySymbol)
+%% fkey_command(+FKeySymbol, Documentation)
 %  Called by UI whenever a given F-key is pressed.
+
+fkey_command(f1) :-
+   generate_overlay("Debug commands",
+		    clause(fkey_command(Key, Documentation), _),
+		    line(Key, ":\t", Documentation)).
+fkey_command(Key) :-
+   fkey_command(Key, _).
+
+fkey_command(alt-q, "Quit the game") :-
+   call_method($'Application', quit, _).
+% These are implemented in the C# code, so the handlers are here
+% only to make sure the documentation appears in the help display.
+fkey_command(f5, "Pause/unpause game").
+fkey_command(f2, "Toggle Prolog window").
 
 :- public display_as_overlay/1.
 
@@ -23,4 +37,14 @@ emit_grain(_,_).
 display_as_overlay(Stuff) :-
    begin(component_of_gameobject_with_type(Overlay, _, $'DebugOverlay'),
 	 call_method(Overlay, updatetext(Stuff), _)).
+
+:- higher_order generate_overlay(0, 1, 0).
+generate_overlay(Title, Generator, Template) :-
+   all(Template, Generator, Lines),
+   display_as_overlay([size(30, line(Title)) | Lines]).
+
+:- higher_order generate_unsorted_overlay(0, 1, 0).
+generate_unsorted_overlay(Title, Generator, Template) :-
+   findall(Template, Generator, Lines),
+   display_as_overlay([size(30, line(Title)) | Lines]).
 

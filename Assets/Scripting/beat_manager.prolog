@@ -264,27 +264,34 @@ maybe_interrupt_current_beat :-
 	 start_beat(Winner)).
 maybe_interrupt_current_beat.
 
-fkey_command(f1) :-
+fkey_command(alt-delete, "Skip current beat") :-
    current_beat(Beat),
    log(force_beat_completion:Beat),
    end_beat.
 
-fkey_command(b) :-
-   begin(all(BeatInfo,
-	     beat_info(BeatInfo),
-	     List),
-	 display_as_overlay([line("Beat status") | List])).
+fkey_command(alt-b, "Show beat status") :-
+   generate_unsorted_overlay("Beat status",
+			     beat_info(I),
+			     I).
 
 beat_info(color(Color,
-		line(Beat, ": ", score=Score, " ", state=State))) :-
+		[ line(Beat, ": "),
+		  line("\tScore: ", Score, "\tState: ", State)
+		  | WaitList ])) :-
    current_beat(Current),
    beat(Beat),
    beat_score(Beat, Score),
    (beat_state(Beat, State) -> true ; State=null),
-   beat_display_color(Beat, Current, State, Color).
+   all(line("\tWaiting for: ", Precondition),
+       unsatisfied_beat_precondition(Beat, Precondition),
+       WaitList),
+   once(beat_display_color(Beat, Current, WaitList, State, Color)).
 
-beat_display_color(Current, Current, _, lime) :-
-   !.
-beat_display_color(_, _, completed, grey) :-
-   !.
-beat_display_color(_, _, _, white).
+unsatisfied_beat_precondition(Beat, P) :-
+   beat_precondition(Beat, P),
+   \+ P.
+
+beat_display_color(Current, Current, _,   _,         lime).
+beat_display_color(_,       _,       _,   completed, grey).
+beat_display_color(_,       _,       [ ], _,         white).
+beat_display_color(_,       _,       _,   _,         red).

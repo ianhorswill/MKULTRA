@@ -104,10 +104,28 @@ public class NLPrompt : BindingBehaviour
 
     private void HandleKeyDown(Event e)
     {
-        if (e.alt 
+        if (e.alt || e.control
             || (e.keyCode>= KeyCode.F1 && e.keyCode<=KeyCode.F15))
         {
-            KnowledgeBase.Global.IsTrue(new Structure("fkey_command", Symbol.Intern(e.keyCode.ToString().ToLower())));
+            if (e.keyCode == KeyCode.None)
+                return;
+
+            object key = Symbol.Intern(e.keyCode.ToString().ToLower());
+            if (e.alt)
+            {
+                if (e.control)
+                    key = new Structure("-", 
+                        new Structure("-",
+                            Symbol.Intern("control"),
+                            Symbol.Intern("alt")),
+                        key);
+                else
+                    key = new Structure("-", Symbol.Intern("alt"), key);
+            }
+            else if (e.control)
+                key = new Structure("-", Symbol.Intern("control"), key);
+
+            KnowledgeBase.Global.IsTrue(new Structure("fkey_command", key));
             return;
         }
 
