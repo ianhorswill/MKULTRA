@@ -126,7 +126,6 @@ current_beat(Beat) :-
    !.
 
 set_current_beat(Beat) :-
-   log(beat:Beat),
    assert($global_root/beats/current:Beat),
    set_beat_state(Beat, started).
 
@@ -208,7 +207,6 @@ check_beat_completion :-
 
 end_beat :-
    current_beat(Beat),
-   log(Beat:completed),
    set_beat_state(Beat, completed),
    assert($global_root/beats/previous:Beat),
    retract($global_root/beats/current).
