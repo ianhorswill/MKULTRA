@@ -46,7 +46,10 @@ beat_completion_condition(pc_explores_the_house,
 			    $pc::contained_in($report, $pc) )).
 beat_idle_task(pc_explores_the_house,
 	       $pc,
-	       search_for($pc, kavis_house, _)).
+	       search_object(kavis_house,
+			     X^previously_hidden(X),
+			     Y^pickup(Y),
+			     mental_monologue(["Nothing seems to be hidden."]))).
 
 after(pickup($report),
       describe($report)).

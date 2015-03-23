@@ -246,7 +246,9 @@ strategy(sleep(Seconds),
    Time is $now + Seconds.
 
 strategy(examine($me, Object),
-	 describe(Object, general, null)).
+	 if(examination_content(Object, Content),
+	    call(pop_up_examination_content(Content)),
+	    describe(Object, general, null))).
 
 strategy(read($me, Object),
 	 if(examination_content(Object, Content),

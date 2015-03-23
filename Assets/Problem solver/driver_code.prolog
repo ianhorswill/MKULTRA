@@ -59,3 +59,13 @@ on_event(E, task, T, wait_event_completed(T)) :-
 wait_event_completed(T) :-
    bind_default_task_indexicals,
    step_completed(T).
+
+%%
+%% Debug display
+%%
+
+character_debug_display(Character, line("Task:\t", Task, "\t", Status, "\t", Current)) :-
+   Character::(concern(T, task),
+	       T/type:task:Task,
+	       (concern_status(T, Status) -> true ; (Status=null)),
+	       T/current:Current).

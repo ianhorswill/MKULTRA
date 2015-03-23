@@ -28,6 +28,18 @@ descendant_concern_of(Ancestor, Descendant) :-
 parent_concern_of(Child, Parent) :-
    Parent is Child.'Parent'.'Parent'.
 
+:- public concern_status/2, set_concern_status/2.
+
+%% concern_status(+Concern, -Status)
+%  Concern's status field is the specified status.
+concern_status(Concern, Status) :-
+   Concern/status:Status.
+
+%% set_concern_status(+Concern, +Status)
+%  Update's concern's status field.
+set_concern_status(Concern, Status) :-
+   assert(Concern/status:Status).
+
 %%
 %% Creation
 %%

@@ -293,3 +293,7 @@ beat_display_color(Current, Current, _,   _,         lime).
 beat_display_color(_,       _,       _,   completed, grey).
 beat_display_color(_,       _,       [ ], _,         white).
 beat_display_color(_,       _,       _,   _,         red).
+
+character_debug_display(Character, line("Idle task:\t", Task, "\t", beat:Beat)) :-
+   current_beat(Beat),
+   (Character::beat_idle_task(Beat, Character, Task) -> true ; (Task=none)).

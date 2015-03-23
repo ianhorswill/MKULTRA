@@ -5,7 +5,8 @@ before(goto(_),
    in_conversation_with(Partner).
 
 strategy(say_something,
-	 begin(retract(TopicNode),
+	 begin(call(set_concern_status($task, TopicNode)),
+	       retract(TopicNode),
 	       if(string(Topic),
 		  speech([Topic]),
 		  Topic))) :-
@@ -14,6 +15,7 @@ strategy(say_something,
 
 default_strategy(say_something,
 		 when(dialog_task_advances_current_beat(Task),
+		      call(set_concern_status($task, Task)),
 		      Task)).
 
 strategy(ask_about($me, $addressee, $addressee),

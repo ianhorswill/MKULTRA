@@ -74,13 +74,13 @@ normalize_task(when(Condition, Action),
    Condition -> (S=Action) ; (S=null).
 normalize_task(when(Condition, Action1, Action2),
 	       S) :-
-   Condition -> (S=(Action1, Action2) ; (S=null)).
+   Condition -> S=(Action1, Action2) ; (S=null).
 normalize_task(when(Condition, Action1, Action2, Action3, Action4),
 	       S) :-
-   Condition -> (S=(Action1, Action2, Action3, Action4) ;  (S=null)).
+   Condition -> S=(Action1, Action2, Action3, Action4) ;  (S=null).
 normalize_task(when(Condition, Action1, Action2, Action3, Action4, Action5),
 	       S) :-
-   Condition -> (S=(Action1, Action2, Action3, Action4, Action5) ; (S=null)).
+   Condition -> S=(Action1, Action2, Action3, Action4, Action5) ; (S=null).
 
 normalize_task(begin(A, B),
 	       (A, B)).

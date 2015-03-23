@@ -57,3 +57,6 @@ currently_in_conversation :-
 in_conversation_with(Person) :-
    once( ( concern(C, conversation),
 	   C/partner/Person )).
+
+character_debug_display(Character, line("Talking to:\t", Partner)) :-
+   Character::in_conversation_with(Partner).

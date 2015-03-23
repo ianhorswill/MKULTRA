@@ -59,3 +59,9 @@ generate_unsorted_overlay(Title, Generator, Template) :-
    findall(Template, Generator, Lines),
    display_as_overlay([size(30, line(Title)) | Lines]).
 
+:- public character_debug_display/2, generate_character_debug_overlay/1.
+generate_character_debug_overlay(Character) :-
+   property_value(Character, given_name, Name),
+   generate_overlay(Name,
+		    character_debug_display(Character, Data),
+		    Data).

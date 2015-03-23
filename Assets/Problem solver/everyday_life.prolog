@@ -7,6 +7,16 @@
 character_initialization :-
    start_task($root, everyday_life, 100, T, [T/repeating_task]).
 
+character_debug_display(Character, line("Pending:\t", Task)) :-
+   Character::(/goals/pending_tasks/Task).
+
+character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
+   Character::(/pending_conversation_topics/Person/Topic).
+
+normalize_task(work_on_everyday_life_task(T),
+	       begin(call(set_concern_status($task, T)),
+		     T)).
+
 everyday_life_task(TaskConcern) :-
    concern(TaskConcern, task),
    TaskConcern/type:task:everyday_life.
@@ -16,14 +26,14 @@ restart_everyday_life_task :-
    restart_task(C).
 
 strategy(everyday_life,
-	 (retract(Node), T)) :-
+	 begin(retract(Node), work_on_everyday_life_task(T))) :-
    /goals/pending_tasks/T>>Node.
 
 add_pending_task(Task) :-
    assert(/goals/pending_tasks/Task).
 
 strategy(everyday_life,
-	 achieve(P) ) :-
+	 work_on_everyday_life_task(achieve(P)) ) :-
    unsatisfied_maintenance_goal(P),
    % Make sure that P isn't obviously unachievable.
    have_strategy(achieve(P)).
@@ -33,14 +43,15 @@ unsatisfied_maintenance_goal(P) :-
    \+ P.
 
 strategy(everyday_life,
-	 engage_in_conversation(Person)) :-
+	 work_on_everyday_life_task(engage_in_conversation(Person))) :-
    /pending_conversation_topics/Person/_,
    \+ currently_in_conversation.
 
 default_strategy(everyday_life,
 		 if(my_beat_idle_task(Task),
-		    Task,
-		    wait_event_with_timeout(_, PollTime))) :-
+		    work_on_everyday_life_task(Task),
+		    begin(call(set_concern_status($task, idle)),
+			  wait_event_with_timeout(_, PollTime)))) :-
    everyday_life_polling_time(PollTime).
 
 everyday_life_polling_time(T) :-
