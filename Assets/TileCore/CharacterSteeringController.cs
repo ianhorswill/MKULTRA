@@ -233,6 +233,7 @@ public class CharacterSteeringController : BindingBehaviour
         return result.normalized;
     }
 
+    private bool wasStopped = true;
     private void UpdateWalkAnimation(Vector2 characterVelocity)
     {
         //this.animator.speed = characterVelocity.magnitude;
@@ -240,14 +241,16 @@ public class CharacterSteeringController : BindingBehaviour
         if (characterVelocity.magnitude < 0.01)
         {
             spriteController.StopAnimation();
+            wasStopped = true;
         }
         else
         {
             var desiredDirection = characterVelocity.normalized;
-            if (Vector2.Dot(currentDirection, desiredDirection) > 0.7f && !currentState.StartsWith("Face"))
+            if (Vector2.Dot(currentDirection, desiredDirection) > 0.7f && !wasStopped)
                 // Close enough; don't change it.
                 return;
 
+            wasStopped = false;
             this.currentDirection = this.NearestCardinalDirection(desiredDirection);
             if (this.currentDirection.x > 0)
                 currentState = "East";
