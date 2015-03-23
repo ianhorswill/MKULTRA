@@ -249,8 +249,8 @@ strategy(examine($me, Object),
 	 describe(Object, general, null)).
 
 strategy(read($me, Object),
-	 if(property_value(Object, text, Text),
-	    say_string(Text),
+	 if(examination_content(Object, Content),
+	    call(pop_up_examination_content(Content)),
 	    say_string("It's blank."))).
 
 %%

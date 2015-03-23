@@ -2,6 +2,17 @@
 %%% Code for talking to other parts of the C# code
 %%%
 
+:- public examination_content/2, pop_up_examination_content/1.
+
+%% examination_content(+Object, -ContentComponent)
+%  ContentComponent is the ExaminationContent component of the GameObject Object.
+examination_content(Object, ContentComponent) :-
+   is_class(Object, $'GameObject'),
+   component_of_gameobject_with_type(ContentComponent, Object, $'ExaminationContent').
+
+pop_up_examination_content(ContentComponent) :-
+   call_method(ContentComponent, popup, _).
+
 %% emit_grain(+SoundName, +Duration) is det
 %  Plays a grain of sound with the specified duration in ms.
 emit_grain(Name, Duration) :-
