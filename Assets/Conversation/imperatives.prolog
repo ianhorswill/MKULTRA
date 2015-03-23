@@ -12,8 +12,9 @@ request_status(_Requestor, Task, immoral) :-
 request_status(_Requestor, Task, non_normative) :-
    \+ well_typed(Task, action, _),
    !.
-request_status(_Requestor, Task, unachievable) :-
+request_status(_Requestor, Task, unachievable(Reason)) :-
    \+ have_strategy(Task),
+   once(diagnose(Task, Reason)),
    !.
 request_status(Requestor, Task, incriminating(P)) :-
    guard_condition(Task, P),
@@ -34,20 +35,28 @@ strategy(follow_command(_, immoral),
 	 say_string("That would be immoral.")).
 strategy(follow_command(_, non_normative),
 	 say_string("That would be weird.")).
-strategy(follow_command(_, unachievable),
-	 say_string("I don't know how.")).
+strategy(follow_command(_, unachievable(Reason)),
+	 explain_failure(Reason)).
 strategy(follow_command(_, incriminating(_)),
 	 say_string("Sorry, I can't.")).
+
+diagnose(Task, ~Precondition) :-
+   unsatisfied_task_precondition(Task, Precondition).
+
+default_strategy(explain_failure(_),
+		 say_string("I don't know how.")).
+strategy(explain_failure(~know(X:location(_Object, X))),
+	 speech(["I don't know where", np(X), "is"])).
 
 strategy(tell_about($me, _, Topic),
 	 describe(Topic, general, null)).
 
-strategy(go($me, Location),
-	 goto(Location)).
-strategy(take($me, Patient, _),
-	 pickup(Patient)).
-strategy(put($me, Patient, Destination),
-	 move($me, Patient, Destination)) :-
+normalize_task(go($me, Location),
+	       goto(Location)).
+normalize_task(take($me, Patient, _),
+	       pickup(Patient)).
+normalize_task(put($me, Patient, Destination),
+	      move($me, Patient, Destination)) :-
    nonvar(Destination).
 
 strategy(talk($me, $addressee, Topic),

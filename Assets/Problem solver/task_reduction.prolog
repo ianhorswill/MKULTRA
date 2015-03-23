@@ -154,3 +154,16 @@ append_task_lists(X, Y, Z, Joined) :-
    append(Y, Z, Intermediate),
    append(X, Intermediate, FullList),
    commafy_task_list(FullList, Joined).
+
+reduce_to_primitive( (Task, _), Primitive) :-
+   !,
+   reduce_to_primitive(Task, Primitive).
+reduce_to_primitive(Primitive, Primitive) :-
+   primitive_task(Primitive),
+   !.
+reduce_to_primitive(resolve_match_failure(resolve_match_failure(resolve_match_failure(_))), _) :-
+   !,
+   fail.
+reduce_to_primitive(Task, Primitive) :-
+   task_reduction(Task, Reduced),
+   reduce_to_primitive(Reduced, Primitive).

@@ -123,6 +123,7 @@ after_time(Time) :-
 %%%
 
 hidden(X) :-
+   is_class(X, $'GameObject'),
    component_of_gameobject_with_type(PhysicalObject, X, $'PhysicalObject'),
    PhysicalObject.'IsHidden'.
 

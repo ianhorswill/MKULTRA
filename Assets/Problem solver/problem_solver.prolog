@@ -94,10 +94,7 @@ switch_to_task(Task) :-
    fail.
 % Check for immediate builtins
 switch_to_task(done) :-
-   $task/repeating_task ->
-      ( $task/type:task:Goal, invoke_continuation(Goal) )
-      ;
-      kill_concern($task).
+   restart_or_kill_task.
 switch_to_task(null) :-
    step_completed.
 switch_to_task(call(PrologCode)) :-
@@ -142,25 +139,37 @@ switch_to_task(A) :-
       % It's an action and it's ready to run.
       assert($task/current:A:action)).
 
+:- external failed_task/2.
 %% We have a task we don't know what to do with.
 switch_to_task(resolve_match_failure(resolve_match_failure(resolve_match_failure(FailedTask)))) :-
-   $task/type:task:TopLevelTask,
-   asserta($global::failed_task($me, (TopLevelTask-> FailedTask))),
-   emit_grain("task fail", 100),
-   kill_concern($task),
-   throw(repeated_match_failure($me, (TopLevelTask->FailedTask))).
+   fail_task("repeated match failure", FailedTask).
 
-% Simple compound task, so decompose it.
-switch_to_task(Task) :-
-   !,
+fail_task(Why, FailedTask) :-
+   begin($task/type:task:TopLevelTask,
+	 asserta($global::failed_task($me, (TopLevelTask-> FailedTask))),
+	 emit_grain("task fail", 100),
+	 restart_or_kill_task,
+	 throw(task_failed($me, Why, (TopLevelTask->FailedTask)))).
+
+% Compound task, so decompose it.
+switch_to_task(T) :-
+   begin(canonical_form_of_task(T, Task),
+	 switch_to_canonical_task(Task)).
+
+switch_to_canonical_task(Task) :-
+   unsatisfied_task_precondition(Task, Precondition),
+   switch_to_task((achieve_precondition(Task,
+					Precondition),
+		   Task)).
+switch_to_canonical_task(Task) :-
    begin(task_reduction(Task, Reduced),
 	 switch_to_task(Reduced)).
 
 %% have_strategy(+Task)
 %  True when we have at least some candidate reduction for this task.
 have_strategy(Task) :-
-%   once(matching_strategy(_, Task)).
-   task_reduction(Task, Reduct),
+   reduce_to_primitive(Task, Reduct),
+%   task_reduction(Task, Reduct),
    !,
    Reduct \= resolve_match_failure(_).
 
@@ -191,6 +200,12 @@ invoke_continuation(K) :-
 invoke_continuation(TaskConcern, K) :-
    within_task(TaskConcern, invoke_continuation(K)).
 
+restart_or_kill_task :-
+   $task/repeating_task ->
+      ( $task/type:task:Goal, invoke_continuation(Goal) )
+      ;
+      kill_concern($task).
+
 %% restart_task(+TaskConcern)
 %  Restarts a repeating task
 restart_task(TaskConcern) :-
@@ -211,3 +226,14 @@ interrupt_step(TaskConcern, InterruptingTask) :-
 		     TaskConcern/continuation:K,
 		     assert(TaskConcern/continuation:(C,K)),
 		     switch_to_task(InterruptingTask))).
+
+%%
+%% Task preconditions
+%%
+
+unsatisfied_task_precondition(Task, P) :-
+   precondition(Task, P),
+   \+ task_precondition_satisfied(P).
+
+task_precondition_satisfied(know(_:Condition)) :-
+   truth_value(Condition, true).

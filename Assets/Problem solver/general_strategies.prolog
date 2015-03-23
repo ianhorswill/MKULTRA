@@ -65,6 +65,9 @@ strategy(achieve(docked_with(WorldObject)),
 %%
 %% goto
 %%
+:- external know/1.
+precondition(goto(Object),
+	     know(X:location(Object, X))).
 
 strategy(goto(Building),
 	 null) :-
@@ -249,3 +252,17 @@ strategy(read($me, Object),
 	 if(property_value(Object, text, Text),
 	    say_string(Text),
 	    say_string("It's blank."))).
+
+%%
+%% Precondition chaining
+%%
+
+strategy(achieve_precondition(_, P),
+	 S) :-
+   postcondition(S, P).
+
+default_strategy(achieve_precondition(_SubTask, P),
+		 abort_and_then(explain_failure(~P))).
+
+normalize_task(abort_and_then(Task),
+	       call(invoke_continuation(Task))).
