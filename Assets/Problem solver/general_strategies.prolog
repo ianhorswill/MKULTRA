@@ -254,6 +254,15 @@ strategy(read($me, Object),
 	    say_string("It's blank."))).
 
 %%
+%% Tracking who you're doing something for
+%%
+
+normalize_task(on_behalf_of(Person, Task),
+	       begin(assert($task/on_behalf_of:Person),
+		     Task)).
+retract_on_restart(Task, Task/on_behalf_of).
+
+%%
 %% Precondition chaining
 %%
 
@@ -265,4 +274,5 @@ default_strategy(achieve_precondition(_SubTask, P),
 		 abort_and_then(explain_failure(~P))).
 
 normalize_task(abort_and_then(Task),
-	       call(invoke_continuation(Task))).
+	       call(begin(perform_restart_retractions($task),
+			  invoke_continuation(Task)))).

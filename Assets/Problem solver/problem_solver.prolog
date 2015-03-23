@@ -209,10 +209,17 @@ restart_or_kill_task :-
 %% restart_task(+TaskConcern)
 %  Restarts a repeating task
 restart_task(TaskConcern) :-
-   ignore(retract(TaskConcern/location_bids)),
+   perform_restart_retractions(TaskConcern),
    assertion(TaskConcern/repeating_task, "Attempt to restart a non-repeating task"),
    TaskConcern/type:task:Goal,
    invoke_continuation(TaskConcern, Goal).
+
+perform_restart_retractions(Task) :-
+   forall(retract_on_restart(Task, Assertion),
+	  ignore(retract(Assertion))).
+
+retract_on_restart(Task, Task/location_bids).
+retract_on_restart(Task, Task/monitor).
 
 %%
 %% Interrupts
@@ -236,4 +243,7 @@ unsatisfied_task_precondition(Task, P) :-
    \+ task_precondition_satisfied(P).
 
 task_precondition_satisfied(know(_:Condition)) :-
-   truth_value(Condition, true).
+   ($task/on_behalf_of:Beneficiary) ->
+      admitted_truth_value(Beneficiary, Condition, true)
+      ;
+      truth_value(Condition, true).

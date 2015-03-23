@@ -3,7 +3,7 @@
 %%
 
 strategy(respond_to_dialog_act(command(Requestor, $me, Task)),
-	 follow_command(Task, RequestStatus)) :-
+	 follow_command(Requestor, Task, RequestStatus)) :-
    request_status(Requestor, Task, RequestStatus).
 
 request_status(_Requestor, Task, immoral) :-
@@ -23,21 +23,21 @@ request_status(Requestor, Task, incriminating(P)) :-
    !.
 request_status(_Requestor, _Task, normal).
 
-strategy(follow_command(Task, normal),
+strategy(follow_command(Requestor, Task, normal),
 	 if(dialog_task(Task),
 	    Task,
-	    call(add_pending_task(Task)))).
+	    call(add_pending_task(on_behalf_of(Requestor, Task))))).
 
 :- public dialog_task/1.
 dialog_task(tell_about(_,_,_)).
 
-strategy(follow_command(_, immoral),
+strategy(follow_command(_, _, immoral),
 	 say_string("That would be immoral.")).
-strategy(follow_command(_, non_normative),
+strategy(follow_command(_, _, non_normative),
 	 say_string("That would be weird.")).
-strategy(follow_command(_, unachievable(Reason)),
+strategy(follow_command(_, _, unachievable(Reason)),
 	 explain_failure(Reason)).
-strategy(follow_command(_, incriminating(_)),
+strategy(follow_command(_, _, incriminating(_)),
 	 say_string("Sorry, I can't.")).
 
 diagnose(Task, ~Precondition) :-
@@ -45,8 +45,8 @@ diagnose(Task, ~Precondition) :-
 
 default_strategy(explain_failure(_),
 		 say_string("I don't know how.")).
-strategy(explain_failure(~know(X:location(_Object, X))),
-	 speech(["I don't know where", np(X), "is"])).
+strategy(explain_failure(~know(X:location(Object, X))),
+	 speech(["I don't know where", np(Object), "is"])).
 
 strategy(tell_about($me, _, Topic),
 	 describe(Topic, general, null)).
