@@ -45,3 +45,5 @@ contraction(who, are, who, re).
 
 contraction('I', will, 'I','ll').
 contraction(let, us, 'let','s').
+
+:- register_all_lexical_items([A, B, C, D], contraction(A,B,C,D)).

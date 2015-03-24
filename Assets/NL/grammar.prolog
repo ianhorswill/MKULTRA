@@ -45,14 +45,20 @@ current_dialog_pair($speaker, $addressee).
 stock_phrase(do_not_understand($speaker, $addressee, _)) --> [ huh, '?'].
 stock_phrase(prompt_player($me, $me)) --> [type, something].
 
+:-register_lexical_items([huh, type, something]).
+
 stock_phrase(greet($speaker, Who)) -->
    [Salutation, ','],
    { member(Salutation, ['Hey', 'Hello', 'Hi']) },
    proper_name(Who, singular).
 stock_phrase(greet($speaker, $addressee)) --> ['Hi', there].
 
+:- register_lexical_items(['Hey', 'Hellow', 'Hi']).
+
 stock_phrase(apology($speaker, $addressee)) --> ['Sorry'].
 stock_phrase(excuse_self($speaker, $addressee)) --> ['Excuse', me].
+
+:- register_lexical_items(['Sorry', 'Excuse']).
 
 stock_phrase(parting($speaker, $addressee)) --> [X], { member(X, [bye, byebye, goodbye]) }.
 stock_phrase(parting($speaker, $addressee)) --> [see, you].
@@ -60,12 +66,17 @@ stock_phrase(parting($speaker, $addressee)) --> [be, seeing, you].
 
 stock_phrase(command($speaker, $addressee, end_game($addressee, $addressee))) --> [ end, game ].
 
+:- register_lexical_items([end, game]).
+
 %
 % Help queries from the player
 %
 
 stock_phrase(general_help(player, $me)) -->
    [help].
+
+:- register_lexical_item(help).
+
 stock_phrase(general_help(player, $me)) -->
    [what, do, 'I', do, '?'].
 stock_phrase(how_do_i(player, $me, Q)) -->
@@ -85,6 +96,8 @@ stock_phrase(color_query(player, $me, red)) -->
    [what, does, red, text, mean, '?'].
 stock_phrase(color_query(player, $me, red)) -->
    [why, does, my, text, turn, red, '?'].
+
+:- register_lexical_items([red, green, yellow, white, turn, mean]).
 
 stock_phrase(color_query(player, $me, yellow)) -->
    [what, does, yellow, text, mean, '?'].

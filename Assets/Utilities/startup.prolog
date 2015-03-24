@@ -11,6 +11,19 @@ load_csv_row(Row, Assertion) :-
 load_csv_row(_, Assertion) :-
    assertz(Assertion).
 
+:- public register_all_lexical_items/2.
+%% register_all_lexical_items(?ListTemplate, :Generator)
+%  Registers all the lexical items from ListTemplate for each solution of Generator.
+register_all_lexical_items(ListTemplate, Generator) :-
+   forall(Generator,
+	  register_lexical_items(ListTemplate)).
+
+%% register_lexical_items(+List)
+%  Register each of a series of lexical items.
+register_lexical_items(List) :-
+   forall(member(Item, List),
+	  register_lexical_item(Item)).
+
 %% assert_phrase_rule(Phrase, Words) is det
 %  Asserts that Phrase can be matched by Words (a list of symbols).
 %  Asserts the DCG rule: Phrase --> Words.

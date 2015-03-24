@@ -99,7 +99,7 @@ namespace Prolog
         public static bool IsLexicalItem(string s)
         {
             var l = s.ToLower();
-            return LexicalItems.ContainsKey(l) || Symbol.IsInterned(l);
+            return LexicalItems.ContainsKey(l); // || Symbol.IsInterned(l);
         }
 
         public static void RegisterLexicalItem(Symbol s)

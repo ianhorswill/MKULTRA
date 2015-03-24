@@ -1,5 +1,3 @@
-:- register_lexical_item('I').
-
 %% relpron( that ).
 %% relpron( who  ).
 %% relpron( whom ).
@@ -25,3 +23,7 @@ whpron( what, entity ).
 % det( every, (X^S1)^(X^S2)^   all(X,S1,S2) ).
 % det( a,     (X^S1)^(X^S2)^exists(X,S1,S2)  ).
 % det( some,  (X^S1)^(X^S2)^exists(X,S1,S2)  ).
+
+:- register_all_lexical_items([P], whpron(P, _)).
+:- register_all_lexical_items([P], pronoun_word(P,_,_,_,_)).
+

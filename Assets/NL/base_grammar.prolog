@@ -198,6 +198,8 @@ s(Noun:property_value(Noun, Property, Value),
    copula(simple, Tense, third:singular),
    property_value_np(Property, Value).
 
+:- register_lexical_item(whose).
+
 % NP's Property is [not] PropertyValue
 s((Value:(property_value(Noun, Property, Value), is_a(Value, Kind))),
   interrogative, affirmative, Tense, simple) -->
@@ -258,6 +260,8 @@ s(Method:method(S, Method), interrogative, affirmative, Tense, simple) -->
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
    vp(base, M^M, NP^S1, present, Agreement, nogap).
 
+:- register_lexical_item(how).
+
 % Is he Adjective?
 s(S, interrogative, Polarity, present, simple) -->
    aux_be(present, Agreement),
@@ -296,12 +300,16 @@ s(X:explanation(S, X), interrogative, Polarity, Tense, Aspect) -->
    [why],
    inverted_sentence(S, Polarity, Tense, Aspect).
 
+:- register_lexical_item(why).
+
 % where is NP
 s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
    [where],
    aux_be(Tense, Agreement),
    opt_not(Polarity),
    np((S^S)^S, subject, Agreement, nogap, nogap).
+
+:- register_lexical_item(where).
 
 % Who has  NP
 s((Character:location(Object, Character), is_a(Character, person)), interrogative, Polarity, Tense, simple) -->

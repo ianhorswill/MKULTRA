@@ -57,3 +57,5 @@ preposition(for).
 %  True when the slot of Predication corresponding to Preposition
 %  has the value Referrent.
 :- randomizable prepositional_slot/3.
+
+:- register_all_lexical_items([P], preposition(P)).

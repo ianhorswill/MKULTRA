@@ -17,6 +17,8 @@ aux(Gap, negative, Agreement, Tense, simple, base, X^X) -->
 aux(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF) -->
    aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, ModalLF).
 
+:- register_lexical_item(not).
+
 aux_without_do_support(Gap, Polarity, Agreement, future, Aspect, Form, X^X) -->
    [ will ],
    opt_not(Polarity),
@@ -29,6 +31,8 @@ aux_without_do_support(Gap, Polarity, _Agreement, present, simple, base, P^LF) -
    aux_gap(Gap).
 aux_without_do_support(Gap, Polarity, Agreement, Tense, Aspect, Form, X^X) -->
    aux_aspect(Gap, Polarity, Tense, Aspect, Agreement, Form).
+
+:- register_lexical_item(will).
 
 
 %% aux_aspect_future(?Aspect, ?Agreement, ?Form)
@@ -85,6 +89,8 @@ modal_aux(may).
 modal_aux(should).
 modal_aux(must).
 
+:- register_all_lexical_items([A], modal_aux(A)).
+
 :- randomizable aux_do//2.
 aux_do(present, Agreement) -->
 	[ do ],
@@ -92,6 +98,8 @@ aux_do(present, Agreement) -->
 aux_do(present, third:singular) -->
 	[ does ].
 aux_do(past, _Agreement) --> [did].
+
+:- register_lexical_items([do, does, did, doing]).
 
 :- randomizable aux_have//2.
 aux_have(present, Agreement) -->
@@ -101,6 +109,8 @@ aux_have(present, third:singular) -->
 	[ has ].
 aux_have(past, _Agreement) --> [had].
 aux_have(future, _Agreement) --> [have].
+
+:- register_lexical_items([have, has, had, having]).
 
 :- randomizable aux_be//2.
 aux_be(present, first:singular) -->
@@ -123,3 +133,5 @@ aux_be(Tense, _Agreement) -->
    % Only applies if we already know this is future tense
    { Tense == future },
    [be].
+
+:- register_lexical_items([am, are, is, was, were, be, being]).
