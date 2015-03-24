@@ -245,11 +245,23 @@ strategy(sleep(Seconds),
 	 wait_condition(after_time(Time))) :-
    Time is $now + Seconds.
 
+ready_to_hand(Object) :-
+   location(Object, $me).
+ready_to_hand(Object) :-
+   docked_with(Object).
+
+strategy(achieve_precondition(_, ready_to_hand(Object)),
+	 goto(Object)).
+
+precondition(examine($me, Object),
+	     ready_to_hand(Object)).
 strategy(examine($me, Object),
 	 if(examination_content(Object, Content),
 	    call(pop_up_examination_content(Content)),
 	    describe(Object, general, null))).
 
+precondition(read($me, Object),
+	     ready_to_hand(Object)).
 strategy(read($me, Object),
 	 if(examination_content(Object, Content),
 	    call(pop_up_examination_content(Content)),
@@ -276,5 +288,5 @@ default_strategy(achieve_precondition(_SubTask, P),
 		 abort_and_then(explain_failure(~P))).
 
 normalize_task(abort_and_then(Task),
-	       call(begin(perform_restart_retractions($task),
-			  invoke_continuation(Task)))).
+	       begin(call(perform_restart_retractions($task)),
+		     invoke_continuation(Task))).

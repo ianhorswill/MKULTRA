@@ -139,8 +139,6 @@ discourse_fragment(X) -->
 % and to be events that conversations should respond to.
 %
 
-action_functor(discourse_increment, 5).
-
 :- public register_utterance_types/0.
 
 register_utterance_types :-

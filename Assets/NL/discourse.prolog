@@ -26,7 +26,10 @@ fkey_command(alt-t, "Display transcript") :-
 			       (Agent = $pc ->
 				   (Color = lime)
 			           ;
-				   (Color = yellow)) ),
+				   (Agent = player ->
+				        (Color=white)
+				        ;
+				        (Color = yellow))) ),
 			     color(Color, line(Name, ":\t", Text))).
 		   
 fkey_command(control-alt-t, "Display transcript as dialog acts") :-
@@ -154,14 +157,3 @@ default_addressee(Partner) :-
    in_conversation_with(Partner),
    !.
 default_addressee($me).
-
-
-
-%%
-%% Utilities
-%%
-reduce(Lambda, Arg, Result) :-
-   copy_term(Lambda, Copy),
-   reduce_aliasing(Copy, Arg, Result).
-
-reduce_aliasing(Arg^Result, Arg, Result).

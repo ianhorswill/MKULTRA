@@ -61,3 +61,11 @@ unless(P, Imperative1, Imperative2, Imperative3, Imperative4) :-
 unless(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
    P -> true ; begin(Imperative1, Imperative2, Imperative3, Imperative4, Imperative5).
 
+%%
+%% Lambda expressions
+%%
+reduce(Lambda, Arg, Result) :-
+   copy_term(Lambda, Copy),
+   reduce_aliasing(Copy, Arg, Result).
+
+reduce_aliasing(Arg^Result, Arg, Result).

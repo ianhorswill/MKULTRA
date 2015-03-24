@@ -8,7 +8,7 @@
 poll_tasks :-
    begin(bind_default_task_indexicals,
 	 forall(concern(Task, task),
-		poll_task(Task))).
+		once(poll_task(Task)))).
 
 %% poll_task(+Task)
 %  Attempts to make forward progress on Task's current step.
@@ -19,6 +19,7 @@ poll_task(T) :-
    within_task(T, invoke_continuation(Continuation)).
 poll_task(T) :-
    (T/current:A)>>ActionNode,
+   !,
    ((ActionNode:action) ->
       poll_action(T, A)
       ;
@@ -34,7 +35,7 @@ poll_builtin(T, wait_condition(Condition)) :-
 poll_builtin(_, wait_event(_)).   % nothing to do.
 poll_builtin(T, wait_event(_, Timeout)) :-
    ($now > Timeout) ->
-      step_completed(T) ; true.
+       step_completed(T) ; true.
 
 bind_default_task_indexicals :-
    default_addressee(A),
@@ -52,13 +53,19 @@ score_action(A, task, T, Score) :-
    A=X,
    T/priority:Score.
 
-on_event(E, task, T, wait_event_completed(T)) :-
+on_event(E, task, T, wait_event_completed(T, E)) :-
+   task_waiting_for(T, E).
+
+task_waiting_for(T, E) :-
    T/current:X,
    (X=E ; X=wait_event(E) ; X=wait_event(E,_)).
 
-wait_event_completed(T) :-
+wait_event_completed(T, E) :-
+   % Check to make sure that we're still waiting for this event.
+   task_waiting_for(T, E),
    bind_default_task_indexicals,
    step_completed(T).
+wait_event_completed(_,_).
 
 %%
 %% Debug display

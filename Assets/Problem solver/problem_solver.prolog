@@ -94,8 +94,10 @@ switch_to_task(Task) :-
    fail.
 % Check for immediate builtins
 switch_to_task(done) :-
+   !,
    restart_or_kill_task.
 switch_to_task(null) :-
+   !,
    step_completed.
 switch_to_task(call(PrologCode)) :-
    begin(PrologCode,
@@ -107,6 +109,7 @@ switch_to_task(retract(Fact)) :-
    begin(retract(Fact),
 	 step_completed).
 switch_to_task(invoke_continuation(K)) :-
+   !,
    invoke_continuation(K).
 
 % Non-immediates that can be taken care of now.
@@ -119,6 +122,7 @@ switch_to_task( (First, Rest) ) :-
 	 assert($task/continuation:(Rest,K)),
 	 switch_to_task(First)).
 switch_to_task(let(BindingCode, Task)) :-
+   !,
    BindingCode ->
       switch_to_task(Task)
       ;
@@ -142,6 +146,7 @@ switch_to_task(A) :-
 :- external failed_task/2.
 %% We have a task we don't know what to do with.
 switch_to_task(resolve_match_failure(resolve_match_failure(resolve_match_failure(FailedTask)))) :-
+   !,
    fail_task("repeated match failure", FailedTask).
 
 fail_task(Why, FailedTask) :-
@@ -243,6 +248,12 @@ unsatisfied_task_precondition(Task, P) :-
    \+ task_precondition_satisfied(P).
 
 task_precondition_satisfied(know(_:Condition)) :-
+   !,
+   ($task/on_behalf_of:Beneficiary) ->
+      admitted_truth_value(Beneficiary, Condition, true)
+      ;
+      truth_value(Condition, true).
+task_precondition_satisfied(Condition) :-
    ($task/on_behalf_of:Beneficiary) ->
       admitted_truth_value(Beneficiary, Condition, true)
       ;
