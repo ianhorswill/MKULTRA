@@ -1,3 +1,5 @@
+:- public show_decomposition/1.
+
 %%
 %% Goal reduction
 %%
@@ -35,10 +37,17 @@ selected_reduction(Task, Strategies, resolve_conflict(Task, Strategies)) :-
 %% Canonical forms
 %%
 
+%:- external trace_normalization/2.
 canonical_form_of_task(Task, Canon) :-
+   % when(trace_normalization($me, Task),
+   % 	log($me:start_normalization(Task)),
+   % 	trace(contained_in/2)),
    normalize_task(Task, Normalized),
    canonical_form_of_task(Normalized, Canon),
    !.
+   % when(trace_normalization($me, Task),
+   % 	log($me:normalize_task(Task, Canon))).
+
 canonical_form_of_task(Task, Task).
 
 %%

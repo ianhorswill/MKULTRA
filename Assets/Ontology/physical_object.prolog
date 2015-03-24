@@ -36,6 +36,7 @@ contained_in(PhysicalObject, Location) :-
    location(PhysicalObject, Location).
 contained_in(PhysicalObject, Location) :-
    nonvar(PhysicalObject),
+   !,
    location(PhysicalObject, Container),
    contained_in(Container, Location).
 contained_in(PhysicalObject, Location) :-

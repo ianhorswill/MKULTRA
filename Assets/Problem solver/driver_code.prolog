@@ -8,7 +8,11 @@
 poll_tasks :-
    begin(bind_default_task_indexicals,
 	 forall(concern(Task, task),
-		once(poll_task(Task)))).
+		once((poll_task(Task)->
+		        true
+		        ;
+		        begin(Task/type:task:T,
+			      log($me:poll_task_failed(Task, T))))))).
 
 %% poll_task(+Task)
 %  Attempts to make forward progress on Task's current step.
@@ -18,12 +22,33 @@ poll_task(T) :-
    !,
    within_task(T, invoke_continuation(Continuation)).
 poll_task(T) :-
-   (T/current:A)>>ActionNode,
-   !,
-   ((ActionNode:action) ->
-      poll_action(T, A)
-      ;
-      poll_builtin(T, A)).
+   begin((T/current:A)>>ActionNode,
+	 poll_task_action(T, A, ActionNode)).
+
+poll_task_action(T, starting, _) :-
+   begin(T/type:task:Goal,
+	 log($me:polling_task_that_never_finished_starting(T, Goal)),
+	 kill_task(T)).
+poll_task_action(T, completing_timeout, _) :-
+   begin(T/type:task:Goal,
+	 log($me:polling_task_that_never_finished_completing_timeout(T, Goal))).
+	 %kill_task(T)).
+poll_task_action(T, completing_wait, _) :-
+   begin(T/type:task:Goal,
+	 log($me:polling_task_that_never_finished_completing_wait(T, Goal)),
+	 kill_task(T)).
+poll_task_action(T, restarting, _) :-
+   begin(T/type:task:Goal,
+	 log($me:polling_task_that_never_finished_restart(T, Goal)),
+	 restart_task(T)).
+poll_task_action(T, exiting, _) :-
+   begin(T/type:task:Goal,
+	 log($me:polling_task_that_already_exited(T, Goal)),
+	 kill_task(T)).
+poll_task_action(T, A, ActionNode) :-
+   call_with_step_limit(10000, ((ActionNode:action) -> poll_action(T, A))).
+poll_task_action(T, A, _) :-
+   call_with_step_limit(10000, poll_builtin(T, A)).
 
 poll_action(T, A) :-
    % Make sure it's still runnable
@@ -35,7 +60,10 @@ poll_builtin(T, wait_condition(Condition)) :-
 poll_builtin(_, wait_event(_)).   % nothing to do.
 poll_builtin(T, wait_event(_, Timeout)) :-
    ($now > Timeout) ->
-       step_completed(T) ; true.
+       begin(assert(T/current:completing_timeout),
+	     step_completed(T))
+       ;
+       true.
 
 bind_default_task_indexicals :-
    default_addressee(A),
@@ -63,6 +91,7 @@ task_waiting_for(T, E) :-
 wait_event_completed(T, E) :-
    % Check to make sure that we're still waiting for this event.
    task_waiting_for(T, E),
+   assert(T/current:completing_wait),
    bind_default_task_indexicals,
    step_completed(T).
 wait_event_completed(_,_).
