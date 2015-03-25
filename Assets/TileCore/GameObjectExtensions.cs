@@ -29,7 +29,7 @@ public static class GameObjectExtensions
     /// <returns>The TileRect for the footprint</returns>
     public static Rect Footprint(this GameObject o)
     {
-        return o.collider2D.BoundingBox();
+        return o.GetComponent<Collider2D>().BoundingBox();
     }
 
     /// <summary>

@@ -52,7 +52,7 @@ public class PropInfo : PhysicalObject
 
     internal void OnGUI()
     {
-        if (Camera.current != null && renderer == null && !IsHidden)
+        if (Camera.current != null && GetComponent<Renderer>() == null && !IsHidden)
         {
             var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
             var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);

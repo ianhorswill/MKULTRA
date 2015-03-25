@@ -14,7 +14,7 @@ public class CharacterSteeringController : BindingBehaviour
     public void CharacterDead()
     {
         enabled = false;
-        rigidbody2D.velocity = Vector2.zero;
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
     #region Fields and properties
@@ -52,7 +52,7 @@ public class CharacterSteeringController : BindingBehaviour
     public void Stop()
     {
         targetLocation = null;
-        rigidbody2D.velocity = Vector2.zero;
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
     /// <summary>
@@ -180,7 +180,7 @@ public class CharacterSteeringController : BindingBehaviour
         if (fMag > MaxForce)
             force *= MaxForce / fMag;
 
-        var rb = rigidbody2D;
+        var rb = GetComponent<Rigidbody2D>();
         var vel = rb.velocity;
         var currentSpeed = vel.magnitude;
 
@@ -218,7 +218,7 @@ public class CharacterSteeringController : BindingBehaviour
     /// </summary>
     public void Update()
     {
-        this.UpdateWalkAnimation(this.rigidbody2D.velocity);
+        this.UpdateWalkAnimation(this.GetComponent<Rigidbody2D>().velocity);
         if (mySpriteRenderer == null)
              mySpriteRenderer = GetComponent<SpriteRenderer>();
     }

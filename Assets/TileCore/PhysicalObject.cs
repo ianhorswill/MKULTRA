@@ -10,16 +10,16 @@ public abstract class PhysicalObject : BindingBehaviour
 
     public void SetHidden(bool state)
     {
-        if (this.renderer != null)
-            this.renderer.enabled = !state;
+        if (this.GetComponent<Renderer>() != null)
+            this.GetComponent<Renderer>().enabled = !state;
         this.IsHidden = state;
     }
 
     public override void Awake()
     {
         base.Awake();
-        if (IsHidden && this.renderer != null)
-            this.renderer.enabled = false;
+        if (IsHidden && this.GetComponent<Renderer>() != null)
+            this.GetComponent<Renderer>().enabled = false;
     }
 
     [HideInInspector]
@@ -46,10 +46,10 @@ public abstract class PhysicalObject : BindingBehaviour
 
     public void ObjectAdded(GameObject newObject)
     {
-        if (newObject.renderer != null)
+        if (newObject.GetComponent<Renderer>() != null)
         {
-            newObject.renderer.enabled = ContentsVisible;
-            var sr = newObject.renderer as SpriteRenderer;
+            newObject.GetComponent<Renderer>().enabled = ContentsVisible;
+            var sr = newObject.GetComponent<Renderer>() as SpriteRenderer;
             if (sr != null && ContentsVisible)
                 sr.sortingLayerName = "PlacedOnSurface";
         }
@@ -73,6 +73,6 @@ public abstract class PhysicalObject : BindingBehaviour
         if (spriteController != null)
             spriteController.enabled = false;
         else
-            this.renderer.enabled = false;
+            this.GetComponent<Renderer>().enabled = false;
     }
 }

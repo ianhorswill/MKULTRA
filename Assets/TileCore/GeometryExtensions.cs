@@ -50,7 +50,7 @@ public static class GeometryExtensions
             var cc = c as CircleCollider2D;
             if (cc != null)
             {
-                Vector2 center = t.TransformPoint(cc.center);
+                Vector2 center = t.TransformPoint(cc.offset);
                 var halfSize = cc.radius * (Vector2)t.localScale;
                 var lowerLeft = center - halfSize;
                 return new Rect(lowerLeft.x, lowerLeft.y, 2 * halfSize.x, 2 * halfSize.y);
@@ -60,7 +60,7 @@ public static class GeometryExtensions
             var bc = c as BoxCollider2D;
             if (bc != null)
             {
-                Vector2 center = t.TransformPoint(bc.center);
+                Vector2 center = t.TransformPoint(bc.offset);
                 var size = new Vector2(bc.size.x*t.localScale.x, bc.size.y*t.localScale.y);
                 var lowerLeft = center - size*0.5f;
                 return new Rect(lowerLeft.x, lowerLeft.y, size.x, size.y);

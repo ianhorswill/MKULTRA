@@ -277,7 +277,7 @@ public class TileMap : BindingBehaviour
                 remainingWallTiles.Remove(p);
 
             var bcollider = walls.AddComponent<BoxCollider2D>();
-            bcollider.center = selectedWall.WorldCenter;
+            bcollider.offset = selectedWall.WorldCenter;
             bcollider.size = selectedWall.Size;
 
 #if DEBUG_MAKEWALLS
