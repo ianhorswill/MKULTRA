@@ -6,6 +6,8 @@ namespace Prolog
 {
     public class DebugOverlay : BindingBehaviour
     {
+        public GUIStyle Style;
+
         private string text;
         private readonly StringBuilder textBuilder = new StringBuilder();
 
@@ -38,7 +40,7 @@ namespace Prolog
                         GUI.Box(screenRect, greyOutTexture);
 
                         scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-                        GUILayout.Label(text);
+                        GUILayout.Label(text, Style);
                         GUILayout.EndScrollView();
                     }
                     break;
@@ -95,14 +97,14 @@ namespace Prolog
                         break;
 
                     case "bold":
-                        this.textBuilder.AppendFormat("<b>", op.Argument(0));
+                        this.textBuilder.AppendFormat("<b>");
                         for (int i = 0; i < op.Arity; i++)
                             this.Render(op.Argument(i));
                         this.textBuilder.Append("</b>");
                         break;
 
                     case "italic":
-                        this.textBuilder.AppendFormat("<i>", op.Argument(0));
+                        this.textBuilder.AppendFormat("<i>");
                         for (int i = 0; i < op.Arity; i++)
                             this.Render(op.Argument(i));
                         this.textBuilder.Append("</i>");

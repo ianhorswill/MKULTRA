@@ -265,6 +265,11 @@ public class SimController : PhysicalObject
             greyOutTexture = new Texture2D(1,1);
             greyOutTexture.SetPixel(0,0, new Color(0,0,0, 128));
         }
+
+        var theCamera = FindObjectOfType<Camera>();
+        var origin = theCamera.WorldToScreenPoint(Vector3.zero);
+        this.characterWidth = (theCamera.WorldToScreenPoint(new Vector3(Tile.SizeInSceneUnits, 0, 0)) - origin).x;
+        this.characterHeight = (theCamera.WorldToScreenPoint(new Vector3(0, 2*Tile.SizeInSceneUnits, 0)) - origin).y;
     }
 
     private bool prologInitializationsExecuted;
@@ -798,9 +803,9 @@ public class SimController : PhysicalObject
 
     public GUIStyle SpeechBubbleStyle;
 
-    private const int CharacterWidth = 32;
+    private float characterWidth;
 
-    private const int CharacterHeight = 2 * CharacterWidth;
+    private float characterHeight;
     internal void OnGUI()
     {
         if (Camera.current != null && !string.IsNullOrEmpty(this.currentSpeechBubbleText))
@@ -809,10 +814,10 @@ public class SimController : PhysicalObject
             var addresseeOffset = addressee.transform.position - transform.position;
 
             if (addresseeOffset.x > 0 || addresseeOffset.y < 0)
-                bubblelocation.y += 2*CharacterHeight;
+                bubblelocation.y += this.characterHeight;
             var size = SpeechBubbleStyle.CalcSize(new GUIContent(this.currentSpeechBubbleText));
             //bubblelocation.x += (addresseeOffset.x<0)?CharacterWidth:-(CharacterWidth+size.x);
-            bubblelocation.x += CharacterWidth;
+            bubblelocation.x += this.characterWidth;
             var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);
             var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
             var leftEdgeOfMap = ((Vector2)Camera.current.WorldToScreenPoint(new Vector3(0, Tile.MapXMin, 0))).y;
