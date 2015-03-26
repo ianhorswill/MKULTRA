@@ -104,80 +104,77 @@ public class NLPrompt : BindingBehaviour
 
     private void HandleKeyDown(Event e)
     {
-        if (e.alt || e.control
-            || (e.keyCode>= KeyCode.F1 && e.keyCode<=KeyCode.F15))
+        if (e.keyCode != KeyCode.None)
         {
-            if (e.keyCode == KeyCode.None)
-                return;
-
-            object key = Symbol.Intern(e.keyCode.ToString().ToLower());
-            if (e.alt)
+            if (e.alt || e.control || (e.keyCode >= KeyCode.F1 && e.keyCode <= KeyCode.F15))
             {
-                if (e.control)
-                    key = new Structure("-", 
-                        new Structure("-",
-                            Symbol.Intern("control"),
-                            Symbol.Intern("alt")),
-                        key);
-                else
-                    key = new Structure("-", Symbol.Intern("alt"), key);
-            }
-            else if (e.control)
-                key = new Structure("-", Symbol.Intern("control"), key);
-
-            KnowledgeBase.Global.IsTrue(new Structure("fkey_command", key));
-            return;
-        }
-
-        // Update last user activity time
-        this.LastPlayerActivity.StoreExclusive(Time.time, true);
-
-        switch (e.keyCode)
-        {
-            case KeyCode.Escape:
-                this.input = this.formatted = this.commentary = "";
-                this.dialogAct = null;
-                PauseManager.Paused = false;
-                break;
-
-            case KeyCode.Delete:
-            case KeyCode.Backspace:
-                if (this.input != "")
+                object key = Symbol.Intern(e.keyCode.ToString().ToLower());
+                if (e.alt)
                 {
-                    this.formatted = this.input = this.input.Substring(0, this.input.Length - 1);
-                    this.TryCompletionIfCompleteWord();
+                    if (e.control)
+                        key = new Structure(
+                            "-",
+                            new Structure("-", Symbol.Intern("control"), Symbol.Intern("alt")),
+                            key);
+                    else
+                        key = new Structure("-", Symbol.Intern("alt"), key);
                 }
-                break;
+                else if (e.control)
+                    key = new Structure("-", Symbol.Intern("control"), key);
 
-            case KeyCode.Tab:
-                this.input = string.Format("{0}{1}{2}",
-                                           this.input,
-                                           ( this.input.EndsWith(" ")
-                                             || ( !string.IsNullOrEmpty(completion)
-                                                  && !char.IsLetterOrDigit(completion[0])))
-                                           ? "" : " ",
-                                           this.completion);
-                break;
+                KnowledgeBase.Global.IsTrue(new Structure("fkey_command", key));
+                return;
+            }
 
-            case KeyCode.Return:
-            case KeyCode.KeypadEnter:
-                if (this.dialogAct != null)
-                {
-                    simController.QueueEvent("player_input", dialogAct);
-                    this.IsTrue("log_dialog_act", dialogAct);
-                    this.formatted = this.input = this.completion = this.commentary = "";
+            // Update last user activity time
+            this.LastPlayerActivity.StoreExclusive(Time.time, true);
+
+            switch (e.keyCode)
+            {
+                case KeyCode.Escape:
+                    this.input = this.formatted = this.commentary = "";
                     this.dialogAct = null;
                     PauseManager.Paused = false;
-                }
-                Event.current.Use();
-                break;
+                    break;
 
-            default:
-                if (e.character > 0)
-                {
-                    this.AddToInput(e.character);
-                }
-                break;
+                case KeyCode.Delete:
+                case KeyCode.Backspace:
+                    if (this.input != "")
+                    {
+                        this.formatted = this.input = this.input.Substring(0, this.input.Length - 1);
+                        this.TryCompletionIfCompleteWord();
+                    }
+                    break;
+
+                case KeyCode.Tab:
+                    this.input = string.Format(
+                        "{0}{1}{2}",
+                        this.input,
+                        (this.input.EndsWith(" ")
+                         || (!string.IsNullOrEmpty(completion) && !char.IsLetterOrDigit(completion[0])))
+                            ? ""
+                            : " ",
+                        this.completion);
+                    break;
+
+                case KeyCode.Return:
+                case KeyCode.KeypadEnter:
+                    if (this.dialogAct != null)
+                    {
+                        simController.QueueEvent("player_input", dialogAct);
+                        this.IsTrue("log_dialog_act", dialogAct);
+                        this.formatted = this.input = this.completion = this.commentary = "";
+                        this.dialogAct = null;
+                        PauseManager.Paused = false;
+                    }
+                    Event.current.Use();
+                    break;
+            }
+        }
+
+        if (e.character > 0 && !e.alt && !e.control && e.character >= ' ')
+        {
+            this.AddToInput(e.character);
         }
     }
 
