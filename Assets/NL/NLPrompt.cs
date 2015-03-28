@@ -1,4 +1,6 @@
-﻿using Prolog;
+﻿using System;
+
+using Prolog;
 using UnityEngine;
 
 // ReSharper disable once InconsistentNaming
@@ -32,7 +34,7 @@ public class NLPrompt : BindingBehaviour
     /// <summary>
     /// Database node for storing when the user last typed.
     /// </summary>
-    private ELNode LastPlayerActivity;
+    private ELNode lastPlayerActivity;
 
     /// <summary>
     /// What the user has typed so far.
@@ -67,8 +69,16 @@ public class NLPrompt : BindingBehaviour
 
     internal void Start()
     {
-        this.LastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
-        this.LastPlayerActivity.StoreExclusive(-1, true);
+        this.lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
+        this.lastPlayerActivity.StoreExclusive(-1, true);
+
+        var theCamera = Camera.main;
+        var bottomOfUI = Math.Min(InputRect.yMin, Math.Min(CommentaryRect.yMin, ResponseRect.yMin));
+        var r = theCamera.pixelRect;
+        r.height -= bottomOfUI + 50;
+        theCamera.pixelRect = r;
+        FindObjectOfType<TileMap>().UpdateCamera(theCamera);
+        Tile.UpdateTileSize(theCamera);
     }
 
     /// <summary>
@@ -127,7 +137,7 @@ public class NLPrompt : BindingBehaviour
             }
 
             // Update last user activity time
-            this.LastPlayerActivity.StoreExclusive(Time.time, true);
+            this.lastPlayerActivity.StoreExclusive(Time.time, true);
 
             switch (e.keyCode)
             {
