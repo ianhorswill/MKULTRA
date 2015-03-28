@@ -78,4 +78,19 @@ public class Tile
     /// The type of tile this is (freespace, wall, etc.)
     /// </summary>
     public TileType Type = TileType.Freespace;
+
+    /// <summary>
+    /// The screen size of a tile, in pixels.
+    /// </summary>
+    public static float TileSizeInPixels;
+
+    /// <summary>
+    /// Updates the TileSizeInPixels field after a change in the camera or its viewport
+    /// </summary>
+    /// <param name="c">the camera being used.</param>
+    public static void UpdateTileSize(Camera c)
+    {
+        var origin = c.WorldToScreenPoint(Vector3.zero);
+        TileSizeInPixels = (c.WorldToScreenPoint(new Vector3(Tile.SizeInSceneUnits, 0, 0)) - origin).x;
+    }
 }

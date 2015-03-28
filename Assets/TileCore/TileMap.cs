@@ -59,6 +59,13 @@ public class TileMap : BindingBehaviour
         MarkObstacles();
     }
 
+    public void UpdateCamera(Camera c)
+    {
+        var delta = new Vector3(Tile.MapXMin, Tile.MapYMin, 0) - c.ScreenToWorldPoint(Vector3.zero);
+        delta.z = 0;
+        c.transform.position += delta;
+    }
+
     /// <summary>
     /// Mark all tiles of all sprites for which IsStaticObstacle() is true.
     /// </summary>
