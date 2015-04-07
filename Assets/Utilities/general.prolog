@@ -31,7 +31,19 @@ thaw(X) :-
 
 test_file(freeze(_), "Utilities/freeze_tests").
 
+:- public if/3.
+:- higher_order if(1,1,1).
+if(C, T, _E) :-
+   C, !, T.
+if(_, _, E) :-
+   E.
+
 :- public when/2, when/3, when/4, when/5, when/6.
+:- higher_order when(1,1).
+:- higher_order when(1,1,1).
+:- higher_order when(1,1,1,1).
+:- higher_order when(1,1,1,1,1).
+:- higher_order when(1,1,1,1,1,1).
 
 %% when(?Condition, :Imperatives, ...)
 %  Run Imperatives in order if Condition is true, else do nothing
@@ -47,6 +59,12 @@ when(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
    P -> begin(Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) ; true.
 
 :- public unless/2, unless/3, unless/4, unless/5, unless/6.
+:- higher_order unless(1,1).
+:- higher_order unless(1,1,1).
+:- higher_order unless(1,1,1,1).
+:- higher_order unless(1,1,1,1,1).
+:- higher_order unless(1,1,1,1,1,1).
+
 
 %% unless(?Condition, :Imperatives, ...)
 %  Run Imperatives in order unless Condition is true.

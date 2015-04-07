@@ -1,11 +1,15 @@
-%%
-%% General strategies
-%%
+%%%
+%%% STRATEGIES FOR STANDARD OPERATIONS
+%%%
 
 %% default_strategy(+Task, -Strategy) is nondet
 %  Provides default strategies to use when Task has no specific matches.
 strategy(resolve_match_failure(X), S) :-
    default_strategy(X, S).
+
+%%%
+%%% Precondition and postcondition handling
+%%%
 
 %%
 %% achieve(P)
@@ -34,6 +38,21 @@ unachievable(exists(_)).
 strategy(achieve(P),
 	 wait_condition(P)) :-
    self_achieving(P).
+
+%%
+%% Precondition chaining
+%%
+
+strategy(achieve_precondition(_, P),
+	 S) :-
+   postcondition(S, P).
+
+default_strategy(achieve_precondition(_SubTask, P),
+		 abort_and_then(explain_failure(~P))).
+
+normalize_task(abort_and_then(Task),
+	       begin(call(perform_restart_retractions($task)),
+		     invoke_continuation(Task))).
 
 %%
 %% MOVEMENT AND LOCOMOTION
@@ -276,17 +295,55 @@ normalize_task(on_behalf_of(Person, Task),
 		     Task)).
 retract_on_restart(Task, Task/on_behalf_of).
 
-%%
-%% Precondition chaining
-%%
+%%%
+%%% Parallel processing
+%%% We just have a simplistic fork/join system.
+%%%
 
-strategy(achieve_precondition(_, P),
-	 S) :-
-   postcondition(S, P).
+default_strategy(spawn(Task),
+		 call(spawn_child_task(Task))).
 
-default_strategy(achieve_precondition(_SubTask, P),
-		 abort_and_then(explain_failure(~P))).
+:- public spawn_child_task/1.
+spawn_child_task(Task) :-
+   begin($task/priority:Priority,
+	 start_task($task, Task, Priority)).
 
-normalize_task(abort_and_then(Task),
-	       begin(call(perform_restart_retractions($task)),
-		     invoke_continuation(Task))).
+default_strategy(wait_for_children,
+		 wait_condition(\+ Me/concerns/_)) :-
+   % Need to manually bind a variable here to $task because the code that polls
+   % this doesn't run "inside" the task, i.e. doesn't bind $task.
+   Me = $task.
+
+default_strategy(cobegin(T1),
+		 begin(spawn(T1),
+		       wait_for_children)).
+
+default_strategy(cobegin(T1, T2, T3),
+		 begin(spawn(T1),
+		       spawn(T2),
+		       spawn(T3),
+		       wait_for_children)).
+
+default_strategy(cobegin(T1, T2, T3, T4),
+		 begin(spawn(T1),
+		       spawn(T2),
+		       spawn(T3),
+		       spawn(T4),
+		       wait_for_children)).
+
+default_strategy(cobegin(T1, T2, T3, T4, T5),
+		 begin(spawn(T1),
+		       spawn(T2),
+		       spawn(T3),
+		       spawn(T4),
+		       spawn(T5),
+		       wait_for_children)).
+
+default_strategy(cobegin(T1, T2, T3, T4, T5, T6),
+		 begin(spawn(T1),
+		       spawn(T2),
+		       spawn(T3),
+		       spawn(T4),
+		       spawn(T5),
+		       spawn(T6),
+		       wait_for_children)).
