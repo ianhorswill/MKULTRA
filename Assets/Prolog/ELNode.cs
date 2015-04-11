@@ -146,7 +146,7 @@ namespace Prolog
         public bool ContainsKey(object key)
         {
             foreach (var n in Children)
-                if (key.Equals(n.Key))
+                if (Equals(key, n.Key))
                     return true;
             return false;
         }
@@ -160,11 +160,13 @@ namespace Prolog
         public bool TryLookup(object key, out ELNode child)
         {
             foreach (var c in Children)
-                if (c.Key.Equals(key))
+            {
+                if (Equals(c.Key, key))
                 {
                     child = c;
                     return true;
                 }
+            }
             child = null;
             return false;
         }
@@ -177,7 +179,7 @@ namespace Prolog
         public ELNode ChildWithKey(object key)
         {
             foreach (var c in Children)
-                if (c.Key.Equals(key))
+                if (Equals(c.Key, key))
                 {
                     return c;
                 }
@@ -341,7 +343,7 @@ namespace Prolog
         public void DeleteKey(object key)
         {
             for (int i = 0; i<Children.Count; i++)
-                if (key.Equals(Children[i].Key))
+                if (Equals(key, Children[i].Key))
                 {
                     Children.RemoveAt(i);
                     return;
