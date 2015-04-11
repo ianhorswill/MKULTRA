@@ -29,26 +29,18 @@
 %%% one for non-dialog tasks.
 %%%
 
-%% dialog_task_advances_current_beat(-Task) is det
-%  Task is the thing I should run to try to move the beat forward.
-%  If I'm not a participant for this beat or if there's nothing for me
-%  to do right now, this will fail.
-dialog_task_advances_current_beat(sleep(1)) :-
-   beat_waiting_for_timeout.
-dialog_task_advances_current_beat(begin(Task,
-					assert($global_root/beats/Beat/completed_tasks/Task))) :-
-   current_beat(Beat),
-   dialog_task_advances_beat(Beat, Task).
-
-%% dialog_task_advances_beat(+Beat, -Task)
-%  Task is a task I can do that would advance Beat.
-dialog_task_advances_beat(Beat, Task) :-
-   $task/partner/Partner,
+dialog_task_with_partner_advances_current_beat(Beat, Partner, Task) :-
    beat_dialog_with(Beat, Partner, TaskList),
    ( incomplete_beat_task_from_list(Beat, TaskList, T) ->
-        can_perform_beat_task(T, Task)
+     can_perform_beat_task(T, Task)
         ;
         (Task=null, check_beat_completion) ).
+
+% Used for debugging display.
+potential_beat_dialog(Task) :-
+   current_log_character(Beat),
+   in_conversation_with(Partner),
+   dialog_task_with_partner_advances_current_beat(Beat, Partner, Task).
 
 can_perform_beat_task(Who:Task, Task) :-
    !,
@@ -289,7 +281,9 @@ unsatisfied_beat_precondition(Beat, P) :-
    beat_precondition(Beat, P),
    \+ P.
 
-beat_display_color(Current, Current, _,   _,         lime).
+beat_display_color(Current, Current, _,   _,         lime) :-
+   \+ beat_waiting_for_timeout.
+beat_display_color(Current, Current, _,   _,         yellow).  % if waiting for timeout
 beat_display_color(_,       _,       _,   completed, grey).
 beat_display_color(_,       _,       [ ], _,         white).
 beat_display_color(_,       _,       _,   _,         red).
@@ -297,3 +291,5 @@ beat_display_color(_,       _,       _,   _,         red).
 character_debug_display(Character, line("Idle task:\t", Task, "\t", beat:Beat)) :-
    current_beat(Beat),
    (Character::beat_idle_task(Beat, Character, Task) -> true ; (Task=none)).
+character_debug_display(Character, line("Beat task:\t", Task)) :-
+   Character::potential_beat_dialog(Task).

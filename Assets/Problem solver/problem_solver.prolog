@@ -19,17 +19,16 @@ test_file(problem_solver(_), "Problem solver/ps_tests").
 start_task(Parent, Task, Priority, TaskConcern, Assertions) :-
    begin_child_concern(Parent, task, Priority, TaskConcern,
    		       [TaskConcern/type:task:Task,
-			TaskConcern/current:starting,
+			TaskConcern/current:start,
    			TaskConcern/continuation:done]),
    forall(member(A, Assertions),
-   	  assert(A)),
-   within_task(TaskConcern, switch_to_task(Task)).
+   	  assert(A)).
+%   within_task(TaskConcern, switch_to_task(Task)).
 
 start_task(Parent, Task, Priority) :-
    start_task(Parent, Task, Priority, _, [ ]).
 start_task(Task, Priority) :-
    start_task($root, Task, Priority, _, [ ]).
-
 
 % Problem solver state is stored in:
 %   TaskConcern/type:task:TopLevelTask         

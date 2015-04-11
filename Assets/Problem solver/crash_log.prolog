@@ -2,6 +2,16 @@
 %% Saving of crash logs and other logs of problem solver tasks
 %%
 
+%% maybe_log_task(+Task)
+% Adds Task to current task concern's log, provided it's "worth" logging.
+% Doesn't bother to log the first level of match failure or comma expressions.
+maybe_log_task( (_, _) ) :- !.
+maybe_log_task(resolve_match_failure(X)) :-
+   X \= resolve_match_failure(_),
+   !.
+maybe_log_task(Task) :-
+   assert($task/log/Task).
+
 %% save_task_logs(+Character, +TopLevelGoal)
 % Tasks for Character that involve TopLevelGoal should be logged.
 :- external save_task_logs/2.
@@ -69,7 +79,8 @@ fkey_command(alt-leftarrow, "Show logs for previous character") :-
    update_crash_log_display.
 
 current_log_character(C) :-
-   $global_root/gui_state/current_log_character:C.
+   $global_root/gui_state/current_log_character:C,
+   !.
 current_log_character(C) :-
    character(C),
    assert($global_root/gui_state/current_log_character:C).
@@ -90,7 +101,8 @@ fkey_command(alt-uparrow, "Show previous log for this character") :-
    update_crash_log_display.
 
 current_log_uid(U) :-
-   $global_root/gui_state/current_log_uid:U, !.
+   $global_root/gui_state/current_log_uid:U,
+   !.
 current_log_uid(U) :-
    current_log_character(C),
    $global_root/logs/C/U,

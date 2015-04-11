@@ -45,10 +45,13 @@ on_event(die(Partner),
 	 kill_concern(C)) :-
    C/partner/Partner.
 
-% KLUGE: when polling for actions, check if the conversation is idle, and if so try to say something.
+% KLUGE: when polling for actions, check if the conversation is idle,
+% and if so try to say something.
 propose_action(_, conversation, C) :-
    conversation_is_idle(C),
-   conversation_handler_task(C, say_something),
+   C/partner/Who,
+   conversation_idle_task(Who, Task),
+   conversation_handler_task(C, Task),
    fail.
 
 currently_in_conversation :-

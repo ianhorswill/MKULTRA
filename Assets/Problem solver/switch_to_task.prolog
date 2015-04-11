@@ -7,7 +7,7 @@
 
 switch_to_task(Task) :-
    % This clause just logs Task and fails over to the next clause.
-   assert($task/log/Task),
+   maybe_log_task(Task),
    emit_grain("task", 10),
    trace_task($me, Task),
    ($task/current:CurrentStep ->

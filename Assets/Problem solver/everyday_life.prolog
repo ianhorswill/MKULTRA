@@ -15,7 +15,11 @@ character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
 
 normalize_task(work_on_everyday_life_task(T),
 	       begin(call(set_concern_status($task, T)),
-		     T)).
+		     % Spawn it as a subtask and wait for it.
+		     % Spawning it means that if it crashes, it doesn't take the
+		     % parent task with it, and that the task gets its own separate
+		     % crash log for debugging.
+		     cobegin(T))).
 
 everyday_life_task(TaskConcern) :-
    concern(TaskConcern, task),
