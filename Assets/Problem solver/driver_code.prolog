@@ -60,6 +60,7 @@ poll_task_action(T, exiting, _) :-
 	 log($me:polling_task_that_already_exited(T, Goal)),
 	 save_log(T, "task killed twice"),
 	 kill_task(T)).
+poll_task_action(_, breakpoint, _).  % do nothing.
 poll_task_action(T, A, ActionNode) :-
    % Check if the task is in the middle of an action.
    call_with_step_limit(10000, ((ActionNode:action) -> poll_action(T, A))).

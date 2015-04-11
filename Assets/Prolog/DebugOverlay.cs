@@ -47,11 +47,15 @@ namespace Prolog
 
                 case EventType.keyDown:
                     if (Event.current.keyCode == KeyCode.Escape)
-                        text = null;
+                        Hide();
                     break;
             }
 
         }
+
+	public void Hide() {
+	    text=null;
+	}
 
         public void UpdateText(object payload)
         {

@@ -61,6 +61,7 @@ immediate_builtin(let(_,_)).
 polled_builtin(wait_condition(_)).
 polled_builtin(wait_event(_)).
 polled_builtin(wait_event(_,_)).
+polled_builtin(breakpoint).
 
 %% strategy(+Task, -CandidateStrategy)
 %  CandidateStrategy is a possible way to solve Task.

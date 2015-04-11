@@ -53,7 +53,10 @@ switch_to_task(let(BindingCode, Task)) :-
       switch_to_task(Task)
       ;
       throw(let_failed(let(BindingCode, Task))).
-
+switch_to_task(breakpoint) :-
+   !,
+   assert($task/current:breakpoint),
+   display_task_debugger.
 % All other primitive tasks
 switch_to_task(B) :-
    polled_builtin(B),

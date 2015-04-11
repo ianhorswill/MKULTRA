@@ -49,6 +49,10 @@ display_as_overlay(Stuff) :-
    begin(component_of_gameobject_with_type(Overlay, _, $'DebugOverlay'),
 	 call_method(Overlay, updatetext(Stuff), _)).
 
+hide_overlay :-
+   begin(component_of_gameobject_with_type(Overlay, _, $'DebugOverlay'),
+	 call_method(Overlay, hide, _)).
+
 :- higher_order generate_overlay(0, 1, 0).
 generate_overlay(Title, Generator, Template) :-
    all(Template, Generator, Lines),
