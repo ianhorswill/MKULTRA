@@ -325,6 +325,7 @@ namespace Prolog
                 Key = key;
                 this.Children.Clear();
                 mode = ExclusionMode.Empty;
+   
             }
         }
 

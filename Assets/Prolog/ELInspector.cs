@@ -12,6 +12,7 @@ namespace Prolog
         public Rect WindowRect = new Rect(0, 0, 640, 480);
         public bool ShowInspector = true;
         public GUIStyle Style = new GUIStyle();
+        public KeyCode ActivationKey = KeyCode.F2;	//Key used to show/hide inspector
         #endregion
 
         #region Private fields and properties
@@ -36,9 +37,8 @@ namespace Prolog
 
         internal void Start()
         {
-            this.SetKB(this.KnowledgeBase());
+            this.SetKB(this.GetComponent<PrologConsole>().DefaultGameObject.KnowledgeBase());
             ID = IDCount++;
-            WindowTitle = name+" KB";
             viewHeight = WindowRect.height;
         }
 
@@ -46,6 +46,7 @@ namespace Prolog
         {
             root = kb.ELRoot;
             displayChildren.Add(root);
+            WindowTitle = kb.Name + " KB";
         }
 
         private bool mouseClicked;
@@ -62,6 +63,13 @@ namespace Prolog
                 case EventType.mouseDown:
                     mouseClicked = true;
                     mouseClickY = Event.current.mousePosition.y - WindowRect.y;
+                    break;
+
+                case EventType.KeyUp:
+                    if (Event.current.keyCode == ActivationKey)
+                    {
+                        this.ShowInspector = !this.ShowInspector;
+                    }
                     break;
             }
         }

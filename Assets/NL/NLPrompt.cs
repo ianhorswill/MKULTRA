@@ -1,6 +1,4 @@
-﻿using System;
-
-using Prolog;
+﻿using Prolog;
 using UnityEngine;
 
 // ReSharper disable once InconsistentNaming
@@ -71,14 +69,6 @@ public class NLPrompt : BindingBehaviour
     {
         this.lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
         this.lastPlayerActivity.StoreExclusive(-1, true);
-
-        var theCamera = Camera.main;
-        var bottomOfUI = Math.Min(InputRect.yMin, Math.Min(CommentaryRect.yMin, ResponseRect.yMin));
-        var r = theCamera.pixelRect;
-        r.height -= bottomOfUI + 50;
-        theCamera.pixelRect = r;
-        FindObjectOfType<TileMap>().UpdateCamera(theCamera);
-        Tile.UpdateTileSize(theCamera);
     }
 
     /// <summary>

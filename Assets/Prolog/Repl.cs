@@ -57,6 +57,10 @@ namespace Prolog
         /// TextWriter for writing output
         /// </summary>
         public TextWriter Output { get; set; }
+        /// <summary>
+        /// Callback for when KB is changed from one gameobject to another
+        /// </summary>
+        public Action<KnowledgeBase> OnChangeKB;
 
         /// <summary>
         /// Outputs a newline to the current repl's output stream.
@@ -96,7 +100,7 @@ namespace Prolog
             try
             {
                 string[] parsed = command.Split();
-                switch ((parsed.Length > 0) ? parsed[0] : "")
+                switch ((parsed.Length > 0) ? parsed[0].Trim(new [] {'.'}) : "")
                 {
                     case "quit":
                     case "exit":
@@ -174,6 +178,8 @@ namespace Prolog
         private void SwitchComponents(string command)
         {
             var gameObjectName = command.Replace("within", "").Trim();
+            if (gameObjectName.EndsWith("."))
+                gameObjectName = gameObjectName.Substring(0, gameObjectName.Length - 1);
             if (gameObjectName == "global")
                 gameObjectName = "GlobalKB";
             var newGameObject = GameObject.Find(gameObjectName);
@@ -193,9 +199,8 @@ namespace Prolog
             CurrentGameObject = newGameObject;
             PrologContext.KnowledgeBase = kb.KnowledgeBase;
             PrologContext.Reset(CurrentGameObject);
-            var eli = UnityEngine.Object.FindObjectOfType<ELInspector>();
-            if (eli != null)
-                eli.SetKB(kb.KnowledgeBase);
+            if (OnChangeKB != null)
+                OnChangeKB(kb.KnowledgeBase);
             Output.WriteLine("Now using the KB of {0}", gameObjectName);
         }
 

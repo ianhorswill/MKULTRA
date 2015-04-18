@@ -12,15 +12,23 @@ namespace Prolog
 
         internal override void Start()
         {
-            //Header = "Prolog REPL";
-            WindowTitle = "Prolog console";
             base.Start();
             repl = new Repl {
                        Output = Out,
-                       CurrentGameObject = DefaultGameObject??gameObject
+                       CurrentGameObject = DefaultGameObject??gameObject,
+                       OnChangeKB = KBChanged
                    };
+            WindowTitle = "Prolog console: " + repl.CurrentKnowledgeBase.Name;
             Prolog.TraceOutput = Out;
             PrologChecker.Check();
+        }
+
+        void KBChanged(KnowledgeBase newKB)
+        {
+            var eli = FindObjectOfType<ELInspector>();
+            if (eli != null)
+                eli.SetKB(newKB);
+            WindowTitle = "Prolog console: " + newKB.Name;
         }
 
         protected override void Run(string command)
