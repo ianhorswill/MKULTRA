@@ -6,11 +6,15 @@
 
 %% on_event(+Event, +Type, +Concern, -Handler)
 %  Handler is the handler specified by Concern for Event, Type is Concern's type.
+%  Important: on_event is not an imperative.  Rules for on_event should not
+%  change the character's state.  However, the purpose of on_event is to generate
+%  the list of handlers, and handlers are by definition imperatives.  Put your
+%  state changes in the handlers, not in on_event.
 :- external on_event/4.
 :- higher_order on_event(0, 0, 0, 1).
 
 %% log_events(+Event)
-%  Occurances of Event should be logged.
+%  True if occurances of Event should be logged.
 :- external log_events/1.
 
 %% notify_event(+Event)
@@ -26,7 +30,8 @@ notify_event(Event) :-
 	    Handlers),
     maybe_log_event(Event, Handlers),
     forall(member(Handler, Handlers),
-	   (Handler -> true ; log(handler_failed(Handler)))).
+	   unless(Handler,
+		  log(handler_failed(Handler)))).
 
 %% event_handler(+Event, ?Type, ?Concern, -Handler)
 %  Handler is Concern's handler for some construal of Event

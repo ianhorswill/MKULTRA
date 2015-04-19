@@ -36,6 +36,7 @@ concern_status(Concern, Status) :-
    Concern/status:Status.
 
 %% set_concern_status(+Concern, +Status)
+%  IMPERATIVE
 %  Update's concern's status field.
 set_concern_status(Concern, Status) :-
    assert(Concern/status:Status).
@@ -54,13 +55,15 @@ begin_concern(Type, Priority) :-
 
 %% begin_concern(+Type, +Priority, -Child)
 %  IMPERATIVE
-%  Creates a new concern of type Type at top level and returns its ELNode in Child.
+%  Creates a new concern of type Type at top level and returns its ELNode
+%  in Child.
 begin_concern(Type, Priority, Child) :-
     begin_child_concern($root, Type, Priority, Child).
 
 %% begin_child_concern(+Parent, +Type, Priority, -Child, +Assertions)
 %  IMPERATIVE
-%  Creates a new concern of type Type as a child of Parent, and returns its ELNode in Child.
+%  Creates a new concern of type Type as a child of Parent, and returns its
+%  ELNode in Child.
 %  Adds Assertions to its ELNode.
 begin_child_concern(Parent, Type, Priority, Child, Assertions) :-
     begin(allocate_UID(ChildUID),
@@ -73,7 +76,8 @@ begin_child_concern(Parent, Type, Priority, Child, Assertions) :-
 
 %% begin_child_concern(+Parent, +Type, +Priority, -Child)
 %  IMPERATIVE
-%  Creates a new concern of type Type as a child of Parent, and returns its ELNode in Child.
+%  Creates a new concern of type Type as a child of Parent, and returns its
+%  ELNode in Child.
 begin_child_concern(Parent, Type, Priority, Child) :-
     begin_child_concern(Parent, Type, Priority, Child, [ ]).
 
@@ -84,6 +88,7 @@ begin_child_concern(Parent, Type, Priority, Child) :-
 :- public kill_concern/1.
 
 %% kill_concern(+Concern)
+%  IMPERATIVE
 %  Kills concern and all its children.
 %  Calls on_kill/2 on it before deletion.
 kill_concern(Concern) :-
@@ -93,6 +98,7 @@ kill_concern(Concern) :-
 	  retract(Concern)).
 
 %% kill_children(+Concern)
+%  IMPERATIVE
 %  Calls kill_concern/1 on all children of Concern.
 
 :- public kill_children/1.
@@ -113,6 +119,7 @@ kill_children(Concern) :-
 %%
 
 %% goto_state(+Concern, +State)
+%  IMPERATIVE
 %  Switches Concern to State, running entry/exit handlers as appropriate.
 
 :- public goto_state/2.

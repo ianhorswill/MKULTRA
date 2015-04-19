@@ -20,7 +20,8 @@
 :- external action_score/4.
 
 %% next_action(-Action) is det
-%  Action is the highest rated action available, or sleep if no available actions.
+%  Action is the highest rated action available, or sleep if no available
+%  actions.
 %  Called by SimController component's Update routine.
 next_action(Action) :-
    poll_tasks,
@@ -47,6 +48,8 @@ action_score(Action, TotalScore) :-
 	    score_action(Action, Type, Concern, Score) ),
 	  TotalScore).
 
+% Debugging tool
+% Prints proposed actions and their scores
 actions :-
    findall(S-A,
 	   ( available_action(A), 
@@ -55,4 +58,6 @@ actions :-
    keysort(Unsorted, Sorted),
    reverse(Sorted, Reversed),
    forall(member(Score-Action, Reversed),
-	  ( write(Action), write("\t"), writeln(Score) )).
+	  begin(write(Action),
+		write("\t"),
+		writeln(Score))).

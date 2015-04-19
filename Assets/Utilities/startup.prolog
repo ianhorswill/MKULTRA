@@ -1,19 +1,29 @@
+%%%
+%%% Utilities involved in loading the KB and lexicon
+%%%
+
 :- public load_csv_row/2.
 :- public begin_csv_loading/1, end_csv_loading/1.
 :- external begin_csv_loading/1, end_csv_loading/1.
 
-%% Figure out who the player character is and stash it in the global name $player_character.
-:- component_of_gameobject_with_type(_Component, PC, $'NLPrompt'),
-   indexical(player_character=PC).
-
+%% load_csv_row(+RowNumber, +RowData)
+%  IMPERATIVE
+%  Called for each row of a CSV file when it's loaded.  RowData
+%  is a structure whose functor is the name of the file (w/o
+%  extension and whose arguments are the data from the row's
+%  columns.
+%
+%  If there's a load_special_csv_row rule that matches the RowData,
+%  it's allowed to process the row.  Otherwise the RowData is
+%  asserted into the KB as a fact.
 load_csv_row(Row, Assertion) :-
    load_special_csv_row(Row, Assertion).
 load_csv_row(_, Assertion) :-
    assertz(Assertion).
 
-:- public register_all_lexical_items/2.
 %% register_all_lexical_items(?ListTemplate, :Generator)
 %  Registers all the lexical items from ListTemplate for each solution of Generator.
+:- public register_all_lexical_items/2.
 register_all_lexical_items(ListTemplate, Generator) :-
    forall(Generator,
 	  register_lexical_items(ListTemplate)).

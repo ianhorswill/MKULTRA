@@ -1,3 +1,7 @@
+%%%
+%%% Misc useful data structures and data structure algorithms
+%%%
+
 :- public list_to_array/2, array_member/2, topological_sort/3.
 
 list_to_array(List, Array) :-

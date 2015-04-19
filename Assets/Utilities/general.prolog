@@ -31,6 +31,9 @@ thaw(X) :-
 
 test_file(freeze(_), "Utilities/freeze_tests").
 
+%% if(:Condition, :Then, :Else)
+%  CONTROL FLOW OPERATOR FOR IMPERATIVES
+%  Runs Then if Condition is true, else Else.
 :- public if/3.
 :- higher_order if(1,1,1).
 if(C, T, _E) :-
@@ -46,6 +49,7 @@ if(_, _, E) :-
 :- higher_order when(1,1,1,1,1,1).
 
 %% when(?Condition, :Imperatives, ...)
+%  CONTROL FLOW OPERATOR FOR IMPERATIVES
 %  Run Imperatives in order if Condition is true, else do nothing
 when(P, Imperative) :-
    P -> begin(Imperative) ; true.
@@ -67,6 +71,7 @@ when(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
 
 
 %% unless(?Condition, :Imperatives, ...)
+%  CONTROL FLOW OPERATOR FOR IMPERATIVES
 %  Run Imperatives in order unless Condition is true.
 unless(P, Imperative) :-
    P -> true ; begin(Imperative).
@@ -82,8 +87,14 @@ unless(P, Imperative1, Imperative2, Imperative3, Imperative4, Imperative5) :-
 %%
 %% Lambda expressions
 %%
+
+%% reduce(+Lambda, ?Arg, ?Result)
+%  Copies Lambda and beta reduces it.
 reduce(Lambda, Arg, Result) :-
    copy_term(Lambda, Copy),
    reduce_aliasing(Copy, Arg, Result).
 
+%% reduce_aliasing(+Lambda, ?Arg, ?Result)
+%  Reduces Lambda without copying it.  Thus it will cause variables in Lambda itself
+%  to become instantiated.
 reduce_aliasing(Arg^Result, Arg, Result).

@@ -7,6 +7,8 @@
 
 :- indexical test_name=null, test_options=null, test_body=null, running_tests=false.
 
+%% running_tests
+%  True if the current goal is part of a unit test.
 running_tests :-
    X = $running_tests,
    X.

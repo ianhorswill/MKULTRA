@@ -7,14 +7,18 @@
 :- public register_room/2, register_prop/3, register_character/1.
 
 %% register_room(*Room, *CommonNoun, *Plural)
-%  Add Room to the database, ensuring its singular and plural nouns are registered in the lexicon
+%  IMPERATIVE
+%  Add Room to the database, ensuring its singular and plural nouns are registered in the lexicon.
+%  Called from Start() routine of Room.cs
 register_room(Room, Kind) :-
    assert(declare_value(Room, building, kavis_house)),  %KLUGE
    asserta(location(Room, kavis_house)),
    ensure(declare_kind(Room, Kind)).
 
 %% register_prop(*Prop, *CommonNoun, *Plural, Adjectives)
-%  Add Prop to the database, ensuring its singular and plural nouns are registered in the lexicon
+%  IMPERATIVE
+%  Add Prop to the database, ensuring its singular and plural nouns are registered in the lexicon.
+%  Called from Start() routine of PropInfo.cs
 register_prop(Prop, Kind, Adjectives) :-
    assertion(kind(Kind), prop_has_unknown_kind(Prop, Kind)),
    ensure(prop(Prop)),
@@ -24,11 +28,14 @@ register_prop(Prop, Kind, Adjectives) :-
 	  ignore(initialize_prop(Prop, K))).
 
 %% register_character(*Character)
+%  IMPERATIVE
 %  Add Character to database.
+%  Called from Start() routine of SimController.cs
 register_character(Character) :-
    ensure(character(Character)).
 
 %% ensure(+Fact)
+%  IMPERATIVE
 %  Adds Fact to database, if it is not already there.
 ensure([Functor | Arguments]) :-
    !,
@@ -151,6 +158,7 @@ do_all_character_initializations :-
     (character_initialization, fail) ; true.
 
 %% character_initialization
+%  IMPERATIVE
 %  All rules for this will be called once when the game object receives a Start() message.
 :- external character_initialization/0.
 
@@ -159,6 +167,7 @@ do_all_character_initializations :-
 %%%
 
 %% allocate_UID(UID)
+%  IMPERATIVE
 %  UID is a unique integer not previously allocated within this character.
 allocate_UID(UID) :-
     begin(/next_uid:UID,

@@ -1,7 +1,7 @@
 :- public agent/2, patient/2.
 
 %% agent(+Event, ?Who) is det
-%  True is Who is the agent of Event.
+%  True if Who is the agent of Event.
 %  Assumes agent is first argument.
 agent(player_input(_), _) :-
    !,

@@ -1,3 +1,8 @@
+%%%
+%%% Social_interaction concern
+%%% Waits for someone to say hi and then spawns a conversation concern.
+%%%
+
 standard_concern(social_interaction, 1).
 
 on_event(greet(Speaker, $me),
