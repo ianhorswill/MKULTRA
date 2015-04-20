@@ -15,9 +15,9 @@
 %  Concern, which is of type Type, proposes Action.
 :- external propose_action/3.
 
-%% action_score(+Action, +Type, +Concern, -Score) is nondet
+%% score_action(+Action, +Type, +Concern, -Score) is nondet
 %  Concern (of type Type) assigns Score to Action.
-:- external action_score/4.
+:- external score_action/4.
 
 %% next_action(-Action) is det
 %  Action is the highest rated action available, or sleep if no available

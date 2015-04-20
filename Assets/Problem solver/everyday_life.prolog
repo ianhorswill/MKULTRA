@@ -5,7 +5,8 @@
 %%
 
 character_initialization :-
-   start_task($root, everyday_life, 100, T, [T/repeating_task]).
+   \+ $global_root/configuration/inhibit_concern_initialization,
+   start_task($root, everyday_life, 1, T, [T/repeating_task]).
 
 character_debug_display(Character, line("Pending:\t", Task)) :-
    Character::(/goals/pending_tasks/Task).

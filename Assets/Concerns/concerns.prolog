@@ -148,6 +148,7 @@ goto_state(Concern, State) :-
 %%
 
 character_initialization :-
+   \+ $global_root/configuration/inhibit_concern_initialization,
    forall(character_concern(Type, Priority),
 	  begin_concern(Type, Priority)).
 

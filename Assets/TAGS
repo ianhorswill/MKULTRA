@@ -1,50 +1,59 @@
 
-Characters/Kavi.prolog,112
+/Users/ian/Documents/Unity/MKULTRA/Assets/Characters/Kavi.prolog,112
 pretend_truth_value(12,295
 bedroom_empty :-bedroom_empty37,1034
 intruder(41,1146
 personal_strategy(47,1299
 
-Concerns/be_polite.prolog,57
-score_action(3,34
-on_event(5,80
-propose_action(13,270
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/be_polite.prolog,61
+score_action(11,294
+on_event(13,340
+propose_action(21,530
 
-Concerns/concerns.prolog,279
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/command_line.prolog,71
+do(7,145
+propose_action(19,419
+score_action(22,486
+on_event(26,585
+
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/concerns.prolog,331
 concern(11,126
 descendant_concern_of(23,471
 parent_concern_of(28,626
-begin_concern(40,889
-begin_child_concern(53,1408
-kill_concern(77,2143
-kill_children(88,2390
-goto_state(108,2817
-character_initialization :-character_initialization131,3385
-character_concern(139,3638
+concern_status(35,840
+set_concern_status(41,993
+begin_concern(53,1255
+begin_child_concern(68,1780
+kill_concern(94,2532
+kill_children(106,2793
+goto_state(127,3234
+character_initialization :-character_initialization150,3802
+character_concern(159,4120
 
-Concerns/conversation.prolog,316
-launch_conversation(1,0
-conversation_handler_task(7,244
-conversation_is_idle(13,436
-still_speaking_to_partner(16,538
-partner_still_speaking_to_me(19,588
-on_enter_state(27,789
-on_event(36,1049
-propose_action(49,1351
-currently_in_conversation :-currently_in_conversation54,1475
-in_conversation_with(57,1540
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/conversation.prolog,358
+launch_conversation(18,591
+conversation_handler_task(27,942
+conversation_is_idle(35,1244
+still_speaking_to_partner(40,1464
+partner_still_speaking_to_me(46,1662
+on_enter_state(57,2005
+on_event(66,2291
+propose_action(84,2739
+currently_in_conversation :-currently_in_conversation93,2976
+in_conversation_with(98,3144
+character_debug_display(103,3262
 
-Concerns/event_grammar.prolog,46
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/event_grammar.prolog,46
 next_events(8,180
 admissible_history(18,584
 
-Concerns/patrol.prolog,86
-rebid_patrol(5,30
-on_event(10,190
-on_enter_state(17,360
-patrol_destination(22,500
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/patrol.prolog,88
+on_event(10,266
+on_enter_state(16,453
+patrol_destination(22,658
+rebid_patrol(27,747
 
-Concerns/player_interaction.prolog,109
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/player_interaction.prolog,109
 on_event(5,73
 propose_action(24,547
 player_input_task(29,647
@@ -52,11 +61,11 @@ okay(40,886
 be(41,897
 declare_kind(43,915
 
-Concerns/roles.prolog,29
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/roles.prolog,29
 agent(6,135
 patient(15,346
 
-Concerns/script.prolog,139
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/script.prolog,139
 on_enter_state(3,46
 on_event(9,212
 propose_action(13,324
@@ -64,11 +73,11 @@ script_update(20,488
 script_update_await_list(25,601
 script_history(40,1018
 
-Concerns/social_interaction.prolog,37
-standard_concern(1,0
-on_event(3,42
+/Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/social_interaction.prolog,40
+standard_concern(6,112
+on_event(8,154
 
-Conversation/assertions.prolog,108
+/Users/ian/Documents/Unity/MKULTRA/Assets/Conversation/assertions.prolog,108
 strategy(5,35
 default_strategy(10,259
 heard_hearsay(18,665
@@ -76,7 +85,7 @@ strategy(21,736
 be(29,930
 strategy(33,1011
 
-Conversation/description.prolog,255
+/Users/ian/Documents/Unity/MKULTRA/Assets/Conversation/description.prolog,255
 normalize_task(5,29
 strategy(8,95
 default_strategy(16,428
@@ -88,37 +97,37 @@ interesting_attribute(82,2881
 interesting_property(87,3075
 interesting_relation(96,3423
 
-Conversation/imperatives.prolog,195
+/Users/ian/Documents/Unity/MKULTRA/Assets/Conversation/imperatives.prolog,195
 strategy(5,36
-request_status(9,193
-strategy(26,674
-dialog_task(32,811
-strategy(34,844
-diagnose(43,1163
-default_strategy(46,1251
-strategy(48,1325
-normalize_task(54,1503
-strategy(62,1741
+request_status(9,204
+strategy(26,685
+dialog_task(32,858
+strategy(34,891
+diagnose(43,1222
+default_strategy(46,1310
+strategy(48,1384
+normalize_task(54,1566
+strategy(62,1804
 
-Conversation/introductions.prolog,131
+/Users/ian/Documents/Unity/MKULTRA/Assets/Conversation/introductions.prolog,131
 strategy(5,49
 default_strategy(12,214
 strategy(16,322
 property_relevant_to_purpose(20,370
 relation_relevant_to_purpose(25,562
 
-Conversation/misc_responses.prolog,111
+/Users/ian/Documents/Unity/MKULTRA/Assets/Conversation/misc_responses.prolog,111
 default_strategy(9,113
 strategy(17,263
 default_strategy(55,1485
 strategy(57,1543
 default_strategy(86,2357
 
-Conversation/normalization.prolog,48
+/Users/ian/Documents/Unity/MKULTRA/Assets/Conversation/normalization.prolog,48
 normalize_dialog_act(1,0
 da_normal_form(8,180
 
-Conversation/questions.prolog,132
+/Users/ian/Documents/Unity/MKULTRA/Assets/Conversation/questions.prolog,132
 strategy(6,62
 default_strategy(30,725
 strategy(35,945
@@ -126,26 +135,27 @@ default_strategy(73,2311
 connective_for_answer(86,2851
 strategy(89,2932
 
-Conversation/strategies.prolog,71
+/Users/ian/Documents/Unity/MKULTRA/Assets/Conversation/strategies.prolog,108
 before(3,28
-strategy(7,116
-default_strategy(15,369
-strategy(19,467
+conversation_idle_task(7,116
+strategy(10,217
+conversation_idle_task(19,529
+strategy(24,708
 
-NL/auxverbs.prolog,214
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/auxverbs.prolog,215
 aux(9,211
-aux_without_do_support(20,706
-aux_aspect_future(39,1485
-aux_aspect(51,1996
-aux_gap(64,2436
-aux_perfect(69,2572
-opt_not(75,2759
-modal_aux(83,2878
-aux_do(89,2974
-aux_have(97,3162
-aux_be(106,3396
+aux_without_do_support(22,738
+aux_aspect_future(43,1550
+aux_aspect(55,2061
+aux_gap(68,2501
+aux_perfect(73,2637
+opt_not(79,2824
+modal_aux(87,2943
+aux_do(95,3090
+aux_have(105,3330
+aux_be(116,3618
 
-NL/base_grammar.prolog,254
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/base_grammar.prolog,254
 test_file(1,0
 sentence(4,105
 bind_discourse_variables(27,709
@@ -155,45 +165,42 @@ opt_stop(55,1542
 s(68,1823
 inverted_sentence(184,5692
 s(193,5986
-inverted_sentence(286,9274
-s(295,9591
-ap(349,11288
+inverted_sentence(290,9340
+s(299,9657
+ap(357,11420
 
-NL/base_grammar_test.prolog,45
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/base_grammar_test.prolog,45
 test_options(1,0
 test(4,77
 s_test(57,1898
 
-NL/contractions.prolog,43
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/contractions.prolog,43
 contracted_form(4,197
 contraction(19,841
 
-NL/discourse.prolog,255
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/discourse.prolog,213
 log_dialog_act(7,99
 transcript :-transcript13,276
 fkey_command(17,334
-recent_dialog(49,1298
-normalize_task(63,1495
-strategy(82,2242
-default_strategy(98,2794
-strategy(113,3234
-default_addressee(153,4555
-reduce(163,4671
-reduce_aliasing(167,4770
+recent_dialog(52,1370
+normalize_task(66,1567
+strategy(85,2314
+default_strategy(101,2866
+strategy(116,3306
+default_addressee(156,4627
 
-NL/grammar.prolog,309
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/grammar.prolog,284
 utterance(8,117
 current_dialog_pair(39,1445
 stock_phrase(45,1510
-utterance(108,3597
-discourse_fragments(114,3850
-discourse_fragment(120,3975
-action_functor(142,4617
-register_utterance_types :-register_utterance_types146,4697
-assert_action_functor(153,4891
-add_conversation_dispatch_clause(161,5190
+utterance(121,3894
+discourse_fragments(127,4147
+discourse_fragment(133,4272
+register_utterance_types :-register_utterance_types157,4953
+assert_action_functor(164,5147
+add_conversation_dispatch_clause(172,5446
 
-NL/interface.prolog,484
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/interface.prolog,484
 generate_text(8,234
 input_completion(17,600
 well_formed_dialog_act(29,1144
@@ -207,18 +214,18 @@ input_from_player :-input_from_player83,2627
 player_idle_time(91,2836
 player_idle_for_at_least(95,2928
 
-NL/lexicon.prolog,34
-pronoun_word(7,93
-whpron(20,655
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/lexicon.prolog,34
+pronoun_word(5,61
+whpron(18,623
 
-NL/lf.prolog,124
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/lf.prolog,124
 modalized(8,158
 lf_main_predicate(18,435
 lf_core_predicate(26,667
 lf_subject(56,1431
 lf_core_predicate_subject(62,1566
 
-NL/np.prolog,256
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/np.prolog,256
 test_file(5,43
 impose_selectional_constraint(11,214
 selectional_constraint(14,332
@@ -230,12 +237,12 @@ np(98,2440
 resolve_definite_description(108,2611
 property_value_np(130,3236
 
-NL/np_tests.prolog,47
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/np_tests.prolog,47
 test_options(1,0
 test(8,119
 np_test(87,2400
 
-NL/pdebug.prolog,198
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/pdebug.prolog,198
 pdebug(3,21
 test_nonterminal(7,123
 parse(15,269
@@ -246,7 +253,7 @@ try_completion(45,1069
 run_parser_test(51,1291
 nonterminal_args(60,1669
 
-NL/player_help.prolog,172
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/player_help.prolog,172
 normalize_task(1,0
 strategy(10,383
 player_question(29,1204
@@ -256,13 +263,13 @@ strategy(34,1363
 player_question(43,1773
 strategy(44,1820
 
-NL/pp.prolog,80
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/pp.prolog,80
 opt_pp(16,700
 generator_pp(24,962
 parser_opt_pp(37,1507
 preposition(48,1863
 
-NL/preterminals.prolog,294
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/preterminals.prolog,294
 proper_name(9,189
 pronoun(12,257
 whpron(18,430
@@ -276,17 +283,17 @@ end_csv_loading(127,4255
 check_lexicon_typing(130,4363
 check_lexical_entry_type(134,4457
 
-NL/vp.prolog,57
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/vp.prolog,57
 test_file(3,35
 copula(13,334
 aux_vp(21,559
 vp(31,870
 
-NL/vp_tests.prolog,27
+/Users/ian/Documents/Unity/MKULTRA/Assets/NL/vp_tests.prolog,27
 test(5,21
 vp_test(46,966
 
-Norms/dprolog.prolog,267
+/Users/ian/Documents/Unity/MKULTRA/Assets/Norms/dprolog.prolog,267
 strict_der(41,805
 def_der(76,1928
 dprolog_treat_as_primitive(99,2633
@@ -301,22 +308,22 @@ def_rule(270,7696
 preempted(286,8072
 preempt :-preempt320,9014
 
-Norms/dputils.prolog,77
+/Users/ian/Documents/Unity/MKULTRA/Assets/Norms/dputils.prolog,77
 dlisting(78,1659
 dfunctor(132,3029
 rule_functor(145,3343
 pprint(163,3789
 
-Norms/ethics.prolog,68
+/Users/ian/Documents/Unity/MKULTRA/Assets/Norms/ethics.prolog,68
 immoral(2,70
 murder(5,109
 incompatible(26,571
 possession(30,644
 
-Ontology/container.prolog,22
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/container.prolog,22
 initialize_prop(6,97
 
-Ontology/csv_loading.prolog,370
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/csv_loading.prolog,370
 load_special_csv_row(10,146
 assert_default_description(45,1498
 decode_kind_name(49,1643
@@ -331,14 +338,14 @@ load_special_csv_row(136,4376
 assert_description(150,4971
 parse_list(154,5104
 
-Ontology/food_drink.prolog,22
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/food_drink.prolog,22
 initialize_prop(4,44
 
-Ontology/hypno.prolog,60
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/hypno.prolog,60
 hypnotically_believe(9,234
 hypnotically_believable(22,545
 
-Ontology/integrity_checks.prolog,140
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/integrity_checks.prolog,140
 known_object(1,0
 known_type(6,91
 known_property(17,293
@@ -346,10 +353,10 @@ known_relation(20,382
 test(23,471
 lambda_contains_undefined_predicate(158,5583
 
-Ontology/kinds.prolog,23
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/kinds.prolog,23
 immediate_kind_of(1,0
 
-Ontology/knowledge_representation.prolog,555
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/knowledge_representation.prolog,555
 test_file(15,452
 is_a(31,813
 is_a_aux(54,1528
@@ -375,23 +382,23 @@ related(257,7647
 decendant_relation(274,8278
 ancestor_relation(279,8389
 
-Ontology/person.prolog,130
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/person.prolog,130
 adjectival_property(1,0
 nominal_property(2,29
 valid_property_value(3,52
 adjectival_property(5,104
 valid_property_value(6,130
 
-Ontology/physical_object.prolog,136
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/physical_object.prolog,136
 location(1,0
 unique_answer(10,228
 incompatible(14,300
 in_room(18,366
 top_level_container(22,450
 contained_in(31,707
-room(48,1231
+room(49,1237
 
-Ontology/type_check.prolog,218
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/type_check.prolog,218
 possible_types_given_constraint(3,122
 variable_type_given_constraint(10,394
 well_typed(17,631
@@ -400,67 +407,108 @@ copy_list_as_variables(68,2535
 variable_well_typed(72,2649
 lookup_variable_type(87,3229
 
-Problem solver/driver_code.prolog,252
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/crash_log.prolog,378
+maybe_log_task(8,248
+maybe_save_log(22,683
+save_task_logs(27,846
+save_log(31,948
+fkey_command(39,1243
+update_crash_log_display :-update_crash_log_display42,1317
+task_log_line(54,1691
+fkey_command(66,2249
+current_log_character(81,2897
+fkey_command(88,3087
+current_log_uid(103,3668
+adjacent_in_list_circular(111,3872
+adjacent_in_list(115,4055
+last_element(119,4199
+
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/debugger.prolog,153
+display_task_debugger :-display_task_debugger1,0
+debugger_line(6,127
+fkey_command(17,436
+continue_from_breakpoint :-continue_from_breakpoint22,570
+
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/driver_code.prolog,343
 poll_tasks :-poll_tasks8,130
-poll_task(15,316
-poll_action(27,576
-poll_builtin(31,691
-bind_default_task_indexicals :-bind_default_task_indexicals39,937
-propose_action(47,1070
-score_action(50,1124
-on_event(55,1212
-wait_event_completed(59,1326
+poll_task(19,432
+poll_task_action(28,651
+poll_action(71,2460
+poll_builtin(75,2575
+bind_default_task_indexicals :-bind_default_task_indexicals86,2887
+propose_action(94,3020
+score_action(97,3074
+on_event(102,3162
+task_waiting_for(105,3242
+wait_event_completed(109,3333
+character_debug_display(121,3600
 
-Problem solver/everyday_life.prolog,538
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/everyday_life.prolog,599
 character_initialization :-character_initialization7,81
-everyday_life_task(10,175
-restart_everyday_life_task :-restart_everyday_life_task14,282
-strategy(18,359
-add_pending_task(22,442
-strategy(25,507
-unsatisfied_maintenance_goal(31,668
-strategy(35,737
-default_strategy(40,874
-everyday_life_polling_time(46,1039
-maintenance_goal(49,1118
-hungry(53,1196
-maintenance_goal(56,1270
-thirsty(57,1303
-maintenance_goal(60,1381
-tired(61,1412
-maintenance_goal(64,1482
-dirty(65,1513
-maintenance_goal(68,1583
-full_bladder(69,1621
+character_debug_display(11,240
+normalize_task(17,479
+everyday_life_task(25,816
+restart_everyday_life_task :-restart_everyday_life_task29,923
+strategy(33,1000
+add_pending_task(37,1116
+strategy(40,1181
+unsatisfied_maintenance_goal(46,1370
+strategy(50,1439
+default_strategy(55,1604
+everyday_life_polling_time(62,1848
+maintenance_goal(65,1927
+hungry(69,2005
+maintenance_goal(72,2079
+thirsty(73,2112
+maintenance_goal(76,2190
+tired(77,2221
+maintenance_goal(80,2291
+dirty(81,2322
+maintenance_goal(84,2392
+full_bladder(85,2430
 
-Problem solver/general_strategies.prolog,563
-strategy(7,150
-unachievable(32,641
-strategy(34,667
-task_precondition(69,1311
-strategy(72,1378
-after(93,1947
-normalize_task(101,2060
-task_interacts_with_objects(105,2229
-guard_condition(108,2335
-normalize_task(116,2485
-strategy(121,2639
-after(134,3108
-before(138,3178
-strategy(142,3274
-default_strategy(171,4345
-nearest_unsearched(182,4736
-unsearched(186,4839
-reveal_hidden_item(193,5021
-previously_hidden(202,5300
-strategy(209,5409
-postcondition(211,5445
-strategy(217,5570
-postcondition(219,5608
-self_achieving(225,5742
-strategy(231,5817
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/general_strategies.prolog,888
+strategy(7,169
+unachievable(36,713
+strategy(38,739
+default_strategy(50,909
+normalize_task(53,1003
+strategy(65,1219
+precondition(88,1728
+strategy(91,1792
+after(112,2361
+normalize_task(120,2474
+task_interacts_with_objects(124,2643
+guard_condition(127,2749
+normalize_task(135,2899
+strategy(140,3053
+after(153,3522
+before(157,3592
+strategy(161,3688
+default_strategy(190,4759
+nearest_unsearched(201,5150
+unsearched(205,5253
+reveal_hidden_item(212,5435
+previously_hidden(221,5714
+strategy(228,5823
+postcondition(230,5859
+strategy(236,5984
+postcondition(238,6022
+self_achieving(244,6156
+strategy(250,6231
+ready_to_hand(267,6512
+strategy(272,6613
+precondition(275,6688
+strategy(277,6753
+precondition(282,6916
+strategy(284,6978
+normalize_task(293,7182
+retract_on_restart(296,7289
+default_strategy(303,7416
+spawn_child_task(307,7511
+default_strategy(311,7610
 
-Problem solver/integrity_checks.prolog,202
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/integrity_checks.prolog,202
 build_reduction_cross_reference :-build_reduction_cross_reference1,0
 reduction_clause(6,170
 assert_reductions(15,440
@@ -469,52 +517,61 @@ bad_reduction(49,1261
 primitive_task(55,1425
 test(60,1539
 
-Problem solver/metastrategies.prolog,90
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/invoke_continuation.prolog,247
+step_completed :-step_completed3,84
+invoke_continuation(15,434
+restart_or_kill_task :-restart_or_kill_task26,732
+kill_task(34,915
+restart_task(41,1068
+perform_restart_retractions(48,1348
+retract_on_restart(52,1465
+interrupt_step(61,1684
+
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/metastrategies.prolog,90
 default_strategy(6,76
 strategy(20,437
 preferred_strategy(34,820
 max_preference(37,925
 
-Problem solver/problem_solver.prolog,444
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/problem_solver.prolog,176
 test_file(5,65
-start_task(19,525
-within_task(44,1381
-primitive_task(49,1510
-builtin_task(51,1563
-immediate_builtin(53,1627
-polled_builtin(61,1864
-switch_to_task(82,2607
-fail_task(150,4533
-switch_to_task(158,4824
-have_strategy(168,5155
-step_completed :-step_completed178,5416
-invoke_continuation(190,5766
-restart_task(203,6123
-interrupt_step(215,6491
-unsatisfied_task_precondition(226,6760
-task_precondition_satisfied(230,6872
+start_task(19,529
+within_task(44,1415
+primitive_task(49,1544
+builtin_task(51,1597
+immediate_builtin(53,1661
+polled_builtin(61,1898
+have_strategy(78,2512
 
-Problem solver/ps_tests.prolog,55
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/ps_tests.prolog,55
 strategy(1,0
 ignore_undeclared_task(5,49
 test(8,110
 
-Problem solver/task_reduction.prolog,384
-task_reduction(5,25
-reduce_canonical_form(8,158
-selected_reduction_with_before_after(16,445
-selected_reduction(28,844
-canonical_form_of_task(38,1110
-normalize_task(48,1309
-matching_strategies(106,3141
-matching_strategy(113,3309
-show_decomposition(125,3652
-show_decomposition_aux(130,3769
-commafy_task_list(147,4255
-append_task_lists(152,4432
-reduce_to_primitive(158,4646
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/switch_to_task.prolog,177
+switch_to_task(8,251
+fail_task(81,2208
+switch_to_task(89,2496
+switch_to_canonical_task(93,2595
+unsatisfied_task_precondition(106,2894
+task_precondition_satisfied(110,3001
 
-Script/demo_level.prolog,513
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/task_reduction.prolog,385
+task_reduction(7,58
+reduce_canonical_form(10,191
+selected_reduction_with_before_after(18,478
+selected_reduction(30,877
+canonical_form_of_task(41,1179
+normalize_task(57,1580
+matching_strategies(115,3406
+matching_strategy(122,3574
+show_decomposition(134,3917
+show_decomposition_aux(139,4034
+commafy_task_list(156,4520
+append_task_lists(161,4697
+reduce_to_primitive(167,4911
+
+/Users/ian/Documents/Unity/MKULTRA/Assets/Script/demo_level.prolog,513
 beat(5,29
 beat_start_task(6,47
 beat_dialog(9,98
@@ -527,198 +584,208 @@ beat_delay(42,863
 beat_follows(43,901
 beat_completion_condition(44,949
 beat_idle_task(47,1084
-after(51,1178
-beat(58,1261
-beat_priority(59,1288
-beat_precondition(60,1327
-beat_monolog(62,1404
-beat(72,1590
-beat_priority(73,1620
-beat_precondition(74,1662
-beat_monolog(76,1745
-beat(85,1870
-beat_priority(86,1890
-beat_precondition(87,1922
-beat_monolog(89,2001
+after(54,1285
+beat(61,1368
+beat_priority(62,1395
+beat_precondition(63,1434
+beat_monolog(65,1511
+beat(75,1697
+beat_priority(76,1727
+beat_precondition(77,1769
+beat_monolog(79,1852
+beat(88,1977
+beat_priority(89,1997
+beat_precondition(90,2029
+beat_monolog(92,2108
 
-Scripting/beat_manager.prolog,1057
-dialog_task_advances_current_beat(36,1305
-dialog_task_advances_beat(45,1651
-can_perform_beat_task(53,1918
-incomplete_beat_task_from_list(59,2041
-beat_dialog_with(69,2482
-my_beat_idle_task(77,2796
-next_beat_monolog_task(86,3072
-monolog_task(93,3292
-beat_waiting_for_timeout :-beat_waiting_for_timeout105,3558
-current_beat(119,3913
-set_current_beat(128,4152
-beat_state(135,4340
-set_beat_state(137,4407
-beat_running_time(140,4487
-beat_running_for_at_least(144,4581
-best_next_beat(154,4759
-select_new_beat(162,4940
-available_beat(169,5142
-runnable_beat(176,5306
-beat_requirement(180,5374
-beat_score(189,5737
-start_beat(192,5818
-interrupt_beat(199,6036
-check_beat_completion :-check_beat_completion204,6218
-end_beat :-end_beat209,6333
-test_file(216,6514
-standard_concern(223,6626
-on_event(225,6668
-plot_point(244,7113
-react_to_plot_event(251,7360
-maybe_interrupt_current_beat :-maybe_interrupt_current_beat256,7487
-fkey_command(267,7797
-beat_info(277,8041
-unsatisfied_beat_precondition(290,8468
-beat_display_color(294,8551
+/Users/ian/Documents/Unity/MKULTRA/Assets/Scripting/beat_manager.prolog,1099
+dialog_task_with_partner_advances_current_beat(32,1080
+potential_beat_dialog(40,1378
+can_perform_beat_task(45,1548
+incomplete_beat_task_from_list(51,1671
+beat_dialog_with(61,2112
+my_beat_idle_task(69,2426
+next_beat_monolog_task(78,2702
+monolog_task(85,2922
+beat_waiting_for_timeout :-beat_waiting_for_timeout97,3188
+current_beat(111,3543
+set_current_beat(120,3782
+beat_state(126,3951
+set_beat_state(128,4018
+beat_running_time(131,4098
+beat_running_for_at_least(135,4192
+best_next_beat(145,4370
+select_new_beat(153,4551
+available_beat(160,4753
+runnable_beat(167,4917
+beat_requirement(171,4985
+beat_score(180,5348
+start_beat(183,5429
+interrupt_beat(190,5647
+check_beat_completion :-check_beat_completion195,5829
+end_beat :-end_beat200,5944
+test_file(206,6101
+standard_concern(213,6213
+on_event(215,6255
+plot_point(234,6700
+react_to_plot_event(241,6947
+maybe_interrupt_current_beat :-maybe_interrupt_current_beat246,7074
+fkey_command(257,7384
+beat_info(267,7628
+unsatisfied_beat_precondition(280,8055
+beat_display_color(284,8138
+character_debug_display(291,8501
 
-Scripting/beat_task_crossrefs.prolog,53
+/Users/ian/Documents/Unity/MKULTRA/Assets/Scripting/beat_task_crossrefs.prolog,53
 reduction_clause(1,0
 ignore_undeclared_task(23,649
 
-Scripting/quip_manager.prolog,39
+/Users/ian/Documents/Unity/MKULTRA/Assets/Scripting/quip_manager.prolog,39
 strategy(7,183
 normalize_task(12,302
 
-Sims/action_selection.prolog,115
-next_action(25,836
-best_action(30,922
-available_action(39,1198
-action_score(43,1296
-actions :-actions50,1509
+/Users/ian/Documents/Unity/MKULTRA/Assets/Sims/action_selection.prolog,115
+next_action(26,839
+best_action(31,925
+available_action(40,1201
+action_score(44,1299
+actions :-actions53,1572
 
-Sims/actions.prolog,358
-action(30,580
-runnable(47,948
-blocking(52,1121
-action_functor(60,1246
-precondition(61,1273
-postcondition(65,1362
-action_functor(68,1414
-precondition(69,1442
-postcondition(73,1572
-action_functor(77,1660
-precondition(79,1712
-postcondition(84,1843
-action_functor(87,1889
-true_after(91,1946
-follows_from(97,2133
-inferrable_postcondition(111,2419
+/Users/ian/Documents/Unity/MKULTRA/Assets/Sims/actions.prolog,352
+action(7,137
+action_functor(35,761
+precondition(36,788
+postcondition(40,877
+action_functor(43,929
+precondition(44,957
+postcondition(48,1087
+action_functor(52,1175
+precondition(54,1227
+postcondition(59,1358
+action_functor(62,1404
+runnable(68,1528
+blocking(73,1701
+true_after(79,1868
+follows_from(85,2055
+inferrable_postcondition(99,2341
 
-Sims/events.prolog,107
-notify_event(23,580
-event_handler(34,963
-maybe_log_event(43,1296
-construals(67,1893
-construal(73,2111
+/Users/ian/Documents/Unity/MKULTRA/Assets/Sims/events.prolog,108
+notify_event(27,876
+event_handler(39,1260
+maybe_log_event(48,1593
+construals(72,2190
+construal(78,2408
 
-Sims/utilities.prolog,434
-register_room(11,350
-register_prop(18,677
-register_character(28,1020
-ensure(33,1158
-world_object(44,1445
-nearest(49,1619
-elroot(59,1891
-exists(67,2118
-true_location(82,2548
-existing(90,2805
-dead(98,2951
-alive(103,3083
-docked_with(108,3275
-after_time(118,3538
-hidden(125,3603
-reveal(130,3754
-hidden_contents(134,3882
-do_all_character_initializations :-do_all_character_initializations150,4197
-allocate_UID(163,4563
+/Users/ian/Documents/Unity/MKULTRA/Assets/Sims/utilities.prolog,435
+register_room(13,407
+register_prop(22,795
+register_character(34,1203
+ensure(40,1355
+world_object(51,1642
+nearest(56,1816
+elroot(66,2088
+exists(74,2315
+true_location(89,2745
+existing(97,3002
+dead(105,3148
+alive(110,3280
+docked_with(115,3472
+after_time(125,3735
+hidden(132,3800
+reveal(137,3951
+hidden_contents(141,4079
+do_all_character_initializations :-do_all_character_initializations157,4394
+allocate_UID(172,4788
 
-Utilities/data_structures.prolog,96
-list_to_array(3,64
-array_member(6,124
-topological_sort(11,301
-topological_sort_recur(14,414
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/data_structures.prolog,98
+list_to_array(7,135
+array_member(10,195
+topological_sort(15,372
+topological_sort_recur(18,485
 
-Utilities/freeze_tests.prolog,10
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/freeze_tests.prolog,10
 test(1,0
 
-Utilities/general.prolog,124
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/general.prolog,178
 arguments_unbound(7,262
 term_append(13,487
 assertion(20,704
 thaw(28,893
 test_file(32,928
-when(38,1133
-unless(53,1843
+if(39,1139
+when(54,1541
+unless(76,2458
+reduce(93,3123
+reduce_aliasing(100,3377
 
-Utilities/graphviz.prolog,76
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/graphviz.prolog,76
 draw_dag(6,78
 identity(20,524
 write_transition(22,540
 gz_command(27,709
 
-Utilities/startup.prolog,103
-load_csv_row(9,325
-assert_phrase_rule(17,607
-assert_proper_name(43,1695
-number_spec_number(58,2229
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/startup.prolog,172
+load_csv_row(19,608
+register_all_lexical_items(27,917
+register_lexical_items(33,1116
+assert_phrase_rule(40,1367
+assert_proper_name(66,2455
+number_spec_number(81,2989
 
-Utilities/test_rig.prolog,595
-running_tests :-running_tests10,273
-run_tests :-run_tests19,462
-test_body(34,915
-run_test(41,1156
-run_test_body(53,1539
-print_test_results(62,1828
-print_exception_test_results(68,2079
-print_nonexception_test_results(77,2522
-check_test_determinism(88,2927
-setup_test(97,3329
-do_test_setup(104,3549
-check_test_success(109,3688
-run_success_test(116,3870
-success_test(128,4224
-test_has_option(138,4407
-all_test_options(143,4632
-call_on_list(151,4949
-deterministic(163,5473
-nonempty_instantiated_atom_list(171,5655
-ensure_tests_loaded(192,6107
-ensure_test_file_loaded(196,6213
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/test_rig.prolog,595
+running_tests :-running_tests12,342
+run_tests :-run_tests21,531
+test_body(36,984
+run_test(43,1225
+run_test_body(55,1608
+print_test_results(64,1897
+print_exception_test_results(70,2148
+print_nonexception_test_results(79,2591
+check_test_determinism(90,2996
+setup_test(99,3398
+do_test_setup(106,3618
+check_test_success(111,3757
+run_success_test(118,3939
+success_test(130,4293
+test_has_option(140,4476
+all_test_options(145,4701
+call_on_list(153,5018
+deterministic(165,5542
+nonempty_instantiated_atom_list(173,5724
+ensure_tests_loaded(194,6176
+ensure_test_file_loaded(198,6282
 
-Utilities/truth_value.prolog,276
-truth_value(6,191
-know_that(14,312
-know_whether(18,355
-know_about_object(31,671
-know_whether(37,788
-know_relation(39,806
-know_property(41,882
-know_about_object(44,957
-admitted_truth_value(52,1092
-consistent_with_pretend_truth_value(66,1578
-and_truth_values(72,1741
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/truth_value.prolog,283
+truth_value(23,800
+know_that(33,979
+know_whether(37,1022
+know_about_object(50,1338
+know_whether(56,1455
+know_relation(58,1473
+know_property(60,1549
+know_about_object(63,1624
+admitted_truth_value(75,2000
+consistent_with_pretend_truth_value(89,2486
+and_truth_values(95,2649
 
-Utilities/unity_stuff.prolog,128
-emit_grain(7,165
-fkey_command(19,441
-display_as_overlay(37,1044
-generate_overlay(42,1237
-generate_unsorted_overlay(47,1430
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/unity_stuff.prolog,271
+examination_content(9,257
+pop_up_examination_content(16,571
+emit_grain(22,783
+fkey_command(34,1059
+display_as_overlay(53,1701
+hide_overlay :-hide_overlay60,1914
+generate_overlay(70,2302
+generate_unsorted_overlay(80,2731
+generate_character_debug_overlay(89,3176
 
-Utilities/why.prolog,51
-why(3,31
-why_not(10,167
-diagnose_failure(20,372
+/Users/ian/Documents/Unity/MKULTRA/Assets/Utilities/why.prolog,53
+why(10,184
+why_not(20,463
+diagnose_failure(30,668
 
-Sims/indexicals.prolog,0
+/Users/ian/Documents/Unity/MKULTRA/Assets/Sims/indexicals.prolog,0
 
-Ontology/tort.prolog,0
+/Users/ian/Documents/Unity/MKULTRA/Assets/Ontology/tort.prolog,0
 
-Characters/pc.prolog,0
+/Users/ian/Documents/Unity/MKULTRA/Assets/Characters/pc.prolog,0
