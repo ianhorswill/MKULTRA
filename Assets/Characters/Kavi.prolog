@@ -35,6 +35,9 @@ pretend_truth_value(Asker,
    
 :- public bedroom_empty/0.
 bedroom_empty :-
+   % Kluge, but I don't have time to refactor this stuff to be nice.
+   $global_root/configuration/inhibit_beat_system
+   ;
    \+ intruder(_Intruder, $bedroom).
 
 % An intruder is a person who isn't an illuminati member

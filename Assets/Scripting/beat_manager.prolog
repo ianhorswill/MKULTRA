@@ -30,6 +30,7 @@
 %%%
 
 dialog_task_with_partner_advances_current_beat(Beat, Partner, Task) :-
+   \+ $global_root/configuration/inhibit_beat_system,
    beat_dialog_with(Beat, Partner, TaskList),
    ( incomplete_beat_task_from_list(Beat, TaskList, T) ->
      can_perform_beat_task(T, Task)
@@ -69,6 +70,7 @@ beat_dialog_with(Beat, Partner, TaskList) :-
 my_beat_idle_task(sleep(1)) :-
    beat_waiting_for_timeout.
 my_beat_idle_task(Task) :-
+   \+ $global_root/configuration/inhibit_beat_system,
    \+ in_conversation_with(_),  % we're not idle if we aren't in conversation
    current_beat(Beat),
    ( next_beat_monolog_task(Beat, Task)
@@ -181,6 +183,7 @@ beat_score(Beat, Score) :-
    beat_priority(Beat, Score) -> true ; (Score = 0).
 
 start_beat(Beat) :-
+   \+ $global_root/configuration/inhibit_beat_system,
    assert($global_root/beats/Beat/start_time: $now),
    forall(beat_start_task(Beat, Who, Task),
 	  Who::add_pending_task(Task)).
@@ -264,6 +267,9 @@ fkey_command(alt-b, "Show beat status") :-
 			     beat_info(I),
 			     I).
 
+beat_info(color("red", line("Beat system disabled."))) :-
+   $global_root/configuration/inhibit_beat_system,
+   !.
 beat_info(color(Color,
 		[ line(Beat, ": "),
 		  line("\tScore: ", Score, "\tState: ", State)

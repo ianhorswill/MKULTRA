@@ -2,8 +2,8 @@
 /Users/ian/Documents/Unity/MKULTRA/Assets/Characters/Kavi.prolog,112
 pretend_truth_value(12,295
 bedroom_empty :-bedroom_empty37,1034
-intruder(41,1146
-personal_strategy(47,1299
+intruder(44,1270
+personal_strategy(50,1423
 
 /Users/ian/Documents/Unity/MKULTRA/Assets/Concerns/be_polite.prolog,61
 score_action(11,294
@@ -443,29 +443,29 @@ task_waiting_for(105,3242
 wait_event_completed(109,3333
 character_debug_display(121,3600
 
-/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/everyday_life.prolog,599
+/Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/everyday_life.prolog,598
 character_initialization :-character_initialization7,81
-character_debug_display(11,240
-normalize_task(17,479
-everyday_life_task(25,816
-restart_everyday_life_task :-restart_everyday_life_task29,923
-strategy(33,1000
-add_pending_task(37,1116
-strategy(40,1181
-unsatisfied_maintenance_goal(46,1370
-strategy(50,1439
-default_strategy(55,1604
-everyday_life_polling_time(62,1848
-maintenance_goal(65,1927
-hungry(69,2005
-maintenance_goal(72,2079
-thirsty(73,2112
-maintenance_goal(76,2190
-tired(77,2221
-maintenance_goal(80,2291
-dirty(81,2322
-maintenance_goal(84,2392
-full_bladder(85,2430
+character_debug_display(11,238
+normalize_task(17,477
+everyday_life_task(25,814
+restart_everyday_life_task :-restart_everyday_life_task29,921
+strategy(33,998
+add_pending_task(37,1114
+strategy(40,1179
+unsatisfied_maintenance_goal(46,1368
+strategy(50,1437
+default_strategy(55,1602
+everyday_life_polling_time(62,1846
+maintenance_goal(65,1925
+hungry(69,2003
+maintenance_goal(72,2077
+thirsty(73,2110
+maintenance_goal(76,2188
+tired(77,2219
+maintenance_goal(80,2289
+dirty(81,2320
+maintenance_goal(84,2390
+full_bladder(85,2428
 
 /Users/ian/Documents/Unity/MKULTRA/Assets/Problem solver/general_strategies.prolog,888
 strategy(7,169
@@ -600,41 +600,41 @@ beat_monolog(92,2108
 
 /Users/ian/Documents/Unity/MKULTRA/Assets/Scripting/beat_manager.prolog,1099
 dialog_task_with_partner_advances_current_beat(32,1080
-potential_beat_dialog(40,1378
-can_perform_beat_task(45,1548
-incomplete_beat_task_from_list(51,1671
-beat_dialog_with(61,2112
-my_beat_idle_task(69,2426
-next_beat_monolog_task(78,2702
-monolog_task(85,2922
-beat_waiting_for_timeout :-beat_waiting_for_timeout97,3188
-current_beat(111,3543
-set_current_beat(120,3782
-beat_state(126,3951
-set_beat_state(128,4018
-beat_running_time(131,4098
-beat_running_for_at_least(135,4192
-best_next_beat(145,4370
-select_new_beat(153,4551
-available_beat(160,4753
-runnable_beat(167,4917
-beat_requirement(171,4985
-beat_score(180,5348
-start_beat(183,5429
-interrupt_beat(190,5647
-check_beat_completion :-check_beat_completion195,5829
-end_beat :-end_beat200,5944
-test_file(206,6101
-standard_concern(213,6213
-on_event(215,6255
-plot_point(234,6700
-react_to_plot_event(241,6947
-maybe_interrupt_current_beat :-maybe_interrupt_current_beat246,7074
-fkey_command(257,7384
-beat_info(267,7628
-unsatisfied_beat_precondition(280,8055
-beat_display_color(284,8138
-character_debug_display(291,8501
+potential_beat_dialog(41,1432
+can_perform_beat_task(46,1602
+incomplete_beat_task_from_list(52,1725
+beat_dialog_with(62,2166
+my_beat_idle_task(70,2480
+next_beat_monolog_task(80,2810
+monolog_task(87,3030
+beat_waiting_for_timeout :-beat_waiting_for_timeout99,3296
+current_beat(113,3651
+set_current_beat(122,3890
+beat_state(128,4059
+set_beat_state(130,4126
+beat_running_time(133,4206
+beat_running_for_at_least(137,4300
+best_next_beat(147,4478
+select_new_beat(155,4659
+available_beat(162,4861
+runnable_beat(169,5025
+beat_requirement(173,5093
+beat_score(182,5456
+start_beat(185,5537
+interrupt_beat(193,5809
+check_beat_completion :-check_beat_completion198,5991
+end_beat :-end_beat203,6106
+test_file(209,6263
+standard_concern(216,6375
+on_event(218,6417
+plot_point(237,6862
+react_to_plot_event(244,7109
+maybe_interrupt_current_beat :-maybe_interrupt_current_beat249,7236
+fkey_command(260,7546
+beat_info(270,7790
+unsatisfied_beat_precondition(286,8332
+beat_display_color(290,8415
+character_debug_display(297,8778
 
 /Users/ian/Documents/Unity/MKULTRA/Assets/Scripting/beat_task_crossrefs.prolog,53
 reduction_clause(1,0
