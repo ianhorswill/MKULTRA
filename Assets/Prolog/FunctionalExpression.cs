@@ -88,6 +88,16 @@ namespace Prolog
                     if (t.Arguments.Length != 1) throw new ArgumentCountException("floor", t.Arguments, "number");
                     return Convert.ToSingle(Eval(t.Arguments[0], context));
 
+		case "min":
+                    if (t.Arguments.Length != 2)
+                        throw new ArgumentCountException("min", t.Arguments, "number1", "number2");
+                    return GenericArithmetic.Min(Eval(t.Arguments[0], context), Eval(t.Arguments[1], context));
+
+		case "max":
+                    if (t.Arguments.Length != 2)
+                        throw new ArgumentCountException("max", t.Arguments, "number1", "number2");
+                    return GenericArithmetic.Max(Eval(t.Arguments[0], context), Eval(t.Arguments[1], context));
+
                 case "magnitude":
                 {
                     if (t.Arguments.Length != 1)
