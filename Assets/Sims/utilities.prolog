@@ -98,6 +98,13 @@ existing(Kind, Object) :-
    is_a(Object, Kind),
    exists(Object).
 
+%% kill(+Character)
+%  Kills (destroys) the character.  The character will stop updating.
+:- public kill/1.
+kill(Character) :-
+   component_of_gameobject_with_type(SimController, Character, $'SimController'),
+   call_method(SimController, destroy, _).
+
 :- public dead/1, alive/1.
 
 %% dead(?X)

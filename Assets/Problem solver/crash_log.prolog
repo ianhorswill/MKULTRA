@@ -24,8 +24,6 @@ maybe_save_log(TaskConcern) :-
 	 when(save_task_logs($me, Task),
 	      save_log(TaskConcern, "task completed  normally"))).
 
-save_task_logs(_,_).
-
 %% save_log(+TaskConcern, +ExitStatus)
 % Saves the log of TaskConcern in /logs.
 save_log(TaskConcern, ExitStatus) :-
@@ -35,6 +33,8 @@ save_log(TaskConcern, ExitStatus) :-
 	 assert($global_root/logs/ $me/Key/exit_status:ExitStatus),
 	 forall(TaskConcern/log/T,
 		assert($global_root/logs/ $me/Key/log/T))).
+
+save_task_logs(_,_).
 
 fkey_command(alt-l, "Display crash log") :-
    update_crash_log_display.

@@ -15,7 +15,7 @@
 %  Concern, which is of type Type, proposes Action.
 :- external propose_action/3.
 
-%% score_action(+Action, +Type, +Concern, -Score) is nondet
+%% score_action(+Action, +Type, +Concern, -Score)
 %  Concern (of type Type) assigns Score to Action.
 :- external score_action/4.
 
@@ -24,7 +24,8 @@
 %  actions.
 %  Called by SimController component's Update routine.
 next_action(Action) :-
-   poll_tasks,
+   begin(run_delayed_operations,
+	 poll_tasks),
    best_action(Action).
 next_action(sleep(1)).
 

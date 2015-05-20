@@ -45,7 +45,7 @@ strategy(achieve(P),
 
 strategy(achieve_precondition(_, P),
 	 S) :-
-   postcondition(S, P).
+   strategy(achieve(P), S).
 
 default_strategy(achieve_precondition(_SubTask, P),
 		 abort_and_then(explain_failure(~P))).
