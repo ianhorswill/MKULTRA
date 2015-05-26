@@ -34,8 +34,9 @@ obj/
 \#*\#
 .\#*
 \#*\#.meta
-TAGS
-TAGS.meta
+Assets/TAGS
+Assets/TAGS.meta
+
 
 # ============ #
 # OS generated #
@@ -68,4 +69,3 @@ UnityVS.*.sln.DotSettings
 #!Library/unity default resources
 #!Library/unity editor resources
 #!Library/metadata/
-

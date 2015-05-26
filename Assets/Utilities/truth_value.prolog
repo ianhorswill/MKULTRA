@@ -8,31 +8,120 @@
 %%% don't know it.
 %%%
 
-:- public truth_value/2, admitted_truth_value/3, know_that/1.
+:- public truth_value/2, admitted_truth_value/3,
+   know_true/1, know_false/1,
+   closed/1.
 :- external know_whether/1, pretend_truth_value/3.
 :- external know_property/3, know_relation/3,
-            know_about_kind/1.
+            know_about_kind/1, closed/1.
 
 %% know_whether(?Predicate)
 %  True when this character has knowledge about the truth of
 %  Predicate.
 
+informed_about($me, P) :- know_whether(P).
+
 %% truth_value(:P, ?TruthValue)
 %  The truth value (true, false, or unknown) of P is for this character
 %  is TruthValue.  Current version is very simplistic.
-truth_value(P, unknown) :-
-   \+ know_whether(P),
-   !.
-truth_value(P, true) :-
-   P.
-truth_value(P, false) :-
-   \+ P.
 
-%% know_that(:P)
-%  P is true and the character knows it.
-know_that(P) :-
-   know_whether(P),
+truth_value(P, Value) :-
+   var(Value), !,
+   determine_truth_value(P, Value).
+truth_value(P, unknown) :-
+   determine_truth_value(P, unknown).
+truth_value(P, true) :-
+   know_true(P).
+truth_value(P, false) :-
+   know_false(P).
+
+%% determine_truth_value(:Sentence, -TruthValue)
+%  Returns the truth value for Sentence for this character
+determine_truth_value((P, Q), Value) :-
+   !,
+   determine_truth_value(P, LeftValue),
+   continue_conjunction(Q, LeftValue, Value).
+continue_conjunction(_, false, false).
+continue_conjunction(_, unknown, unknown).
+continue_conjunction(Q, LValue, Value) :-
+   LValue \= false,
+   LValue \= unknown,
+   determine_truth_value(Q, Value).
+determine_truth_value((P ; Q), Value) :-
+   !,
+   determine_truth_value(P, LeftValue),
+   continue_disjunction(Q, LeftValue, Value).
+continue_disjunction(_, true, true).
+continue_disjunction(Q, LValue, Value) :-
+   LValue \= true,
+   determine_truth_value(Q, Value).
+
+determine_truth_value(~P, Value) :-
+   !,
+   determine_truth_value(P, NotValue),
+   invert_truth_value(NotValue, Value).
+invert_truth_value(true, false).
+invert_truth_value(false, true).
+invert_truth_value(unknown, unknown).
+
+determine_truth_value(P, unknown) :-
+   ~informed_about($me, P).
+determine_truth_value(P, true) :-
+   informed_about($me, P),
    P.
+determine_truth_value(P, false) :-
+   informed_about($me, P),
+   ~P.
+determine_truth_value(P, false) :-
+   closed(P),
+   informed_about($me, P),
+   \+ P.
+determine_truth_value(P, unknown) :-
+   \+ closed(P),
+   \+ P,
+   \+ ~P.
+
+closed(is_a(_,_)).
+
+%% know_true(:Sentence)
+%  This character knows that Sentence is true.
+know_true((P, Q)) :-
+   !,
+   know_true(P),
+   know_true(Q).
+know_true((P; Q)) :-
+   !,
+   (know_true(P) ; know_true(Q)).
+know_true(~P) :-
+   !,
+   know_false(P).
+know_true(P) :-
+   informed_about($me, P),
+   P.
+
+%% know_false(:Sentence)
+%  This character knows that Sentence is false.
+know_false((P, Q)) :-
+   !,
+   (know_false(P) ; know_false(Q)).
+know_false((P; Q)) :-
+   !,
+   (know_false(P), know_false(Q)).
+know_false(~P) :-
+   !,
+   know_true(P).
+know_false(P) :-
+   informed_about($me, P),
+   (~P ; (closed(P), \+ P)).
+
+%%%%%%%%%%%%%%%%%%%%%% OLD CODE %%%%%%%%%%%%%%%%%%%%%%%%
+% truth_value(P, unknown) :-
+%    \+ know_whether(P),
+%    !.
+% truth_value(P, true) :-
+%    P.
+% truth_value(P, false) :-
+%    \+ P.
 
 know_whether(is_a(_, entity)).
 know_whether(is_a(Object, _Kind)) :-
