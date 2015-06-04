@@ -187,6 +187,14 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
        Polarity, Agreement, Tense, Aspect, Form, Modality),
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
+% is NP a KIND?
+s(is_a(Noun, Kind), interrogative, Polarity, Tense, simple) -->
+   aux_be(Tense, Agreement),
+   np((Noun^_)^_, subject, Agreement, nogap, nogap),
+   [a],
+   kind_noun(Kind, singular).
+
+
 % Wh-questions about properties
 
 % Whose property is Value?
