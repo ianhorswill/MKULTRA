@@ -108,6 +108,10 @@ namespace Prolog
                 row++;
                 while (reader.Peek() >= 0)
                 {
+		    // Windows excel generates invalid CSV files that contain
+		    // \r\n rather than \r as is defined by the spec.
+		    if (reader.Peek() == '\n')
+		        reader.Read();
                     if (reader.Peek() == '%')
                         SkipLine(); // Skip comment lines
                     else
