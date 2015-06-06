@@ -188,7 +188,7 @@ inverted_sentence(S, Polarity, Tense, Aspect) -->
    vp(Form, Modality, NP^S1, Tense, Agreement, nogap).
 
 % is NP a KIND?
-s(is_a(Noun, Kind), interrogative, Polarity, Tense, simple) -->
+s(is_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
    aux_be(Tense, Agreement),
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    [a],
