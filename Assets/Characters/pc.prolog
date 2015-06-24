@@ -2,6 +2,9 @@
 %%% Initializations for the player character
 %%%
 
+% Monitor goals quickly
+/parameters/poll_time:1.
+
 :- unless(proper_name($pc, _, X, []),
 	  assert_proper_name($pc, ['Betsy'], singular)),
    unless(declare_value($pc, gender, _),
