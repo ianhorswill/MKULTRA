@@ -194,6 +194,20 @@ s(is_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
    [a],
    kind_noun(Kind, singular).
 
+% Wh-questions about normal verbs
+
+% What Verbs?
+s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, Aspect) -->
+   whpron(Kind),
+   aux_vp(Wh^S, affirmative, third:singular, Tense, Aspect).
+
+% What did Subject Verb?
+s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, simple) -->
+   whpron(Kind),
+   aux_do(Tense, Agreement),
+   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   vp(base, X^X, NP^S1, Tense, Agreement, np(Wh)).
+
 
 % Wh-questions about properties
 

@@ -16,8 +16,6 @@ selectional_constraint(Var, Type) :-
    !.
 selectional_constraint(_, entity).
 
-%:- randomizable np/7.
-
 %% np(?Meaning, ?Case, Agreement, +GapIn, -GapOut)
 %  Noun phrases
 
