@@ -228,10 +228,12 @@ unique_answer(Value, property_value(Object, Property, Value)) :-
    nonvar(Property).
 
 lookup_property_value(Object, Property, Value) :-
-   declare_value(Object, Property, Value), !.
+   declare_value(Object, Property, Value).
 lookup_property_value(Object, Property, Value) :-
+   nonvar(Object),
+   \+ declare_value(Object, Property, _),
    is_a(Object, Kind),
-   default_value(Kind, Property, Value), !.
+   default_value(Kind, Property, Value).
 
 %% valid_property_value(?Property, ?Value)
 %  True if Value is a valid value for Property.
