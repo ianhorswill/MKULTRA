@@ -1059,6 +1059,34 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300078, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!21 &119475522
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: .5
+    m_Colors: {}
 --- !u!1 &139442441
 GameObject:
   m_ObjectHideFlags: 0
@@ -1858,33 +1886,6 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300028, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!21 &228043549
-Material:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: .5
-    m_Colors: {}
 --- !u!1 &228758201
 GameObject:
   m_ObjectHideFlags: 0
@@ -3024,6 +3025,7 @@ CircleCollider2D:
   m_Radius: .200000003
 --- !u!50 &338102931
 Rigidbody2D:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -3032,11 +3034,11 @@ Rigidbody2D:
   m_LinearDrag: 10
   m_AngularDrag: .0500000007
   m_GravityScale: 1
-  m_FixedAngle: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!114 &338102932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3139,7 +3141,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 338102926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a4216bfab58207459df4beb86bd6c6f, type: 3}
+  m_Script: {fileID: -456989425, guid: 0e6f9282c125e429fbaddd0ef55b9098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SourceFiles:
@@ -3168,7 +3170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 228043549}
+  Material: {fileID: 119475522}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
   Rows: 4
@@ -7268,12 +7270,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 821242395}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c7285fd2dd86944cbcf7788fe324e8a, type: 3}
+  m_Script: {fileID: -99087058, guid: 0e6f9282c125e429fbaddd0ef55b9098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WindowRect:
     serializedVersion: 2
-    x: 1000
+    x: 0
     y: 0
     width: 640
     height: 480
@@ -7286,7 +7288,7 @@ MonoBehaviour:
     m_Name: 
     m_Normal:
       m_Background: {fileID: 0}
-      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -7329,7 +7331,7 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Font: {fileID: 0}
-    m_FontSize: 16
+    m_FontSize: 0
     m_FontStyle: 0
     m_Alignment: 0
     m_WordWrap: 0
@@ -7373,21 +7375,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 821242395}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0ab9b75268cfa046a60fc5d04357fa4, type: 3}
+  m_Script: {fileID: 1553730478, guid: 0e6f9282c125e429fbaddd0ef55b9098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WindowRect:
     serializedVersion: 2
-    x: 1000
-    y: 500
+    x: 0
+    y: 0
     width: 640
-    height: 300
-  ShowInspector: 0
+    height: 480
+  ShowInspector: 1
   Style:
     m_Name: 
     m_Normal:
       m_Background: {fileID: 0}
-      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -9335,7 +9337,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1073926155}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c20d5b5d566e83428b24750c6828bf9, type: 3}
+  m_Script: {fileID: -1766888084, guid: 0e6f9282c125e429fbaddd0ef55b9098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1073926157
@@ -9447,33 +9449,6 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300012, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!21 &1100771778
-Material:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: .5
-    m_Colors: {}
 --- !u!1 &1114388603
 GameObject:
   m_ObjectHideFlags: 0
@@ -15474,6 +15449,7 @@ Camera:
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!1 &1924982940
 GameObject:
   m_ObjectHideFlags: 0
@@ -15546,6 +15522,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!4 &1924982945
 Transform:
   m_ObjectHideFlags: 0
@@ -16385,7 +16362,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1989881525}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a4216bfab58207459df4beb86bd6c6f, type: 3}
+  m_Script: {fileID: -456989425, guid: 0e6f9282c125e429fbaddd0ef55b9098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SourceFiles:
@@ -16586,6 +16563,7 @@ AudioSource:
     m_PostInfinity: 2
 --- !u!50 &1989881533
 Rigidbody2D:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -16594,11 +16572,11 @@ Rigidbody2D:
   m_LinearDrag: 10
   m_AngularDrag: .0500000007
   m_GravityScale: 1
-  m_FixedAngle: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!4 &1989881534
 Transform:
   m_ObjectHideFlags: 0
@@ -16636,7 +16614,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 1100771778}
+  Material: {fileID: 2130487153}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
   Rows: 4
@@ -17326,7 +17304,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2049103804}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a4216bfab58207459df4beb86bd6c6f, type: 3}
+  m_Script: {fileID: -456989425, guid: 0e6f9282c125e429fbaddd0ef55b9098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SourceFiles:
@@ -17419,14 +17397,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 2049103804}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0f2692fa21ba9846bf89359f80479ee, type: 3}
+  m_Script: {fileID: 1558941299, guid: 0e6f9282c125e429fbaddd0ef55b9098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Subtree: configuration
+  Options: []
+--- !u!114 &2049103808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2049103804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 758235086, guid: 0e6f9282c125e429fbaddd0ef55b9098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Style:
     m_Name: 
     m_Normal:
       m_Background: {fileID: 0}
-      m_TextColor: {r: 1, g: 1, b: 1, a: 1}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
     m_Hover:
       m_Background: {fileID: 0}
       m_TextColor: {r: 0, g: 0, b: 0, a: 1}
@@ -17468,8 +17459,8 @@ MonoBehaviour:
       m_Right: 0
       m_Top: 0
       m_Bottom: 0
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 12
+    m_Font: {fileID: 0}
+    m_FontSize: 0
     m_FontStyle: 0
     m_Alignment: 0
     m_WordWrap: 0
@@ -17481,23 +17472,6 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
---- !u!114 &2049103808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2049103804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7be8ae5c66e0483da4831e62782d27a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Subtree: configuration
-  Options:
-  - Selected: 0
-    Name: inhibit_concern_initialization
-  - Selected: 0
-    Name: inhibit_beat_system
 --- !u!1 &2049919187
 GameObject:
   m_ObjectHideFlags: 0
@@ -18127,6 +18101,34 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300036, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!21 &2130487153
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: .5
+    m_Colors: {}
 --- !u!1 &2135811088
 GameObject:
   m_ObjectHideFlags: 0
