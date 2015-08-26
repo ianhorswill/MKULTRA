@@ -52,11 +52,25 @@ public class TileMap : BindingBehaviour
     {
         base.Awake();
 
+        this.EnsureMapBuilt();
+    }
+
+    private bool mapBuilt;
+    public void EnsureMapBuilt()
+    {
+        if (mapBuilt)
+            return;
         var allSprites = this.GetComponentsInChildren<SpriteRenderer>();
         this.GetMapDimensions(allSprites);
         this.PopulateMap(allSprites);
 
-        MarkObstacles();
+        this.MarkObstacles();
+        mapBuilt = true;
+    }
+
+    public static void UpdateMapVariables()
+    {
+        FindObjectOfType<TileMap>().EnsureMapBuilt();
     }
 
     public void UpdateCamera(Camera c)

@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: f68bb1969f57aa540ab4fd8198d49358
+timeCreated: 1440631371
+licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: Black
@@ -48,6 +50,7 @@ TextureImporter:
     21300086: Refridgerator
     21300088: Stove
     21300090: Kitchen table
+    21300092: Kitchen sink
     21300094: Radio table
     21300096: Shelf 1
     21300098: Shelf 2
@@ -846,15 +849,15 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: 
+    - name: Kitchen sink
       rect:
         serializedVersion: 2
         x: 128
         y: 1056
         width: 64
         height: 64
-      alignment: 2
-      pivot: {x: .5, y: 1}
+      alignment: 7
+      pivot: {x: .5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Radio table
       rect:
