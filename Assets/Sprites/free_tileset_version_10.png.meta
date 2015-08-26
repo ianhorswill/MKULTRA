@@ -355,6 +355,9 @@ TextureImporter:
   isReadable: 0
   grayScaleToAlpha: 0
   generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -3
   maxTextureSize: 4096
@@ -363,8 +366,9 @@ TextureImporter:
     aniso: 1
     mipBias: -1
     wrapMode: 1
-  nPOTScale: 2
+  nPOTScale: 0
   lightmap: 0
+  rGBM: 0
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
@@ -3742,5 +3746,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-  spritePackingTag: 
+  spritePackingTag: Background
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
