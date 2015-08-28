@@ -434,19 +434,14 @@ public class SimController : PhysicalObject
                 if (p.Container == null)
                 {
                     // It's not inside another object, so find what room it's in.
-                    
+
                     if (n == null || !n.ExclusiveKeyValue<GameObject>().GetComponent<Room>().Contains(o))
                     {
-                        foreach (var r in Registry<Room>())
+                        var r = TileMap.TheTileMap.TileRoom(o);
+                        ELNode.Store(this.locationRoot / o % (r.gameObject));
+                        if (o == this.gameObject)
                         {
-                            if (r.Contains(o))
-                            {
-                                ELNode.Store(this.locationRoot / o % (r.gameObject));
-                                if (o == this.gameObject)
-                                {
-                                    this.myCurrentRoom = r;
-                                }
-                            }
+                            this.myCurrentRoom = r;
                         }
                     }
                 }

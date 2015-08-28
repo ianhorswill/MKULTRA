@@ -10,9 +10,13 @@ using UnityEngine;
 /// </summary>
 public class TileMap : BindingBehaviour
 {
+    public static TileMap TheTileMap;
+
     public static string WallTileRegex = "^Wall top";
     #region Map data
     private Tile[,] contents;
+
+    private Room[,] tileRoom;
 
     private SpriteRenderer[,] renderers;
 
@@ -50,6 +54,8 @@ public class TileMap : BindingBehaviour
     #region Initialization
     public override void Awake()
     {
+        TheTileMap = this;
+
         base.Awake();
 
         this.EnsureMapBuilt();
@@ -135,6 +141,18 @@ public class TileMap : BindingBehaviour
             tile.Type = wall.IsMatch(spriteName) ? TileType.Wall : TileType.Freespace;
             renderers[p.Column, p.Row] = spriteRenderer;
         }
+
+        // Mark what tiles are in what rooms
+        tileRoom = new Room[MapColumns, MapRows];
+        foreach (var r in Registry<Room>())
+        {
+            r.Initialize();
+            foreach (var tp in r.TileRect)
+                tileRoom[tp.Column, tp.Row] = r;
+            foreach (var p in r.Portals)
+                foreach (var tp in p.TileRect)
+                    tileRoom[tp.Column, tp.Row] = r;
+        }
     }
 
     public void SetTileColor(TilePosition p, Color c)
@@ -142,6 +160,13 @@ public class TileMap : BindingBehaviour
         var tileRenderer = renderers[p.Column, p.Row];
         if (tileRenderer != null)
             tileRenderer.color = c;
+    }
+
+    public void SetTileSprite(TilePosition p, Sprite s)
+    {
+        var tileRenderer = renderers[p.Column, p.Row];
+        if (tileRenderer != null)
+            tileRenderer.sprite = s;
     }
 
     public void SetTileColor(TileRect r, Color c)
@@ -204,6 +229,26 @@ public class TileMap : BindingBehaviour
             if (!IsFreespace(p))
                 return false;
         return true;
+    }
+
+    /// <summary>
+    /// Returns the room a given tile position appears in, or null if it doesn't correspond to any room.
+    /// </summary>
+    /// <param name="tp">Tile position to check</param>
+    /// <returns>Room object or null</returns>
+    public Room TileRoom(TilePosition tp)
+    {
+        return tileRoom[tp.Column, tp.Row];
+    }
+
+    /// <summary>
+    /// Returns the room a given GameObject appears in, or null if it doesn't correspond to any room.
+    /// </summary>
+    /// <param name="o">GameObject to check</param>
+    /// <returns>Room object or null</returns>
+    public Room TileRoom(GameObject o)
+    {
+        return TileRoom(o.Position());
     }
     #endregion
 

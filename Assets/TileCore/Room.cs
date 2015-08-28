@@ -27,20 +27,25 @@ public class Room : BindingBehaviour
 
         public int Height;
 
-        private TileRect tileRect;
+        public TileRect TileRect { get; private set; }
 
         public bool Contains(GameObject o)
         {
-            return this.tileRect.Contains(o.Position());
+            return this.TileRect.Contains(o.Position());
+        }
+
+        public bool Contains(TilePosition tp)
+        {
+            return this.TileRect.Contains(tp);
         }
 
         public void Initialize()
         {
-            this.tileRect = new TileRect(Left, Bottom, Width, Height);
+            this.TileRect = new TileRect(Left, Bottom, Width, Height);
         }
     }
 
-    public override void Awake()
+    public void Initialize()
     {
         this.tileRect = new TileRect(Left, Bottom, Width, Height);
         foreach (var portal in Portals)
@@ -71,10 +76,18 @@ public class Room : BindingBehaviour
     /// </summary>
     public bool Contains(GameObject o)
     {
-        if (this.tileRect.Contains(o.Position()))
+        return this.Contains(o.Position());
+    }
+
+    /// <summary>
+    /// True iff the room contains this TilePosition.
+    /// </summary>
+    public bool Contains(TilePosition tp)
+    {
+        if (this.tileRect.Contains(tp))
             return true;
         foreach (var portal in Portals)
-            if (portal.Contains(o))
+            if (portal.Contains(tp))
                 return true;
         return false;
     }
