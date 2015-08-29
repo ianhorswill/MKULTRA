@@ -39,11 +39,18 @@ public static class Retiler
 
     private static Sprite TileSpriteAt(TilePosition tilePosition)
     {
-        var wallStyle = Object.FindObjectOfType<WallStyle>();
+        var wallStyle = Object.FindObjectOfType<WallTopStyle>();
 
         var r = tileMap.TileRoom(tilePosition);
         if (r != null)
+        {
+            if (r.Wall != null
+                && tilePosition.Row == r.Bottom + r.Height - 1
+                && !r.WithinPortal(tilePosition.Down))
+                // It's the back wall
+                return r.Wall.CenterSprite;
             return r.Floor.Sprite;
+        }
 
         // The tile isn't the interiod of a room.
         // Check to see if it's adjacent to a room.
@@ -70,28 +77,6 @@ public static class Retiler
         {
             case Direction.None:
                 return null;
-
-            //case Direction.Up | Direction.UpLeft:
-            //case Direction.Up | Direction.UpRight:
-            //case Direction.Up | Direction.UpLeft | Direction.UpRight:
-            //case Direction.Down | Direction.DownLeft:
-            //case Direction.Down | Direction.DownRight:
-            //case Direction.Down | Direction.DownLeft | Direction.DownRight:
-            //case Direction.Up | Direction.UpLeft | Direction.Down | Direction.DownLeft:
-            //case Direction.Up | Direction.UpRight | Direction.Down | Direction.DownRight:
-            //case Direction.Up | Direction.UpLeft | Direction.UpRight | Direction.Down | Direction.DownLeft | Direction.DownRight:
-            //    return wallStyle.Horizontal;
-
-            //case Direction.Left | Direction.UpLeft:
-            //case Direction.Left | Direction.DownLeft:
-            //case Direction.Left | Direction.UpLeft | Direction.DownLeft:
-            //case Direction.Right | Direction.UpRight:
-            //case Direction.Right | Direction.DownRight:
-            //case Direction.Right | Direction.UpRight | Direction.DownRight:
-            //case Direction.Left | Direction.UpLeft | Direction.Right | Direction.UpRight:
-            //case Direction.Left | Direction.DownLeft | Direction.Right | Direction.DownRight:
-            //case Direction.Left | Direction.UpLeft | Direction.DownLeft | Direction.Right | Direction.UpRight | Direction.DownRight:
-            //    return wallStyle.Vertical;
 
             case Direction.UpLeft:
                 return wallStyle.NECorner;
@@ -162,7 +147,9 @@ public static class Retiler
                     return wallStyle.Horizontal;
                 }
                 if (leftRoom || rightRoom)
+                {
                     return wallStyle.Vertical;
+                }
                 return null;
         }
     }

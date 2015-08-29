@@ -14,6 +14,8 @@ public class Room : BindingBehaviour
 
     public FloorMaterial Floor;
 
+    public WallMaterial Wall;
+
     public Portal[] Portals;
 
     [Serializable]
@@ -86,6 +88,11 @@ public class Room : BindingBehaviour
     {
         if (this.tileRect.Contains(tp))
             return true;
+        return this.WithinPortal(tp);
+    }
+
+    public bool WithinPortal(TilePosition tp)
+    {
         foreach (var portal in Portals)
             if (portal.Contains(tp))
                 return true;
