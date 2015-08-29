@@ -54,10 +54,7 @@ public class TileMap : BindingBehaviour
     #region Initialization
     public override void Awake()
     {
-        TheTileMap = this;
-
         base.Awake();
-
         this.EnsureMapBuilt();
     }
 
@@ -66,12 +63,18 @@ public class TileMap : BindingBehaviour
     {
         if (mapBuilt)
             return;
+        this.RebuildMap();
+    }
+
+    public void RebuildMap()
+    {
+        TheTileMap = this;
         var allSprites = this.GetComponentsInChildren<SpriteRenderer>();
         this.GetMapDimensions(allSprites);
         this.PopulateMap(allSprites);
 
         this.MarkObstacles();
-        mapBuilt = true;
+        this.mapBuilt = true;
     }
 
     public static void UpdateMapVariables()
@@ -166,7 +169,9 @@ public class TileMap : BindingBehaviour
     {
         var tileRenderer = renderers[p.Column, p.Row];
         if (tileRenderer != null)
+        {
             tileRenderer.sprite = s;
+        }
     }
 
     public void SetTileColor(TileRect r, Color c)
@@ -238,6 +243,9 @@ public class TileMap : BindingBehaviour
     /// <returns>Room object or null</returns>
     public Room TileRoom(TilePosition tp)
     {
+        if (tp.Column < 0 || tp.Row < 0 || tp.Column >= TheTileMap.MapColumns || tp.Row >= TheTileMap.MapRows)
+            return null;
+
         return tileRoom[tp.Column, tp.Row];
     }
 

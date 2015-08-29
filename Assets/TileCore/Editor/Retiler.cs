@@ -1,19 +1,18 @@
-﻿using UnityEngine;
-using System.Linq;
+﻿using System;
+using UnityEditor;
+using UnityEngine;
 
 using Object = UnityEngine.Object;
 
 public static class Retiler
 {
-    private static Room[] rooms;
-
     private static TileMap tileMap;
 
+    [MenuItem("TileMap/Retile")]
     public static void RetileMap()
     {
-        rooms = Object.FindObjectsOfType(typeof(Room)).Cast<Room>().ToArray();
         tileMap = Object.FindObjectOfType<TileMap>();
-        tileMap.EnsureMapBuilt();
+        tileMap.RebuildMap();
         for (int row = 0; row < tileMap.MapRows; row++)
             for (int column = 0; column < tileMap.MapColumns; column++)
             {
@@ -22,15 +21,149 @@ public static class Retiler
                 if (newSprite != null)
                     tileMap.SetTileSprite(tilePosition, newSprite);
             }
+        Debug.Log("Reset background tiles.");
     }
+
+    [Flags]
+    enum Direction {
+        None = 0,
+        Up = 1,
+        Down = 2,
+        Left = 4,
+        Right = 8, 
+        UpLeft = 16, 
+        UpRight = 32,
+        DownLeft = 64, 
+        DownRight = 128
+    };
 
     private static Sprite TileSpriteAt(TilePosition tilePosition)
     {
-        foreach (var r in rooms)
+        var wallStyle = Object.FindObjectOfType<WallStyle>();
+
+        var r = tileMap.TileRoom(tilePosition);
+        if (r != null)
+            return r.Floor.Sprite;
+
+        // The tile isn't the interiod of a room.
+        // Check to see if it's adjacent to a room.
+        var upRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up);
+        var downRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down);
+        var leftRoom = TileMap.TheTileMap.TileRoom(tilePosition.Left);
+        var rightRoom = TileMap.TheTileMap.TileRoom(tilePosition.Right);
+        var upLeftRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up.Left);
+        var upRightRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up.Right);
+        var downLeftRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down.Left);
+        var downRightRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down.Right);
+
+
+        var neighborsInRooms = (upRoom?Direction.Up:0)
+            | (downRoom?Direction.Down:0)
+            | (leftRoom ? Direction.Left : 0)
+            | (rightRoom ? Direction.Right : 0)
+            | (upLeftRoom ? Direction.UpLeft : 0)
+            | (upRightRoom ? Direction.UpRight : 0)
+            | (downLeftRoom ? Direction.DownLeft : 0)
+            | (downRightRoom ? Direction.DownRight : 0);
+
+        switch (neighborsInRooms)
         {
-            if (r.Contains(tilePosition))
-                return r.Floor.Sprite;
+            case Direction.None:
+                return null;
+
+            //case Direction.Up | Direction.UpLeft:
+            //case Direction.Up | Direction.UpRight:
+            //case Direction.Up | Direction.UpLeft | Direction.UpRight:
+            //case Direction.Down | Direction.DownLeft:
+            //case Direction.Down | Direction.DownRight:
+            //case Direction.Down | Direction.DownLeft | Direction.DownRight:
+            //case Direction.Up | Direction.UpLeft | Direction.Down | Direction.DownLeft:
+            //case Direction.Up | Direction.UpRight | Direction.Down | Direction.DownRight:
+            //case Direction.Up | Direction.UpLeft | Direction.UpRight | Direction.Down | Direction.DownLeft | Direction.DownRight:
+            //    return wallStyle.Horizontal;
+
+            //case Direction.Left | Direction.UpLeft:
+            //case Direction.Left | Direction.DownLeft:
+            //case Direction.Left | Direction.UpLeft | Direction.DownLeft:
+            //case Direction.Right | Direction.UpRight:
+            //case Direction.Right | Direction.DownRight:
+            //case Direction.Right | Direction.UpRight | Direction.DownRight:
+            //case Direction.Left | Direction.UpLeft | Direction.Right | Direction.UpRight:
+            //case Direction.Left | Direction.DownLeft | Direction.Right | Direction.DownRight:
+            //case Direction.Left | Direction.UpLeft | Direction.DownLeft | Direction.Right | Direction.UpRight | Direction.DownRight:
+            //    return wallStyle.Vertical;
+
+            case Direction.UpLeft:
+                return wallStyle.NECorner;
+
+            case Direction.UpRight:
+                return wallStyle.NWCorner;
+
+            case Direction.DownLeft:
+                return wallStyle.SECorner;
+
+            case Direction.DownRight:
+                return wallStyle.SWCorner;
+
+            case Direction.Up | Direction.Down | Direction.Left | Direction.Right:
+                if (wallStyle.Cross != null)
+                    return wallStyle.Cross;
+                throw new InvalidOperationException("WallStyle does not include a tile for cross junctions");
+
+            case Direction.UpLeft | Direction.UpRight:
+            case Direction.UpLeft | Direction.UpRight | Direction.DownLeft | Direction.Down | Direction.DownRight:
+                return wallStyle.TJunctionDown;
+
+            case Direction.DownLeft | Direction.DownRight:
+            case Direction.DownLeft | Direction.DownRight | Direction.UpLeft | Direction.Up | Direction.UpRight:
+                return wallStyle.TJunctionUp;
+
+            case Direction.UpLeft | Direction.DownLeft:
+                return wallStyle.TJunctionLeft;
+
+            case Direction.UpRight | Direction.DownRight:
+                return wallStyle.TJunctionRight;
+
+            case Direction.UpLeft /*| Direction.Up */ | Direction.UpRight
+             | Direction.Right
+             | Direction.DownRight | Direction.Down | Direction.DownLeft
+             | Direction.Left:
+                return wallStyle.DownCap;
+
+            case Direction.UpLeft | Direction.Up | Direction.UpRight
+             | Direction.Right
+             | Direction.DownRight /*| Direction.Down */ | Direction.DownLeft
+             | Direction.Left:
+                return wallStyle.UpCap;
+
+            case Direction.UpLeft | Direction.Up | Direction.UpRight
+             /*| Direction.Right*/
+             | Direction.DownRight | Direction.Down | Direction.DownLeft
+             | Direction.Left:
+            case Direction.UpLeft | Direction.Up /*| Direction.UpRight*/
+                /*| Direction.Right*/
+         /*| Direction.DownRight*/ | Direction.Down | Direction.DownLeft
+         | Direction.Left:
+                return wallStyle.RightCap;
+
+            case Direction.UpLeft | Direction.Up | Direction.UpRight
+             | Direction.Right
+             | Direction.DownRight | Direction.Down | Direction.DownLeft
+             /*| Direction.Left*/:
+                return wallStyle.LeftCap;
+
+            default:
+                if (upRoom || downRoom)
+                {
+                    if (leftRoom)
+                        return wallStyle.RightCap;
+                    if (rightRoom)
+                        return wallStyle.LeftCap;
+                    return wallStyle.Horizontal;
+                }
+                if (leftRoom || rightRoom)
+                    return wallStyle.Vertical;
+                return null;
         }
-        return null;
     }
 }
