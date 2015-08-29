@@ -46,7 +46,7 @@ public static class Retiler
         {
             if (r.Wall != null
                 && tilePosition.Row == r.Bottom + r.Height - 1
-                && !r.WithinPortal(tilePosition.Down))
+                && !r.WithinPortal(tilePosition.Up))
                 // It's the back wall
                 return r.Wall.CenterSprite;
             return r.Floor.Sprite;
@@ -54,14 +54,14 @@ public static class Retiler
 
         // The tile isn't the interiod of a room.
         // Check to see if it's adjacent to a room.
-        var upRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up);
-        var downRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down);
+        var upRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down);
+        var downRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up);
         var leftRoom = TileMap.TheTileMap.TileRoom(tilePosition.Left);
         var rightRoom = TileMap.TheTileMap.TileRoom(tilePosition.Right);
-        var upLeftRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up.Left);
-        var upRightRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up.Right);
-        var downLeftRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down.Left);
-        var downRightRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down.Right);
+        var upLeftRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down.Left);
+        var upRightRoom = TileMap.TheTileMap.TileRoom(tilePosition.Down.Right);
+        var downLeftRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up.Left);
+        var downRightRoom = TileMap.TheTileMap.TileRoom(tilePosition.Up.Right);
 
 
         var neighborsInRooms = (upRoom?Direction.Up:0)
