@@ -46,7 +46,7 @@ public static class Retiler
         {
             if (r.Wall != null
                 && tilePosition.Row == r.Bottom + r.Height - 1
-                && !r.WithinPortal(tilePosition.Up))
+                && !r.IsBackWallTile(tilePosition))
                 // It's the back wall
                 return r.Wall.CenterSprite;
             return r.Floor.Sprite;

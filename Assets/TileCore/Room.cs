@@ -99,6 +99,11 @@ public class Room : BindingBehaviour
         return false;
     }
 
+    public bool IsBackWallTile(TilePosition tp)
+    {
+        return this.WithinPortal(tp.Up);
+    }
+
     internal void OnDrawGizmosSelected()
     {
         TileMap.UpdateMapVariables();
