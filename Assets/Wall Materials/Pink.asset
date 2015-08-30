@@ -14,3 +14,4 @@ MonoBehaviour:
   LeftSprite: {fileID: 21300060, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   CenterSprite: {fileID: 21300064, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   RightSprite: {fileID: 21300062, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
+  SingletonSprite: {fileID: 21300058, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}

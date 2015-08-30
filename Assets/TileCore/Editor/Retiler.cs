@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
-
 using Object = UnityEngine.Object;
 
 public static class Retiler
@@ -44,16 +43,21 @@ public static class Retiler
         var r = tileMap.TileRoom(tilePosition);
         if (r != null)
         {
-            if (r.Wall != null
-                && tilePosition.Row == r.Bottom + r.Height - 1
-                && !r.IsBackWallTile(tilePosition))
-                // It's the back wall
+            if (r.Wall != null)
             {
-                if (r.WithinPortal(tilePosition.Right.Up))
-                    return r.Wall.RightSprite;
-                if (r.WithinPortal(tilePosition.Left.Up))
-                    return r.Wall.LeftSprite;
-                return r.Wall.CenterSprite;
+                if (r.WithinPortal(tilePosition) && tileMap.TileRoom(tilePosition.Up) == null)
+                    // It's the top tile of a vertical portal between two rooms; make it be a wall
+                    return r.Wall.SingletonSprite;
+
+                if (tilePosition.Row == r.Bottom + r.Height - 1 && !r.IsBackWallTile(tilePosition))
+                    // It's the back wall
+                {
+                    if (r.WithinPortal(tilePosition.Right.Up))
+                        return r.Wall.RightSprite;
+                    if (r.WithinPortal(tilePosition.Left.Up))
+                        return r.Wall.LeftSprite;
+                    return r.Wall.CenterSprite;
+                }
             }
             return r.Floor.Sprite;
         }

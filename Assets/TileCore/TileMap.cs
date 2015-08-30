@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 /// <summary>
@@ -13,7 +12,7 @@ public class TileMap : BindingBehaviour
 {
     public static TileMap TheTileMap;
 
-    public static string WallTileRegex = "^Wall top";
+    public string WallTileNamePrefix = "Wall ";
     #region Map data
     private Tile[,] contents;
 
@@ -137,14 +136,13 @@ public class TileMap : BindingBehaviour
     private void PopulateMap(SpriteRenderer[] tileSprites)
         // ReSharper restore ParameterTypeCanBeEnumerable.Local
     {
-        var wall = new Regex(WallTileRegex);
         foreach (var spriteRenderer in tileSprites)
         {
             TilePosition p = spriteRenderer.bounds.center;
             var tile = this[p];
             var spriteName = spriteRenderer.sprite.name;
             tile.SpriteName = spriteName;
-            tile.Type = wall.IsMatch(spriteName) ? TileType.Wall : TileType.Freespace;
+            tile.Type = spriteName.StartsWith(WallTileNamePrefix) ? TileType.Wall : TileType.Freespace;
             renderers[p.Column, p.Row] = spriteRenderer;
         }
 

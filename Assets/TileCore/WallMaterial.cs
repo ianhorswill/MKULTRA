@@ -8,6 +8,7 @@ public class WallMaterial : ScriptableObject
     public Sprite LeftSprite;
     public Sprite CenterSprite;
     public Sprite RightSprite;
+    public Sprite SingletonSprite;
 
     [MenuItem("Assets/Create/Wall Material")]
     internal static void Create()
