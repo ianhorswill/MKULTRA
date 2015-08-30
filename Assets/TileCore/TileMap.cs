@@ -8,6 +8,7 @@ using UnityEngine;
 /// <summary>
 /// A map (background) built out of tiles in a TileSet (a kind of sprite sheet).
 /// </summary>
+[AddComponentMenu("Tile/TileMap")]
 public class TileMap : BindingBehaviour
 {
     public static TileMap TheTileMap;
@@ -69,9 +70,9 @@ public class TileMap : BindingBehaviour
     public void RebuildMap()
     {
         TheTileMap = this;
-        var allSprites = this.GetComponentsInChildren<SpriteRenderer>();
-        this.GetMapDimensions(allSprites);
-        this.PopulateMap(allSprites);
+        var allTileSprites = this.transform.Find("Tiles").GetComponentsInChildren<SpriteRenderer>();
+        this.GetMapDimensions(allTileSprites);
+        this.PopulateMap(allTileSprites);
 
         this.MarkObstacles();
         this.mapBuilt = true;
@@ -120,6 +121,8 @@ public class TileMap : BindingBehaviour
     {
         if (sprite.sortingLayerName == "Map")
             return false;
+        if (sprite.GetComponent<Door>() != null)
+            return false;
         if (sprite.GetComponent<BoxCollider2D>() == null)
             return false;
         return sprite.GetComponent<Rigidbody2D>() == null;
@@ -131,11 +134,11 @@ public class TileMap : BindingBehaviour
     }
 
     // ReSharper disable ParameterTypeCanBeEnumerable.Local
-    private void PopulateMap(SpriteRenderer[] allSprites)
+    private void PopulateMap(SpriteRenderer[] tileSprites)
         // ReSharper restore ParameterTypeCanBeEnumerable.Local
     {
         var wall = new Regex(WallTileRegex);
-        foreach (var spriteRenderer in allSprites)
+        foreach (var spriteRenderer in tileSprites)
         {
             TilePosition p = spriteRenderer.bounds.center;
             var tile = this[p];
@@ -180,15 +183,15 @@ public class TileMap : BindingBehaviour
             SetTileColor(tile, c);
     }
 
-    private void GetMapDimensions(SpriteRenderer[] allSprites)
+    private void GetMapDimensions(SpriteRenderer[] tileSprites)
     {
-        float tileSize = 2*allSprites[0].bounds.extents.x;
+        float tileSize = 2*tileSprites[0].bounds.extents.x;
         float minX = float.PositiveInfinity;
         float minY = float.PositiveInfinity;
         float maxX = float.NegativeInfinity;
         float maxY = float.NegativeInfinity;
 
-        foreach (var spriteRenderer in allSprites)
+        foreach (var spriteRenderer in tileSprites)
         {
             var bounds = spriteRenderer.bounds;
             if (Mathf.Abs((bounds.max.x-bounds.min.x)-tileSize) > 0.01

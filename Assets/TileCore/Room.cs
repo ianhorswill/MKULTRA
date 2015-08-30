@@ -2,6 +2,10 @@
 using Prolog;
 using UnityEngine;
 
+/// <summary>
+/// A component defining a room in the TileMap
+/// </summary>
+[AddComponentMenu("Tile/Room")]
 public class Room : BindingBehaviour
 {
     public int Left;

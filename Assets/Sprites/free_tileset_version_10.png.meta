@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: f68bb1969f57aa540ab4fd8198d49358
-timeCreated: 1440897897
+timeCreated: 1440966183
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -95,9 +95,9 @@ TextureImporter:
     21300176: Toilet
     21300178: Bathroom sink
     21300180: Shower head
-    21300182: free_tileset_version_10_132
+    21300182: Double closed door
     21300184: free_tileset_version_10_133
-    21300186: free_tileset_version_10_134
+    21300186: Single closed door
     21300188: Rug big
     21300190: Candelabra
     21300192: Throne
@@ -1299,12 +1299,12 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_132
+    - name: Double closed door
       rect:
         serializedVersion: 2
         x: 96
         y: 864
-        width: 32
+        width: 64
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
@@ -1319,7 +1319,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_134
+    - name: Single closed door
       rect:
         serializedVersion: 2
         x: 160

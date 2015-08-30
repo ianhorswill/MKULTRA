@@ -3,6 +3,7 @@
 /// <summary>
 /// An overlay to show some image or text when the player examines the object.
 /// </summary>
+[AddComponentMenu("Props/ExaminationContent")]
 public class ExaminationContent : MonoBehaviour
 {
     protected ExaminationContent()

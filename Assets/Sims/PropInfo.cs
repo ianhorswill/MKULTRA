@@ -5,6 +5,7 @@ using Prolog;
 
 using UnityEngine;
 
+[AddComponentMenu("Props/PropInfo")]
 public class PropInfo : PhysicalObject
 {
     /// <summary>

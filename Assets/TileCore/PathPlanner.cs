@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+[AddComponentMenu("Tile/PathPlanner")]
 public class PathPlanner : BindingBehaviour
 {
     /// <summary>
