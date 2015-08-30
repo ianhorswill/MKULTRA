@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: f68bb1969f57aa540ab4fd8198d49358
-timeCreated: 1440631371
+timeCreated: 1440897897
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -33,10 +33,10 @@ TextureImporter:
     21300052: free_tileset_version_10_26
     21300054: free_tileset_version_10_27
     21300056: free_tileset_version_10_28
-    21300058: free_tileset_version_10_30
-    21300060: free_tileset_version_10_31
-    21300062: free_tileset_version_10_32
-    21300064: free_tileset_version_10_33
+    21300058: pink wall other
+    21300060: pink wall left
+    21300062: pink wall right
+    21300064: pink wall center
     21300066: Wall top white end E
     21300068: Wall top tee E
     21300070: Wall top tee S
@@ -679,7 +679,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_30
+    - name: pink wall other
       rect:
         serializedVersion: 2
         x: 0
@@ -689,7 +689,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_31
+    - name: pink wall left
       rect:
         serializedVersion: 2
         x: 32
@@ -699,7 +699,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_32
+    - name: pink wall right
       rect:
         serializedVersion: 2
         x: 64
@@ -709,7 +709,7 @@ TextureImporter:
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: free_tileset_version_10_33
+    - name: pink wall center
       rect:
         serializedVersion: 2
         x: 96
