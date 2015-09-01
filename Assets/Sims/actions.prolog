@@ -51,6 +51,7 @@ postcondition(putdown(Object, Dest),
 
 action_functor(face, 1).
 action_functor(ingest, 1).
+action_functor(get_in, 1).
 precondition(ingest(Edible),
 	     location(Edible, $me)) :-
    Edible \= $me.

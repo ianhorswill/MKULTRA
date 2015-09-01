@@ -105,6 +105,7 @@ public class SpriteSheetAnimationController : MonoBehaviour
         Animations["East"] = new RowSpriteAnimation("East", 1, 4, Stride, 0);
         Animations["West"] = new RowSpriteAnimation("West", 2, 4, Stride, 0);
         Animations["South"] = new RowSpriteAnimation("South", 3, 4, Stride, 0);
+        Animations["Lay in bed"] = new RowSpriteAnimation("Lay in bed", 3, 1, 0, 0);
     }
 
     #region User-callable procedures for controling animation.

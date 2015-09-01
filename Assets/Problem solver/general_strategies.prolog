@@ -75,6 +75,10 @@ strategy(achieve(location(X, Container)),
    Container \= $me,
    \+ is_a(Container, room).
 
+strategy(achieve(location($me, Container)),
+	 begin(goto(Container),
+	       get_in(Container))).
+
 strategy(move($me, X,Y),
 	 achieve(location(X, Y))).
 

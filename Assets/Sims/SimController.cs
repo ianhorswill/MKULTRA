@@ -582,6 +582,10 @@ public class SimController : PhysicalObject
                     break;
                 }
 
+                case "get_in":
+                    this.GetIn(structure.Argument<GameObject>(0));
+                    break;
+
                 case "end_game":
                     Application.Quit();
                     break;
@@ -656,6 +660,23 @@ public class SimController : PhysicalObject
             this.currentlySpeaking = false;
             this.motorRoot.DeleteKey(SIAmSpeaking);
         }
+    }
+
+    public void GetIn(GameObject target)
+    {
+        var prop = target.GetComponent<PropInfo>();
+        if (prop == null)
+        {
+            Debug.Log(name+": attempted to get in the non-prop "+target);
+            return;
+        }
+        if (prop.LayAnimation == null)
+        {
+            Debug.Log(name + ": attempted to get in non-layable prop "+target);
+            return;
+        }
+        this.GetComponent<PhysicalObject>().MoveTo(target);
+        spriteController.StartIdleAnimation(prop.LayAnimation);
     }
 
     /// <summary>

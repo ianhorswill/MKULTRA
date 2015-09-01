@@ -14,6 +14,11 @@ public class PropInfo : PhysicalObject
     public bool IsContainer;
 
     /// <summary>
+    /// Name of the animation to play to display the character laying on this object
+    /// </summary>
+    public string LayAnimation;
+
+    /// <summary>
     /// True if this satisfies hunger
     /// </summary>
     public bool IsFood;

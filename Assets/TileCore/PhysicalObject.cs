@@ -8,6 +8,12 @@ public abstract class PhysicalObject : BindingBehaviour
     /// </summary>
     public bool IsHidden;
 
+    /// <summary>
+    /// For containers only:
+    /// Where, in local coordinates, objects placed on this object should appear.
+    /// </summary>
+    public Vector3 PlacedObjectPosition;
+
     public void SetHidden(bool state)
     {
         if (this.GetComponent<Renderer>() != null)
@@ -61,7 +67,7 @@ public abstract class PhysicalObject : BindingBehaviour
                 spriteController.enabled = ContentsVisible;
             }
         }
-        newObject.transform.localPosition = Vector3.zero;
+        newObject.transform.localPosition = PlacedObjectPosition;
     }
 
     public virtual void Destroy()
