@@ -527,6 +527,8 @@ public class SimController : PhysicalObject
                 {
                     var patient = structure.Argument<GameObject>(0);
                     if (patient == gameObject)
+                        throw new InvalidOperationException(name+": tried to pickup() self!");
+                    if (patient == gameObject)
                         return;
                     if (patient == null)
                         throw new NullReferenceException("Argument to pickup is not a gameobject");
@@ -560,6 +562,8 @@ public class SimController : PhysicalObject
                 case "putdown":
                 {
                     var patient = structure.Argument<GameObject>(0);
+                    if (patient == gameObject)
+                        throw new InvalidOperationException(name+": tried to putdown() self!");
                     if (patient == null)
                         throw new NullReferenceException("Argument to putdown is not a gameobject");
                     var physob = patient.GetComponent<PhysicalObject>();
@@ -584,6 +588,10 @@ public class SimController : PhysicalObject
 
                 case "get_in":
                     this.GetIn(structure.Argument<GameObject>(0));
+                    break;
+
+                case "dismount":
+                    this.Dismount();
                     break;
 
                 case "end_game":
@@ -676,7 +684,38 @@ public class SimController : PhysicalObject
             return;
         }
         this.GetComponent<PhysicalObject>().MoveTo(target);
-        spriteController.StartIdleAnimation(prop.LayAnimation);
+	if (prop.ContentsVisible)
+            spriteController.StartIdleAnimation(prop.LayAnimation);
+    }
+
+    /// <summary>
+    /// Remove the character from their current physical container, and return them to its
+    /// docking region in the enclosing room.
+    /// 
+    /// Internally, this means reparenting the character's gameobject back to the Characters
+    /// gameobject and setting its position to the center of the original container's
+    /// docking region.
+    /// </summary>
+    public void Dismount()
+    {
+        var container = gameObject.transform.parent.gameObject;
+        if (container.GetComponent<PhysicalObject>() == null)
+        {
+            // we're not in a container; do nothing
+            return;
+        }
+
+        var dockingRegion = container.GetComponent<DockingRegion>();
+        if (dockingRegion == null)
+            throw new InvalidOperationException(
+                string.Format(
+                    "{0} is dismounting from object {1}, which has no docking region defined.",
+                    name,
+                    container.name));
+
+        this.transform.parent = (GameObject.Find("Characters")??new GameObject("Characters")).transform;
+        transform.position = dockingRegion.WorldDockingRect.center;
+	spriteController.enabled = true;
     }
 
     /// <summary>
@@ -776,7 +815,10 @@ public class SimController : PhysicalObject
                 || (currentDestination != null && currentPath != null && !CurrentDestination.DockingTiles().Contains(currentPath.FinalTile)))
             {
                 if (newDestination)
+                {
+                    this.Dismount();
                     ELNode.Store(eventHistory / new Structure("goto", winner)); // Log change for debugging purposes.
+                }
                 this.CurrentDestination = winner;
                 this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
             }

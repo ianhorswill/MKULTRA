@@ -11,7 +11,8 @@ reduce_canonical_form(Task, Task) :-
    primitive_task(Task),
    !.
 reduce_canonical_form(Canonical, Reduction) :-
-   begin(matching_strategies(Strategies, Canonical),
+   begin(maybe_trace_reduction(Canonical),
+	 matching_strategies(Strategies, Canonical),
 	 selected_reduction_with_before_after(Canonical, Strategies, Reduction)).
 
 % Select method and attach befor and after
@@ -123,6 +124,16 @@ matching_strategy(S, Task) :-
    (personal_strategy(Task, S) ; strategy(Task, S)),
    emit_grain("Default", 3),
    \+ veto_strategy(Task).
+
+maybe_trace_reduction(Canonical) :-
+   trace_reduction(Canonical),
+   forall( ( clause(strategy(Task, Reduction), Body),
+	     copy_term(Task:Reduction:Body, CTask:CReduction:CBody),
+	     Canonical = CTask ),
+	   if(CBody,
+	      assert($task/log/match(Canonical, strategy(Task,Reduction), CReduction)),
+	      assert($task/log/fail_match(Canonical, strategy(Task, Reduction))))).   
+maybe_trace_reduction(_).
 
 %%
 %% Debugging tools

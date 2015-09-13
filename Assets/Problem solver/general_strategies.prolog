@@ -62,22 +62,25 @@ normalize_task(abort_and_then(Task),
 %% goto
 %%
 
-strategy(achieve(location(X,$me)),
-	 pickup(X)).
+strategy(achieve(location(X, $me)),
+	 pickup(X)) :-
+   X \= $me.
 strategy(achieve(location(X, Room)),
 	 achieve(location(X, Container))) :-
    %\+ freestanding(X),
    is_a(Room, room),
    is_a(Container, work_surface),
    location(Container, Room).
-strategy(achieve(location(X, Container)),
+default_strategy(achieve(location(X, Container)),
 	 putdown(X, Container)) :-
+   X \= $me,
    Container \= $me,
    \+ is_a(Container, room).
 
 strategy(achieve(location($me, Container)),
 	 begin(goto(Container),
-	       get_in(Container))).
+	       get_in(Container))) :-
+   is_a(Container, prop).
 
 strategy(move($me, X,Y),
 	 achieve(location(X, Y))).

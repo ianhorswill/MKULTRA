@@ -38,7 +38,8 @@ precondition(pickup(X),
 precondition(pickup(X),
 	     docked_with(X)).
 postcondition(pickup(X),
-	      location(X, $me)).
+	      location(X, $me)) :-
+   X \= $me.
 
 action_functor(putdown, 2).
 precondition(putdown(Object, _Dest),
@@ -47,7 +48,8 @@ precondition(putdown(_Object, Dest),
 	     docked_with(Dest)).
 postcondition(putdown(Object, Dest),
 	      location(Object, Dest)) :-
-   Dest \= $me.
+   Dest \= $me,
+   Object \= $me.
 
 action_functor(face, 1).
 action_functor(ingest, 1).
