@@ -1,4 +1,5 @@
 :- public show_decomposition/1.
+:- external trace_reduction/1.
 
 %%
 %% Goal reduction
