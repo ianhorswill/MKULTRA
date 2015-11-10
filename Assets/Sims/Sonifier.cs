@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class Sonifier : MonoBehaviour
@@ -12,10 +12,26 @@ public class Sonifier : MonoBehaviour
 
     private DumbGranularSynthesizer syn;
 
+    AudioSource audioSource;
+    GameObject pc;
+
     internal void Start()
     {
         samplingRate = AudioSettings.outputSampleRate;
         syn = new DumbGranularSynthesizer(samplingRate, 0.5f);
+        audioSource = GetComponent<AudioSource>();
+        pc = GameObject.Find("pc");
+    }
+
+    internal void Update()
+    {
+        if (pc != gameObject)
+        {
+            var offset = gameObject.Position() - pc.Position();
+            var volume = Math.Min(1, 5/offset.sqrMagnitude);
+            audioSource.panStereo = offset.normalized.x;
+            audioSource.volume = volume;
+        }
     }
 
     public void EmitGrain(string patchName, int ms)
