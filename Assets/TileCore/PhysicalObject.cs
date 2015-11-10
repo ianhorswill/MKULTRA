@@ -65,6 +65,7 @@ public abstract class PhysicalObject : BindingBehaviour
             if (spriteController != null)
             {
                 spriteController.enabled = ContentsVisible;
+                spriteController.Visible = ContentsVisible;
             }
         }
         newObject.transform.localPosition = PlacedObjectPosition;
