@@ -386,7 +386,7 @@ public class SimController : PhysicalObject
         for (var i = 0; i<characterCount;i++)
         {
             var character = colliders[i].gameObject;
-            if (character != gameObject && !statusNode.ContainsKey(character) && myCurrentRoom.Contains(character))
+            if (character != gameObject && !statusNode.ContainsKey(character) && myCurrentRoom != null && myCurrentRoom.Contains(character))
             {
                 // The character just arrived in this character's conversational space
 
@@ -422,6 +422,7 @@ public class SimController : PhysicalObject
     private readonly Symbol brainwashedSymbol = Symbol.Intern("brainwashed");
     private void UpdateLocations()
     {
+        // TODO: FIX THIS SO THAT DESTROYED OBJECTS GET THEIR ENTRIES GC'ed.
         foreach (var p in Registry<PhysicalObject>())
         {
             var o = p.gameObject;
@@ -430,8 +431,11 @@ public class SimController : PhysicalObject
             // which would mean the character is brainwashed about O's position.
             if (n == null || n.Children.Count == 0 || !n.Children[0].ContainsKey(this.brainwashedSymbol))
             {
+                if (!p.Exists)
+                    // Dead; remove it.
+                    locationRoot.DeleteKey(o);
                 // Determine if it's inside something
-                if (p.Container == null)
+                else if (p.Container == null)
                 {
                     // It's not inside another object, so find what room it's in.
 
@@ -548,6 +552,8 @@ public class SimController : PhysicalObject
                     if (physob == null)
                         throw new NullReferenceException("Argument to ingest is not a physical object.");
                     physob.Destroy();
+                    // TODO: FIX LOCATION UPDATE SO WE DON'T NEED TO KLUGE THIS
+                    locationRoot.DeleteKey(patient);
                     var propinfo = patient.GetComponent<PropInfo>();
                     if (propinfo != null)
                     {
