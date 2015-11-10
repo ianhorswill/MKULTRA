@@ -56,7 +56,10 @@ action_functor(ingest, 1).
 action_functor(get_in, 1).
 precondition(ingest(Edible),
 	     location(Edible, $me)) :-
-   Edible \= $me.
+   \+ is_a(Edible, person).
+precondition(ingest(Edible),
+	     docked_with(Edible)) :-
+   is_a(Edible, person).
 precondition(ingest(Edible),
 	     exists(Edible)).
 postcondition(ingest(X),
