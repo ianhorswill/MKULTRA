@@ -1593,6 +1593,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1036973645}
   m_RootOrder: 10
+--- !u!21 &174734750
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: .5
+    m_Colors: {}
 --- !u!1 &182778210
 GameObject:
   m_ObjectHideFlags: 0
@@ -2269,6 +2297,56 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300036, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &266788631
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 266788632}
+  - 114: {fileID: 266788633}
+  m_Layer: 10
+  m_Name: stop button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &266788632
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 266788631}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.3569136, y: 2.71622276, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1541256199}
+  m_RootOrder: 2
+--- !u!114 &266788633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 266788631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsHidden: 0
+  PlacedObjectPosition: {x: 0, y: 0, z: 0}
+  Container: {fileID: 1616970354}
+  Exists: 1
+  ContentsVisible: 0
+  IsContainer: 0
+  LayAnimation: 
+  IsFood: 0
+  IsBeverage: 0
+  Kind: button
+  Adjectives: []
 --- !u!1 &270486428
 GameObject:
   m_ObjectHideFlags: 0
@@ -3179,7 +3257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 2142594173}
+  Material: {fileID: 174734750}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
   Rows: 4
@@ -4424,6 +4502,34 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300004, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!21 &462302340
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: .5
+    m_Colors: {}
 --- !u!1 &462438153
 GameObject:
   m_ObjectHideFlags: 0
@@ -4478,6 +4584,56 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300012, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &470051335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 470051336}
+  - 114: {fileID: 470051337}
+  m_Layer: 10
+  m_Name: run button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &470051336
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 470051335}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.3569136, y: 2.71622276, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1541256199}
+  m_RootOrder: 1
+--- !u!114 &470051337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 470051335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsHidden: 0
+  PlacedObjectPosition: {x: 0, y: 0, z: 0}
+  Container: {fileID: 1616970354}
+  Exists: 1
+  ContentsVisible: 0
+  IsContainer: 0
+  LayAnimation: 
+  IsFood: 0
+  IsBeverage: 0
+  Kind: button
+  Adjectives: []
 --- !u!1 &481720825
 GameObject:
   m_ObjectHideFlags: 0
@@ -10345,34 +10501,6 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300004, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!21 &1219844850
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: .5
-    m_Colors: {}
 --- !u!1 &1222742865
 GameObject:
   m_ObjectHideFlags: 0
@@ -10967,6 +11095,56 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300064, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &1330954387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1330954388}
+  - 114: {fileID: 1330954389}
+  m_Layer: 10
+  m_Name: magic button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1330954388
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1330954387}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.3569136, y: 2.71622276, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1541256199}
+  m_RootOrder: 3
+--- !u!114 &1330954389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1330954387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsHidden: 0
+  PlacedObjectPosition: {x: 0, y: 0, z: 0}
+  Container: {fileID: 1616970354}
+  Exists: 1
+  ContentsVisible: 0
+  IsContainer: 0
+  LayAnimation: 
+  IsFood: 0
+  IsBeverage: 0
+  Kind: button
+  Adjectives: []
 --- !u!1 &1334240276
 GameObject:
   m_ObjectHideFlags: 0
@@ -12519,7 +12697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 1644521598}
+  Material: {fileID: 1633258908}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
   Rows: 4
@@ -13090,6 +13268,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1477267614}
+  - {fileID: 470051336}
+  - {fileID: 266788632}
+  - {fileID: 1330954388}
+  - {fileID: 2097529039}
   m_Father: {fileID: 1036973645}
   m_RootOrder: 11
 --- !u!1 &1541784522
@@ -13788,6 +13970,34 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300008, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!21 &1633258908
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: .5
+    m_Colors: {}
 --- !u!1 &1636741191
 GameObject:
   m_ObjectHideFlags: 0
@@ -13896,34 +14106,6 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300008, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!21 &1644521598
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: .5
-    m_Colors: {}
 --- !u!1 &1649144405
 GameObject:
   m_ObjectHideFlags: 0
@@ -17168,7 +17350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 1219844850}
+  Material: {fileID: 462302340}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
   Rows: 4
@@ -18390,6 +18572,56 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300058, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &2097529038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2097529039}
+  - 114: {fileID: 2097529040}
+  m_Layer: 10
+  m_Name: more magic button
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2097529039
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2097529038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.3569136, y: 2.71622276, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1541256199}
+  m_RootOrder: 4
+--- !u!114 &2097529040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2097529038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c4cde1131ce4046a53056272fd25cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsHidden: 0
+  PlacedObjectPosition: {x: 0, y: 0, z: 0}
+  Container: {fileID: 1616970354}
+  Exists: 1
+  ContentsVisible: 0
+  IsContainer: 0
+  LayAnimation: 
+  IsFood: 0
+  IsBeverage: 0
+  Kind: button
+  Adjectives: []
 --- !u!1 &2098955290
 GameObject:
   m_ObjectHideFlags: 0
@@ -18714,31 +18946,3 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300064, guid: f68bb1969f57aa540ab4fd8198d49358, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!21 &2142594173
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: .5
-    m_Colors: {}

@@ -294,6 +294,15 @@ strategy(read($me, Object),
 	    say_string("It's blank."))).
 
 %%
+%% Pressing buttons
+%%
+
+precondition(press($me, Button),
+	     ready_to_hand(Button)).
+default_strategy(press($me, _Button),
+		 say_string("Nothing happened...")).
+
+%%
 %% Tracking who you're doing something for
 %%
 

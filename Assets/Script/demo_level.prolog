@@ -1,3 +1,16 @@
+strategy(press($pc, $'magic button'),
+	 begin(call(release_captive),
+	       say_string("My God, there's someone hidden inside!"))).
+
+:- public release_captive/0.
+
+release_captive :-
+   force_move($captive, $living_room),
+   component_of_gameobject_with_type(SimController, $captive, $'SimController'),
+   set_property(SimController, 'IsHidden', false),
+   component_of_gameobject_with_type(Renderer, $captive, $'SpriteSheetAnimationController'),
+   set_property(Renderer, visible, true).
+
 %%%
 %%% Exposition beat
 %%%

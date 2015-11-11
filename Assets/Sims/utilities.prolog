@@ -90,6 +90,15 @@ true_location(GameObject, Container) :-
    component_of_gameobject_with_type(C, GameObject, $'PhysicalObject'),
    property(C, "Container", Container).
 
+:- public force_move/2.
+
+%% force_move(+GameObject, +Container)
+%  IMPERATIVE
+%  Forcibly move GameObject to Container.
+force_move(GameObject, Container) :-
+   component_of_gameobject_with_type(C, GameObject, $'PhysicalObject'),
+   C.moveto(Container).
+
 :- public existing/2.
 
 %% existing(*Kind, ?GameObject)
