@@ -9,7 +9,11 @@ release_captive :-
    component_of_gameobject_with_type(SimController, $captive, $'SimController'),
    set_property(SimController, 'IsHidden', false),
    component_of_gameobject_with_type(Renderer, $captive, $'SpriteSheetAnimationController'),
-   set_property(Renderer, visible, true).
+   set_property(Renderer, visible, true),
+   react_to_plot_event(release_captive).
+
+plot_point(release_captive,
+	   $global_root/plot_points/captive_released).
 
 %%%
 %%% Exposition beat
@@ -94,6 +98,24 @@ beat_monolog(pc_finds_the_macguffin,
 	     ["Got it!",
 	      "I knew he stole it."]).
 
+%%%
+%%% PC releases captive
+%%%
+
+beat(pc_releases_captive).
+beat_priority(pc_releases_captive, 1).
+beat_precondition(pc_releases_captive,
+		  $global_root/plot_points/captive_released).
+beat_start_task(pc_releases_captive,
+		$captive,
+		goto($pc)).
+beat_dialog(pc_releases_captive, $pc, $captive,
+	    [ thanks_for_releasing_me ]).
+
+$captive::quip(thanks_for_releasing_me,
+	       [ "Thanks for releasing me!" ]).
+
+     
 %%%
 %%% Kavi eats Pc
 %%%
