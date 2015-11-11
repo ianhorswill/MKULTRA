@@ -14,6 +14,14 @@ public class PropInfo : PhysicalObject
     public bool IsContainer;
 
     /// <summary>
+    /// True if this object can be portrayed visually.
+    /// Set to false if e.g. it is a component of the parent object
+    /// whose rendering encompasses the rendering of this object, or
+    /// if the object is immaterial.
+    /// </summary>
+    public bool IsVisuallyPortrayable = true;
+
+    /// <summary>
     /// Name of the animation to play to display the character laying on this object
     /// </summary>
     public string LayAnimation;
@@ -58,7 +66,7 @@ public class PropInfo : PhysicalObject
 
     internal void OnGUI()
     {
-        if (Camera.current != null && GetComponent<Renderer>() == null && !IsHidden)
+        if (IsVisuallyPortrayable && !IsHidden && Camera.current != null && GetComponent<Renderer>() == null)
         {
             var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
             var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);

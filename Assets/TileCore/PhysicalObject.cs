@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public abstract class PhysicalObject : BindingBehaviour
 {
@@ -7,6 +8,11 @@ public abstract class PhysicalObject : BindingBehaviour
     /// Also, suppresses rendering of the object until it's unhidden.
     /// </summary>
     public bool IsHidden;
+
+    /// <summary>
+    /// True if the object can be moved.
+    /// </summary>
+    public bool IsMovable = true;
 
     /// <summary>
     /// For containers only:
@@ -38,6 +44,8 @@ public abstract class PhysicalObject : BindingBehaviour
 
     public void MoveTo(GameObject newContainer)
     {
+        if (!IsMovable)
+            throw new InvalidOperationException("Attempt to move immovable object "+name);
         Container = newContainer;
         IsHidden = false;
         // Reparent our gameObject to newContainer
