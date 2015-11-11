@@ -91,8 +91,8 @@ beat_precondition(kavi_eats_pc,
 		  $global_root/plot_points/ate/ $kavi/ $pc).
 beat_monolog(kavi_eats_pc,
 	     $kavi,
-	     ["Sorry, old chap,",
-	      "but I can't let you investigate my house.",
+	     ["Sorry, old girl,",
+	      "but I'm afraid I can't let you search my house.",
 	      "I know it's horribly rude to eat you,",
 	      "But you see, I don't have a gun.",
 	      "So there's really no alternative."]).
