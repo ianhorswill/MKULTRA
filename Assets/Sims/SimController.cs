@@ -826,7 +826,12 @@ public class SimController : PhysicalObject
                     ELNode.Store(eventHistory / new Structure("goto", winner)); // Log change for debugging purposes.
                 }
                 this.CurrentDestination = winner;
-                this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
+                if (currentDestination.DockingTiles().Contains(gameObject.TilePosition()))
+                {
+                    QueueEvent("arrived_at", currentDestination);
+                }
+                else
+                    this.currentPath = planner.Plan(gameObject.TilePosition(), this.CurrentDestination.DockingTiles());
             }
         }
     }
