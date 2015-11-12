@@ -20,6 +20,8 @@ public class ExaminationContent : MonoBehaviour
     /// </summary>
     public GUIStyle Style;
 
+    public TextAsset Text;
+
     private int popUpTimestamp;
     public void PopUp()
     {
@@ -53,6 +55,8 @@ public class ExaminationContent : MonoBehaviour
             // For some reason, changing the alpha value here has no effect on the amount of greying out
             greyOutTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.5f));
         }
+        if (Text != null)
+            Content.text = Text.text;
     }
 
     private Vector2 scrollPosition;

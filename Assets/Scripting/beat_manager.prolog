@@ -51,13 +51,16 @@ can_perform_beat_task(Task, Task) :-
 
 incomplete_beat_task_from_list(Beat, TaskList, Task) :-
    member(Task, TaskList),
-   ( atomic(Task) ->
+   \+ beat_task_already_executed(Beat, Task).
+
+beat_task_already_executed(Beat, Task) :-
+   atomic(Task) ->
         % The / operator only does a pointer comparison, not unification.
         % So this only works when Task is atomic.
-        (\+ $global_root/beats/Beat/completed_tasks/Task)
+        ($global_root/beats/Beat/completed_tasks/Task)
         ;
         % This is the harder version - look at each T and check if it's Task.
-        \+ ($global_root/beats/Beat/completed_tasks/T, T=Task) ).
+        (($global_root/beats/Beat/completed_tasks/T), T=Task).
 
 beat_dialog_with(Beat, Partner, TaskList) :-
    beat_dialog(Beat, $me, Partner, TaskList).

@@ -25,8 +25,10 @@ beat_start_task(exposition,
 		goto($pc)).
 beat_dialog(exposition,
 	    $pc, $kavi,
-	    [ mention_macguffin,
-	      mention_keepout ]).
+	    [ read_instructions($intro_screen),
+	      mention_macguffin,
+	      mention_keepout,
+	      read_instructions($instructions) ]).
 
 $kavi::quip(mention_macguffin,
 	    ["Sorry to hear your macguffin was stolen.",
@@ -35,6 +37,9 @@ $kavi::quip(mention_keepout,
 	    ["By the way,",
 	     "Stay out of my bedroom",
 	     "It's a personal thing."]).
+
+$pc::personal_strategy(read_instructions(X),
+		       force_examine(X)).
 
 %%%
 %%% Pc reacts to Kavi's speech
@@ -49,7 +54,8 @@ beat_monolog(pc_reacts,
 	       "I'm sure Kavi stole my macguffin.",
 	       "It must be here someplace.",
 	       "He's a member of the illuminati.",
-	       "I need to search the house." ]).
+	       "I need to search the house.",
+	       read_instructions($instructions2) ]).
 
 %%%
 %%% Pc explores the house

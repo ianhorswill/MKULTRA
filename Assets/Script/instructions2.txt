@@ -1,0 +1,6 @@
+You can <color="lime"><b>talk with characters by typing</b></color>  If Betsy isn't in a conversation with another character, then anything you type, you are saying to her.
+
+You can inject false beliefs into another character by prefixing them with the magic word <color="lime"><b>fnord</b></color>.
+
+Good luck!
+

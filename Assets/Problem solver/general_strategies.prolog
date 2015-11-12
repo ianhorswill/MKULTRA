@@ -293,6 +293,11 @@ strategy(read($me, Object),
 	    call(pop_up_examination_content(Content)),
 	    say_string("It's blank."))).
 
+strategy(force_examine(Object),
+	 if(examination_content(Object, Content),
+	    call(pop_up_examination_content(Content)),
+	    call(log(no_examination_content(Object))))).
+
 %%
 %% Pressing buttons
 %%
