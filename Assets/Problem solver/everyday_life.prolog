@@ -37,6 +37,11 @@ strategy(everyday_life,
 add_pending_task(Task) :-
    assert(/goals/pending_tasks/Task).
 
+:- public kill_current_everyday_life_task/0.
+kill_current_everyday_life_task :-
+   everyday_life_task(T),
+   retract(T/concerns).
+
 strategy(everyday_life,
 	 work_on_everyday_life_task(achieve(P)) ) :-
    unsatisfied_maintenance_goal(P),

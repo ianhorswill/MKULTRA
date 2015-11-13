@@ -26,7 +26,9 @@ request_status(_Requestor, _Task, normal).
 strategy(follow_command(Requestor, Task, normal),
 	 if(dialog_task(Task),
 	    Task,
-	    call(add_pending_task(on_behalf_of(Requestor, Task))))).
+	    if(Task=halt($me),
+	       call(kill_current_everyday_life_task),
+	       call(add_pending_task(on_behalf_of(Requestor, Task)))))).
 
 :- public dialog_task/1.
 dialog_task(tell_about(_,_,_)).
