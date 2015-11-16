@@ -143,3 +143,7 @@ check_lexical_entry_type(LF) :-
    !.
 check_lexical_entry_type(LF) :-
    log(no_type_specified_for(LF)).
+
+end_csv_loading(adjective) :-
+   forall(adjective(A, _),
+	  register_lexical_item(A)).
