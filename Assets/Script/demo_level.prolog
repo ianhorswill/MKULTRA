@@ -62,7 +62,7 @@ beat_monolog(pc_reacts,
 %%%
 
 beat(pc_explores_the_house).
-beat_delay(pc_explores_the_house, 5).
+beat_delay(pc_explores_the_house, 20).
 beat_follows(pc_explores_the_house, pc_reacts).
 beat_completion_condition(pc_explores_the_house,
 			  ( $pc::contained_in($macguffin, $pc),
@@ -92,6 +92,19 @@ beat_monolog(pc_finds_the_report,
 	      "I've never heard of it."]).
 
 %%%
+%%% Pc finds the photo
+%%%
+
+beat(pc_finds_the_photo).
+beat_priority(pc_finds_the_photo, 1).
+beat_precondition(pc_finds_the_photo,
+		  $global_root/examined/ $photo).
+beat_monolog(pc_finds_the_photo,
+	     $pc,
+	     [ "Wait, that's Trip and Grace!?!",
+	       "What's a photo of them doing here?" ]).
+
+%%%
 %%% Pc finds the macguffin
 %%%
 
@@ -116,10 +129,32 @@ beat_start_task(pc_releases_captive,
 		$captive,
 		goto($pc)).
 beat_dialog(pc_releases_captive, $pc, $captive,
-	    [ thanks_for_releasing_me ]).
+	    [ thanks_for_releasing_me,
+	      its_been_so_long,
+	      about_ten_years,
+	      what_are_you_doing_here,
+	      medical_experiments,
+	      oh_no,
+	      javascript,
+	      barbaric ]).
 
 $captive::quip(thanks_for_releasing_me,
 	       [ "Thanks for releasing me!" ]).
+$pc::quip(its_been_so_long,
+	  [ "I haven't seen you since that horrible dinner party!",
+	    "How long has it been?" ]).
+$captive::quip(about_ten_years,
+	       [ "Oh I'd say about ten years!" ]).
+$pc::quip(what_are_you_doing_here,
+	  [ "What are you doing here?" ]).
+$captive::quip(medical_experiments,
+	       [ "They kidnapped me for medical experiments!" ]).
+$pc::quip(oh_no,
+	  [ "Oh no!" ]).
+$captive::quip(javascript,
+	       [ "They were trying to reimplement me in JavaScript!" ]).
+$pc::quip(barbaric,
+	  [ "How barbaric!" ]).
 
      
 %%%

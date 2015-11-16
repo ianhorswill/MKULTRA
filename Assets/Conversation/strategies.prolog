@@ -21,7 +21,8 @@ conversation_idle_task(Partner, do_beat_dialog(Task)) :-
    \+ beat_waiting_for_timeout,
    dialog_task_with_partner_advances_current_beat(B, Partner, Task).
 
-strategy(do_beat_dialog(Task),
+strategy(do_beat_dialog(null), null).
+default_strategy(do_beat_dialog(Task),
 	 begin(Task,
 	       assert($global_root/beats/Beat/completed_tasks/Task))) :-
    current_beat(Beat).
