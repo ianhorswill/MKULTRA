@@ -653,6 +653,10 @@ public class SimController : PhysicalObject
                                 if (character != this.gameObject)
                                     character.QueueEvent((Structure)Term.CopyInstantiation(structure));
                             }
+                            // TODO: fix it so that when characters appear, the system computes their social
+                            // spaces from scratch.  Then we won't need this kluge.
+                            if (!socialSpace.ContainsKey(thisAddressee))
+                                thisAddressee.QueueEvent((Structure)Term.CopyInstantiation(structure));
                         }
                     }
                     break;
@@ -818,6 +822,7 @@ public class SimController : PhysicalObject
             // Replan if destination has changed or if destination has moved away from current path.
             var newDestination = (winner != CurrentDestination && winner != CurrentlyDockedWith);
             if (newDestination
+                || (currentDestination != null && currentPath == null)
                 || (currentDestination != null && currentPath != null && !CurrentDestination.DockingTiles().Contains(currentPath.FinalTile)))
             {
                 if (newDestination)
