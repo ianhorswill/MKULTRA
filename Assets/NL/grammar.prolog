@@ -134,6 +134,8 @@ discourse_fragment(question_answer(X)) -->
    {!}, sentence(X, indicative, affirmative, present, simple).
 discourse_fragment(s(X)) -->
    {!}, sentence(X, indicative, affirmative, present, simple).
+discourse_fragment(uninterpreted_s(X)) -->
+   {!}, sentence(X, indicative, affirmative, present, simple).
 
 discourse_fragment(np(X)) -->
    {kind(X), !}, [a, X].
