@@ -282,9 +282,11 @@ strategy(achieve_precondition(_, ready_to_hand(Object)),
 precondition(examine($me, Object),
 	     ready_to_hand(Object)).
 strategy(examine($me, Object),
-	 if(examination_content(Object, Content),
-	    call(pop_up_examination_content(Content)),
-	    describe(Object, general, null))).
+	 begin(assert($global_root/examined/Object),
+	       if(examination_content(Object, Content),
+		  call(pop_up_examination_content(Content)),
+		  describe(Object, general, null)),
+	       call(maybe_interrupt_current_beat))).
 
 precondition(read($me, Object),
 	     ready_to_hand(Object)).
