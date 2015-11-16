@@ -71,7 +71,8 @@ beat_dialog_with(Beat, Partner, TaskList) :-
 %  Task is the thing I should do to advance the current beat if
 %  I'm not already involved in dialog.
 my_beat_idle_task(sleep(1)) :-
-   beat_waiting_for_timeout.
+   beat_waiting_for_timeout,
+   !.
 my_beat_idle_task(Task) :-
    \+ $global_root/configuration/inhibit_beat_system,
    \+ in_conversation_with(_),  % we're not idle if we aren't in conversation
@@ -102,9 +103,8 @@ monolog_task(Beat,
 beat_waiting_for_timeout :-
    current_beat(Beat),
    beat_delay(Beat, Time),
-   ( (\+ beat_running_for_at_least(Beat, Time))
-     ;
-     (\+ player_idle_for_at_least(Time)) ).
+   (\+ ( beat_running_for_at_least(Beat, Time),
+	 player_idle_for_at_least(Time) )).
 
 %%%
 %%% Beat state
