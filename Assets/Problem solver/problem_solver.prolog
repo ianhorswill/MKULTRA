@@ -58,6 +58,7 @@ immediate_builtin(retract(_)).
 immediate_builtin(invoke_continuation(_)).
 immediate_builtin((_,_)).
 immediate_builtin(let(_,_)).
+polled_builtin(yield).
 polled_builtin(wait_condition(_)).
 polled_builtin(wait_event(_)).
 polled_builtin(wait_event(_,_)).

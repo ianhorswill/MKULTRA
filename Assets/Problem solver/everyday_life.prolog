@@ -14,8 +14,8 @@ character_debug_display(Character, line("Pending:\t", Task)) :-
 character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
    Character::(/pending_conversation_topics/Person/Topic).
 
-strategy(work_on_everyday_life_task(sleep(_)),
-	 null).
+strategy(work_on_everyday_life_task(yield),
+	 yield).
 default_strategy(work_on_everyday_life_task(T),
 		 begin(call(set_concern_status($task, T)),
 				% Spawn it as a subtask and wait for it.

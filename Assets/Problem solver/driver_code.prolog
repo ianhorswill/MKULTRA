@@ -24,7 +24,6 @@ poll_task(T) :-
 poll_task(T) :-
    begin((T/current:A)>>ActionNode,
 	 poll_task_action(T, A, ActionNode)).
-
 poll_task_action(T, start, _) :-
    % The task was just created and has yet to start.
    begin(assert(T/current:starting),
@@ -72,6 +71,10 @@ poll_action(T, A) :-
    % Make sure it's still runnable
    runnable(A) ; interrupt_step(T, achieve(runnable(A))).
 
+poll_builtin(T, yield) :-
+   % Task had yielded, so let it run now.
+   !,
+   step_completed(T).
 poll_builtin(T, wait_condition(Condition)) :-
    !,
    (Condition -> step_completed(T) ; true).

@@ -37,7 +37,6 @@ switch_to_task(retract(Fact)) :-
 switch_to_task(invoke_continuation(K)) :-
    !,
    invoke_continuation(K).
-
 % Non-immediates that can be taken care of now.
 switch_to_task(wait_condition(Condition)) :-
    Condition,
