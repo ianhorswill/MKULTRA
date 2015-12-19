@@ -70,6 +70,12 @@ assert_proper_name(Object, [ ], _) :-
 assert_proper_name(Object, [ ], NumberSpec) :-
    !,
    assert_proper_name(Object, [Object], NumberSpec).
+assert_proper_name(Object, [the | Name], NumberSpec) :-
+   !,
+   (number_spec_number(NumberSpec, Number) -> 
+      assert_phrase_rule(proper_name_without_the(Object, Number), Name)
+      ;
+      log(bad_grammatical_number(NumberSpec:Name))).
 assert_proper_name(Object, Name, NumberSpec) :-
    number_spec_number(NumberSpec, Number) -> 
       assert_phrase_rule(proper_name(Object, Number), Name)

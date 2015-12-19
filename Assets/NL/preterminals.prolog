@@ -9,6 +9,10 @@
 proper_name(Object, Name) :-
    proper_name(Object, _, Name, [ ]).
 
+proper_name(Object, Number) -->
+   [the],
+   proper_name_without_the(Object, Number).
+
 pronoun(Case, Person:Number, (E^S)^S) -->
    [PN],
    { \+ bound_discourse_variable(E),

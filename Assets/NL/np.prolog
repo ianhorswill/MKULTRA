@@ -33,6 +33,13 @@ np((E^S)^S, Case, third:Number, Gap, Gap) -->
    proper_name(E, Number),
    opt_genitive(Case).
 
+% PARSE ONLY
+np((E^S)^S, Case, third:Number, Gap, Gap) -->
+   { \+ bound_discourse_variable(E) },
+   { input_from_player },  % filter for parse mode
+   proper_name_without_the(E, Number),
+   opt_genitive(Case).
+
 opt_genitive(subject) --> [].
 opt_genitive(object) --> [].
 opt_genitive(genitive) --> ['\'', s].
@@ -58,6 +65,14 @@ np((X^S)^S, _, third:singular, Gap, Gap) -->
 % "the NOUN"
 np((X^S)^S, _C, third:singular, Gap, Gap) -->
    [ the ],
+   { var(X),
+     input_from_player},	% filter for parsing
+   kind_noun(Kind, singular),
+   { resolve_definite_description(X, is_a(X, Kind)) }.
+
+% PARSE ONLY
+% "NOUN" (not grammatical English but common in IF text 
+np((X^S)^S, _C, third:singular, Gap, Gap) -->
    { var(X),
      input_from_player},	% filter for parsing
    kind_noun(Kind, singular),
