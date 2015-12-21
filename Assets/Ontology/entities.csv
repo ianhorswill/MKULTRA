@@ -1,4 +1,4 @@
-Entity,Kinds (list),Description,Proper noun (word list),Number,Properties (list),Relations (list)
+Entity,Kinds (list),Description,Proper noun (phrase list),Number,Properties (list),Relations (list)
 player,person,,the player,,,
 $pc,person,,,,"age=23, job=spy","knows_about: spying, member_of:www, interested_in: illuminati, friend_of: $'Kavi'"
 $kavi,person,, 'Kavi',,"age=23, given_name=""Kavi"", surname=""Surkow"", gender=male","member_of: illuminati, friend_of: $pc"

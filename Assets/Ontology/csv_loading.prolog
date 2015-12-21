@@ -17,9 +17,10 @@ load_special_csv_row(RowNumber,
 			   ClassRelations)) :-
    begin(define_kind(RowNumber, Kind, Parents),
 	 assert_default_description(Kind, Description),
-	 decode_kind_name(SingularSpec, [Kind], Singular),
-	 decode_kind_name(PluralSpec, Singular, Plural),
-	 assert_kind_noun(Kind, Singular, Plural),
+	 decode_kind_names(SingularSpec, [Kind], Singular),
+	 (([DefPlural | _] = Singular) ; DefPlural = []),
+	 decode_kind_names(PluralSpec, DefPlural, Plural),
+	 assert_kind_nouns(Kind, Singular, Plural),
 	 assert(declare_kind(Kind, kind)),
 	 parse_list(Prop=Value, DefaultProperties,
 		    assert(default_value(Kind, Prop, Value)),
@@ -46,14 +47,15 @@ assert_default_description(_, null).
 assert_default_description(Kind, Description) :-
    assert(default_value(Kind, description, Description)).
 
-decode_kind_name([-], _, []).
-decode_kind_name([], Default, Default).
-decode_kind_name(Name, _, Name).
+decode_kind_names([[-]], _, []).
+decode_kind_names([[]], Default, [Default]).
+decode_kind_names(Names, _, Names).
 
-assert_kind_noun(_, _, []).
-assert_kind_noun(Kind, Singular, Plural) :-
-   assert_phrase_rule(kind_noun(Kind, singular), Singular),
-   assert_phrase_rule(kind_noun(Kind, plural), Plural).
+assert_kind_nouns(Kind, Singulars, Plurals) :-
+   begin(forall(member(Phrase, Singulars),
+		assert_phrase_rule(kind_noun(Kind, singular), Phrase)),
+	 forall(member(Phrase, Plurals),
+		assert_phrase_rule(kind_noun(Kind, plural), Phrase))).
 
 define_kind(RowNumber, Kind, _) :-
    kind(Kind),
@@ -136,12 +138,13 @@ assert_genitive_form(Name, Number, Phrase) :-
 load_special_csv_row(_RowNumber,
 		     entities(EntityName, KindList,
 			      Description,
-			      ProperName, GramaticalNumber,
+			      ProperNames, GramaticalNumber,
 			      PropertyList, RelationList)) :-
    assert_description(EntityName, Description),
    forall(member(Kind, KindList),
 	  assert(declare_kind(EntityName, Kind))),
-   assert_proper_name(EntityName, ProperName, GramaticalNumber),
+   forall(member(ProperName, ProperNames),
+	  assert_proper_name(EntityName, ProperName, GramaticalNumber)),
    forall(member(PropertyName=Value, PropertyList),
 	  assert(declare_value(EntityName, PropertyName, Value))),
    forall(member(RelationName:Relatum, RelationList),
