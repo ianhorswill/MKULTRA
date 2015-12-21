@@ -97,3 +97,17 @@ player_idle_time(Time) :-
 player_idle_for_at_least(Time) :-
    player_idle_time(T),
    T >= Time.
+
+%% caption(+GameObject, -Caption) is det
+% Generates caption for the desired object.
+:- public caption/2.
+caption($pc, "That's me!").
+caption(GameObject, Name) :-
+   proper_name(GameObject, Words),
+   word_list(Name, Words).
+caption(GameObject, Description) :-
+   base_kind(GameObject, Kind),
+   kind_noun(Kind, singular, Words, []),
+   contracted_form([a | Words], Contracted),
+   word_list(Description, Contracted).
+caption(_, "???").

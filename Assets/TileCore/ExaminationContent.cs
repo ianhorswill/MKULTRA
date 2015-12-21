@@ -73,7 +73,7 @@ public class ExaminationContent : MonoBehaviour
                 GUI.depth = -1;
 
                 var screenRect = new Rect(0, 0, Screen.width, Screen.height);
-                // For some reason, changing the alpha on greyOutTexture has no effect on the greying out
+                // For some reason, changing the alpha on GreyOutTexture has no effect on the greying out
                 // but drawing the box twice does :(
                 GUI.Box(screenRect, greyOutTexture);
                 GUI.Box(screenRect, greyOutTexture);

@@ -66,6 +66,7 @@ public class PropInfo : PhysicalObject
 
     internal void OnGUI()
     {
+        MaybeShowDescription();
         if (IsVisuallyPortrayable && !IsHidden && Camera.current != null && GetComponent<Renderer>() == null)
         {
             var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);

@@ -97,7 +97,7 @@ public class SimController : PhysicalObject
 
     #region Private fields
 
-    private static Texture2D greyOutTexture;
+    internal static Texture2D GreyOutTexture;
 
     private ELNode elRoot;
 
@@ -261,9 +261,9 @@ public class SimController : PhysicalObject
         ELNode.Store(lastDestination % null);  // Need a placeholder last destination so that /last_destination/X doesn't fail.
         if (!KB.Global.IsTrue("register_character", gameObject))
             throw new Exception("Can't register character " + name);
-        if (greyOutTexture == null) {
-            greyOutTexture = new Texture2D(1,1);
-            greyOutTexture.SetPixel(0,0, new Color(0,0,0, 128));
+        if (GreyOutTexture == null) {
+            GreyOutTexture = new Texture2D(1,1);
+            GreyOutTexture.SetPixel(0,0, new Color(0,0,0, 128));
         }
     }
 
@@ -884,6 +884,7 @@ public class SimController : PhysicalObject
 
     internal void OnGUI()
     {
+        MaybeShowDescription();
         if (Camera.current != null && !string.IsNullOrEmpty(this.currentSpeechBubbleText))
         {
             var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
@@ -909,7 +910,7 @@ public class SimController : PhysicalObject
                     bubbleRect.yMin -= size.y;
                 }
             }
-            GUI.Box(bubbleRect, greyOutTexture);
+            GUI.Box(bubbleRect, GreyOutTexture);
             GUI.Label(bubbleRect, this.currentSpeechBubbleText, SpeechBubbleStyle);
         }
     }

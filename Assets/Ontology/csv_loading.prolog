@@ -49,6 +49,7 @@ assert_default_description(Kind, Description) :-
 
 decode_kind_names([[-]], _, []).
 decode_kind_names([[]], Default, [Default]).
+decode_kind_names([], Default, [Default]).
 decode_kind_names(Names, _, Names).
 
 assert_kind_nouns(Kind, Singulars, Plurals) :-
