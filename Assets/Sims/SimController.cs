@@ -725,7 +725,8 @@ public class SimController : PhysicalObject
 
         this.transform.parent = (GameObject.Find("Characters")??new GameObject("Characters")).transform;
         transform.position = dockingRegion.WorldDockingRect.center;
-	spriteController.enabled = true;
+	    spriteController.enabled = true;
+        spriteController.Visible = true;
     }
 
     /// <summary>
