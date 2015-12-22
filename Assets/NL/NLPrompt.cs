@@ -87,7 +87,7 @@ public class NLPrompt : BindingBehaviour
         switch (e.type)
         {
             case EventType.KeyDown:
-                if (GUI.GetNameOfFocusedControl()=="")
+                if (GUI.GetNameOfFocusedControl()=="" && !e.alt && !e.control)
                 {
                     this.HandleKeyDown(e);
                     this.TryCompletionIfCompleteWord();
