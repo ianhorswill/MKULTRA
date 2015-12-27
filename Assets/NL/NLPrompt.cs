@@ -87,7 +87,7 @@ public class NLPrompt : BindingBehaviour
         switch (e.type)
         {
             case EventType.KeyDown:
-                if (GUI.GetNameOfFocusedControl()=="" && !e.alt && !e.control)
+                if (GUI.GetNameOfFocusedControl() == "" && !e.alt && !e.control)
                 {
                     this.HandleKeyDown(e);
                     this.TryCompletionIfCompleteWord();
@@ -95,6 +95,16 @@ public class NLPrompt : BindingBehaviour
                 break;
 
             case EventType.Repaint:
+                //if (!string.IsNullOrEmpty(input))
+                {
+                    GameObject addressee;
+                    var da = dialogAct as Structure;
+                    if (da == null)
+                        addressee = GameObject.Find("pc");
+                    else addressee = (GameObject) da.Argument(1);
+
+                    addressee.DrawThumbNail(new Vector2(InputRect.x - 40, InputRect.y));
+                }
                 GUI.Label(InputRect, formatted, InputGUIStyle);
                 GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
                 GUI.Label(ResponseRect, characterResponse, InputGUIStyle);

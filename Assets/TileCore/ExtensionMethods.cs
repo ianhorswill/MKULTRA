@@ -17,4 +17,12 @@ public static class TileCoreExtensionMethods
         var screenPosition = ScreenPosition(gameObject);
         return new Vector2(screenPosition.x, Screen.height - screenPosition.y);
     }
+
+    public static void DrawThumbNail(this GameObject gameObject, Vector2 screenLocation)
+    {
+        var ss = gameObject.GetComponent<SpriteSheetAnimationController>();
+        if (ss == null)
+            throw new ArgumentNullException("ThumbNailImage() called on game object with not SpriteSheetAnimationController");
+        ss.DrawThumbNail(screenLocation);
+    }
 }
