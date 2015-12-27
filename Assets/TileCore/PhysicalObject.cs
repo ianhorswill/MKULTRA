@@ -118,8 +118,8 @@ public abstract class PhysicalObject : BindingBehaviour
     {
         if (Event.current.type == EventType.Repaint && mouseIsOverMe)
         {
-            var screenPosition = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
-            var bubbleRect = new Rect(screenPosition.x, Screen.height - screenPosition.y, captionSize.x, captionSize.y);
+            var screenPosition = gameObject.GUIScreenPosition();
+            var bubbleRect = new Rect(screenPosition.x, screenPosition.y, captionSize.x, captionSize.y);
             GUI.Box(bubbleRect, SimController.GreyOutTexture);
             GUI.Label(
                 bubbleRect,

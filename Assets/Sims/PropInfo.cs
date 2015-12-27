@@ -69,8 +69,7 @@ public class PropInfo : PhysicalObject
         MaybeShowDescription();
         if (IsVisuallyPortrayable && !IsHidden && Camera.current != null && GetComponent<Renderer>() == null)
         {
-            var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
-            var topLeft = new Vector2(bubblelocation.x, Camera.current.pixelHeight - bubblelocation.y);
+            var topLeft = gameObject.GUIScreenPosition();
             var size = new Vector2(300, 3000);
             var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
             GUI.Label(bubbleRect, name);

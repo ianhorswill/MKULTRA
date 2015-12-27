@@ -888,15 +888,14 @@ public class SimController : PhysicalObject
         MaybeShowDescription();
         if (Camera.current != null && !string.IsNullOrEmpty(this.currentSpeechBubbleText))
         {
-            var bubblelocation = (Vector2)Camera.current.WorldToScreenPoint(transform.position);
+            var bubblelocation = gameObject.GUIScreenPosition();
             var addresseeOffset = addressee.transform.position - transform.position;
 
             if (addresseeOffset.x > 0 || addresseeOffset.y < 0)
-                bubblelocation.y += (CharacterHeight+0.5f)*Tile.TileSizeInPixels;
+                bubblelocation.y -= (CharacterHeight+0.5f)*Tile.TileSizeInPixels;
             var size = SpeechBubbleStyle.CalcSize(new GUIContent(this.currentSpeechBubbleText));
             bubblelocation.x += (CharacterWidth*0.5f)*Tile.TileSizeInPixels;
-            var topLeft = new Vector2(bubblelocation.x, Screen.height-bubblelocation.y);
-            var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
+            var bubbleRect = new Rect(bubblelocation.x, bubblelocation.y, size.x, size.y);
 
             // Handle rects that overshoot the map
             var overshoot = bubbleRect.xMax - Screen.width;
