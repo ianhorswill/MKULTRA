@@ -28,6 +28,9 @@ switch_to_task(null) :-
 switch_to_task(call(PrologCode)) :-
    begin(PrologCode,
 	 step_completed).
+switch_to_task(tell(Fact)) :-
+   begin(tell(Fact),
+	 step_completed).
 switch_to_task(assert(Fact)) :-
    begin(assert(Fact),
 	 step_completed).

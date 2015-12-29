@@ -53,6 +53,7 @@ builtin_task(T) :-
 immediate_builtin(null).
 immediate_builtin(done).
 immediate_builtin(call(_)).
+immediate_builtin(tell(_)).
 immediate_builtin(assert(_)).
 immediate_builtin(retract(_)).
 immediate_builtin(invoke_continuation(_)).
