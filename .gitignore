@@ -69,3 +69,4 @@ UnityVS.*.sln.DotSettings
 #!Library/unity default resources
 #!Library/unity editor resources
 #!Library/metadata/
+*.stackdump
