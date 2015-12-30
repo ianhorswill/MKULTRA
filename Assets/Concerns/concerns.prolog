@@ -41,6 +41,15 @@ concern_status(Concern, Status) :-
 set_concern_status(Concern, Status) :-
    assert(Concern/status:Status).
 
+%% current_priority(-Priority)
+% Priority is the priority of the currently runnign concern,
+% or 1, if this code is not running in a concern.
+current_priority(P) :-
+   $task \= null,
+   $task/priority:P,
+   !.
+current_priority(1).
+
 %%
 %% Creation
 %%
