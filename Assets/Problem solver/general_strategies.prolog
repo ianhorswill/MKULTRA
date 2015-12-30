@@ -174,7 +174,7 @@ strategy(search_object(ArchitecturalSpace, CriterionLambda, SuccessLambda, FailT
 					CriterionLambda, SuccessLambda,
 					FailTask)),
 	    % Searched entire contents
-	    begin(assert(/searched/ArchitecturalSpace),
+	    begin(tell(/searched/ArchitecturalSpace),
 		  FailTask))) :-
    is_a(ArchitecturalSpace, architectural_space).
 
@@ -187,7 +187,7 @@ strategy(search_object(Container, CriterionLambda, SuccessLambda, FailTask),
 			  search_object(Container,
 					CriterionLambda, SuccessLambda, FailTask)),
 	    % Searched entire contents
-	    begin(assert(/searched/Container),
+	    begin(tell(/searched/Container),
 		  FailTask))) :-
    is_a(Container, container),
    \+ is_a(Container, architectural_space),
@@ -197,11 +197,11 @@ strategy(search_object(Container, CriterionLambda, SuccessLambda, FailTask),
 default_strategy(search_object(Object, CriterionLambda, SuccessLambda, FailTask),
 		 if(( reduce(CriterionLambda, Object, Criterion),
 		      Criterion ),
-		    begin(assert(/searched/Object),
+		    begin(tell(/searched/Object),
 			  let(reduce(SuccessLambda, Object, SuccessTask),
 			      SuccessTask)),
 		    begin(sleep(0.75),
-			  assert(/searched/Object),
+			  tell(/searched/Object),
 			  FailTask))).
 
 :- public nearest_unsearched/2, unsearched/2.
@@ -219,7 +219,7 @@ unsearched(Container, Contents) :-
 reveal_hidden_item(Container) :-
    hidden_contents(Container, Item),
    reveal(Item),
-   assert($task/previously_hidden_items/Item),
+   tell($task/previously_hidden_items/Item),
    % Don't wait for update loop to update Item's position.
    assert(/perception/location/Item:Container),
    !.
@@ -282,7 +282,7 @@ strategy(achieve_precondition(_, ready_to_hand(Object)),
 precondition(examine($me, Object),
 	     ready_to_hand(Object)).
 strategy(examine($me, Object),
-	 begin(assert($global_root/examined/Object),
+	 begin(tell($global_root/examined/Object),
 	       if(examination_content(Object, Content),
 		  call(pop_up_examination_content(Content)),
 		  describe(Object, general, null)),

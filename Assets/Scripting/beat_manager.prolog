@@ -130,7 +130,7 @@ current_beat(Beat) :-
    !.
 
 set_current_beat(Beat) :-
-   assert($global_root/beats/current:Beat),
+   tell($global_root/beats/current:Beat),
    set_beat_state(Beat, started).
 
 %% beat_state(?Beat, ?State)
@@ -138,7 +138,7 @@ set_current_beat(Beat) :-
 beat_state(Beat, State) :-
    $global_root/beats/Beat/state:State.
 set_beat_state(Beat, State) :-
-   assert($global_root/beats/Beat/state:State).
+   tell($global_root/beats/Beat/state:State).
 
 beat_running_time(Beat, Time) :-
    $global_root/beats/Beat/start_time:T,
@@ -194,7 +194,7 @@ beat_score(Beat, Score) :-
 
 start_beat(Beat) :-
    \+ $global_root/configuration/inhibit_beat_system,
-   assert($global_root/beats/Beat/start_time: $now),
+   tell($global_root/beats/Beat/start_time: $now),
    forall(beat_start_task(Beat, Who, Task),
 	  Who::add_pending_task(Task)).
 

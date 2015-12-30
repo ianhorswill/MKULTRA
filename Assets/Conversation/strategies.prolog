@@ -24,7 +24,7 @@ conversation_idle_task(Partner, do_beat_dialog(Task)) :-
 strategy(do_beat_dialog(null), null).
 default_strategy(do_beat_dialog(Task),
 	 begin(Task,
-	       assert($global_root/beats/Beat/completed_tasks/Task))) :-
+	       tell($global_root/beats/Beat/completed_tasks/Task))) :-
    current_beat(Beat).
 
 strategy(ask_about($me, $addressee, $addressee),

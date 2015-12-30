@@ -12,7 +12,8 @@ default_strategy(respond_to_assertion(_Speaker, _ModalLF, true),
 default_strategy(respond_to_assertion(_Speaker, _ModalLF, false),
 	 say_string("I don't think so.")).
 default_strategy(respond_to_assertion(Speaker, ModalLF, unknown),
-	 (say_string(Response), assert(/hearsay/Speaker/ModalLF))) :-
+		 begin(say_string(Response),
+		       tell(/hearsay/Speaker/ModalLF))) :-
    heard_hearsay(ModalLF) -> Response="I've head that." ; Response="Really?".
 
 heard_hearsay(ModalLF) :-
