@@ -114,20 +114,3 @@ dirty($me) :- /physiological_states/dirty.
 maintenance_goal(~full_bladder($me)).
 full_bladder($me) :- /physiological_states/full_bladder.
 ~full_bladder(X) :- \+ full_bladder(X).
-
-%%%
-%%% Converstation topic queue
-%%%
-
-todo(engage_in_conversation(Person), 1) :-
-   \+ currently_in_conversation,
-   /pending_conversation_topics/Person/_.
-
-%%%
-%%% Beat background tasks
-%%%
-
-todo(BeatIdleTask, 0) :-
-   my_beat_idle_task(BeatIdleTask).
-
-

@@ -69,10 +69,18 @@ strategy(talk($me, ConversationalPartner, Topic),
 	 add_conversation_topic(ConversationalPartner, Topic)) :-
    ConversationalPartner \= $addressee.
 
+strategy(end_game(_,_), end_game(null)).
+
+%%%
+%%% Converstation topic queue
+%%%
+
+todo(engage_in_conversation(Person), 1) :-
+   \+ currently_in_conversation,
+   /pending_conversation_topics/Person/_.
+
 strategy(add_conversation_topic(Person, Topic),
 	 assert(/pending_conversation_topics/Person/ask_about($me,
 							      Person,
 							      Topic))) :-
    var(Topic) -> Topic = Person ; true.
-
-strategy(end_game(_,_), end_game(null)).

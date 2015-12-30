@@ -67,6 +67,13 @@ beat_dialog_with(Beat, Partner, TaskList) :-
 beat_dialog_with(Beat, Partner, TaskList) :-
    beat_dialog(Beat, Partner, $me, TaskList).
 
+%%%
+%%% Beat background tasks
+%%%
+
+todo(BeatIdleTask, 0) :-
+   my_beat_idle_task(BeatIdleTask).
+
 %% my_beat_idle_task(-Task)
 %  Task is the thing I should do to advance the current beat if
 %  I'm not already involved in dialog.
