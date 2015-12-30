@@ -14,38 +14,76 @@ character_debug_display(Character, line("Pending:\t", Task)) :-
 character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
    Character::(/pending_conversation_topics/Person/Topic).
 
-strategy(work_on_everyday_life_task(yield),
-	 yield).
+%% todo(-Task/-Preamble, -Priority)
+% Character wants/need to do Task with specified Priority.
+% When executing this task, it should first run Preamble
+% Preamble is used for housekeeping, e.g. to remove Task
+% from a queue of pending tasks. 
+
+strategy(everyday_life,
+	 work_on_everyday_life_task(Task)) :-
+   arg_max(Task, Priority, todo(Task, Priority)).
+default_strategy(everyday_life, yield).
+
 default_strategy(work_on_everyday_life_task(T),
-		 begin(call(set_concern_status($task, T)),
+		 begin(call(set_concern_status($task, Task)),
 				% Spawn it as a subtask and wait for it.
 				% Spawning it means that if it crashes, it doesn't take the
 				% parent task with it, and that the task gets its own separate
 				% crash log for debugging.
-		       cobegin(T))).
+		       Preamble,
+		       cobegin(Task))) :-
+   unpack_preamble(T, Task, Preamble).
 
+unpack_preamble(Task/Preamble, Task, Preamble) :- !.
+unpack_preamble(Task, Task, null).
+
+%%%
+%%% Control of the everyday_life task
+%%%
+
+%% everyday_life_task(-TaskConcern)
+% Returns the everyday_life task of the current character.
+% This means the top-level task called everyday_life, not whatever
+% todo list item it happens to be running right now.
 everyday_life_task(TaskConcern) :-
    concern(TaskConcern, task),
    TaskConcern/type:task:everyday_life.
 
+%% restart_everday_life_task
+% Restarts the everyday_life task
 restart_everyday_life_task :-
    everyday_life_task(C),
    restart_task(C).
 
-strategy(everyday_life,
-	 begin(retract(Node), work_on_everyday_life_task(T))) :-
-   /goals/pending_tasks/T>>Node.
-
-add_pending_task(Task) :-
-   assert(/goals/pending_tasks/Task).
-
+%% kill_current_everyday_life_task
+% Stops whatever the everyday_life task is currently trying to do.
 :- public kill_current_everyday_life_task/0.
 kill_current_everyday_life_task :-
    everyday_life_task(T),
    retract(T/concerns).
 
-strategy(everyday_life,
-	 work_on_everyday_life_task(achieve(P)) ) :-
+
+%%%
+%%% Pending task queue
+%%%
+
+todo(T/retract(Node), P) :-
+   /goals/pending_tasks/T>>Node,
+   Node:P.
+
+add_pending_task(Task) :-
+   add_pending_task(Task, 1).
+add_pending_task(Task, Priority) :-
+   current_priority(P),
+   Multiplied is Priority*P,
+   assert(/goals/pending_tasks/Task:Multiplied).
+
+%%%
+%%% Maintenance goals
+%%%
+
+todo(achieve(P), 1) :-
    unsatisfied_maintenance_goal(P),
    % Make sure that P isn't obviously unachievable.
    have_strategy(achieve(P)).
@@ -53,21 +91,6 @@ strategy(everyday_life,
 unsatisfied_maintenance_goal(P) :-
    maintenance_goal(P),
    \+ P.
-
-strategy(everyday_life,
-	 work_on_everyday_life_task(engage_in_conversation(Person))) :-
-   /pending_conversation_topics/Person/_,
-   \+ currently_in_conversation.
-
-default_strategy(everyday_life,
-		 if(my_beat_idle_task(Task),
-		    work_on_everyday_life_task(Task),
-		    begin(call(set_concern_status($task, idle)),
-			  wait_event_with_timeout(_, PollTime)))) :-
-   everyday_life_polling_time(PollTime).
-
-everyday_life_polling_time(T) :-
-   /parameters/poll_time:T -> true ; T = 60.
 
 maintenance_goal(P) :-
    /goals/maintain/P.
@@ -91,3 +114,20 @@ dirty($me) :- /physiological_states/dirty.
 maintenance_goal(~full_bladder($me)).
 full_bladder($me) :- /physiological_states/full_bladder.
 ~full_bladder(X) :- \+ full_bladder(X).
+
+%%%
+%%% Converstation topic queue
+%%%
+
+todo(engage_in_conversation(Person), 1) :-
+   \+ currently_in_conversation,
+   /pending_conversation_topics/Person/_.
+
+%%%
+%%% Beat background tasks
+%%%
+
+todo(BeatIdleTask, 0) :-
+   my_beat_idle_task(BeatIdleTask).
+
+
