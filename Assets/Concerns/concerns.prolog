@@ -41,6 +41,9 @@ concern_status(Concern, Status) :-
 set_concern_status(Concern, Status) :-
    assert(Concern/status:Status).
 
+normalize_task(set_status(Status),
+	       call(set_concern_status($task, Status))).
+
 %% current_priority(-Priority)
 % Priority is the priority of the currently runnign concern,
 % or 1, if this code is not running in a concern.

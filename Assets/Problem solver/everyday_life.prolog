@@ -6,7 +6,7 @@
 
 character_initialization :-
    \+ $global_root/configuration/inhibit_concern_initialization,
-   start_task($root, everyday_life, 1, T, [T/repeating_task]).
+   start_task($root, everyday_life, 1, T, [T/repeating_task, T/status:idle]).
 
 character_debug_display(Character, line("Pending:\t", Task)) :-
    Character::(/goals/pending_tasks/Task).
@@ -26,13 +26,14 @@ strategy(everyday_life,
 default_strategy(everyday_life, yield).
 
 default_strategy(work_on_everyday_life_task(T),
-		 begin(call(set_concern_status($task, Task)),
+		 begin(set_status(Task),
 				% Spawn it as a subtask and wait for it.
 				% Spawning it means that if it crashes, it doesn't take the
 				% parent task with it, and that the task gets its own separate
 				% crash log for debugging.
 		       Preamble,
-		       cobegin(Task))) :-
+		       cobegin(Task),
+		       set_status(idle))) :-
    unpack_preamble(T, Task, Preamble).
 
 unpack_preamble(Task/Preamble, Task, Preamble) :- !.
