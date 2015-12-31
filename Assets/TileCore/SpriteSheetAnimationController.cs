@@ -231,7 +231,7 @@ public class SpriteSheetAnimationController : MonoBehaviour
         var uSize = 1.0f / Columns;
         var vSize = 1.0f / Rows;
         var column = 1;
-        var row = 3;
+        var row = 1;
         GUI.DrawTextureWithTexCoords(
             new Rect(screenLocation.x, screenLocation.y, SpriteSheet.width / Columns, SpriteSheet.height / Rows),
             SpriteSheet,

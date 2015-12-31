@@ -62,13 +62,15 @@ public class NLPrompt : BindingBehaviour
     [Bind]
 #pragma warning disable 649
     private SimController simController;
+
+    private float typingPromptStartTime;
 #pragma warning restore 649
     #endregion
 
     internal void Start()
     {
-        this.lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
-        this.lastPlayerActivity.StoreExclusive(-1, true);
+        lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
+        lastPlayerActivity.StoreExclusive(-1, true);
     }
 
     /// <summary>
@@ -86,17 +88,22 @@ public class NLPrompt : BindingBehaviour
         var e = Event.current;
         switch (e.type)
         {
+            case EventType.MouseDown:
+                typingPromptStartTime = Time.time;
+                break;
+
             case EventType.KeyDown:
                 if (GUI.GetNameOfFocusedControl() == "")
                 {
-                    this.HandleKeyDown(e);
+                    HandleKeyDown(e);
                     if (!e.alt && !e.control)
-                        this.TryCompletionIfCompleteWord();
+                        TryCompletionIfCompleteWord();
                 }
                 break;
 
             case EventType.Repaint:
-                //if (!string.IsNullOrEmpty(input))
+                var arrowActive = typingPromptStartTime > Time.time-3;
+                if (!string.IsNullOrEmpty(input) || arrowActive)
                 {
                     GameObject addressee;
                     var da = dialogAct as Structure;
@@ -106,7 +113,8 @@ public class NLPrompt : BindingBehaviour
 
                     addressee.DrawThumbNail(new Vector2(InputRect.x - 40, InputRect.y));
                 }
-                GUI.Label(InputRect, formatted, InputGUIStyle);
+                var text = (string.IsNullOrEmpty(input) && arrowActive) ? "<color=grey><i>Talk to me</i></color>" : formatted;
+                GUI.Label(InputRect, text, InputGUIStyle);
                 GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
                 GUI.Label(ResponseRect, characterResponse, InputGUIStyle);
                 break;
@@ -138,54 +146,61 @@ public class NLPrompt : BindingBehaviour
             }
 
             // Update last user activity time
-            this.lastPlayerActivity.StoreExclusive(Time.time, true);
+            lastPlayerActivity.StoreExclusive(Time.time, true);
 
             switch (e.keyCode)
             {
                 case KeyCode.Escape:
-                    this.input = this.formatted = this.commentary = "";
-                    this.dialogAct = null;
+                    input = formatted = commentary = "";
+                    dialogAct = null;
                     PauseManager.Paused = false;
                     break;
 
                 case KeyCode.Delete:
                 case KeyCode.Backspace:
-                    if (this.input != "")
+                    if (input != "")
                     {
-                        this.formatted = this.input = this.input.Substring(0, this.input.Length - 1);
-                        this.TryCompletionIfCompleteWord();
+                        formatted = input = input.Substring(0, input.Length - 1);
+                        TryCompletionIfCompleteWord();
                     }
                     break;
 
                 case KeyCode.Tab:
-                    this.input = string.Format(
+                    input = string.Format(
                         "{0}{1}{2}",
-                        this.input,
-                        (this.input.EndsWith(" ")
+                        input,
+                        (input.EndsWith(" ")
                          || (!string.IsNullOrEmpty(completion) && !char.IsLetterOrDigit(completion[0])))
                             ? ""
                             : " ",
-                        this.completion);
+                        completion);
                     break;
 
                 case KeyCode.Return:
                 case KeyCode.KeypadEnter:
-                    if (this.dialogAct != null)
+                    if (dialogAct != null)
                     {
                         simController.QueueEvent("player_input", dialogAct);
                         this.IsTrue("log_dialog_act", dialogAct);
-                        this.formatted = this.input = this.completion = this.commentary = "";
-                        this.dialogAct = null;
+                        formatted = input = completion = commentary = "";
+                        dialogAct = null;
                         PauseManager.Paused = false;
                     }
                     Event.current.Use();
+                    break;
+
+                case KeyCode.UpArrow:
+                case KeyCode.DownArrow:
+                case KeyCode.LeftArrow:
+                case KeyCode.RightArrow:
+                    typingPromptStartTime = Time.time;
                     break;
             }
         }
 
         if (e.character > 0 && !e.alt && !e.control && e.character >= ' ')
         {
-            this.AddToInput(e.character);
+            AddToInput(e.character);
         }
     }
 
@@ -196,10 +211,10 @@ public class NLPrompt : BindingBehaviour
 
         PauseManager.Paused = true;
         characterResponse = "";
-        if (c != ' ' || (this.input != "" && !this.input.EndsWith(" "))) // don't let them type redundant spaces
-            this.input = this.input + c;
+        if (c != ' ' || (input != "" && !input.EndsWith(" "))) // don't let them type redundant spaces
+            input = input + c;
 
-        this.TryCompletionIfCompleteWord();
+        TryCompletionIfCompleteWord();
     }
 
     /// <summary>
@@ -226,25 +241,25 @@ public class NLPrompt : BindingBehaviour
 
     private void TryCompletionIfCompleteWord()
     {
-        this.formatted = null;
+        formatted = null;
         if (InputEndsWithCompleteWord)
-            this.TryCompletion();
+            TryCompletion();
         else
         {
-            var lastSpace = this.input.LastIndexOf(' ');
-            var lastWord = lastSpace < 0 ? this.input : this.input.Substring(lastSpace + 1);
+            var lastSpace = input.LastIndexOf(' ');
+            var lastWord = lastSpace < 0 ? input : input.Substring(lastSpace + 1);
             lastWord = lastWord.Trim('(', ')', '.', ',', '?', '!', ';', ':', '\'', '"');
 
             if (Prolog.Prolog.IsLexicalItem(lastWord))
             {
-                this.TryCompletion();
+                TryCompletion();
             }
         }
 
-        if (this.formatted == null)
+        if (formatted == null)
         {
-            this.formatted = this.input;
-            this.dialogAct = null;
+            formatted = input;
+            dialogAct = null;
         }
     }
 
@@ -255,63 +270,63 @@ public class NLPrompt : BindingBehaviour
         bool completionSuccess = false;
         try
         {
-            completionSuccess = this.IsTrue("input_completion", this.input, completionVar, dialogActVar);
+            completionSuccess = this.IsTrue("input_completion", input, completionVar, dialogActVar);
         }
         catch (InferenceStepsExceededException e)
         {
-            Debug.LogError("Completion took too many steps for input: "+this.input);
+            Debug.LogError("Completion took too many steps for input: "+ input);
             Debug.LogException(e);
         }
         if (completionSuccess)
         {
-            this.completion = (string)completionVar.Value;
-            this.dialogAct = Term.CopyInstantiation(dialogActVar.Value);
-            if (this.IsTrue("well_formed_dialog_act", this.dialogAct))
+            completion = (string)completionVar.Value;
+            dialogAct = Term.CopyInstantiation(dialogActVar.Value);
+            if (this.IsTrue("well_formed_dialog_act", dialogAct))
             {
-                this.formatted = this.completion == "" ?
-                    string.Format("<b><color=lime>{0}</color></b>", this.input)
+                formatted = completion == "" ?
+                    string.Format("<b><color=lime>{0}</color></b>", input)
                     : string.Format("<color=lime>{0}{1}<i>{2}</i></color>",
-                                    this.input,
-                                    ( this.input.EndsWith(" ") || this.input.EndsWith("'") 
-                                      || !char.IsLetterOrDigit(this.completion[0])) 
+                                    input,
+                                    (input.EndsWith(" ") || input.EndsWith("'") 
+                                      || !char.IsLetterOrDigit(completion[0])) 
                                     ? "" : " ",
-                                    this.completion);
-                var da = this.dialogAct as Structure;
+                                    completion);
+                var da = dialogAct as Structure;
                 if (da != null && da.Arity > 1)
                 {
                     var a = da.Argument<GameObject>(1);
-                    this.commentary = string.Format("{0} to {1}\n{2}", da.Functor, (a == this) ? "myself" : a.name,
+                    commentary = string.Format("{0} to {1}\n{2}", da.Functor, (a == this) ? "myself" : a.name,
                                                     ISOPrologWriter.WriteToString(dialogActVar.Value));
                 }
                 else
                 {
-                    this.commentary = ISOPrologWriter.WriteToString(dialogActVar.Value);
+                    commentary = ISOPrologWriter.WriteToString(dialogActVar.Value);
                 }
             }
             else
             {
                 // Input is grammatical but not well formed.
-                this.formatted = this.completion == "" ?
-                    string.Format("<b><color=yellow>{0}</color></b>", this.input)
+                formatted = completion == "" ?
+                    string.Format("<b><color=yellow>{0}</color></b>", input)
                     : string.Format("<color=yellow>{0}{1}</color><color=grey><i>{2}</i></color>",
-                                    this.input,
-                                    (this.input.EndsWith(" ") || !char.IsLetterOrDigit(this.completion[0])) ? "" : " ",
-                                    this.completion);
-                if (this.completion == "")
-                    this.commentary = string.Format(
+                                    input,
+                                    (input.EndsWith(" ") || !char.IsLetterOrDigit(completion[0])) ? "" : " ",
+                                    completion);
+                if (completion == "")
+                    commentary = string.Format(
                         "This input is grammatical, but doesn't make sense to me\n{0}",
                         ISOPrologWriter.WriteToString(dialogActVar.Value));
                 else
                 {
-                    this.commentary = "This is grammatical but nonsensical\n" + ISOPrologWriter.WriteToString(dialogActVar.Value);
+                    commentary = "This is grammatical but nonsensical\n" + ISOPrologWriter.WriteToString(dialogActVar.Value);
                 }
             }
 
         }
         else
         {
-            this.formatted = string.Format("<color=red>{0}</color>", this.input);
-            this.commentary = "Sorry; I don't understand any sentences beginning with those words.";
+            formatted = string.Format("<color=red>{0}</color>", input);
+            commentary = "Sorry; I don't understand any sentences beginning with those words.";
         }
     }
 }
