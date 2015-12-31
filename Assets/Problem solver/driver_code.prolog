@@ -121,8 +121,13 @@ wait_event_completed(_,_).
 %% Debug display
 %%
 
-character_debug_display(Character, line("Task:\t", Task, "\t", Status, "\t", Current)) :-
-   Character::(concern(T, task),
-	       T/type:task:Task,
-	       (concern_status(T, Status) -> true ; (Status=null)),
-	       T/current:Current).
+character_debug_display(Character,
+			[table([[bold("Task"), bold("Status"), bold("Current operation")]
+			       | Tasks]),
+			 line("")]) :-
+   findall([Task, Status, Current],
+	   Character::(concern(T, task),
+		       T/type:task:Task,
+		       (concern_status(T, Status) -> true ; (Status=null)),
+		       T/current:Current),
+	   Tasks).

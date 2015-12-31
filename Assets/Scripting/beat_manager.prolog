@@ -280,15 +280,18 @@ fkey_command(alt-b, "Show beat status") :-
 beat_info(color("red", line("Beat system disabled."))) :-
    $global_root/configuration/inhibit_beat_system,
    !.
-beat_info(color(Color,
-		[ line(Beat, ": "),
-		  line("\tScore: ", Score, "\tState: ", State)
-		  | WaitList ])) :-
+beat_info(table([[bold("Beat"), bold("Score"), bold("State"), bold("Waiting for")]
+		| BeatList])) :-
+   findall([color(Color, Beat), Score, State, term(WaitList)],
+	   beat_table_entry(Beat, Score, State, WaitList, Color),
+	   BeatList).
+
+beat_table_entry(Beat, Score, State, WaitList, Color) :-
    current_beat(Current),
    beat(Beat),
    beat_score(Beat, Score),
-   (beat_state(Beat, State) -> true ; State=null),
-   all(line("\tWaiting for: ", Precondition),
+   (beat_state(Beat, State) -> true ; State=" "),
+   all(Precondition,
        unsatisfied_beat_precondition(Beat, Precondition),
        WaitList),
    once(beat_display_color(Beat, Current, WaitList, State, Color)).
