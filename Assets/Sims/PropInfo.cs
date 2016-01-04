@@ -66,7 +66,6 @@ public class PropInfo : PhysicalObject
 
     internal void OnGUI()
     {
-        MaybeShowDescription();
         if (IsVisuallyPortrayable && !IsHidden && Camera.current != null && GetComponent<Renderer>() == null)
         {
             var topLeft = gameObject.GUIScreenPosition();

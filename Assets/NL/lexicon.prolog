@@ -12,6 +12,11 @@ pronoun_word(we, subject, first, plural, $dialog_group).
 pronoun_word(us, object, first, plural, $dialog_group).
 pronoun_word(our, genitive, first, plural, $dialog_group).
 
+demonstrative_pronoun(this).
+demonstrative_pronoun(that).
+
+:- register_all_lexical_items([D], demonstrative_pronoun(D)).
+
 :- randomizable noun/3.
 
 :- randomizable whpron/2.

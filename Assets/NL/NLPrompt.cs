@@ -59,6 +59,8 @@ public class NLPrompt : BindingBehaviour
     /// </summary>
     private string characterResponse = "";
 
+    private ELNode mouseSelectionELNode;
+
     [Bind]
 #pragma warning disable 649
     private SimController simController;
@@ -71,6 +73,7 @@ public class NLPrompt : BindingBehaviour
     {
         lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
         lastPlayerActivity.StoreExclusive(-1, true);
+        mouseSelectionELNode = this.KnowledgeBase().ELRoot/ Symbol.Intern("perception") / Symbol.Intern("mouse_selection");
     }
 
     /// <summary>
@@ -103,6 +106,12 @@ public class NLPrompt : BindingBehaviour
 
             case EventType.Repaint:
                 var arrowActive = typingPromptStartTime > Time.time-3;
+
+                // You'd want this to be called by a MouseMove event, but it's not supported in game,
+                // and in any case, we probably need to keep updating because of potential object movement.
+                UpdateMouseSelection();
+                ShowMouseSelectionCaption();
+
                 if (!string.IsNullOrEmpty(input) || arrowActive)
                 {
                     GameObject addressee;
@@ -265,6 +274,9 @@ public class NLPrompt : BindingBehaviour
 
     private void TryCompletion()
     {
+        // Update the mouse selection, so Prolog can get at it.
+        mouseSelectionELNode.StoreExclusive(MouseSelection, true);
+
         var completionVar = new LogicVariable("Output");
         var dialogActVar = new LogicVariable("DialogAct");
         bool completionSuccess = false;
@@ -329,4 +341,59 @@ public class NLPrompt : BindingBehaviour
             commentary = "Sorry; I don't understand any sentences beginning with those words.";
         }
     }
+
+    #region Mouse handling
+    /// <summary>
+    /// The GameObject of the PhysicalObject over which the mouse is currently hovering.
+    /// </summary>
+    public GameObject MouseSelection;
+    private void UpdateMouseSelection()
+    {
+        GameObject newSelection = null;
+
+        foreach (var physob in FindObjectsOfType<PhysicalObject>())
+        {
+            var go = physob.gameObject;
+            var rect = go.GUIScreenRect();
+            if (rect.HasValue && rect.Value.Contains(Event.current.mousePosition))
+                newSelection = go;
+        }
+
+        if (newSelection != MouseSelection)
+            MouseSelectionChanged(newSelection);
+    }
+
+    GUIContent caption;
+    GUIStyle captionStyle = new GUIStyle(GUIStyle.none);
+    Vector2 captionSize;
+
+    private void MouseSelectionChanged(GameObject newSelection)
+    {
+        MouseSelection = newSelection;
+        if (MouseSelection != null)
+        {
+            captionStyle.normal.textColor = Color.white;
+            var cap = new LogicVariable("Caption");
+            caption =
+                new GUIContent(
+                    (string) KnowledgeBase.Global.SolveFor(cap, new Structure("caption", MouseSelection, cap), this));
+            captionSize = captionStyle.CalcSize(caption);
+        }
+        TryCompletionIfCompleteWord();
+    }
+
+    protected void ShowMouseSelectionCaption()
+    {
+        if (MouseSelection != null)
+        {
+            var screenPosition = MouseSelection.GUIScreenPosition();
+            var bubbleRect = new Rect(screenPosition.x, screenPosition.y, captionSize.x, captionSize.y);
+            GUI.Box(bubbleRect, SimController.GreyOutTexture);
+            GUI.Label(
+                bubbleRect,
+                caption,
+                captionStyle);
+        }
+    }
+    #endregion
 }

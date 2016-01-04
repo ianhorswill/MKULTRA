@@ -93,39 +93,4 @@ public abstract class PhysicalObject : BindingBehaviour
             this.GetComponent<Renderer>().enabled = false;
     }
     #endregion
-
-    #region GUI
-    bool mouseIsOverMe;
-    GUIContent caption;
-    GUIStyle captionStyle = new GUIStyle(GUIStyle.none);
-    Vector2 captionSize;
-
-    internal void OnMouseEnter()
-    {
-        mouseIsOverMe = true;
-        captionStyle.normal.textColor = Color.white;
-        var cap = new LogicVariable("Caption");
-        caption = new GUIContent((string)KnowledgeBase.Global.SolveFor(cap, new Structure("caption", gameObject, cap), this));
-        captionSize = captionStyle.CalcSize(caption);
-    }
-
-    internal void OnMouseExit()
-    {
-        mouseIsOverMe = false;
-    }
-
-    protected void MaybeShowDescription()
-    {
-        if (Event.current.type == EventType.Repaint && mouseIsOverMe)
-        {
-            var screenPosition = gameObject.GUIScreenPosition();
-            var bubbleRect = new Rect(screenPosition.x, screenPosition.y, captionSize.x, captionSize.y);
-            GUI.Box(bubbleRect, SimController.GreyOutTexture);
-            GUI.Label(
-                bubbleRect,
-                caption,
-                captionStyle);
-        }
-    }
-    #endregion
 }

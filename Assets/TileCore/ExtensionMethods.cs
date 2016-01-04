@@ -18,6 +18,30 @@ public static class TileCoreExtensionMethods
         return new Vector2(screenPosition.x, Screen.height - screenPosition.y);
     }
 
+    public static Rect? GUIScreenRect(this GameObject go)
+    {
+        var position = go.GUIScreenPosition();
+
+        var sr = go.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            var height = sr.sprite.bounds.size.y*sr.sprite.pixelsPerUnit;
+            return new Rect(position.x, position.y - height,
+                sr.sprite.bounds.size.x*sr.sprite.pixelsPerUnit,
+                height);
+        }
+
+        var sa = go.GetComponent<SpriteSheetAnimationController>();
+        if (sa != null)
+        {
+            var height = 1.5f*Tile.TileSizeInPixels;
+            var width = Tile.TileSizeInPixels;
+            return new Rect(position.x-0.5f*width, position.y-height, width, height);
+        }
+
+        return null;
+    }
+
     public static void DrawThumbNail(this GameObject gameObject, Vector2 screenLocation)
     {
         var ss = gameObject.GetComponent<SpriteSheetAnimationController>();

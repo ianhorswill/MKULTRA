@@ -27,6 +27,13 @@ np((X^S)^S, _C, _Agreement, np(X), nogap) -->
 np(NP, Case, Agreement, Gap, Gap) -->
    pronoun(Case, Agreement,NP).
 
+% Demonstrative pronouns
+np((E^S)^S, _Case, third:singular, Gap, Gap) -->
+   [ Demonstrative ],
+   { demonstrative_pronoun(Demonstrative),
+     /perception/mouse_selection:E,
+     E \= null }.
+
 % Proper names
 np((E^S)^S, Case, third:Number, Gap, Gap) -->
    { \+ bound_discourse_variable(E) },
