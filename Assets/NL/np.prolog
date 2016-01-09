@@ -31,8 +31,7 @@ np(NP, Case, Agreement, Gap, Gap) -->
 np((E^S)^S, _Case, third:singular, Gap, Gap) -->
    [ Demonstrative ],
    { demonstrative_pronoun(Demonstrative),
-     /perception/mouse_selection:E,
-     E \= null }.
+     /perception/mouse_selection:E }.
 
 % Proper names
 np((E^S)^S, Case, third:Number, Gap, Gap) -->

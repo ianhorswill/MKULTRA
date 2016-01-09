@@ -61,6 +61,8 @@ public class NLPrompt : BindingBehaviour
 
     private ELNode mouseSelectionELNode;
 
+    private ELNode talkingToElNode;
+
     [Bind]
 #pragma warning disable 649
     private SimController simController;
@@ -74,6 +76,7 @@ public class NLPrompt : BindingBehaviour
         lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
         lastPlayerActivity.StoreExclusive(-1, true);
         mouseSelectionELNode = this.KnowledgeBase().ELRoot/ Symbol.Intern("perception") / Symbol.Intern("mouse_selection");
+        talkingToElNode = this.KnowledgeBase().ELRoot/Symbol.Intern("social_state")/Symbol.Intern("talking_to");
     }
 
     /// <summary>
@@ -115,10 +118,14 @@ public class NLPrompt : BindingBehaviour
                 if (!string.IsNullOrEmpty(input) || arrowActive)
                 {
                     GameObject addressee;
+
                     var da = dialogAct as Structure;
-                    if (da == null)
-                        addressee = GameObject.Find("pc");
-                    else addressee = (GameObject) da.Argument(1);
+                    if (da != null)
+                        addressee = (GameObject)da.Argument(1);
+                    else if (talkingToElNode.Children.Count > 0)
+                        addressee = (GameObject)talkingToElNode.Children[0].Key;
+                    else
+                        addressee = gameObject;
 
                     addressee.DrawThumbNail(new Vector2(InputRect.x - 40, InputRect.y));
                 }
@@ -357,6 +364,13 @@ public class NLPrompt : BindingBehaviour
             var rect = go.GUIScreenRect();
             if (rect.HasValue && rect.Value.Contains(Event.current.mousePosition))
                 newSelection = go;
+        }
+        if (newSelection == null)
+        {
+            var mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var room = TileMap.TheTileMap.TileRoom(mouseLocation);
+            if (room != null)
+                newSelection = room.gameObject;
         }
 
         if (newSelection != MouseSelection)

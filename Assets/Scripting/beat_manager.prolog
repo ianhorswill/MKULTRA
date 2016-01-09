@@ -77,12 +77,10 @@ todo(BeatIdleTask, 0) :-
 %% my_beat_idle_task(-Task)
 %  Task is the thing I should do to advance the current beat if
 %  I'm not already involved in dialog.
-my_beat_idle_task(yield) :-
-   beat_waiting_for_timeout,
-   !.
 my_beat_idle_task(Task) :-
    \+ $global_root/configuration/inhibit_beat_system,
    \+ in_conversation_with(_),  % we're not idle if we aren't in conversation
+   \+ beat_waiting_for_timeout,
    current_beat(Beat),
    ( next_beat_monolog_task(Beat, Task)
      ;

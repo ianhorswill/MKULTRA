@@ -16,10 +16,16 @@
 %  Creates a subconcern of Parent to handle conversation with Partner.
 %  Event is the initial event that is triggering the conversation.
 launch_conversation(Parent, Partner, Event) :-
+   assert(/social_state/talking_to/Partner),
    begin_child_concern(Parent, conversation, 1, Child,
 		       [ Child/partner/Partner,
 			 Child/initial_history/Event ]),
    (Partner \= player -> assert(Child/location_bids/Partner:20);true).
+
+on_kill(conversation, C) :-
+   forall(C/partner/P,
+	  retract(/social_state/talking_to/P)).
+
 
 %% conversation_handler_task(+ConversationConcern, Task)
 %  IMPERATIVE
@@ -96,8 +102,7 @@ currently_in_conversation :-
 %% in_conversation_with(+Character)
 %  True if there is a running conversation concern with Character.
 in_conversation_with(Person) :-
-   once( ( concern(C, conversation),
-	   C/partner/Person )).
+   /social_state/talking_to/Person.
 
 %% Display debug data.
 character_debug_display(Character, line("Talking to:\t", Partner)) :-
