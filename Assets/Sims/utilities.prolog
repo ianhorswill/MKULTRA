@@ -158,7 +158,39 @@ hidden_contents(Container, HiddenObject) :-
    parent_of_gameobject(HiddenObject, Container),
    hidden(HiddenObject).
 
+%%%
+%%% Character status
+%%%
 
+:- external player_character/0.
+
+update_character_status :-
+   character_status_string(S),
+   assert(/status:S).
+
+character_status_string(Emote) :-
+   /motor_state/emote:Emote:Time,
+   $now < Time+3 .
+character_status_string("!") :-
+   everyday_life_task_busy.
+character_status_string("<>") :-
+   player_character,
+   /perception/nobody_speaking.
+character_status_string("").
+
+%%%
+%%% Emoting
+%%%
+
+:- public emote/1.
+
+emote(Emotion) :-
+   emotion_string(Emotion, String),
+   assert(/motor_state/emote:String: $now).
+emotion_string(surprise, "<size=30><color=red>?</color></size>").
+
+normalize_task(emote(E),
+	       call(emote(E))).
 
 %%%
 %%% Character initialization.

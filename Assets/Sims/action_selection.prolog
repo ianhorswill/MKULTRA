@@ -25,7 +25,8 @@
 %  Called by SimController component's Update routine.
 next_action(Action) :-
    begin(run_delayed_operations,
-	 poll_tasks),
+	 poll_tasks,
+	 update_character_status),
    best_action(Action).
 next_action(sleep(1)).
 

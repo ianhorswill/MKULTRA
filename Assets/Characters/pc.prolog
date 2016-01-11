@@ -2,6 +2,8 @@
 %%% Initializations for the player character
 %%%
 
+player_character.
+
 % Monitor goals quickly
 /parameters/poll_time:1.
 

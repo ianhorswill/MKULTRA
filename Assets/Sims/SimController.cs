@@ -102,6 +102,8 @@ public class SimController : PhysicalObject
 
     private ELNode elRoot;
 
+    private ELNode statusText;
+
     private ELNode perceptionRoot;
 
     private ELNode locationRoot;
@@ -251,6 +253,7 @@ public class SimController : PhysicalObject
     {
         updateConcernBids = UpdateConcernBids;
         elRoot = this.KnowledgeBase().ELRoot;
+        statusText = elRoot/Symbol.Intern("status");
         perceptionRoot = elRoot / Symbol.Intern("perception");
         locationRoot = perceptionRoot / Symbol.Intern("location");
         conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
@@ -892,9 +895,26 @@ public class SimController : PhysicalObject
 
     internal void OnGUI()
     {
+        var guiScreenPosition = gameObject.GUIScreenPosition();
+        if (statusText.Children.Count > 0)
+        {
+            var text = statusText.ExclusiveKeyValue<string>();
+            if (!string.IsNullOrEmpty(text))
+            {
+                var status = new GUIContent(text);
+                var style = GUIStyle.none;
+                style.normal.textColor = Color.yellow;
+                var size = style.CalcSize(status);
+                var statusRect = new Rect(guiScreenPosition.x - 0.5f*size.x,
+                    guiScreenPosition.y - 0.9f*CharacterHeight*Tile.TileSizeInPixels, size.x, size.y);
+                GUI.Box(statusRect, GreyOutTexture);
+                GUI.Label(statusRect, status, style);
+            }
+        }
+
         if (Camera.current != null && !string.IsNullOrEmpty(currentSpeechBubbleText))
         {
-            var bubblelocation = gameObject.GUIScreenPosition();
+            var bubblelocation = guiScreenPosition;
             var addresseeOffset = addressee.transform.position - transform.position;
 
             if (addresseeOffset.x > 0 || addresseeOffset.y < 0)

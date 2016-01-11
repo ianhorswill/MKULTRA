@@ -6,7 +6,8 @@
 
 character_initialization :-
    \+ $global_root/configuration/inhibit_concern_initialization,
-   start_task($root, everyday_life, 1, T, [T/repeating_task, T/status:idle]).
+   start_task($root, everyday_life, 1, T, [T/repeating_task, T/status:idle]),
+   assert(everyday_life_task(T)).
 
 character_debug_display(Character, line("Pending:\t", Task)) :-
    Character::(/goals/pending_tasks/Task).
@@ -27,10 +28,10 @@ default_strategy(everyday_life, yield).
 
 default_strategy(work_on_everyday_life_task(T),
 		 begin(set_status(Task),
-				% Spawn it as a subtask and wait for it.
-				% Spawning it means that if it crashes, it doesn't take the
-				% parent task with it, and that the task gets its own separate
-				% crash log for debugging.
+		       % Spawn it as a subtask and wait for it.
+		       % Spawning it means that if it crashes, it doesn't take the
+		       % parent task with it, and that the task gets its own separate
+		       % crash log for debugging.
 		       Preamble,
 		       cobegin(Task),
 		       set_status(idle))) :-
@@ -47,9 +48,13 @@ unpack_preamble(Task, Task, null).
 % Returns the everyday_life task of the current character.
 % This means the top-level task called everyday_life, not whatever
 % todo list item it happens to be running right now.
-everyday_life_task(TaskConcern) :-
-   concern(TaskConcern, task),
-   TaskConcern/type:task:everyday_life.
+
+% Defined when the everyday_life concern is created. 
+:- external everyday_life_task/1.
+
+everyday_life_task_busy :-
+   everyday_life_task(C),
+   C/concerns/_.
 
 %% restart_everday_life_task
 % Restarts the everyday_life task
@@ -62,7 +67,7 @@ restart_everyday_life_task :-
 :- public kill_current_everyday_life_task/0.
 kill_current_everyday_life_task :-
    everyday_life_task(T),
-   retract(T/concerns).
+   kill_children(T).
 
 
 %%%

@@ -156,7 +156,8 @@ strategy(search_for($me, Container, Target),
    var(Target).
 
 strategy(handle_discovery(X),
-	 mental_monologue(["Found", np(X)])).
+	 begin(emote(surprise),
+	       mental_monologue(["Found", np(X)]))).
 after(handle_discovery(X),
       pickup(X)) :-
    is_a(X, key_item).
