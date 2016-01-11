@@ -17,6 +17,12 @@ demonstrative_pronoun(that).
 
 :- register_all_lexical_items([D], demonstrative_pronoun(D)).
 
+here_there_adverb(here).
+here_there_adverb(there).
+
+:- register_all_lexical_items([D], here_there_adverb(D)).
+
+
 :- randomizable noun/3.
 
 :- randomizable whpron/2.
