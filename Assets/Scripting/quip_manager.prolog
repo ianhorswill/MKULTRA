@@ -20,3 +20,23 @@ normalize_task(run_quip(String),
 	       begin(monolog([String]),
 		     assert(/quips/spoken/String))) :-
    string(String).
+normalize_task(run_quip(String:Markup),
+	       begin(monolog([String:Markup]),
+		     assert(/quips/spoken/String))) :-
+   string(String).
+
+normalize_task(respond_to_quip_markup([M]), respond_to_quip_markup(M)).
+normalize_task(respond_to_quip_markup([M | Tail]),
+	       (respond_to_quip_markup(M), respond_to_quip_markup(Tail))).
+
+:- external question_introduced/1, revealed/1, plot_goal/1.
+
+strategy(respond_to_quip_markup(surprise),
+	 emote(surprise)).
+strategy(respond_to_quip_markup(introduce_question(Q)),
+	 begin(tell($global::question_introduced(Q)),
+	       emote(question))).
+strategy(respond_to_quip_markup(reveal(R)),
+	 begin(tell($global::revealed(R)),
+	       emote(surprise))).
+	

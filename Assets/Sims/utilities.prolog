@@ -171,7 +171,7 @@ update_character_status :-
 character_status_string(Emote) :-
    /motor_state/emote:Emote:Time,
    $now < Time+3 .
-character_status_string("!") :-
+character_status_string("") :-
    everyday_life_task_busy.
 character_status_string("<>") :-
    player_character,
@@ -187,7 +187,10 @@ character_status_string("").
 emote(Emotion) :-
    emotion_string(Emotion, String),
    assert(/motor_state/emote:String: $now).
-emotion_string(surprise, "<size=30><color=red>?</color></size>").
+emotion_string(surprise, "!").
+emotion_string(frustration, "(>_<)").
+emotion_string(question, "?").
+emotion_string(confusion, "???").
 
 normalize_task(emote(E),
 	       call(emote(E))).

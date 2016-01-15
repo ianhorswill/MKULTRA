@@ -143,9 +143,12 @@ discourse_fragment(np(X)) -->
 discourse_fragment(np(X)) -->
    {!}, np((X^S)^S, subject, third:singular, nogap, nogap).
 
-discourse_fragment(X) -->
-   { string(X), ! },
-   [ X ].
+discourse_fragment(String) -->
+   { string(String), ! },
+   [ String ].
+discourse_fragment(String:_Markup) -->
+   { string(String), ! },
+   [ String ].
 
 %
 % Interface to action and conversation systems

@@ -82,6 +82,7 @@ switch_to_task(resolve_match_failure(resolve_match_failure(resolve_match_failure
 
 fail_task(Why, FailedTask) :-
    begin($task/type:task:TopLevelTask,
+	 emote(frustration),
 	 asserta($global::failed_task($me, (TopLevelTask-> FailedTask))),
 	 emit_grain("task fail", 100),
 	 restart_or_kill_task,

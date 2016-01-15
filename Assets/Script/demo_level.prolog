@@ -25,24 +25,26 @@ beat_start_task(exposition,
 		goto($pc)).
 beat_dialog(exposition,
 	    $pc, $kavi,
-	    [ read_instructions($intro_screen),
+	    [ %read_instructions($intro_screen),
 	      mention_macguffin,
-	      mention_keepout,
-	      read_instructions($instructions) ]).
+	      mention_keepout
+              %, read_instructions($instructions)
+	    ]).
 
 $kavi::quip(mention_macguffin,
 	    ["Sorry to hear your macguffin was stolen.",
 	     "Make yourself at home."]).
 $kavi::quip(mention_keepout,
 	    ["By the way,",
-	     "Stay out of my bedroom",
+	     "Stay out of my bedroom"
+	       :[surprise, introduce_question(why_stay_out_of_bedroom)],
 	     "It's a personal thing."]).
 
 $pc::personal_strategy(read_instructions(X),
 		       force_examine(X)).
 
 %%%
-%%% Pc reacts to Kavi's speech
+%%% PC reacts to Kavi's speech
 %%%
 
 beat(pc_reacts).
@@ -54,11 +56,12 @@ beat_monolog(pc_reacts,
 	       "I'm sure Kavi stole my macguffin.",
 	       "It must be here someplace.",
 	       "He's a member of the illuminati.",
-	       "I need to search the house.",
-	       read_instructions($instructions2) ]).
+	       "I need to search the house."
+	       %, read_instructions($instructions2)
+	     ]).
 
 %%%
-%%% Pc explores the house
+%%% PC explores the house
 %%%
 
 beat(pc_explores_the_house).
@@ -78,7 +81,7 @@ after(pickup($report),
       describe($report)).
 
 %%%
-%%% Pc finds the report
+%%% PC finds the report
 %%%
 
 beat(pc_finds_the_report).
@@ -92,7 +95,7 @@ beat_monolog(pc_finds_the_report,
 	      "I've never heard of it."]).
 
 %%%
-%%% Pc finds the photo
+%%% PC finds the photo
 %%%
 
 beat(pc_finds_the_photo).

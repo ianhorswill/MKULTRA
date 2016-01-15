@@ -7,23 +7,14 @@
 
 
 tell(P) :-
-   already_asserted(P),
+   % this should technically be clause(P, true), but that's slower,
+   % and the current version of clause doesn't grok the /, :, and :: operators.
+   P,
    !.
 tell(P) :-
    assert(P),
    forall(when_added(P, Action),
 	  begin(Action)).
-
-% This is slightly complicated because assert/1 and retract/1 know about the EL
-% database, but clause/2 doesn't.  Maybe fix this sometime.
-already_asserted(Node/Key) :-
-   !,
-   Node/Key.
-already_asserted(Node:Key) :-
-   !,
-   Node:Key.
-already_asserted(P) :-
-   clause(P, true).
 
 when_added(P, tell(Q)) :-
    (P ==> Q).

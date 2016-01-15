@@ -58,6 +58,8 @@ strategy(respond_to_increment(Speaker, Addressee, s(LF)),
 	 respond_to_dialog_act(assertion(Speaker, Addressee, LF, present, simple))).
 strategy(respond_to_increment(Speaker, Addressee, question_answer(LF)),
 	 respond_to_dialog_act(question_answer(Speaker, Addressee, LF))).
+strategy(respond_to_increment(_Speaker, _Addressee, _String:Markup),
+	 respond_to_quip_markup(Markup)).
 
 %%
 %% Agreement/disagreement
