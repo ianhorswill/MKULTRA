@@ -254,6 +254,12 @@ react_to_plot_event(Event) :-
 	  assert(PlotPoint)),
    maybe_interrupt_current_beat.
 
+when_added(Assertion, maybe_interrupt_current_beat) :-
+   beat_precondition(_, Assertion).
+
+when_added(Assertion, maybe_interrupt_current_beat) :-
+   beat_completion_condition(_, Assertion).
+
 maybe_interrupt_current_beat :-
    begin(current_beat(Current),
 	 beat_score(Current, CurrentScore),

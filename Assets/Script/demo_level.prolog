@@ -101,7 +101,7 @@ beat_monolog(pc_finds_the_report,
 beat(pc_finds_the_photo).
 beat_priority(pc_finds_the_photo, 1).
 beat_precondition(pc_finds_the_photo,
-		  $global_root/examined/ $photo).
+		  examined($photo)).
 beat_monolog(pc_finds_the_photo,
 	     $pc,
 	     [ "Wait, that's Trip and Grace!?!",

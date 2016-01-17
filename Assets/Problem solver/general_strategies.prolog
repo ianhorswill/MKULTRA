@@ -280,14 +280,17 @@ ready_to_hand(Object) :-
 strategy(achieve_precondition(_, ready_to_hand(Object)),
 	 goto(Object)).
 
+:- external examined/1.
+
+tell_globally(examined(_)).
+
 precondition(examine($me, Object),
 	     ready_to_hand(Object)).
 strategy(examine($me, Object),
-	 begin(tell($global_root/examined/Object),
-	       if(examination_content(Object, Content),
+	 begin(if(examination_content(Object, Content),
 		  call(pop_up_examination_content(Content)),
 		  describe(Object, general, null)),
-	       call(maybe_interrupt_current_beat))).
+	       tell(examined(Object)))).
 
 precondition(read($me, Object),
 	     ready_to_hand(Object)).
