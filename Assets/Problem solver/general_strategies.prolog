@@ -82,6 +82,8 @@ strategy(achieve(location($me, Container)),
 	       get_in(Container))) :-
    is_a(Container, prop).
 
+precondition(move($me, Patient, _),
+	     know(X:location(Patient, X))).
 strategy(move($me, X,Y),
 	 achieve(location(X, Y))).
 
@@ -121,6 +123,13 @@ after(goto_internal(Person),
    character(Person).
 
 %%
+%% Getting things
+%%
+
+strategy(get($me, Object),
+	 move($me, Object, $me)).
+
+%%
 %% Transfer of posession
 %%
 
@@ -138,6 +147,11 @@ guard_condition(Task, location(Object, _Loc)) :-
 %%
 %% Spatial search
 %%
+
+strategy(achieve(know(X:location(Object, X))),
+	 begin(search_for($me, _, Object),
+	       unless(know(X:location(Object, X)),
+		      failed_because(cant_find(Object))))).
 
 normalize_task(search_for($me, Unspecified, Target),
 	       search_for($me, CurrentRoom, Target)) :-
@@ -201,7 +215,7 @@ default_strategy(search_object(Object, CriterionLambda, SuccessLambda, FailTask)
 		    begin(tell(/searched/Object),
 			  let(reduce(SuccessLambda, Object, SuccessTask),
 			      SuccessTask)),
-		    begin(sleep(0.75),
+		    begin(pause(0.75),
 			  tell(/searched/Object),
 			  FailTask))).
 
@@ -252,6 +266,13 @@ postcondition(drink(Person, B),
 self_achieving(/perception/nobody_speaking).
 
 %%
+%% Sleeping
+%%
+
+strategy(sleep($me, OnWhat),
+	 move($me, $me, OnWhat)).
+
+%%
 %% Social interaction
 %%
 
@@ -265,10 +286,10 @@ strategy(engage_in_conversation(Person),
 
 %%
 %% OTHER
-%% Sleeping
+%% Pausing
 %%
 
-strategy(sleep(Seconds),
+strategy(pause(Seconds),
 	 wait_condition(after_time(Time))) :-
    Time is $now + Seconds.
 
@@ -374,3 +395,19 @@ default_strategy(cobegin(T1, T2, T3, T4, T5, T6),
 		       spawn(T5),
 		       spawn(T6),
 		       wait_for_children)).
+
+%%%
+%%% Beginnings of an exception/cognizant-failure system
+%%%
+
+strategy(failed_because(Reason),
+	 begin(assert(/failures/UID:StrippedTask:Reason),
+	       done)) :-
+   $task/type:task:Task,
+   strip_task_wrappers(Task, StrippedTask),
+   UID is $task.'Key'.
+
+strip_task_wrappers(on_behalf_of(_, Task), Stripped) :-
+   !,
+   strip_task_wrappers(Task, Stripped).
+strip_task_wrappers(Task, Task).

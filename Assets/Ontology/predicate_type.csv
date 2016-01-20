@@ -24,6 +24,9 @@ action,"search_for(actor, physical_object, physical_object)"
 action,"examine(actor, physical_object)"
 action,"read(actor, document)"
 action,"watch(actor, physical_object)"
+action,"get(actor, physical_object)"
+action,"find(actor, physical_object)"
+action,"sleep(actor, layable)"
 % Conditions,
 condition,can(action)
 condition,"location(physical_object, container)"

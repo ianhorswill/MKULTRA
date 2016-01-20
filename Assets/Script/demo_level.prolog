@@ -52,7 +52,7 @@ beat_sequel(pc_reacts, exposition).
 beat_start_task(pc_reacts, $kavi, goto($'kitchen sink')).
 beat_monolog(pc_reacts,
 	     $pc,
-	     [ sleep(3),
+	     [ pause(3),
 	       "I'm sure Kavi stole my macguffin.",
 	       "It must be here someplace.",
 	       "He's a member of the illuminati.",

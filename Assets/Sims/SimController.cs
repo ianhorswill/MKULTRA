@@ -177,7 +177,7 @@ public class SimController : PhysicalObject
     /// <summary>
     /// Time to wake character up and ask for an action.
     /// </summary>
-    private float? sleepUntil;
+    private float? pauseUntil;
     #endregion
 
     #region Event queue operations
@@ -229,7 +229,7 @@ public class SimController : PhysicalObject
     private void HandleEvents()
     {
         if (EventsPending)
-            sleepUntil = null;
+            pauseUntil = null;
         while (EventsPending)
             NotifyEvent(GetNextEvent());
     }
@@ -475,10 +475,10 @@ public class SimController : PhysicalObject
     private bool pollActions;
     private void MaybeDoNextAction()
     {
-        if (pollActions || !sleepUntil.HasValue || sleepUntil.Value <= Time.time)
+        if (pollActions || !pauseUntil.HasValue || pauseUntil.Value <= Time.time)
         {
             pollActions = false;
-            sleepUntil = null;
+            pauseUntil = null;
             DoNextAction();
             DecisionCycleCount++;
         }
@@ -533,8 +533,8 @@ public class SimController : PhysicalObject
                     InitiateAction(structure.Argument(1));
                     break;
 
-                case "sleep":
-                    sleepUntil = Time.time + Convert.ToSingle(structure.Argument(0));
+                case "pause":
+                    pauseUntil = Time.time + Convert.ToSingle(structure.Argument(0));
                     break;
 
                 case "pickup":
@@ -671,7 +671,7 @@ public class SimController : PhysicalObject
                     }
                     break;
             }
-            if (structure.Functor.Name != "sleep")
+            if (structure.Functor.Name != "pause")
                 // Report back to the character that the action has occurred.
                 QueueEvent(structure);
         }

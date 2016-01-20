@@ -26,7 +26,7 @@ strategy(respond_to_dialog_act(greet($addressee, $me)),
 strategy(respond_to_dialog_act(parting(Them, $me)),
 	 begin(assert(Parent/generated_parting),
 	       parting($me, Them),
-	       sleep(1),
+	       pause(1),
 	       call(kill_concern(Parent)))) :-
    parent_concern_of($task, Parent),
    \+ Parent/generated_parting.
