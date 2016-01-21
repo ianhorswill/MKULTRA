@@ -159,14 +159,20 @@ normalize_task(search_for($me, Unspecified, Target),
    in_room($me, CurrentRoom).
 
 strategy(search_for($me, Container, Target),
-	 search_object(Container, X^(X=Target),
-		       X^handle_discovery(X),
-		       mental_monologue(["Couldn't find it."]))) :-
+	 {
+	  assert($task/status_text/searching:1),
+	  search_object(Container, X^(X=Target),
+			X^handle_discovery(X),
+			mental_monologue(["Couldn't find it."]))
+	 }) :-
    nonvar(Target).
 strategy(search_for($me, Container, Target),
-	 search_object(Container, X^previously_hidden(X),
-		       X^handle_discovery(X),
-		       mental_monologue(["Nothing seems to be hidden."]))) :-
+	 {
+	  assert($task/status_text/searching:1),
+	  search_object(Container, X^previously_hidden(X),
+			X^handle_discovery(X),
+			mental_monologue(["Nothing seems to be hidden."]))
+	 }) :-
    var(Target).
 
 strategy(handle_discovery(X),
@@ -400,6 +406,8 @@ default_strategy(cobegin(T1, T2, T3, T4, T5, T6),
 %%% Beginnings of an exception/cognizant-failure system
 %%%
 
+
+%% Kill the current task and log the reason for its failure.
 strategy(failed_because(Reason),
 	 begin(assert(/failures/UID:StrippedTask:Reason),
 	       done)) :-
@@ -407,6 +415,9 @@ strategy(failed_because(Reason),
    strip_task_wrappers(Task, StrippedTask),
    UID is $task.'Key'.
 
+%% strip_task_wrappers(+Task, -Stripped)
+%  Stripped is the core task of Task, with any unimportant
+%  wrappers removed, like on_behalf_of.
 strip_task_wrappers(on_behalf_of(_, Task), Stripped) :-
    !,
    strip_task_wrappers(Task, Stripped).

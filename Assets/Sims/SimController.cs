@@ -102,8 +102,6 @@ public class SimController : PhysicalObject
 
     private ELNode elRoot;
 
-    private ELNode statusText;
-
     private ELNode perceptionRoot;
 
     private ELNode locationRoot;
@@ -252,8 +250,8 @@ public class SimController : PhysicalObject
     internal void Start()
     {
         updateConcernBids = UpdateConcernBids;
+        updateStatusTextBids = UpdateStatusTextBids;
         elRoot = this.KnowledgeBase().ELRoot;
-        statusText = elRoot/Symbol.Intern("status");
         perceptionRoot = elRoot / Symbol.Intern("perception");
         locationRoot = perceptionRoot / Symbol.Intern("location");
         conversationalSpace = perceptionRoot / Symbol.Intern("conversational_space");
@@ -896,20 +894,18 @@ public class SimController : PhysicalObject
     internal void OnGUI()
     {
         var guiScreenPosition = gameObject.GUIScreenPosition();
-        if (statusText.Children.Count > 0)
+
+        var statusText = GetStatusText();
+        if (!string.IsNullOrEmpty(statusText))
         {
-            var text = statusText.ExclusiveKeyValue<string>();
-            if (!string.IsNullOrEmpty(text))
-            {
-                var status = new GUIContent(text);
-                var style = GUIStyle.none;
-                style.normal.textColor = Color.yellow;
-                var size = style.CalcSize(status);
-                var statusRect = new Rect(guiScreenPosition.x - 0.5f*size.x,
-                    guiScreenPosition.y - 0.9f*CharacterHeight*Tile.TileSizeInPixels, size.x, size.y);
-                GUI.Box(statusRect, GreyOutTexture);
-                GUI.Label(statusRect, status, style);
-            }
+            var status = new GUIContent(statusText);
+            var style = GUIStyle.none;
+            style.normal.textColor = Color.yellow;
+            var size = style.CalcSize(status);
+            var statusRect = new Rect(guiScreenPosition.x - 0.5f*size.x,
+                guiScreenPosition.y - 0.9f*CharacterHeight*Tile.TileSizeInPixels, size.x, size.y);
+            GUI.Box(statusRect, GreyOutTexture);
+            GUI.Label(statusRect, status, style);
         }
 
         if (Camera.current != null && !string.IsNullOrEmpty(currentSpeechBubbleText))
@@ -918,14 +914,14 @@ public class SimController : PhysicalObject
             var addresseeOffset = addressee.transform.position - transform.position;
 
             if (addresseeOffset.x > 0 || addresseeOffset.y < 0)
-                bubblelocation.y -= (CharacterHeight+0.5f)*Tile.TileSizeInPixels;
+                bubblelocation.y -= (CharacterHeight + 0.5f)*Tile.TileSizeInPixels;
             var size = SpeechBubbleStyle.CalcSize(new GUIContent(currentSpeechBubbleText));
             bubblelocation.x += (CharacterWidth*0.5f)*Tile.TileSizeInPixels;
             var bubbleRect = new Rect(bubblelocation.x, bubblelocation.y, size.x, size.y);
 
             // Handle rects that overshoot the map
             var overshoot = bubbleRect.xMax - Screen.width;
-            if (overshoot>0)
+            if (overshoot > 0)
             {
                 bubbleRect.xMin -= overshoot;
                 bubbleRect.xMax -= overshoot;
@@ -938,6 +934,36 @@ public class SimController : PhysicalObject
             }
             GUI.Box(bubbleRect, GreyOutTexture);
             GUI.Label(bubbleRect, currentSpeechBubbleText, SpeechBubbleStyle);
+        }
+    }
+
+    string maxBidStatus;
+    float maxStatusBid;
+    private Action<ELNode> updateStatusTextBids;
+    private string GetStatusText()
+    {
+        maxStatusBid = -1;
+        maxBidStatus = "";
+        elRoot.WalkTree(SConcerns, updateStatusTextBids);
+        return maxBidStatus;
+    }
+
+    private readonly Symbol SStatusText = Symbol.Intern("status_text");
+    private void UpdateStatusTextBids(ELNode concern)
+    {
+        var textRoot = concern.ChildWithKey(SStatusText);
+        if (textRoot != null && textRoot.Children.Count > 0)
+        {
+            var text = textRoot.Children[0];
+            if (text.Children.Count > 0)
+            {
+                var bid = Convert.ToSingle(text.Children[0].Key);
+                if (bid > maxStatusBid)
+                {
+                    maxStatusBid = bid;
+                    maxBidStatus = text.Key.ToString();
+                }
+            }
         }
     }
     #endregion

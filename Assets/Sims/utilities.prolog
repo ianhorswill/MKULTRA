@@ -165,18 +165,18 @@ hidden_contents(Container, HiddenObject) :-
 :- external player_character/0.
 
 update_character_status :-
-   character_status_string(S),
-   assert(/status:S).
+   character_status_string(S, P),
+   assert(/status_text:S:P).
 
-character_status_string(Emote) :-
+character_status_string(Emote,10) :-
    /motor_state/emote:Emote:Time,
    $now < Time+3 .
-character_status_string("") :-
+character_status_string("", 0) :-
    everyday_life_task_busy.
-character_status_string("<>") :-
+character_status_string("<>", 1) :-
    player_character,
    /perception/nobody_speaking.
-character_status_string("").
+character_status_string("", 0).
 
 %%%
 %%% Emoting
