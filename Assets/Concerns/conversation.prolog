@@ -19,6 +19,7 @@ launch_conversation(Parent, Partner, Event) :-
    assert(/social_state/talking_to/Partner),
    begin_child_concern(Parent, conversation, 1, Child,
 		       [ Child/partner/Partner,
+			 Child/status_text:"[chat]":0.1,
 			 Child/initial_history/Event ]),
    (Partner \= player -> assert(Child/location_bids/Partner:20);true).
 
