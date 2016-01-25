@@ -37,7 +37,7 @@ $kavi::quip(mention_macguffin,
 $kavi::quip(mention_keepout,
 	    ["By the way,",
 	     "Stay out of my bedroom"
-	       :[surprise, introduce_question(why_stay_out_of_bedroom)],
+	       :[surprised, introduce_question(why_stay_out_of_bedroom)],
 	     "It's a personal thing."]).
 
 $pc::personal_strategy(read_instructions(X),

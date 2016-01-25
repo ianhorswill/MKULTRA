@@ -159,20 +159,14 @@ normalize_task(search_for($me, Unspecified, Target),
    in_room($me, CurrentRoom).
 
 strategy(search_for($me, Container, Target),
-	 {
-	  assert($task/status_text/searching:1),
-	  search_object(Container, X^(X=Target),
-			X^handle_discovery(X),
-			mental_monologue(["Couldn't find it."]))
-	 }) :-
+	 search_object(Container, X^(X=Target),
+		       X^handle_discovery(X),
+		       mental_monologue(["Couldn't find it."]))) :-
    nonvar(Target).
 strategy(search_for($me, Container, Target),
-	 {
-	  assert($task/status_text/searching:1),
-	  search_object(Container, X^previously_hidden(X),
-			X^handle_discovery(X),
-			mental_monologue(["Nothing seems to be hidden."]))
-	 }) :-
+	 search_object(Container, X^previously_hidden(X),
+		       X^handle_discovery(X),
+		       mental_monologue(["Nothing seems to be hidden."]))) :-
    var(Target).
 
 strategy(handle_discovery(X),
@@ -187,16 +181,19 @@ before(search_object(Object, _, _, _),
    \+ contained_in($me, Object).
 
 strategy(search_object(ArchitecturalSpace, CriterionLambda, SuccessLambda, FailTask),
-	 if(nearest_unsearched(ArchitecturalSpace, Object),
-	    % Search nearest item
-	    search_object(Object, CriterionLambda, SuccessLambda,
-			  % Try next item, if any
-			  search_object(ArchitecturalSpace,
-					CriterionLambda, SuccessLambda,
-					FailTask)),
-	    % Searched entire contents
-	    begin(tell(/searched/ArchitecturalSpace),
-		  FailTask))) :-
+	 {
+	  assert($task/status_text/"[search]":1),
+	  if(nearest_unsearched(ArchitecturalSpace, Object),
+	     % Search nearest item
+	     search_object(Object, CriterionLambda, SuccessLambda,
+			   % Try next item, if any
+			   search_object(ArchitecturalSpace,
+					 CriterionLambda, SuccessLambda,
+					 FailTask)),
+	     % Searched entire contents
+	     begin(tell(/searched/ArchitecturalSpace),
+		   FailTask))
+	 }) :-
    is_a(ArchitecturalSpace, architectural_space).
 
 strategy(search_object(Container, CriterionLambda, SuccessLambda, FailTask),
@@ -275,8 +272,11 @@ self_achieving(/perception/nobody_speaking).
 %% Sleeping
 %%
 
-strategy(sleep($me, OnWhat),
-	 move($me, $me, OnWhat)).
+precondition(sleep($me, OnWhat),
+	     location($me, OnWhat)).
+strategy(sleep($me, _OnWhat),
+	 with_status_text("zzz":2,
+			  pause(60))).
 
 %%
 %% Social interaction
@@ -356,11 +356,33 @@ retract_on_restart(Task, Task/on_behalf_of).
 
 default_strategy(spawn(Task),
 		 call(spawn_child_task(Task))).
+default_strategy(spawn(Task, Child, Assertions),
+		 call(spawn_child_task(Task, Child, Assertions))).
 
-:- public spawn_child_task/1.
+:- public spawn_child_task/1, spawn_child_task/3.
 spawn_child_task(Task) :-
    begin($task/priority:Priority,
 	 start_task($task, Task, Priority)).
+spawn_child_task(Task, Child, Assertions) :-
+   begin($task/priority:Priority,
+	 start_task($task, Task, Priority, Child, Assertions)).
+
+normalize_task(with_status_text(String:Priority, Task),
+	       let(spawn_child_task(Task, Child, [ Child/status_text:String:Priority ]),
+		   wait_for_child(Child))).
+
+normalize_task(with_child_task(Task, Child, Assertions, Continuation),
+	       let(spawn_child_task(Task, Child, Assertions),
+		   Continuation)).
+
+normalize_task(with_child_task(Task, Child, Continuation),
+	       let(spawn_child_task(Task, Child, []),
+		   Continuation)).
+
+normalize_task(wait_for_child(Child),
+	       wait_condition(\+ Me/concerns/UID)) :-
+   Me = $task,
+   concern_uid(Child, UID).
 
 default_strategy(wait_for_children,
 		 wait_condition(\+ Me/concerns/_)) :-
@@ -413,7 +435,7 @@ strategy(failed_because(Reason),
 	       done)) :-
    $task/type:task:Task,
    strip_task_wrappers(Task, StrippedTask),
-   UID is $task.'Key'.
+   concern_uid($task, UID).
 
 %% strip_task_wrappers(+Task, -Stripped)
 %  Stripped is the core task of Task, with any unimportant

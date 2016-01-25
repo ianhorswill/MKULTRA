@@ -31,8 +31,11 @@ normalize_task(respond_to_quip_markup([M | Tail]),
 
 :- external question_introduced/1, revealed/1, plot_goal/1.
 
-strategy(respond_to_quip_markup(surprise),
+strategy(respond_to_quip_markup(surprised),
 	 emote(surprise)).
+strategy(respond_to_quip_markup(angry),
+	 emote(anger)).
+	 
 strategy(respond_to_quip_markup(introduce_question(Q)),
 	 begin(tell($global::question_introduced(Q)),
 	       emote(question))).

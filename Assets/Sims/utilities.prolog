@@ -173,7 +173,7 @@ character_status_string(Emote,10) :-
    $now < Time+3 .
 character_status_string("", 0) :-
    everyday_life_task_busy.
-character_status_string("<>", 1) :-
+character_status_string("[idle]", 0) :-
    player_character,
    /perception/nobody_speaking.
 character_status_string("", 0).
@@ -191,6 +191,7 @@ emotion_string(surprise, "!").
 emotion_string(frustration, "(>_<)").
 emotion_string(question, "?").
 emotion_string(confusion, "???").
+emotion_string(anger, "Grrr!!!").
 
 normalize_task(emote(E),
 	       call(emote(E))).
