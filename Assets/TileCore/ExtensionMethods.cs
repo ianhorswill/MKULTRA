@@ -12,6 +12,29 @@ public static class TileCoreExtensionMethods
         return Camera.main.WorldToScreenPoint(gameObject.transform.position);
     }
 
+    public static Rect? ScreenRect(GameObject go)
+    {
+        var position = Camera.main.WorldToScreenPoint(go.transform.position);
+        var sr = go.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            var height = sr.sprite.bounds.size.y * sr.sprite.pixelsPerUnit;
+            return new Rect(position.x, position.y - height,
+                sr.sprite.bounds.size.x * sr.sprite.pixelsPerUnit,
+                height);
+        }
+
+        var sa = go.GetComponent<SpriteSheetAnimationController>();
+        if (sa != null)
+        {
+            var height = 1.5f * Tile.SizeInSceneUnits;
+            var width = Tile.TileSizeInPixels;
+            return new Rect(position.x - 0.5f * width, position.y - height, width, height);
+        }
+
+        return null;
+    }
+
     public static Vector2 GUIScreenPosition(this GameObject gameObject)
     {
         var screenPosition = ScreenPosition(gameObject);

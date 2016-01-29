@@ -58,6 +58,10 @@ public class NLPrompt : BindingBehaviour
     /// Output form player character to player, if any.
     /// </summary>
     private string characterResponse = "";
+    
+    private ELNode elRoot;
+
+    private ELNode haloElNode;
 
     private ELNode mouseSelectionELNode;
 
@@ -75,8 +79,10 @@ public class NLPrompt : BindingBehaviour
     {
         lastPlayerActivity = KnowledgeBase.Global.ELRoot.StoreNonExclusive(Symbol.Intern("last_player_activity"));
         lastPlayerActivity.StoreExclusive(-1, true);
-        mouseSelectionELNode = this.KnowledgeBase().ELRoot/ Symbol.Intern("perception") / Symbol.Intern("mouse_selection");
-        talkingToElNode = this.KnowledgeBase().ELRoot/Symbol.Intern("social_state")/Symbol.Intern("talking_to");
+        elRoot = this.KnowledgeBase().ELRoot;
+        haloElNode = elRoot/Symbol.Intern("halo");
+        mouseSelectionELNode = elRoot/ Symbol.Intern("perception") / Symbol.Intern("mouse_selection");
+        talkingToElNode = elRoot/Symbol.Intern("social_state")/Symbol.Intern("talking_to");
     }
 
     /// <summary>
@@ -108,35 +114,93 @@ public class NLPrompt : BindingBehaviour
                 break;
 
             case EventType.Repaint:
-                var arrowActive = typingPromptStartTime > Time.time-3;
-
-                // You'd want this to be called by a MouseMove event, but it's not supported in game,
-                // and in any case, we probably need to keep updating because of potential object movement.
-                UpdateMouseSelection();
-                ShowMouseSelectionCaption();
-
-                if (!string.IsNullOrEmpty(input) || arrowActive)
-                {
-                    GameObject addressee;
-
-                    var da = dialogAct as Structure;
-                    if (da != null)
-                        addressee = (GameObject)da.Argument(1);
-                    else if (talkingToElNode.Children.Count > 0)
-                        addressee = (GameObject)talkingToElNode.Children[0].Key;
-                    else
-                        addressee = gameObject;
-
-                    addressee.DrawThumbNail(new Vector2(InputRect.x - 40, InputRect.y));
-                }
-                var text = (string.IsNullOrEmpty(input) && arrowActive) ? "<color=grey><i>Talk to me</i></color>" : formatted;
-                GUI.Label(InputRect, text, InputGUIStyle);
-                GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
-                GUI.Label(ResponseRect, characterResponse, InputGUIStyle);
+                DrawGUI();
                 break;
         }
     }
 
+    #region Drawing the screen
+    private void DrawGUI()
+    {
+        var arrowActive = typingPromptStartTime > Time.time - 3;
+
+        // You'd want this to be called by a MouseMove event, but it's not supported in game,
+        // and in any case, we probably need to keep updating because of potential object movement.
+        UpdateMouseSelection();
+        ShowMouseSelectionCaption();
+
+        if (!string.IsNullOrEmpty(input) || arrowActive  || Time.time > haloOnset + 2f)
+        {
+            GameObject addressee;
+
+            var da = dialogAct as Structure;
+            if (da != null)
+                addressee = (GameObject) da.Argument(1);
+            else if (talkingToElNode.Children.Count > 0)
+                addressee = (GameObject) talkingToElNode.Children[0].Key;
+            else
+                addressee = gameObject;
+
+            addressee.DrawThumbNail(new Vector2(InputRect.x - 40, InputRect.y));
+        }
+        var text = (string.IsNullOrEmpty(input) && arrowActive) ? "<color=grey><i>Talk to me</i></color>" : formatted;
+        GUI.Label(InputRect, text, InputGUIStyle);
+        GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
+        GUI.Label(ResponseRect, characterResponse, InputGUIStyle);
+    }
+
+    public Material OutlineMaterial;
+    private float haloOnset;
+    private static readonly Symbol SOn = Symbol.Intern("on");
+
+    internal void OnRenderObject()
+    {
+        if (haloElNode.ExclusiveKeyValue<Symbol>() == SOn)
+        {
+            var pos = gameObject.Position();
+            var rect = new Rect(pos.x - 0.5f, pos.y-0.2f, 1, 1.5f);
+            var lineColor = Color.yellow;
+            lineColor.a = (1 - Mathf.Cos(Time.time - haloOnset))*0.5f;
+            OutlineMaterial.SetPass(0);
+            GLDrawRect(lineColor, rect);
+            GL.PushMatrix();
+            GL.LoadPixelMatrix();
+            var r = InputRect;
+            r.yMin = Screen.height - r.yMin;
+            r.yMax = Screen.height - r.yMax;
+            GLDrawRect(lineColor, r);
+            GL.PopMatrix();
+        }
+        else
+        {
+            haloOnset = Time.time;
+        }
+    }
+
+    private static void GLDrawRect(Color lineColor, Rect rect)
+    {
+        GL.Begin(GL.LINES);
+        GL.Color(lineColor);
+        GL.Vertex3(rect.xMin, rect.yMin, 0);
+        GL.Vertex3(rect.xMin, rect.yMax, 0);
+
+
+        GL.Color(lineColor);
+        GL.Vertex3(rect.xMin, rect.yMax, 0);
+        GL.Vertex3(rect.xMax, rect.yMax, 0);
+
+        GL.Color(lineColor);
+        GL.Vertex3(rect.xMax, rect.yMax, 0);
+        GL.Vertex3(rect.xMax, rect.yMin, 0);
+
+        GL.Color(lineColor);
+        GL.Vertex3(rect.xMax, rect.yMin, 0);
+        GL.Vertex3(rect.xMin, rect.yMin, 0);
+        GL.End();
+    }
+    #endregion
+
+    #region Keyboard handling
     private void HandleKeyDown(Event e)
     {
         if (e.keyCode != KeyCode.None)
@@ -157,7 +221,7 @@ public class NLPrompt : BindingBehaviour
                 else if (e.control)
                     key = new Structure("-", Symbol.Intern("control"), key);
 
-                KnowledgeBase.Global.IsTrue(new Structure("fkey_command", key));
+                gameObject.IsTrue(new Structure("fkey_command", key));
                 return;
             }
 
@@ -348,6 +412,7 @@ public class NLPrompt : BindingBehaviour
             commentary = "Sorry; I don't understand any sentences beginning with those words.";
         }
     }
+    #endregion
 
     #region Mouse handling
     /// <summary>

@@ -28,6 +28,9 @@ descendant_concern_of(Ancestor, Descendant) :-
 parent_concern_of(Child, Parent) :-
    Parent is Child.'Parent'.'Parent'.
 
+concern_uid(Concern, UID) :-
+   property(Concern, "Key", UID).
+
 :- public concern_status/2, set_concern_status/2.
 
 %% concern_status(+Concern, -Status)

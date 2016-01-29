@@ -354,10 +354,10 @@ retract_on_restart(Task, Task/on_behalf_of).
 %%% We just have a simplistic fork/join system.
 %%%
 
-default_strategy(spawn(Task),
-		 call(spawn_child_task(Task))).
-default_strategy(spawn(Task, Child, Assertions),
-		 call(spawn_child_task(Task, Child, Assertions))).
+normalize_task(spawn(Task),
+	       call(spawn_child_task(Task))).
+normalize_task(spawn(Task, Child, Assertions),
+	       call(spawn_child_task(Task, Child, Assertions))).
 
 :- public spawn_child_task/1, spawn_child_task/3.
 spawn_child_task(Task) :-
@@ -380,9 +380,19 @@ normalize_task(with_child_task(Task, Child, Continuation),
 		   Continuation)).
 
 normalize_task(wait_for_child(Child),
-	       wait_condition(\+ Me/concerns/UID)) :-
+	       wait_condition(child_completed(UID, Me))) :-
    Me = $task,
    concern_uid(Child, UID).
+
+:- public child_completed/2.
+
+child_completed(UID, Me) :-
+   Me/concerns/UID, !, fail.
+child_completed(UID, Me) :-
+   /failures/UID:_,
+   % Sneakily rewrite our continuation so we'll fail.
+   assert(Me/continuation:fail_because(child_failed(UID))).
+child_completed(_, _).
 
 default_strategy(wait_for_children,
 		 wait_condition(\+ Me/concerns/_)) :-

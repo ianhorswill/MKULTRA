@@ -66,7 +66,8 @@ public class PropInfo : PhysicalObject
 
     internal void OnGUI()
     {
-        if (IsVisuallyPortrayable && !IsHidden && Camera.current != null && GetComponent<Renderer>() == null)
+        if (IsVisuallyPortrayable && !IsHidden && Camera.current != null && GetComponent<Renderer>() == null
+            && Container != null && Container.GetComponent<SimController>() == null)
         {
             var topLeft = gameObject.GUIScreenPosition();
             var size = new Vector2(300, 3000);

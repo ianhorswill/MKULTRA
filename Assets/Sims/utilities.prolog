@@ -171,12 +171,18 @@ update_character_status :-
 character_status_string(Emote,10) :-
    /motor_state/emote:Emote:Time,
    $now < Time+3 .
-character_status_string("", 0) :-
-   everyday_life_task_busy.
-character_status_string("[idle]", 0) :-
-   player_character,
-   /perception/nobody_speaking.
 character_status_string("", 0).
+
+update_halo :-
+   \+ player_character.
+update_halo :-
+   /perception/nobody_speaking,
+   not(everyday_life_task_busy),
+   assert(/halo:on).
+update_halo :-
+   assert(/halo:off).
+update_halo.
+
 
 %%%
 %%% Emoting
@@ -226,3 +232,8 @@ allocate_UID(UID) :-
 	  NextUID is UID+1,
 	  assert(/next_uid:NextUID)).
 
+fkey_command(alt-i, "Display inventory") :-
+   generate_unsorted_overlay("Inventory",
+			     ( location(Item, $me),
+			       once(caption(Item, Description)) ),
+			     line(Description)).

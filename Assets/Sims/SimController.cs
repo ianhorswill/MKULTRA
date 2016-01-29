@@ -877,7 +877,7 @@ public class SimController : PhysicalObject
     }
     #endregion
 
-    #region Speech bubbles
+    #region GUI and speech bubbles
 
     public GUIStyle SpeechBubbleStyle;
 

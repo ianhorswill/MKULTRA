@@ -26,6 +26,7 @@
 next_action(Action) :-
    begin(run_delayed_operations,
 	 poll_tasks,
+	 update_halo,
 	 update_character_status),
    best_action(Action).
 next_action(pause(1)).
