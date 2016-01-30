@@ -171,6 +171,8 @@ update_character_status :-
 character_status_string(Emote,10) :-
    /motor_state/emote:Emote:Time,
    $now < Time+3 .
+character_status_string("O.o", 0) :-
+   /brainwash/brainwashed.
 character_status_string("", 0).
 
 update_halo :-
@@ -197,6 +199,7 @@ emotion_string(surprise, "!").
 emotion_string(frustration, "(>_<)").
 emotion_string(question, "?").
 emotion_string(confusion, "???").
+emotion_string(hypnotized, "O.o").
 emotion_string(anger, "Grrr!!!").
 
 normalize_task(emote(E),
@@ -233,7 +236,40 @@ allocate_UID(UID) :-
 	  assert(/next_uid:NextUID)).
 
 fkey_command(alt-i, "Display inventory") :-
+   display_status_screen(inventory).
+
+display_status_screen(inventory) :-
    generate_unsorted_overlay("Inventory",
 			     ( location(Item, $me),
 			       once(caption(Item, Description)) ),
-			     line(Description)).
+			     line(Description),
+			     "Nothing").
+
+fkey_command(alt-n, "Display notebook") :-
+   display_status_screen(notebook).
+
+display_status_screen(notebook) :-
+   generate_unsorted_overlay("Betsy's notebook",
+			     notebook_entry(E),
+			     line(E),
+			     "Nothing yet").
+
+notebook_entry([line(bold("Goals")) | List]) :-
+   findall(line(D),
+	   (plot_goal(Q), plot_goal_flavor_text(Q, D)),
+	   List),
+   List \= [].
+
+notebook_entry([line(bold("Questions")) | List]) :-
+   findall(line(D),
+	   ( plot_question_introduced(Q),
+	     not(plot_question_answered(Q)),
+	     plot_question_flavor_text(Q, D) ),
+	   List),
+   List \= [].
+
+notebook_entry([line(bold("Clues")) | List]) :-
+   findall(line(D),
+	   (clue(Q), clue_flavor_text(Q, D)),
+	   List),
+   List \= [].

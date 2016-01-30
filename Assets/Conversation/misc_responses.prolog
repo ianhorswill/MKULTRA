@@ -79,7 +79,9 @@ strategy(respond_to_dialog_act(hypno_command(_, $me, LF, present, simple)),
 
 strategy(do_hypnotically_believe(LF),
 	 begin(flash(Yellow, Green, 0.3, 1.5),
-	       discourse_increment($me, Partner, [ uninterpreted_s(LF) ]))) :-
+	       emote(hypnotized),
+	       discourse_increment($me, Partner, [ uninterpreted_s(LF) ]),
+	       emote(hypnotized))) :-
    hypnotically_believe(LF),
    Yellow is $'Color'.yellow,
    Green is $'Color'.green,

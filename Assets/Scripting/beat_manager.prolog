@@ -53,6 +53,9 @@ incomplete_beat_task_from_list(Beat, TaskList, Task) :-
    member(Task, TaskList),
    \+ beat_task_already_executed(Beat, Task).
 
+beat_task_already_executed(Beat, String:_Markup) :-
+   !,
+   $global_root/beats/Beat/completed_tasks/String.
 beat_task_already_executed(Beat, Task) :-
    atomic(Task) ->
         % The / operator only does a pointer comparison, not unification.
@@ -96,6 +99,13 @@ next_beat_monolog_task(Beat, T) :-
 monolog_task(Beat,
 	     String,
 	     begin(run_quip(String),
+		   assert($global_root/beats/Beat/completed_tasks/String)) ) :-
+   string(String),
+   !.
+monolog_task(Beat,
+	     String:Markup,
+	     begin(run_quip(String),
+		   respond_to_quip_markup(Markup),
 		   assert($global_root/beats/Beat/completed_tasks/String)) ) :-
    string(String),
    !.

@@ -37,7 +37,9 @@ $kavi::quip(mention_macguffin,
 $kavi::quip(mention_keepout,
 	    ["By the way,",
 	     "Stay out of my bedroom"
-	       :[surprised, introduce_question(why_stay_out_of_bedroom)],
+	    :[surprised,
+	      introduce_question(why_stay_out_of_bedroom,
+				 "Why does Kavi want me to stay out of the bedroom?")],
 	     "It's a personal thing."]).
 
 $pc::personal_strategy(read_instructions(X),
@@ -55,10 +57,8 @@ beat_monolog(pc_reacts,
 	     [ pause(3),
 	       "I'm sure Kavi stole my macguffin.",
 	       "It must be here someplace.",
-	       "He's a member of the illuminati.",
-	       "I need to search the house."
-	       %, read_instructions($instructions2)
-	     ]).
+	       "He's a member of the illuminati." : clue(kavi-illuminati, "Kavi is a member of the illuminati"),
+	       "I need to search the house." : introduce_goal(search_house, "I need to search the house for the macguffin.")]).
 
 %%%
 %%% PC explores the house
@@ -92,7 +92,8 @@ beat_monolog(pc_finds_the_report,
 	     $pc,
 	     ["What's this?",
 	      "It's a report on project MKSPARSE.",
-	      "I've never heard of it."]).
+	      "I've never heard of it." : introduce_question(what_is_MKSPARSE,
+							     "What is Project MKSPARSE?")]).
 
 %%%
 %%% PC finds the photo
@@ -104,7 +105,8 @@ beat_precondition(pc_finds_the_photo,
 		  examined($photo)).
 beat_monolog(pc_finds_the_photo,
 	     $pc,
-	     [ "Wait, that's Trip and Grace!?!",
+	     [ "Wait, that's Trip and Grace!?!": introduce_question(photo,
+								    "Why does Kavi have a photo of Grace and Trip?"),
 	       "What's a photo of them doing here?" ]).
 
 %%%
@@ -117,7 +119,7 @@ beat_precondition(pc_finds_the_macguffin,
 		  $pc::contained_in($macguffin, $pc)).
 beat_monolog(pc_finds_the_macguffin,
 	     $pc,
-	     ["Got it!",
+	     ["Got it!" : answered(why_stay_out_of_bedroom),
 	      "I knew he stole it."]).
 
 %%%

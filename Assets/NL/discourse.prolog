@@ -68,8 +68,8 @@ normalize_task(monolog([ ]),
 normalize_task(monolog([String | MoreMonolog]),
 	       ( say_string(String), monolog(MoreMonolog) )).
 normalize_task(monolog(String),
-	       say_string(String)) :-
-   string(String).
+	       say_string(String)).
+
 
 %%
 %% Enumerating lists

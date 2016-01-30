@@ -20,26 +20,34 @@ normalize_task(run_quip(String),
 	       begin(monolog([String]),
 		     assert(/quips/spoken/String))) :-
    string(String).
-normalize_task(run_quip(String:Markup),
-	       begin(monolog([String:Markup]),
-		     assert(/quips/spoken/String))) :-
-   string(String).
 
 normalize_task(respond_to_quip_markup([M]), respond_to_quip_markup(M)).
 normalize_task(respond_to_quip_markup([M | Tail]),
 	       (respond_to_quip_markup(M), respond_to_quip_markup(Tail))).
 
-:- external question_introduced/1, revealed/1, plot_goal/1.
+:- external plot_question_introduced/1, plot_question_flavor_text/2,
+   plot_question_answered/1,
+   revealed/1,
+   plot_goal/1, plot_goal_flavor_text/2,
+   clue/1, clue_flavor_text/2.
 
 strategy(respond_to_quip_markup(surprised),
 	 emote(surprise)).
 strategy(respond_to_quip_markup(angry),
 	 emote(anger)).
 	 
-strategy(respond_to_quip_markup(introduce_question(Q)),
-	 begin(tell($global::question_introduced(Q)),
+strategy(respond_to_quip_markup(introduce_question(Q, FlavorText)),
+	 begin(tell($global::plot_question_introduced(Q)),
+	       assert($global::plot_question_flavor_text(Q, FlavorText)),
 	       emote(question))).
+strategy(respond_to_quip_markup(introduce_goal(G, FlavorText)),
+	 begin(tell($global::plot_goal(G)),
+	       assert($global::plot_goal_flavor_text(G, FlavorText)))).
+strategy(respond_to_quip_markup(clue(C, FlavorText)),
+	 begin(tell($global::clue(C)),
+	       assert($global::clue_flavor_text(C, FlavorText)))).
 strategy(respond_to_quip_markup(reveal(R)),
 	 begin(tell($global::revealed(R)),
 	       emote(surprise))).
-	
+strategy(respond_to_quip_markup(answered(Q)),
+	 tell($global::plot_question_answered(Q))).	

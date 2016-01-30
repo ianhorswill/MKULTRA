@@ -114,6 +114,54 @@ stock_phrase(color_query(player, $me, white)) -->
 stock_phrase(color_query(player, $me, white)) -->
    [why, does, my, text, turn, white, '?'].
 
+nsew(north).
+nsew(south).
+nsew(east).
+nsew(west).
+nsew(n).
+nsew(s).
+nsew(e).
+nsew(w).
+
+:- forall(nsew(X), register_lexical_item(X)).
+
+stock_phrase(if_navigation_command(player, $me)) -->
+   { input_from_player },
+   nsew_nav_command.
+
+nsew_nav_command -->
+   [go, X],
+   { nsew(X) }.
+
+nsew_nav_command -->
+   [go, to, the, X],
+   { nsew(X) }.
+
+nsew_nav_command -->
+   [X],
+   { nsew(X) }.
+
+stock_phrase(show_status(player, $me, What)) -->
+   status_display_term(What).
+
+stock_phrase(show_status(player, $me, What)) -->
+   [ show, me ],
+   status_display_term_with_determiner(What).
+
+:- register_lexical_items([show, inventory, notebook]).
+
+status_display_term(inventory) -->
+   [ inventory ].
+status_display_term(notebook) -->
+   [ notebook ].
+
+status_display_term_with_determiner(What) -->
+   [ the ],
+   status_display_term(What).
+status_display_term_with_determiner(What) -->
+   [ my ],
+   status_display_term(What).
+
 %
 % Increments produced by the discourse generator
 %

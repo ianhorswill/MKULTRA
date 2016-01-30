@@ -41,6 +41,7 @@ well_formed_dialog_act(assertion(_, _, LF, _, _)) :-
    well_typed(LF, condition).
 well_formed_dialog_act(hypno_command(_, Target, _, _, _)) :-
    Target \= $me.
+well_formed_dialog_act(show_status(_,_,_)).
 
 bind_dialog_indexicals_for_input :-
    in_conversation_with_npc(NPC),
