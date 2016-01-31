@@ -17,6 +17,9 @@
             beat_start_task/3, beat_idle_task/3, beat_sequel/2, beat_follows/2, beat_delay/2.
 :- external plot_relevant_assertion/4.
 :- higher_order beat_precondition(0, 1).
+:- external plot_goal/1, plot_subgoal/2.
+:- plot_goal(1).
+:- higher_order plot_subgoal(1,1).
 :- public dialog_task_advances_current_beat/1, my_beat_idle_task/1.
 
 %%%

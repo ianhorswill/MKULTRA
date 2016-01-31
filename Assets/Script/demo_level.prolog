@@ -1,3 +1,7 @@
+plot_goal(location($macguffin, $pc)).
+plot_goal_flavor_text(location($macguffin, $pc),
+		      "I have to get my macguffin back!").
+
 strategy(press($pc, $'magic button'),
 	 begin(call(release_captive),
 	       say_string("My God, there's someone hidden inside!"))).
@@ -58,7 +62,10 @@ beat_monolog(pc_reacts,
 	       "I'm sure Kavi stole my macguffin.",
 	       "It must be here someplace.",
 	       "He's a member of the illuminati." : clue(kavi-illuminati, "Kavi is a member of the illuminati"),
-	       "I need to search the house." : introduce_goal(search_house, "I need to search the house for the macguffin.")]).
+	       "I need to search the house." : introduce_goal(house_searched, "I need to search the house for the macguffin.")]).
+
+plot_subgoal(house_searched, location($macguffin, $pc)).
+house_searched :- /searched/kavis_house.
 
 %%%
 %%% PC explores the house

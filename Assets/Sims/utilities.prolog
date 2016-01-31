@@ -256,9 +256,14 @@ display_status_screen(notebook) :-
 
 notebook_entry([line(bold("Goals")) | List]) :-
    findall(line(D),
-	   (plot_goal(Q), plot_goal_flavor_text(Q, D)),
+	   (unsatisfied_plot_goal(G), plot_goal_flavor_text(G, D)),
 	   List),
    List \= [].
+
+unsatisfied_plot_goal(G) :-
+   plot_goal(G),
+   \+ G,
+   (plot_subgoal(G, Parent) -> \+ Parent ; true).
 
 notebook_entry([line(bold("Questions")) | List]) :-
    findall(line(D),
