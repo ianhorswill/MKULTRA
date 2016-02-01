@@ -29,25 +29,18 @@ beat_start_task(exposition,
 		goto($pc)).
 beat_dialog(exposition,
 	    $pc, $kavi,
-	    [ %read_instructions($intro_screen),
-	      mention_macguffin,
-	      mention_keepout
-              %, read_instructions($instructions)
-	    ]).
+	    [
+	     $kavi::"Sorry to hear your macguffin was stolen.",
+	     $kavi::"Make yourself at home.",
+	     $kavi::"By the way,",
+	     $kavi::("Stay out of my bedroom"
+	                 :[surprised,
+			   introduce_question(why_stay_out_of_bedroom,
+					      "Why does Kavi want me to stay out of the bedroom?")]),
+	     $kavi::"It's a personal thing."]).
 
-$kavi::quip(mention_macguffin,
-	    ["Sorry to hear your macguffin was stolen.",
-	     "Make yourself at home."]).
-$kavi::quip(mention_keepout,
-	    ["By the way,",
-	     "Stay out of my bedroom"
-	    :[surprised,
-	      introduce_question(why_stay_out_of_bedroom,
-				 "Why does Kavi want me to stay out of the bedroom?")],
-	     "It's a personal thing."]).
-
-$pc::personal_strategy(read_instructions(X),
-		       force_examine(X)).
+%$pc::personal_strategy(read_instructions(X),
+%		       force_examine(X)).
 
 %%%
 %%% PC reacts to Kavi's speech
@@ -59,13 +52,21 @@ beat_start_task(pc_reacts, $kavi, goto($'kitchen sink')).
 beat_monolog(pc_reacts,
 	     $pc,
 	     [ pause(3),
-	       "I'm sure Kavi stole my macguffin.",
-	       "It must be here someplace.",
-	       "He's a member of the illuminati." : clue(kavi-illuminati, "Kavi is a member of the illuminati"),
+	       "Kavi's a member of the illuminati." : clue(kavi-illuminati, "Kavi is a member of the illuminati"),
+	       "He must have stolen my macguffin.",
 	       "I need to search the house." : introduce_goal(house_searched, "I need to search the house for the macguffin.")]).
 
 plot_subgoal(house_searched, location($macguffin, $pc)).
 house_searched :- /searched/kavis_house.
+plot_goal_idle_task(house_searched,
+		    {
+		     mental_monolog("I'll search the house"),
+		     search_object(kavis_house,
+				  X^previously_hidden(X),
+				  Y^pickup(Y),
+				   mental_monolog(["Nothing seems to be hidden."]))
+		    }).
+
 
 %%%
 %%% PC explores the house
@@ -77,13 +78,6 @@ beat_follows(pc_explores_the_house, pc_reacts).
 beat_completion_condition(pc_explores_the_house,
 			  ( $pc::contained_in($macguffin, $pc),
 			    $pc::contained_in($report, $pc) )).
-beat_idle_task(pc_explores_the_house,
-	       $pc,
-	       search_object(kavis_house,
-			     X^previously_hidden(X),
-			     Y^pickup(Y),
-			     mental_monologue(["Nothing seems to be hidden."]))).
-
 after(pickup($report),
       describe($report)).
 
@@ -141,33 +135,15 @@ beat_start_task(pc_releases_captive,
 		$captive,
 		goto($pc)).
 beat_dialog(pc_releases_captive, $pc, $captive,
-	    [ thanks_for_releasing_me,
-	      its_been_so_long,
-	      about_ten_years,
-	      what_are_you_doing_here,
-	      medical_experiments,
-	      oh_no,
-	      javascript,
-	      barbaric ]).
-
-$captive::quip(thanks_for_releasing_me,
-	       [ "Thanks for releasing me!" ]).
-$pc::quip(its_been_so_long,
-	  [ "I haven't seen you since that horrible dinner party!",
-	    "How long has it been?" ]).
-$captive::quip(about_ten_years,
-	       [ "Oh I'd say about ten years!" ]).
-$pc::quip(what_are_you_doing_here,
-	  [ "What are you doing here?" ]).
-$captive::quip(medical_experiments,
-	       [ "They kidnapped me for medical experiments!" ]).
-$pc::quip(oh_no,
-	  [ "Oh no!" ]).
-$captive::quip(javascript,
-	       [ "They were trying to reimplement me in JavaScript!" ]).
-$pc::quip(barbaric,
-	  [ "How barbaric!" ]).
-
+	    [ $captive::"Thanks for releasing me!",
+	      $pc::"I haven't seen you since that horrible dinner party!",
+	      $pc::"How long has it been?",
+	      $captive::"Oh I'd say about ten years!",
+	      $pc::"What are you doing here?",
+	      $captive::"They kidnapped me for medical experiments!",
+	      $pc::"Oh no!",
+	      $captive::"They were trying to reimplement me in JavaScript!",
+	      $pc::"How barbaric!" ]).
      
 %%%
 %%% Kavi eats Pc

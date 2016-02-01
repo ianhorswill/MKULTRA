@@ -22,6 +22,12 @@
 :- higher_order plot_subgoal(1,1).
 :- public dialog_task_advances_current_beat/1, my_beat_idle_task/1.
 
+:- external plot_question_introduced/1, plot_question_flavor_text/2,
+   plot_question_answered/1,
+   revealed/1,
+   plot_goal/1, plot_goal_flavor_text/2,
+   clue/1, clue_flavor_text/2.
+
 %%%
 %%% Task generation based on beat
 %%%
@@ -32,13 +38,27 @@
 %%% one for non-dialog tasks.
 %%%
 
-dialog_task_with_partner_advances_current_beat(Beat, Partner, Task) :-
+dialog_task_with_partner_advances_current_beat(Beat, Partner, Canon) :-
    \+ $global_root/configuration/inhibit_beat_system,
    beat_dialog_with(Beat, Partner, TaskList),
    ( incomplete_beat_task_from_list(Beat, TaskList, T) ->
-     can_perform_beat_task(T, Task)
+     (can_perform_beat_task(T, Task), canonicalize_beat_dialog_task(Task, Canon))
         ;
-        (Task=null, check_beat_completion) ).
+     (Task=null, check_beat_completion) ).
+
+canonicalize_beat_dialog_task(String, run_quip(String)) :-
+   string(String),
+   !.
+canonicalize_beat_dialog_task(String:Markup, run_quip(String:Markup)) :-
+   string(String),
+   !.
+canonicalize_beat_dialog_task(Task, Task).
+
+beat_task_name(run_quip(String:_Markup), String) :-
+   !.
+beat_task_name(run_quip(String), String) :-
+   !.
+beat_task_name(X, X).
 
 % Used for debugging display.
 potential_beat_dialog(Task) :-
@@ -46,7 +66,7 @@ potential_beat_dialog(Task) :-
    in_conversation_with(Partner),
    dialog_task_with_partner_advances_current_beat(Beat, Partner, Task).
 
-can_perform_beat_task(Who:Task, Task) :-
+can_perform_beat_task(Who::Task, Task) :-
    !,
    Who = $me.
 can_perform_beat_task(Task, Task) :-
@@ -56,6 +76,9 @@ incomplete_beat_task_from_list(Beat, TaskList, Task) :-
    member(Task, TaskList),
    \+ beat_task_already_executed(Beat, Task).
 
+beat_task_already_executed(Beat, _Character :: Whatever) :-
+   !,
+   beat_task_already_executed(Beat, Whatever).
 beat_task_already_executed(Beat, String:_Markup) :-
    !,
    $global_root/beats/Beat/completed_tasks/String.
@@ -84,13 +107,32 @@ todo(BeatIdleTask, 0) :-
 %  Task is the thing I should do to advance the current beat if
 %  I'm not already involved in dialog.
 my_beat_idle_task(Task) :-
-   \+ $global_root/configuration/inhibit_beat_system,
-   \+ in_conversation_with(_),  % we're not idle if we aren't in conversation
-   \+ beat_waiting_for_timeout,
+   beat_is_idle,
    current_beat(Beat),
    ( next_beat_monolog_task(Beat, Task)
      ;
      beat_idle_task(Beat, $me, Task) ).
+
+beat_is_idle :-
+   \+ $global_root/configuration/inhibit_beat_system,
+   \+ in_conversation_with(_),  % we're not idle if we aren't in conversation
+   \+ beat_waiting_for_timeout.
+
+%%%
+%%% Plot goal idle tasks
+%%%
+
+todo(PlotGoalIdleTask, 0) :-
+   player_character,
+   beat_is_idle,
+   plot_goal(G),
+   \+ G,
+   plot_goal_idle_task(G, PlotGoalIdleTask).
+
+
+%%%
+%%% Beat monologs
+%%%
 
 next_beat_monolog_task(Beat, T) :-
    beat_monolog(Beat, $me, TaskList),

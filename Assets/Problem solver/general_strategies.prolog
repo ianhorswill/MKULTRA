@@ -161,17 +161,17 @@ normalize_task(search_for($me, Unspecified, Target),
 strategy(search_for($me, Container, Target),
 	 search_object(Container, X^(X=Target),
 		       X^handle_discovery(X),
-		       mental_monologue(["Couldn't find it."]))) :-
+		       mental_monolog(["Couldn't find it."]))) :-
    nonvar(Target).
 strategy(search_for($me, Container, Target),
 	 search_object(Container, X^previously_hidden(X),
 		       X^handle_discovery(X),
-		       mental_monologue(["Nothing seems to be hidden."]))) :-
+		       mental_monolog(["Nothing seems to be hidden."]))) :-
    var(Target).
 
 strategy(handle_discovery(X),
 	 begin(emote(surprise),
-	       mental_monologue(["Found", np(X)]))).
+	       mental_monolog(["Found", np(X)]))).
 after(handle_discovery(X),
       pickup(X)) :-
    is_a(X, key_item).
