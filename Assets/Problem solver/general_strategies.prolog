@@ -113,9 +113,9 @@ strategy(goto(PropOrCharacter),
    top_level_container(PropOrCharacter, Place).
 
 strategy(goto_internal(Place),
-	 begin(assert($task/location_bids/Place:Priority),
-	       wait_event(arrived_at(Place)),
-	       retract($task/location_bids/Place))) :-
+	 let(spawn_child_task(wait_event(arrived_at(Place)),
+			      Child, [ Child/location_bids/Place:Priority ]),
+	     wait_for_child(Child))) :-
    $task/priority:Priority.
 
 after(goto_internal(Person),
