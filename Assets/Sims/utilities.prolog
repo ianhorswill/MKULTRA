@@ -206,6 +206,20 @@ normalize_task(emote(E),
 	       call(emote(E))).
 
 %%%
+%%% Initialization
+%%%
+
+:- dynamic core_systems_initialized/0.
+:- external initialization/0.
+
+ensure_core_systems_initialized :-
+   core_systems_initialized,
+   !.
+ensure_core_systems_initialized :-
+   assert($global::core_systems_initialized),
+   forall(initialization, true).
+
+%%%
 %%% Character initialization.
 %%%
 
@@ -216,7 +230,8 @@ normalize_task(emote(E),
 %  Called once by SimController.Start().
 %  DO NOT CALL!
 do_all_character_initializations :-
-    (character_initialization, fail) ; true.
+   ensure_core_systems_initialized,
+   (character_initialization, fail) ; true.
 
 %% character_initialization
 %  IMPERATIVE
