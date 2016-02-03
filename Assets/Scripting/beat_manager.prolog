@@ -14,7 +14,8 @@
 %%
 
 :- external beat/1, beat_priority/2, beat_precondition/2, beat_completion_condition/2,
-            beat_start_task/3, beat_idle_task/3, beat_sequel/2, beat_follows/2, beat_delay/2.
+   beat_dialog/4, beat_monolog/3,
+   beat_start_task/3, beat_idle_task/3, beat_sequel/2, beat_follows/2, beat_delay/2.
 :- external plot_relevant_assertion/4.
 :- higher_order beat_precondition(0, 1).
 :- external plot_goal/1, plot_subgoal/2.
@@ -325,6 +326,72 @@ maybe_interrupt_current_beat :-
 	 set_current_beat(Winner),
 	 start_beat(Winner)).
 maybe_interrupt_current_beat.
+
+%%%
+%%% Beat declaration language
+%%%
+
+:- public beat/2.
+
+initialization :-
+   beat(BeatName, { Declarations }),
+   assert($global::beat(BeatName)),
+   forall(( member_of_comma_separated_list(Declaration, Declarations),
+	    beat_declaration_assertions(BeatName, Declaration, Assertions),
+	    member(Assertion, Assertions) ),
+	  assert($global::Assertion)).
+
+member_of_comma_separated_list(Member, (X, Y)) :-
+   !,
+   ( member_of_comma_separated_list(Member, X)
+   ;
+     member_of_comma_separated_list(Member, Y) ).
+member_of_comma_separated_list(Member, Member).
+
+beat_declaration_assertions(BeatName,
+			   start(Character):Task,
+			   [beat_start_task(BeatName, Character, Task)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   (Character1+Character2):Dialog,
+			   [beat_dialog(BeatName, Character1, Character2, Dialog)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   Character: Monolog,
+			   [beat_monolog(BeatName, Character, Monolog)]) :-
+   character(Character),
+   !.
+beat_declaration_assertions(BeatName,
+			   sequel_to: Beat,
+			   [beat_sequel(BeatName, Beat)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   start_delay: Time,
+			   [beat_delay(BeatName, Time)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   follows: Beat,
+			   [beat_follows(BeatName, Beat)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   completed_when: Condition,
+			   [beat_completion_condition(BeatName, Condition)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   priority: Priority,
+			   [beat_priority(BeatName, Priority)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   precondition: Condition,
+			   [beat_precondition(BeatName, Condition)]) :-
+   !.
+beat_declaration_assertions(BeatName, Declaration, []) :-
+   log(BeatName:unknown_beat_declaration(Declaration)).
+
+
+%%%
+%%% Debugging display
+%%%
 
 fkey_command(alt-delete, "Skip current beat") :-
    current_beat(Beat),
