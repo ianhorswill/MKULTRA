@@ -15,7 +15,9 @@
 
 :- external beat/1, beat_priority/2, beat_precondition/2, beat_completion_condition/2,
    beat_dialog/4, beat_monolog/3,
-   beat_start_task/3, beat_idle_task/3, beat_sequel/2, beat_follows/2, beat_delay/2.
+   beat_start_task/3, beat_idle_task/3, beat_sequel/2, beat_follows/2, beat_delay/2,
+   good_ending/1, bad_ending/1, player_achieves_task_during_beat/2.
+:- external beat_expected_during/2, beat_excursion/2.
 :- external plot_relevant_assertion/4.
 :- higher_order beat_precondition(0, 1).
 :- external plot_goal/1, plot_subgoal/2.
@@ -385,8 +387,37 @@ beat_declaration_assertions(BeatName,
 			   precondition: Condition,
 			   [beat_precondition(BeatName, Condition)]) :-
    !.
+beat_declaration_assertions(BeatName,
+			   excursion_of: Predecessor,
+			   [beat_excursion(BeatName, Predecessor)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   expected_during: Predecessor,
+			   [beat_expected_during(BeatName, Predecessor)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   good_ending,
+			   [good_ending(BeatName)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   bad_ending,
+			   [bad_ending(BeatName)]) :-
+   !.
+beat_declaration_assertions(BeatName,
+			   player_achieves:Task,
+			   [player_achieves_task_during_beat(BeatName, Task)]) :-
+   !.
 beat_declaration_assertions(BeatName, Declaration, []) :-
    log(BeatName:unknown_beat_declaration(Declaration)).
+
+%%%
+%%% Derived beat properties
+%%%
+
+terminal_beat(B) :-
+   good_ending(B).
+terminal_beat(B) :-
+   bad_ending(B).
 
 
 %%%
@@ -438,3 +469,107 @@ character_debug_display(Character, line("Idle task:\t", Task, "\t", beat:Beat)) 
    (Character::beat_idle_task(Beat, Character, Task) -> true ; (Task=none)).
 character_debug_display(Character, line("Beat task:\t", Task)) :-
    Character::potential_beat_dialog(Task).
+
+%%%
+%%% Graphviz interface
+%%%
+
+:- public make_plot_graph/0, beat_graph_node/2, beat_graph_relation/3,
+   beat_graph_subgraph/2.
+
+make_plot_graph :-
+   draw_diggraph(beat_graph_node, beat_graph_relation, beat_graph_subgraph).
+
+beat_graph_node(Beat, [shape=box | Attributes]) :-
+   beat(Beat),
+   beat_graph_attributes(Beat, Attributes).
+
+beat_graph_attributes(Beat, [style=filled, fillcolor=green]) :-
+   good_ending(Beat),
+   !.
+beat_graph_attributes(Beat, [style=filled, fillcolor=red]) :-
+   bad_ending(Beat),
+   !.
+beat_graph_attributes(_Beat, []).
+
+beat_graph_relation(B1, B2, [label="sequel"]) :-
+   beat_sequel(B2, B1).
+
+beat_graph_relation(B1, B2, [label="precedes"]) :-
+   beat_follows(B2, B1).
+
+% beat_graph_relation(B1, B2, [style=dotted]) :-
+%    beat_expected_during(B2, B1).
+
+% beat_graph_relation(B1, B2, [label="excursion", style=dotted]) :-
+%    beat_excursion(B2, B1).
+
+beat_graph_relation(B, G, [label="introduces goal"]) :-
+   beat(B),
+   beat_includes_markup(B, introduce_goal(G,_)).
+
+beat_graph_relation(B, Q, [label="introduces question"]) :-
+   beat(B),
+   beat_includes_markup(B, introduce_question(Q,_)).
+
+beat_graph_relation(Q, B, [label="answered by"]) :-
+   beat(B),
+   beat_includes_markup(B, answered(Q)).
+
+beat_graph_relation(B, N, [label="completion requires"]) :-
+   beat_completion_condition(B, Condition),
+   member_of_comma_separated_list(C, Condition),
+   normalize_precondition_for_graph(C, N).
+
+beat_graph_relation(N, B, [label="precondition"]) :-
+   beat_precondition(B, P),
+   normalize_precondition_for_graph(P, N).
+
+%beat_graph_relation(G, S, [label="subgoal"]) :-
+%   plot_subgoal(S, G).
+
+beat_graph_relation(G, C, [label="consequence"]) :-
+   plot_goal_achieves(G, C).
+beat_graph_relation(B, T, [label="player achieves"]) :-
+   player_achieves_task_during_beat(B, T).
+
+beat_graph_node(N, [shape=ellipse]) :-
+   beat_precondition(_,P),
+   normalize_precondition_for_graph(P, N).
+normalize_precondition_for_graph($pc::P, P) :-
+   !.
+normalize_precondition_for_graph(P, P).
+
+beat_graph_node(G, [shape=ellipse, style=filled, fillcolor=green]) :-
+   plot_goal(G).
+beat_graph_node(G, [shape=ellipse]) :-
+   beat(B),
+   beat_includes_markup(B, introduce_goal(G, _)).
+beat_graph_node(Q, [shape=ellipse]) :-
+   beat(B),
+   beat_includes_markup(B, introduce_question(Q, _)).
+
+beat_graph_node(C, [shape=ellipse]) :-
+   beat(B),
+   beat_includes_markup(B, clue(C)).
+
+beat_includes_markup(Beat, Markup) :-
+   (beat_monolog(Beat, _, List) ; beat_dialog(Beat, _, _, List)),
+   member(Line, List),
+   line_includes_markup(Line, Markup).
+
+line_includes_markup((_:LineMarkup), Markup) :-
+   markup_matches(LineMarkup, Markup).
+line_includes_markup((_::(_:LineMarkup)), Markup) :-
+   markup_matches(LineMarkup, Markup).
+
+markup_matches(M, M) :-
+   !.
+markup_matches(List, M) :-
+   list(List),
+   member(M, List).
+
+beat_graph_subgraph(TerminalBeats, [rank=sink]) :-
+   all(Beat,
+       terminal_beat(Beat),
+       TerminalBeats).
