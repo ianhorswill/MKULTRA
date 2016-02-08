@@ -51,6 +51,32 @@ opt_genitive(object) --> [].
 opt_genitive(genitive) --> ['\'', s].
 
 
+np((X^S)^S, _, third:Number, Gap, Gap) -->
+   [your],
+   kind_noun(Kind, Number),
+   { is_a(X, Kind),
+     owner($addressee, X) }.
+
+np((X^S)^S, _, third:Number, Gap, Gap) -->
+   [my],
+   kind_noun(Kind, Number),
+   { is_a(X, Kind),
+     possessive_pronoun_referrent($speaker, Owner),
+     owner(Owner, X) }.
+
+np((X^S)^S, _, third:Number, Gap, Gap) -->
+   proper_name(Owner, singular),
+   ['\'', s],
+   kind_noun(Kind, Number),
+   { is_a(X, Kind),
+     owner(Owner, X) }.
+
+possessive_pronoun_referrent(player, $pc) :- !.
+possessive_pronoun_referrent(X, X).
+
+owner($kavi, X) :- X \= $macguffin.
+owner($pc, $macguffin).
+
 % PARSE/COMPLETE ONLY
 % "a KIND" from unbound variables with declared types
 np(LF, _, third:singular, Gap, Gap) -->
