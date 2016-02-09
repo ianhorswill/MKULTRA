@@ -74,9 +74,6 @@ np((X^S)^S, _, third:Number, Gap, Gap) -->
 possessive_pronoun_referrent(player, $pc) :- !.
 possessive_pronoun_referrent(X, X).
 
-owner($kavi, X) :- X \= $macguffin.
-owner($pc, $macguffin).
-
 % PARSE/COMPLETE ONLY
 % "a KIND" from unbound variables with declared types
 np(LF, _, third:singular, Gap, Gap) -->

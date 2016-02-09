@@ -1,4 +1,11 @@
 %%%
+%%% Ownership
+%%%
+
+owner($kavi, X) :- X \= $macguffin.
+owner($pc, $macguffin).
+
+%%%
 %%% STARTING PLOT GOAL
 %%% Find the macguffin
 %%%
