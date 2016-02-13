@@ -25,13 +25,14 @@
 :- public notify_event/1.
 
 notify_event(Event) :-
-    findall(Handler,
-	    event_handler(Event, _Type, _Concern, Handler), 
-	    Handlers),
-    maybe_log_event(Event, Handlers),
-    forall(member(Handler, Handlers),
-	   unless(Handler,
-		  log(handler_failed(Handler)))).
+   ignore(maybe_remember_event(Event)),
+   findall(Handler,
+	   event_handler(Event, _Type, _Concern, Handler), 
+	   Handlers),
+   maybe_log_event(Event, Handlers),
+   forall(member(Handler, Handlers),
+	  unless(Handler,
+		 log(handler_failed(Handler)))).
 
 %% event_handler(+Event, ?Type, ?Concern, -Handler)
 %  Handler is Concern's handler for some construal of Event
