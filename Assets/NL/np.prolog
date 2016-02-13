@@ -50,21 +50,25 @@ opt_genitive(subject) --> [].
 opt_genitive(object) --> [].
 opt_genitive(genitive) --> ['\'', s].
 
-
+% Possessive constructions (parse only right now).
 np((X^S)^S, _, third:Number, Gap, Gap) -->
+   { input_from_player },
+   possessive_np(X, Number).
+
+possessive_np(X, Number) -->
    [your],
    kind_noun(Kind, Number),
    { is_a(X, Kind),
      owner($addressee, X) }.
 
-np((X^S)^S, _, third:Number, Gap, Gap) -->
+possessive_np(X, Number) -->
    [my],
    kind_noun(Kind, Number),
    { is_a(X, Kind),
      possessive_pronoun_referrent($speaker, Owner),
      owner(Owner, X) }.
 
-np((X^S)^S, _, third:Number, Gap, Gap) -->
+possessive_np(X, Number) -->
    proper_name(Owner, singular),
    ['\'', s],
    kind_noun(Kind, Number),

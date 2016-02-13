@@ -196,10 +196,11 @@ s(is_a(Noun, Kind), interrogative, affirmative, Tense, simple) -->
 
 % Wh-questions about normal verbs
 
-% What Verbs?
-s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, Aspect) -->
-   whpron(Kind),
-   aux_vp(Wh^S, affirmative, third:singular, Tense, Aspect).
+% This seems redundant with the "questions about the subject" rule below.
+% % What Verbs?
+% s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, Aspect) -->
+%    whpron(Kind),
+%    aux_vp(Wh^S, affirmative, third:singular, Tense, Aspect).
 
 % What did Subject Verb?
 s((Wh:(S, is_a(Wh, Kind))), interrogative, affirmative, Tense, simple) -->
