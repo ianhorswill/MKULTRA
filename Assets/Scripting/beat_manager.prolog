@@ -16,7 +16,9 @@
 :- external beat/1, beat_priority/2, beat_precondition/2, beat_completion_condition/2,
    beat_dialog/4, beat_monolog/3,
    beat_start_task/3, beat_idle_task/3, beat_sequel/2, beat_follows/2, beat_delay/2,
-   good_ending/1, bad_ending/1, player_achieves_task_during_beat/2.
+   good_ending/1, bad_ending/1, player_achieves_task_during_beat/2,
+   beat_is_character_reaction/3,
+   beat_leads_to_event/3, plot_event/1.
 :- external beat_expected_during/2, beat_excursion/2.
 :- external plot_relevant_assertion/4.
 :- higher_order beat_precondition(0, 1).
@@ -242,6 +244,8 @@ beat_requirement(Beat, $global_root/beats/previous:ImmediatePredecessor) :-
    beat_sequel(Beat, ImmediatePredecessor).
 beat_requirement(Beat, Precondition) :-
    beat_precondition(Beat, Precondition).
+beat_requirement(Beat, character_remembers_recently(Character, Event)) :-
+   beat_is_character_reaction(Beat, Character, Event).
 
 %% beat_score(+Beat, -Score)
 %  Beat has the specified score.
@@ -275,42 +279,8 @@ end_beat :-
 test_file(problem_solver(_),
 	  "Scripting/beat_task_crossrefs").
 
-%%%
-%%% Monitoring plot-relevant events
-%%%
-
-standard_concern(plot_event_monitor, 1).
-
-on_event(pickup(X),
-	 plot_event_monitor,
-	 _,
-	 react_to_plot_event(pickup(X))) :-
-   is_a(X, key_item).
-
-on_event(ingest(X),
-	 plot_event_monitor,
-	 _,
-	 react_to_plot_event(ingest(X))) :-
-   character(X).
-
-on_event(assertion(Speaker, $me, LF, Tense, Aspect),
-	 plot_event_monitor,
-	 _,
-	 react_to_plot_event(learns_that($me, PlotPoint))) :-
-   modalized(LF, Tense, Aspect, Modal),
-   plot_relevant_assertion(Speaker, $me, Modal, PlotPoint).
-
-plot_point(learns_that(Character, LF),
-	   $global_root/plot_points/Character/LF).
-plot_point(ingest(Character),
-	   $global_root/plot_points/killed/ $me/Character).
-plot_point(ingest(Character),
-	   $global_root/plot_points/ate/ $me/Character).
-
-react_to_plot_event(Event) :-
-   forall(plot_point(Event, PlotPoint),
-	  assert(PlotPoint)),
-   maybe_interrupt_current_beat.
+on_memorable_event(Event) :-
+   plot_event(Event) -> maybe_interrupt_current_beat.
 
 when_added(Assertion, maybe_interrupt_current_beat) :-
    beat_precondition(_, Assertion).
@@ -339,7 +309,7 @@ initialization :-
    beat(BeatName, { Declarations }),
    assert($global::beat(BeatName)),
    forall(( member_of_comma_separated_list(Declaration, Declarations),
-	    beat_declaration_assertions(BeatName, Declaration, Assertions),
+	    once(beat_declaration_assertions(BeatName, Declaration, Assertions)),
 	    member(Assertion, Assertions) ),
 	  assert($global::Assertion)).
 
@@ -352,61 +322,62 @@ member_of_comma_separated_list(Member, Member).
 
 beat_declaration_assertions(BeatName,
 			   start(Character):Task,
-			   [beat_start_task(BeatName, Character, Task)]) :-
-   !.
+			   [beat_start_task(BeatName, Character, Task)]).
 beat_declaration_assertions(BeatName,
 			   (Character1+Character2):Dialog,
-			   [beat_dialog(BeatName, Character1, Character2, Dialog)]) :-
-   !.
+			   [beat_dialog(BeatName, Character1, Character2, Dialog)]).
 beat_declaration_assertions(BeatName,
 			   Character: Monolog,
 			   [beat_monolog(BeatName, Character, Monolog)]) :-
-   character(Character),
-   !.
+   character(Character).
 beat_declaration_assertions(BeatName,
 			   sequel_to: Beat,
-			   [beat_sequel(BeatName, Beat)]) :-
-   !.
+			   [beat_sequel(BeatName, Beat)]).
 beat_declaration_assertions(BeatName,
 			   start_delay: Time,
-			   [beat_delay(BeatName, Time)]) :-
-   !.
+			   [beat_delay(BeatName, Time)]).
 beat_declaration_assertions(BeatName,
 			   follows: Beat,
-			   [beat_follows(BeatName, Beat)]) :-
-   !.
+			   [beat_follows(BeatName, Beat)]).
 beat_declaration_assertions(BeatName,
 			   completed_when: Condition,
-			   [beat_completion_condition(BeatName, Condition)]) :-
-   !.
+			   [beat_completion_condition(BeatName, Condition)]).
 beat_declaration_assertions(BeatName,
 			   priority: Priority,
-			   [beat_priority(BeatName, Priority)]) :-
-   !.
+			   [beat_priority(BeatName, Priority)]).
 beat_declaration_assertions(BeatName,
 			   precondition: Condition,
-			   [beat_precondition(BeatName, Condition)]) :-
-   !.
+			   [beat_precondition(BeatName, Condition)]).
 beat_declaration_assertions(BeatName,
 			   excursion_of: Predecessor,
-			   [beat_excursion(BeatName, Predecessor)]) :-
-   !.
+			   [beat_excursion(BeatName, Predecessor)]).
 beat_declaration_assertions(BeatName,
 			   expected_during: Predecessor,
-			   [beat_expected_during(BeatName, Predecessor)]) :-
-   !.
+			   [beat_expected_during(BeatName, Predecessor)]).
+beat_declaration_assertions(BeatName,
+			    leads_to(Character, Event),
+			    [beat_leads_to_event(BeatName, Character, Event)]).
+beat_declaration_assertions(BeatName,
+			    reaction_to(Character, Event),
+			    [ beat_is_character_reaction(BeatName, Character, Event)
+			      | Memorability ]) :-
+   plot_event(Event) ->
+   (Memorability=[])
+   ;
+   (Memorability=[plot_event(Event)]).
+
+memorable_event(E) :-
+   plot_event(E).
+
 beat_declaration_assertions(BeatName,
 			   good_ending,
-			   [good_ending(BeatName)]) :-
-   !.
+			   [good_ending(BeatName)]).
 beat_declaration_assertions(BeatName,
 			   bad_ending,
-			   [bad_ending(BeatName)]) :-
-   !.
+			   [bad_ending(BeatName)]).
 beat_declaration_assertions(BeatName,
 			   player_achieves:Task,
-			   [player_achieves_task_during_beat(BeatName, Task)]) :-
-   !.
+			   [player_achieves_task_during_beat(BeatName, Task)]).
 beat_declaration_assertions(BeatName, Declaration, []) :-
    log(BeatName:unknown_beat_declaration(Declaration)).
 
@@ -533,12 +504,35 @@ beat_graph_relation(G, C, [label="consequence"]) :-
 beat_graph_relation(B, T, [label="player achieves"]) :-
    player_achieves_task_during_beat(B, T).
 
+beat_graph_node(Event, [shape=octagon]) :-
+   beat_is_character_reaction(_, _, Event).
+
+beat_graph_relation(Event, Beat, [label="reaction to"]) :-
+   beat_is_character_reaction(Beat, _, Event).
+
+beat_graph_relation(Event, Condition, [label="achieves"]) :-
+   beat_is_character_reaction(_, Character, Event),
+   postcondition(Event, Condition),
+   (plot_relevant_condition(Condition) ; plot_relevant_condition(Character::Condition)).
+
+plot_relevant_condition(Condition) :-
+   beat_precondition(_, Condition).
+plot_relevant_condition(Condition) :-
+   beat_completion_condition(_, Condition).
+plot_relevant_condition(Condition) :-
+   beat_completion_condition(_, Condition)
+   ;    beat_completion_condition(_, (Condition, _))
+   ;    beat_completion_condition(_, (_, Condition)).
+
+
+beat_graph_relation(Beat, Event, [label="leads to"]) :-
+   beat_leads_to_event(Beat, _, Event).
+
 beat_graph_node(N, [shape=ellipse]) :-
    beat_precondition(_,P),
-   normalize_precondition_for_graph(P, N).
-normalize_precondition_for_graph($pc::P, P) :-
-   !.
-normalize_precondition_for_graph(P, P).
+   once((normalize_precondition_for_graph(P, N) ; P=N)).
+normalize_precondition_for_graph($pc::P, P).
+normalize_precondition_for_graph(plot_goal(P), P).
 
 beat_graph_node(G, [shape=ellipse, style=filled, fillcolor=green]) :-
    plot_goal(G).

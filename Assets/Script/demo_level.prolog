@@ -33,12 +33,6 @@ plot_goal_achieves(house_searched,
 		   location($macguffin, $pc)).
 plot_goal_achieves(house_searched,
 		   location($report, $pc)).
-plot_goal_achieves(house_searched,
-		   examined($photo)).
-plot_goal_achieves(house_searched,
-		   $global_root/plot_points/ate/ $kavi/ $pc).
-plot_goal_achieves(house_searched,
-		   $global_root/plot_points/captive_released).
 
 %%%
 %%% Exposition
@@ -77,23 +71,28 @@ beat(pc_reacts,
 %%% PC explores the house
 %%%
 
-beat(pc_explores_the_house,
+beat(search_house,
      {
       start_delay: 20,
-      follows: pc_reacts,
+      precondition: plot_goal(house_searched),
       completed_when: ( $pc::location($macguffin, $pc),
 			$pc::location($report, $pc) ),
-      player_achieves: house_searched
+      player_achieves: house_searched,
+      leads_to($pc, pickup($macguffin)),
+      leads_to($pc, pickup($report)),
+      leads_to($pc, captive_released),
+      leads_to($pc, examine($pc, $photo)),
+      leads_to($kavi, ingest($pc))
       }).
 
 after(pickup($report),
       describe($report)).
 
-beat(pc_finds_the_report,
+beat(react_to_report,
      {
       priority: 1,
-      precondition: $pc::location($report, $pc),
-      %excursion_of: pc_explores_the_house,
+      reaction_to($pc, pickup($report)),
+      %excursion_of: search_house,
       $pc:
          ["What's this?",
 	  "It's a report on project MKSPARSE.",
@@ -102,11 +101,11 @@ beat(pc_finds_the_report,
 				 "What is Project MKSPARSE?")]
      }).
 
-beat(pc_finds_the_photo,
+beat(react_to_photo,
      {
       priority: 1,
-      precondition: examined($photo),
-      %excursion_of: pc_explores_the_house,
+      reaction_to($pc, examine($pc, $photo)),
+      %excursion_of: search_house,
       $pc:
          [ "Wait, that's Trip and Grace!?!":
               introduce_question(photo,
@@ -118,12 +117,11 @@ beat(pc_finds_the_photo,
 %%% Good ending
 %%%
 
-beat(pc_finds_the_macguffin,
+beat(react_to_macguffin,
      {
       good_ending,
       priority: 1,
-      expected_during: pc_explores_the_house,
-      precondition: $pc::location($macguffin, $pc),
+      reaction_to($pc, pickup($macguffin)),
       $pc:
         ["Got it!" : answered(why_stay_out_of_bedroom),
 	 "I knew he stole it."]
@@ -133,12 +131,12 @@ beat(pc_finds_the_macguffin,
 %%% Bad ending
 %%%
 
-beat(kavi_eats_pc,
+beat(kavis_goodbye_speech,
      {
       bad_ending,
       priority: 2,
-      precondition: ($global_root/plot_points/ate/ $kavi/ $pc),
-      expected_during: pc_explores_the_house,
+      reaction_to($kavi, ingest($pc)),
+      expected_during: search_house,
       $kavi:
         ["Sorry, old girl,",
 	 "but I'm afraid I can't let you search my house.",
@@ -152,11 +150,10 @@ beat(kavi_eats_pc,
 %%%% Releasd Trip from captivity
 %%%%
 
-beat(pc_releases_captive,
+beat(react_to_trip,
      {
       priority: 1,
-      precondition: ($global_root/plot_points/captive_released),
-      %excursion_of: pc_explores_the_house,
+      reaction_to($pc, captive_released),
       start($captive): goto($pc),
       ($pc + $captive):
        [ $captive::("Thanks for releasing me!":answered(photo)),
@@ -187,8 +184,6 @@ release_captive :-
    set_property(SimController, 'IsHidden', false),
    component_of_gameobject_with_type(Renderer, $captive, $'SpriteSheetAnimationController'),
    set_property(Renderer, visible, true),
-   react_to_plot_event(release_captive).
+   maybe_remember_event(captive_released).
 
-plot_point(release_captive,
-	   $global_root/plot_points/captive_released).
 

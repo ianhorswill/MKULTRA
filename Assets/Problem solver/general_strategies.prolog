@@ -318,6 +318,8 @@ strategy(examine($me, Object),
 		  call(pop_up_examination_content(Content)),
 		  describe(Object, general, null)),
 	       tell(examined(Object)))).
+after(examine($me, Object),
+      call(maybe_remember_event(examine($me, Object)))).
 
 precondition(read($me, Object),
 	     ready_to_hand(Object)).
