@@ -25,6 +25,35 @@ emit_grain(Name, Duration) :-
    !.
 emit_grain(_,_).
 
+:- public activate_prop/1, deactivate_prop/1,
+   prop_activated/1, turned_on/1.
+%% activate_prop(+Prop)
+%  Activates the Prop (e.g. turns on an appliance).
+activate_prop(Prop) :-
+   is_class(Prop, $'GameObject'),
+   component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
+   set_property(PropComponent, 'IsOn', true).
+
+%% deactivate_prop(+Prop)
+%  Activates the Prop (e.g. turns on an appliance).
+deactivate_prop(Prop) :-
+   is_class(Prop, $'GameObject'),
+   component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
+   set_property(PropComponent, 'IsOn', false).
+
+prop_activated(Prop) :-
+   is_class(Prop, $'GameObject'),
+   component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
+   PropComponent.'IsOn'.
+
+%% turned_on(+Appliance)
+%  True is Appliance is turned on.
+turned_on(Appliance) :-
+   prop_activated(Appliance).
+informed_about(turned_on(_)).
+closed(turned_on(_)).
+
+
 :- public fkey_command/1, fkey_command/2.
 :- external fkey_command/2.
 

@@ -50,6 +50,9 @@ default_strategy(explain_failure(_),
 strategy(explain_failure(~know(X:location(Object, X))),
 	 speech(["I don't know where", np(Object), "is"])).
 
+strategy(explain_failure(~ready_to_hand(Object)),
+	 speech([np(Object), "isn't ready to hand."])).
+
 strategy(tell_about($me, _, Topic),
 	 describe(Topic, general, null)).
 

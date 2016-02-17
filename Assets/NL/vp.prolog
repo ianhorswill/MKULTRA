@@ -49,3 +49,22 @@ vp(Form, Predication^Modal, Subject^S2, Tense, Agreement, GapInfo) -->
    np((Object^Modal)^S1, object, _, GapInfo, GapOut),
    opt_pp(ForcePPs, Predication, GapOut, S1, S2).
 
+%% Turn phrasal verbs
+%% Someday this should be data driven
+vp(_Form, Predicate^Modal, Subject^S, Tense, Agreement, GapInfo) -->
+   turn_verb(Agreement, Tense),
+   [TurnAdverb],
+   { turn_phrasal_verb(TurnAdverb, Subject, Object, Predicate) },
+   np((Object^Modal)^S, object, _, GapInfo, nogap).
+vp(_Form, Predicate^Modal, Subject^S, Tense, Agreement, GapInfo) -->
+   turn_verb(Agreement, Tense),
+   np((Object^Modal)^S, object, _, GapInfo, nogap),
+   [TurnAdverb],
+   { turn_phrasal_verb(TurnAdverb, Subject, Object, Predicate) }.
+
+turn_verb(_, present) --> [turn].
+turn_verb(_, past) --> [turned].
+
+turn_phrasal_verb(on, S, O, turn_on(S, O)).
+turn_phrasal_verb(off, S, O, turn_off(S, O)).
+

@@ -148,6 +148,10 @@ check_lexical_entry_type(LF) :-
 check_lexical_entry_type(LF) :-
    log(no_type_specified_for(LF)).
 
+load_special_csv_row(_RowNumber,
+                     adjective(Phrase, Meaning)) :-
+   assert_phrase_rule(adjective(Meaning), Phrase).
+
 end_csv_loading(adjective) :-
-   forall(adjective(A, _),
-	  register_lexical_item(A)).
+   forall(adjective(_, Phrase, []),
+	  register_lexical_items(Phrase)).

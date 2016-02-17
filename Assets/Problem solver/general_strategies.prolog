@@ -343,6 +343,21 @@ default_strategy(press($me, _Button),
 		 say_string("Nothing happened...")).
 
 %%
+%% Turning things on/off
+%%
+
+precondition(turn_on($me, X),
+	     ready_to_hand(X)).
+default_strategy(turn_on($me, X),
+		 call(activate_prop(X))).
+
+precondition(turn_off($me, X),
+	     ready_to_hand(X)).
+default_strategy(turn_off($me, X),
+		 call(deactivate_prop(X))).
+
+
+%%
 %% Tracking who you're doing something for
 %%
 

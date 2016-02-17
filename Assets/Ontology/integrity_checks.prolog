@@ -128,8 +128,8 @@ test(integrity(ditransitive_verb_semantics_defined),
 test(integrity(adjective_semantics_defined),
      [ problem_list("The following undefined predicates or attributes appear in word definitions",
 		    UndefinedPredicates) ]) :-
-   all(Spec:Word,
-       ( adjective(Word, Semantics),
+   all(Spec:Phrase,
+       ( adjective(Semantics, Phrase, []),
 	 lambda_contains_undefined_predicate(Semantics, Spec) ),
        UndefinedPredicates).
 

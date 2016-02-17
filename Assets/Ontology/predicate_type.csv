@@ -27,6 +27,8 @@ action,"look_for(actor, physical_object)"
 action,"sleep(actor, container)"
 action,"examine(actor, physical_object)"
 action,"read(actor, document)"
+action,"turn_on(actor, appliance)"
+action,"turn_off(actor, appliance)"
 action,"watch(actor, physical_object)"
 % Conditions,
 condition,can(action)
@@ -43,3 +45,4 @@ condition,thirsty(person)
 condition,hungry(person)
 condition,"is_a(entity, kind)"
 condition,"kind_of(kind, kind)"
+condition,turned_on(appliance)

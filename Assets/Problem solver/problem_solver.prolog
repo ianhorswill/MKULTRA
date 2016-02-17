@@ -80,5 +80,11 @@ polled_builtin(breakpoint).
 have_strategy(Task) :-
    task_reduction(Task, Reduct),
    !,
-   Reduct \= resolve_match_failure(_).
-   
+   have_strategy_aux(Reduct).
+
+have_strategy_aux(resolve_match_failure(Task)) :-
+   !,
+   task_reduction(resolve_match_failure(Task),
+		  Default),
+   Default \= resolve_match_failure(_).
+have_strategy_aux(_).   

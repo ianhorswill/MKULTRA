@@ -46,6 +46,11 @@ public class PropInfo : PhysicalObject
     /// </summary>
     public string[] Adjectives=new string[0];
 
+    /// <summary>
+    /// For appliances and other active objects: is the device on?
+    /// </summary>
+    public bool IsOn;
+
     public override void Awake()
     {
         base.Awake();

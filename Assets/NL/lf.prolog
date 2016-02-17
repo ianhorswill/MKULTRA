@@ -70,5 +70,5 @@ lf_core_predicate_subject(S, Subject) :-
 lf_core_predicate_subject(S, Subject) :-
    dtv(past_participle, _, Subject^_^_^S, _, _, _, _).
 lf_core_predicate_subject(S, Subject) :-
-   adjective(_, Subject^S).
+   adjective(Subject^S, _, []).
 

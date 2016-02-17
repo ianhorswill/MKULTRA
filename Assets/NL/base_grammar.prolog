@@ -370,13 +370,10 @@ s(S:location(S, Character), interrogative, Polarity, Tense, simple) -->
    { character(Character) },
    aux_have(Tense, Agreement).
 
-
-
 %%%
 %%% Adjectival phrases
 %%% Seems silly to make a whole new file for one clause...
 %%%
 
 ap(Meaning) -->
-   [ Adjective ],
-   { adjective(Adjective, Meaning) }.
+   adjective(Meaning).
