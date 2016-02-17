@@ -52,9 +52,12 @@ opt_genitive(genitive) --> ['\'', s].
 
 % Possessive constructions (parse only right now).
 np((X^S)^S, _, third:Number, Gap, Gap) -->
-   { input_from_player },
+   not_generating_or_completing,
    possessive_np(X, Number).
 
+not_generating_or_completing(In, In) :-
+   nonvar(In).
+   
 possessive_np(X, Number) -->
    [your],
    kind_noun(Kind, Number),
