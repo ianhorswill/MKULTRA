@@ -29,6 +29,7 @@ action,"examine(actor, physical_object)"
 action,"read(actor, document)"
 action,"turn_on(actor, appliance)"
 action,"turn_off(actor, appliance)"
+action,"believe(actor, condition)"
 action,"watch(actor, physical_object)"
 % Conditions,
 condition,can(action)
@@ -46,3 +47,10 @@ condition,hungry(person)
 condition,"is_a(entity, kind)"
 condition,"kind_of(kind, kind)"
 condition,turned_on(appliance)
+condition,"want(actor, condition)"
+condition,"want(actor, action)"
+condition,"need(actor, condition)"
+condition,"need(actor, action)"
+condition,"believe(actor, condition)"
+condition,"know(actor, condition)"
+condition,"know_if(actor, condition)"

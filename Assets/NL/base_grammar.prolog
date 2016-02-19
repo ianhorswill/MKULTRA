@@ -62,6 +62,33 @@ opt_stop(Mood) --> [ '!' ], { Mood \= interrogative }.
 
 :- randomizable s/7.
 
+%%%%
+%%%% CLAUSES
+%%%%
+
+%%%
+%%% Finite clauses
+%%%
+
+finite_clause(S) -->
+   s(S, indicative, affirmative, present, simple).
+
+%%%
+%%% Infinitival clauses
+%%%
+
+infinitival_clause(_EnclosingSubject, S) -->
+   { lf_subject(S, NP) },
+   np((NP^S1)^S, subject, _Agreement, nogap, nogap),
+   infinitival_vp(NP^S1).
+
+infinitival_clause(EnclosingSubject, S) -->
+   infinitival_vp(EnclosingSubject^S).
+
+%%%%
+%%%% SENTENCES
+%%%%
+
 %%%
 %%% Indicative mood
 %%%

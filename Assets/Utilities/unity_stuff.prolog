@@ -50,7 +50,7 @@ prop_activated(Prop) :-
 %  True is Appliance is turned on.
 turned_on(Appliance) :-
    prop_activated(Appliance).
-informed_about(turned_on(_)).
+informed_about(_, turned_on(_)).
 closed(turned_on(_)).
 
 
