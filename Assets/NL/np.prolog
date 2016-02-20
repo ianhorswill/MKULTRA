@@ -29,6 +29,7 @@ np(NP, Case, Agreement, Gap, Gap) -->
 
 % Demonstrative pronouns
 np((E^S)^S, _Case, third:singular, Gap, Gap) -->
+   { var(E) },
    [ Demonstrative ],
    { demonstrative_pronoun(Demonstrative),
      /perception/mouse_selection:E }.
