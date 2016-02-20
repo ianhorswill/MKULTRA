@@ -88,7 +88,6 @@ turn_phrasal_verb(off, S, O, turn_off(S, O)).
 %% modal verbs
 
 vp(_, Predicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
-   not_generating_or_completing,
    modal_verb(Tense, Agreement, Subject^Complement^Predicate),
    infinitival_clause(Subject, Complement).
 
@@ -112,7 +111,6 @@ modal_verb(past, _Agreement, S^C^need(S, C)) -->
 %% Other verbs with clausal complements
 
 vp(_, TransformedPredicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
-   not_generating_or_completing,
    verb_with_clausal_complement(Tense, Agreement, Complementizer, Subject^Complement^Predicate),
    complementizer(Complementizer, Predicate^TransformedPredicate),
    finite_clause(Complement).
@@ -120,8 +118,8 @@ vp(_, TransformedPredicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
 %% complementizer(Type, Transformer)
 %  Matches a complementizer (that, if, whether, null), and gives its semantics for transforming the
 %  verb's normal LF into the final LF.  Used to allow if and whether to change know into know_if.
-complementizer(if, know(X,Y)^know_if(X,Y)) --> [whether].
-complementizer(if, know(X,Y)^know_if(X,Y)) --> [if].
+complementizer(if, knows(X,Y)^knows_if(X,Y)) --> [whether].
+complementizer(if, knows(X,Y)^knows_if(X,Y)) --> [if].
 complementizer(that, X^X) --> [that].
 complementizer(that, X^X) --> [].
 
@@ -133,11 +131,11 @@ verb_with_clausal_complement(present, Agreement, that, Subject^Complement^believ
    [believe],
    { dif(Agreement, third:single) }.
 
-verb_with_clausal_complement(present, third:single, _, Subject^Complement^know(Subject, Complement)) -->
+verb_with_clausal_complement(present, third:single, _, Subject^Complement^knows(Subject, Complement)) -->
    [knows].
-verb_with_clausal_complement(past, _, _, Subject^Complement^know(Subject, Complement)) -->
+verb_with_clausal_complement(past, _, _, Subject^Complement^knows(Subject, Complement)) -->
    [knew].
-verb_with_clausal_complement(present, Agreement, _, Subject^Complement^know(Subject, Complement)) -->
+verb_with_clausal_complement(present, Agreement, _, Subject^Complement^knows(Subject, Complement)) -->
    [know],
    { dif(Agreement, third:single) }.
 

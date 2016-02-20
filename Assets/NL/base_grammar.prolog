@@ -77,8 +77,8 @@ finite_clause(S) -->
 %%% Infinitival clauses
 %%%
 
-infinitival_clause(_EnclosingSubject, S) -->
-   { lf_subject(S, NP) },
+infinitival_clause(EnclosingSubject, S) -->
+   { lf_subject(S, NP), dif(EnclosingSubject, NP) },
    np((NP^S1)^S, subject, _Agreement, nogap, nogap),
    infinitival_vp(NP^S1).
 
@@ -92,6 +92,7 @@ infinitival_clause(EnclosingSubject, S) -->
 %%%
 %%% Indicative mood
 %%%
+
 s(S, indicative, Polarity, Tense, Aspect) -->
    { lf_subject(S, NP) },
    np((NP^S1)^S, subject, Agreement, nogap, nogap),
@@ -148,7 +149,7 @@ s(location(Object, Character), indicative, Polarity, Tense, simple) -->
 
 % NP's Property is [not] PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { valid_property_value(Property, Value),
+   { once(valid_property_value(Property, Value)),
      % Prefer other forms of realization, when available
      % But always let the user type this version if they want.
      ( input_from_player
@@ -163,7 +164,7 @@ s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) --
 
 % NP is [not] PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { valid_property_value(Property, Value),
+   { once(valid_property_value(Property, Value)),
      adjectival_property(Property) },
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
@@ -172,7 +173,7 @@ s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) --
 
 % NP is [not] a PropertyValue
 s(property_value(Noun, Property, Value), indicative, Polarity, Tense, simple) -->
-   { valid_property_value(Property, Value),
+   { once(valid_property_value(Property, Value)),
      nominal_property(Property) },
    np((Noun^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),

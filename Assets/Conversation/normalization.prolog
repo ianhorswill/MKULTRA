@@ -1,5 +1,5 @@
 normalize_dialog_act(Act, Normalized) :-
-   da_normal_form(Act, Normalized) ->
+   once(da_normal_form(Act, Normalized)) ->
       true
       ;
       (Normalized=Act).

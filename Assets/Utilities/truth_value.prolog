@@ -13,7 +13,7 @@
    closed/1.
 :- external know_whether/1, pretend_truth_value/3.
 :- external know_property/3, know_relation/3,
-            know_about_kind/1, closed/1.
+            know_about_kind/1, closed/1, knows/2.
 
 %% know_whether(?Predicate)
 %  True when this character has knowledge about the truth of

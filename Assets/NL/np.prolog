@@ -55,7 +55,14 @@ np((X^S)^S, _, third:Number, Gap, Gap) -->
    not_generating_or_completing,
    possessive_np(X, Number).
 
+:- public not_generating_or_completing/2, not_completing/3.
 not_generating_or_completing(In, In) :-
+   nonvar(In).
+   
+not_completing(LF, _, _) :-
+   nonvar(LF),
+   !.
+not_completing(_, In, In) :-
    nonvar(In).
    
 possessive_np(X, Number) -->

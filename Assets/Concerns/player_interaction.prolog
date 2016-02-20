@@ -2,17 +2,24 @@
 %%% Driver for conversation between player and player character
 %%%
 
-on_event(player_input(X),
+on_event(player_input(DialogAct),
 	 player_interaction,
 	 C,
 	 Response) :-
-   normalize_dialog_act(X, Normalized),
-   (agent(X,player) ->
-      % This is the player talking to the PC.
-      Response = player_input_task(C, respond_to_dialog_act(Normalized))
-      ;
-      % This is the player proposing a PC action.
-      Response = assert(C/propose_action:X)).
+   once(player_input_response(DialogAct, C, Response)).
+
+
+player_input_response(DialogAct, C, player_input_task(C, respond_to_dialog_act(Normalized))) :-
+   normalize_dialog_act(DialogAct, Normalized),
+   agent(Normalized, player).
+player_input_response(X, C, assert(C/propose_action:X)).
+
+da_normal_form(assertion($pc, NPC, knows(NPC, Proposition), present, simple),
+	       hypno_command($pc, NPC, Proposition, present, simple)).
+da_normal_form(command($pc, NPC, knows(NPC, Proposition)),
+	       hypno_command($pc, NPC, Proposition, present, simple)).
+da_normal_form(command($pc, NPC, believe(NPC, Proposition)),
+	       hypno_command($pc, NPC, Proposition, present, simple)).
 
 on_event(DialogAct,
 	 player_interaction,

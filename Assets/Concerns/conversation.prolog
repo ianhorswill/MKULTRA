@@ -64,7 +64,7 @@ partner_still_speaking_to_me(Conversation) :-
 on_enter_state(start, conversation, C) :-
    C/initial_history/Event,
    normalize_dialog_act(Event, Normalized),
-   ( Event = greet($me, _) ->
+   ( Normalized = greet($me, _) ->
        assert(C/greeted)
        ;
        conversation_handler_task(C, respond_to_dialog_act(Normalized)) ).

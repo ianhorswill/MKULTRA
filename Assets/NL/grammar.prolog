@@ -229,8 +229,9 @@ add_conversation_dispatch_clause(Structure) :-
    length(EventArgs, Arity),
    Event =.. [Functor | EventArgs],
    assert( ( on_event(Event, conversation, C,
-		      conversation_handler_task(C, respond_to_dialog_act(Event))) :-
-	        C/partner/Partner
+		      conversation_handler_task(C, respond_to_dialog_act(Normalized))) :-
+	       C/partner/Partner,
+	       normalize_dialog_act(Event, Normalized)
 	   ) ).
 
 :- register_utterance_types.
