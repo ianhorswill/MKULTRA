@@ -77,4 +77,7 @@ lf_core_predicate_subject(S, Subject) :-
    verb_with_clausal_complement(_, _, Subject, _Complement, S, _, _, _).
 lf_core_predicate_subject(S, Subject) :-
    verb_with_clausal_complement(_, _, Subject, _Complement, _, S, _, _).
-lf_core_predicate_subject(knows_if(Subject, _), Subject).
+lf_core_predicate_subject(S, Subject) :-
+   verb_with_object_and_clausal_complement(_, _, Subject, _Object, _Complement, S, _, _, _).
+lf_core_predicate_subject(S, Subject) :-
+   verb_with_object_and_clausal_complement(_, _, Subject, _Object, _Complement, _, S, _, _).

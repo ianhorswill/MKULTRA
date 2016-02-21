@@ -74,9 +74,6 @@ content_clause(ComplementLF, DeclarativePredicate, InterrogativePredicate, Predi
    complementizer(DeclarativePredicate, InterrogativePredicate, Predicate),
    { Predicate \= null },
    s(ComplementLF, indicative, affirmative, present, simple).
-content_clause(ComplementLF, _, InterrogativePredicate, InterrogativePredicate) -->
-   { InterrogativePredicate \= null },
-   s(ComplementLF, interrogative, affirmative, present, simple).
 content_clause((Wh:(S, is_a(Wh, Kind))), _, InterrogativePredicate, InterrogativePredicate) -->
    { InterrogativePredicate \= null },
    whpron(Kind),
@@ -87,6 +84,14 @@ content_clause(Object:(be(Subject, Object), is_a(Subject, Kind)), _, Interrogati
    whpron(Kind),
    np((Subject^S)^S, subject, Agreement, nogap, nogap),
    aux_be(present, Agreement).
+content_clause(Container:location(Subject, Container), _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   [where],
+   np((Subject^S)^S, subject, Agreement, nogap, nogap),
+   aux_be(present, Agreement).
+content_clause(ComplementLF, _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   s(ComplementLF, interrogative, affirmative, present, simple).
 
 %% complementizer(+DeclarativePredicate, +InterrogativePredicate, -Predicate)
 %  Matches a complementizer (that, if, whether, null), chooses which version of the

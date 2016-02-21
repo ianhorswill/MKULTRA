@@ -122,15 +122,39 @@ verb_with_clausal_complement(present, Agreement, Subject, Complement, believes(S
    [believe],
    { dif(Agreement, third:single) }.
 
-verb_with_clausal_complement(present, third:single, Subject, Complement, knows(Subject, Complement), knows_if(Subject, Complement)) -->
+verb_with_clausal_complement(present, third:single, Subject, Complement, knows(Subject, Complement), knows_value(Subject, Complement)) -->
    [knows].
-verb_with_clausal_complement(past, _, Subject, Complement, knows(Subject, Complement), knows_if(Subject, Complement)) -->
+verb_with_clausal_complement(past, _, Subject, Complement, knows(Subject, Complement), knows_value(Subject, Complement)) -->
    [knew].
-verb_with_clausal_complement(present, Agreement, Subject, Complement, knows(Subject, Complement), knows_if(Subject, Complement)) -->
+verb_with_clausal_complement(present, Agreement, Subject, Complement, knows(Subject, Complement), knows_value(Subject, Complement)) -->
    [know],
    { dif(Agreement, third:single) }.
 
 :- forall(verb_with_clausal_complement(_, _, _, _, _, _, Phrase, []),
+	  register_lexical_items(Phrase)).
+
+vp(_, Predicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
+   verb_with_object_and_clausal_complement(Tense, Agreement, Subject, Object, Complement, DeclarativePredicate, InterrogativePredicate),
+   np((Object^_)^_, object, _, nogap, nogap),
+   content_clause(Complement, DeclarativePredicate, InterrogativePredicate, Predicate).
+
+verb_with_object_and_clausal_complement(present, third:single, Subject, Object, Complement, tell(Subject, Object, Complement), tell_value(Subject, Object, Complement)) -->
+   [tells].
+verb_with_object_and_clausal_complement(past, _, Subject, Object, Complement, tell(Subject, Object, Complement), tell_value(Subject, Object, Complement)) -->
+   [told].
+verb_with_object_and_clausal_complement(present, Agreement, Subject, Object, Complement, tell(Subject, Object, Complement), tell_value(Subject, Object, Complement)) -->
+   [tell],
+   { dif(Agreement, third:single) }.
+
+verb_with_object_and_clausal_complement(present, third:single, Subject, Object, Complement, ask(Subject, Object, Complement), ask_value(Subject, Object, Complement)) -->
+   [asks].
+verb_with_object_and_clausal_complement(past, _, Subject, Object, Complement, ask(Subject, Object, Complement), ask_value(Subject, Object, Complement)) -->
+   [asked].
+verb_with_object_and_clausal_complement(present, Agreement, Subject, Object, Complement, ask(Subject, Object, Complement), ask_value(Subject, Object, Complement)) -->
+   [ask],
+   { dif(Agreement, third:single) }.
+
+:- forall(verb_with_object_and_clausal_complement(_, _, _, _, _, _, _, Phrase, []),
 	  register_lexical_items(Phrase)).
 
 
