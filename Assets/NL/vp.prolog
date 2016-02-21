@@ -110,36 +110,27 @@ modal_verb(past, _Agreement, S^C^need(S, C)) -->
 
 %% Other verbs with clausal complements
 
-vp(_, TransformedPredicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
-   verb_with_clausal_complement(Tense, Agreement, Complementizer, Subject^Complement^Predicate),
-   complementizer(Complementizer, Predicate^TransformedPredicate),
-   finite_clause(Complement).
+vp(_, Predicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
+   verb_with_clausal_complement(Tense, Agreement, Subject, Complement, DeclarativePredicate, InterrogativePredicate),
+   content_clause(Complement, DeclarativePredicate, InterrogativePredicate, Predicate).
 
-%% complementizer(Type, Transformer)
-%  Matches a complementizer (that, if, whether, null), and gives its semantics for transforming the
-%  verb's normal LF into the final LF.  Used to allow if and whether to change know into know_if.
-complementizer(if, knows(X,Y)^knows_if(X,Y)) --> [whether].
-complementizer(if, knows(X,Y)^knows_if(X,Y)) --> [if].
-complementizer(that, X^X) --> [that].
-complementizer(that, X^X) --> [].
-
-verb_with_clausal_complement(present, third:single, that, Subject^Complement^believes(Subject, Complement)) -->
+verb_with_clausal_complement(present, third:single, Subject, Complement, believes(Subject, Complement), null) -->
    [believes].
-verb_with_clausal_complement(past, _, that, Subject^Complement^believes(Subject, Complement)) -->
+verb_with_clausal_complement(past, _, Subject, Complement, believes(Subject, Complement), null) -->
    [believed].
-verb_with_clausal_complement(present, Agreement, that, Subject^Complement^believes(Subject, Complement)) -->
+verb_with_clausal_complement(present, Agreement, Subject, Complement, believes(Subject, Complement), null) -->
    [believe],
    { dif(Agreement, third:single) }.
 
-verb_with_clausal_complement(present, third:single, _, Subject^Complement^knows(Subject, Complement)) -->
+verb_with_clausal_complement(present, third:single, Subject, Complement, knows(Subject, Complement), knows_if(Subject, Complement)) -->
    [knows].
-verb_with_clausal_complement(past, _, _, Subject^Complement^knows(Subject, Complement)) -->
+verb_with_clausal_complement(past, _, Subject, Complement, knows(Subject, Complement), knows_if(Subject, Complement)) -->
    [knew].
-verb_with_clausal_complement(present, Agreement, _, Subject^Complement^knows(Subject, Complement)) -->
+verb_with_clausal_complement(present, Agreement, Subject, Complement, knows(Subject, Complement), knows_if(Subject, Complement)) -->
    [know],
    { dif(Agreement, third:single) }.
 
-:- forall(verb_with_clausal_complement(_, _, _, _, Phrase, []),
+:- forall(verb_with_clausal_complement(_, _, _, _, _, _, Phrase, []),
 	  register_lexical_items(Phrase)).
 
 

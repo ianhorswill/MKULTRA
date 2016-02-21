@@ -54,3 +54,4 @@ condition,"need(actor, action)"
 condition,"believes(actor, condition)"
 condition,"knows(actor, condition)"
 condition,"knows_if(actor, condition)"
+condition,entity:condition

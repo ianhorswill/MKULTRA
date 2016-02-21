@@ -70,8 +70,33 @@ opt_stop(Mood) --> [ '!' ], { Mood \= interrogative }.
 %%% Finite clauses
 %%%
 
-finite_clause(S) -->
-   s(S, indicative, affirmative, present, simple).
+content_clause(ComplementLF, DeclarativePredicate, InterrogativePredicate, Predicate) -->
+   complementizer(DeclarativePredicate, InterrogativePredicate, Predicate),
+   { Predicate \= null },
+   s(ComplementLF, indicative, affirmative, present, simple).
+content_clause(ComplementLF, _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   s(ComplementLF, interrogative, affirmative, present, simple).
+content_clause((Wh:(S, is_a(Wh, Kind))), _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   whpron(Kind),
+   np((NP^S1)^S, subject, Agreement, nogap, nogap),
+   vp(base, X^X, NP^S1, _Tense, Agreement, np(Wh)).
+content_clause(Object:(be(Subject, Object), is_a(Subject, Kind)), _, InterrogativePredicate, InterrogativePredicate) -->
+   { InterrogativePredicate \= null },
+   whpron(Kind),
+   np((Subject^S)^S, subject, Agreement, nogap, nogap),
+   aux_be(present, Agreement).
+
+%% complementizer(+DeclarativePredicate, +InterrogativePredicate, -Predicate)
+%  Matches a complementizer (that, if, whether, null), chooses which version of the
+%  Predicate should be used based on whether this is a declarative or interrogative
+%  content clause.
+complementizer(_, IPredicate, IPredicate) --> [whether].
+complementizer(_, IPredicate, IPredicate) --> [if].
+complementizer(Predicate, _, Predicate) --> [that].
+complementizer(Predicate, _, Predicate) --> [].
+
 
 %%%
 %%% Infinitival clauses
