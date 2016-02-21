@@ -108,8 +108,9 @@ complementizer(Predicate, _, Predicate) --> [].
 %%%
 
 infinitival_clause(EnclosingSubject, S) -->
-   { lf_subject(S, NP), dif(EnclosingSubject, NP) },
+   { lf_subject(S, NP) },
    np((NP^S1)^S, subject, _Agreement, nogap, nogap),
+   { NP \= EnclosingSubject },
    infinitival_vp(NP^S1).
 
 infinitival_clause(EnclosingSubject, S) -->

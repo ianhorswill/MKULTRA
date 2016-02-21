@@ -56,7 +56,7 @@ vp(Form, Predication^Modal, Subject^S2, Tense, Agreement, GapInfo) -->
 
 infinitival_vp(LF) -->
    [to],
-   vp(base, S^S, LF, present, _Agreement, nogap).
+   vp(base, S^S, LF, present, first:singular, nogap).
 
 %%%
 %%% Special case verbs
