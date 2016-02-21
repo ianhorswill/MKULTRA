@@ -123,11 +123,11 @@ complementizer(if, knows(X,Y)^knows_if(X,Y)) --> [if].
 complementizer(that, X^X) --> [that].
 complementizer(that, X^X) --> [].
 
-verb_with_clausal_complement(present, third:single, that, Subject^Complement^believe(Subject, Complement)) -->
+verb_with_clausal_complement(present, third:single, that, Subject^Complement^believes(Subject, Complement)) -->
    [believes].
-verb_with_clausal_complement(past, _, that, Subject^Complement^believe(Subject, Complement)) -->
+verb_with_clausal_complement(past, _, that, Subject^Complement^believes(Subject, Complement)) -->
    [believed].
-verb_with_clausal_complement(present, Agreement, that, Subject^Complement^believe(Subject, Complement)) -->
+verb_with_clausal_complement(present, Agreement, that, Subject^Complement^believes(Subject, Complement)) -->
    [believe],
    { dif(Agreement, third:single) }.
 

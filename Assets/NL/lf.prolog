@@ -75,3 +75,4 @@ lf_core_predicate_subject(S, Subject) :-
    modal_verb(_, _, Subject^_Complement^S, _, _).
 lf_core_predicate_subject(S, Subject) :-
    verb_with_clausal_complement(_, _, _, Subject^_Complement^S, _, _).
+lf_core_predicate_subject(knows_if(Subject, _), Subject).
