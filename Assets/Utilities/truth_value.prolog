@@ -10,11 +10,21 @@
 
 :- public truth_value/2, admitted_truth_value/3,
    know_true/1, know_false/1,
-   closed/1.
+   closed/1,
+   thinks/2, knows_if/2.
 :- external know_whether/1, pretend_truth_value/3.
 :- external know_property/3, know_relation/3,
    know_about_kind/1, closed/1.
 :- external believes/2, knows/2, knows_value/2.
+
+thinks($me, Proposition) :-
+   truth_value(Proposition, true).
+believes($me, Proposition) :-
+   truth_value(Proposition, true).
+knows($me, Proposition) :-
+   truth_value(Proposition, true).
+knows_if($me, Proposition) :-
+   truth_value(Proposition, true).
 
 %% know_whether(?Predicate)
 %  True when this character has knowledge about the truth of
