@@ -46,6 +46,9 @@ lf_core_predicate(can(S), P) :-
 lf_core_predicate(must(S), P) :-
    !,
    lf_core_predicate(S, P).
+lf_core_predicate(would(S), P) :-
+   !,
+   lf_core_predicate(S, P).
 lf_core_predicate(S, S).
 
 

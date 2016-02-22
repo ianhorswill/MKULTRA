@@ -6,9 +6,23 @@ normalize_dialog_act(Act, Act).
 
 % Indirect request - "can you hand me that screwdriver?"
 da_normal_form(question(Speaker, Addressee, can(Command), present, simple),
-	       command(Speaker, Addressee, Command)).
+	       command(Speaker, Addressee, Command)) :-
+   agent(Command, Addressee).
+da_normal_form(question(Speaker, Addressee, would(Command), present, simple),
+	       command(Speaker, Addressee, Command)) :-
+   agent(Command, Addressee).
 % Indirect request - "I want you to hand me the screwdriver"
 da_normal_form(assertion(Speaker, Addressee, want(Speaker, Command), present, simple),
+	       command(Speaker, Addressee, Command)) :-
+   agent(Command, Addressee).
+da_normal_form(assertion(Speaker, Addressee, should(Command), present, simple),
+	       command(Speaker, Addressee, Command)) :-
+   agent(Command, Addressee).
+da_normal_form(assertion(Speaker, Addressee, must(Command), present, simple),
+	       command(Speaker, Addressee, Command)) :-
+   agent(Command, Addressee).
+da_normal_form(assertion(Speaker, Addressee, would(likes(Speaker, Command)),
+			 present, simple),
 	       command(Speaker, Addressee, Command)) :-
    agent(Command, Addressee).
 

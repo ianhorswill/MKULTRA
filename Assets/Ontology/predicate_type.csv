@@ -39,6 +39,11 @@ action,"believes(actor, condition)"
 action,"watch(actor, physical_object)"
 % Conditions,
 condition,can(action)
+condition,would(condition)
+condition,would(action)
+condition,must(action)
+condition,may(action)
+condition,should(action)
 condition,"location(physical_object, container)"
 condition,"contained_in(physical_object, container)"
 condition,"related(entity, relation, entity)"
