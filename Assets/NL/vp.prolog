@@ -91,19 +91,27 @@ vp(_, Predicate^Modal, Subject^Modal, Tense, Agreement, nogap) -->
    modal_verb(Tense, Agreement, Subject^Complement^Predicate),
    infinitival_clause(Subject, Complement).
 
-modal_verb(present, third:singular, S^C^want(S, C)) --> [wants].
-modal_verb(present, Agreement, S^C^want(S, C)) -->
+modal_verb(present, third:singular, S^C^wants(S, C)) --> [wants].
+modal_verb(present, Agreement, S^C^wants(S, C)) -->
    [want],
    { dif(Agreement, third:singular) }.
-modal_verb(past, _Agreement, S^C^want(S, C)) -->
+modal_verb(past, _Agreement, S^C^wants(S, C)) -->
    [wanted].
 
-modal_verb(present, third:singular, S^C^need(S, C)) --> [needs].
-modal_verb(present, Agreement, S^C^need(S, C)) -->
+modal_verb(present, third:singular, S^C^needs(S, C)) --> [needs].
+modal_verb(present, Agreement, S^C^needs(S, C)) -->
    [need],
    { dif(Agreement, third:singular) }.
-modal_verb(past, _Agreement, S^C^need(S, C)) -->
+modal_verb(past, _Agreement, S^C^needs(S, C)) -->
    [needed].
+
+modal_verb(present, third:singular, S^C^likes(S, C)) --> [likes].
+modal_verb(present, Agreement, S^C^likes(S, C)) -->
+   [like],
+   { dif(Agreement, third:singular) }.
+modal_verb(past, _Agreement, S^C^likes(S, C)) -->
+   [liked].
+
 
 :- forall(modal_verb(_, _, _, Phrase, []),
 	  register_lexical_items(Phrase)).
@@ -120,6 +128,14 @@ verb_with_clausal_complement(past, _, Subject, Complement, believes(Subject, Com
    [believed].
 verb_with_clausal_complement(present, Agreement, Subject, Complement, believes(Subject, Complement), null) -->
    [believe],
+   { dif(Agreement, third:single) }.
+
+verb_with_clausal_complement(present, third:single, Subject, Complement, thinks(Subject, Complement), null) -->
+   [thinks].
+verb_with_clausal_complement(past, _, Subject, Complement, thinks(Subject, Complement), null) -->
+   [thought].
+verb_with_clausal_complement(present, Agreement, Subject, Complement, thinks(Subject, Complement), null) -->
+   [think],
    { dif(Agreement, third:single) }.
 
 verb_with_clausal_complement(present, third:single, Subject, Complement, knows(Subject, Complement), knows_value(Subject, Complement)) -->

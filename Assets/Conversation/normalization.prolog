@@ -23,3 +23,13 @@ da_normal_form(assertion(Speaker, Addressee, Assertion, _, _),
    declarative_indirect_question(Speaker, Addressee, Assertion, Question).
 
 declarative_indirect_question(S, _, want(S, knows_value(S, Question)), Question).
+
+da_normal_form(assertion(Speaker, Addressee, Assertion, T, A),
+	       assertion(Speaker, Addressee, Normalized, T, A)) :-
+   normalized_assertion(Speaker, Addressee, Assertion, Normalized).
+
+normalized_assertion(S, _, likes(S, thinks(S, A)), A).
+normalized_assertion(S, _, thinks(S, A), A).
+normalized_assertion(S, _, knows(S, A), A).
+normalized_assertion(S, _, believes(S, A), A).
+

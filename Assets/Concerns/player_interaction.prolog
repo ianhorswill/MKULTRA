@@ -18,7 +18,7 @@ player_input_response(DA, C,
    normalize_dialog_act(DA, Normalized),
    reject_player_dialog_act(Normalized, Feedback).
 
-reject_player_dialog_act(hypno_command($pc, X, want(X, _), _, _),
+reject_player_dialog_act(hypno_command($pc, X, wants(X, _), _, _),
 			 "I wish I could just tell people to want things, but I can't.").
 reject_player_dialog_act(hypno_command(_, _, P, _, _),
 			 "Sorry.  That's just too meta for my little head.") :-
@@ -26,9 +26,12 @@ reject_player_dialog_act(hypno_command(_, _, P, _, _),
 reject_player_dialog_act(hypno_command(_, $pc, _, _, _),
 			 "I wish I could hypnotize myself, but I can't.").
 
-modal_payload(want(_, P), P).
+modal_payload(wants(_, P), P).
+modal_payload(needs(_, P), P).
+modal_payload(likes(_, P), P).
 modal_payload(believes(_, P), P).
 modal_payload(knows(_, P), P).
+modal_payload(thinks(_, P), P).
 
 recursive_modal(P) :-
    modal_payload(P, Q),

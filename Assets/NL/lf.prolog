@@ -81,4 +81,3 @@ lf_core_predicate_subject(S, Subject) :-
    verb_with_object_and_clausal_complement(_, _, Subject, _Object, _Complement, S, _, _, _).
 lf_core_predicate_subject(S, Subject) :-
    verb_with_object_and_clausal_complement(_, _, Subject, _Object, _Complement, _, S, _, _).
-lf_core_predicate_subject(want(S, _), S).
