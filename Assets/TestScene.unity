@@ -1129,6 +1129,34 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!21 &134035425
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &139442441
 GameObject:
   m_ObjectHideFlags: 0
@@ -1640,6 +1668,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: radio
   Adjectives: []
+  TextPosition: {x: 10, y: -70}
 --- !u!61 &169465494
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1756,6 +1785,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: refrigerator
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &182778213
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2471,6 +2501,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: button
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!1 &270486428
 GameObject:
   m_ObjectHideFlags: 0
@@ -2995,6 +3026,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: sofa
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &325868713
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3109,34 +3141,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!21 &336774592
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &338102926
 GameObject:
   m_ObjectHideFlags: 0
@@ -3360,6 +3364,14 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   ShowMentalMonologue: 1
+  PositiveAffect:
+    Value: 0.2
+    InitialVariance: 1
+    Lambda: 0.99
+  NegativeAffect:
+    Value: 0.2
+    InitialVariance: 1
+    Lambda: 0.99
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -3459,7 +3471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 876511818}
+  Material: {fileID: 961669904}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
   Rows: 4
@@ -4474,6 +4486,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: plant
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &415999062
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4890,6 +4903,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: photograph
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!1 &450088309
 GameObject:
   m_ObjectHideFlags: 0
@@ -5116,6 +5130,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: button
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!1 &481720825
 GameObject:
   m_ObjectHideFlags: 0
@@ -5332,6 +5347,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: plant
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &489320534
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5568,6 +5584,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: sink
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &496305891
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7231,6 +7248,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: plant
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &692668634
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7386,6 +7404,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: report
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!114 &740415708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8151,6 +8170,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: macguffin
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!1 &820061754
 GameObject:
   m_ObjectHideFlags: 0
@@ -8753,6 +8773,7 @@ MonoBehaviour:
   IsBeverage: 1
   Kind: beer
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!212 &861427266
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8841,34 +8862,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!21 &876511818
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &883554781
 GameObject:
   m_ObjectHideFlags: 0
@@ -9275,6 +9268,34 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!21 &961669904
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &971914859
 GameObject:
   m_ObjectHideFlags: 0
@@ -10105,6 +10126,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: bed
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &1030119508
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10375,6 +10397,7 @@ MonoBehaviour:
   IsBeverage: 1
   Kind: beer
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!212 &1051585098
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11128,34 +11151,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!21 &1169434105
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &1187509233
 GameObject:
   m_ObjectHideFlags: 0
@@ -12225,6 +12220,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: button
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!1 &1334240276
 GameObject:
   m_ObjectHideFlags: 0
@@ -13415,6 +13411,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: desk
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &1454032859
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13592,6 +13589,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: table
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &1466407115
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13876,7 +13874,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 1169434105}
+  Material: {fileID: 134035425}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
   Rows: 4
@@ -13973,6 +13971,14 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   ShowMentalMonologue: 1
+  PositiveAffect:
+    Value: 0.2
+    InitialVariance: 1
+    Lambda: 0.99
+  NegativeAffect:
+    Value: 0.2
+    InitialVariance: 1
+    Lambda: 0.99
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -14193,6 +14199,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: chair
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &1489428762
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14425,6 +14432,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: appliance
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &1541256197
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15114,6 +15122,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: bookshelf
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &1616970357
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15577,6 +15586,34 @@ MonoBehaviour:
     Bottom: 10
     Width: 1
     Height: 1
+--- !u!21 &1663701024
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &1666547248
 GameObject:
   m_ObjectHideFlags: 0
@@ -16909,6 +16946,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: appliance
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &1841301717
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17064,6 +17102,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: toilet
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!114 &1846938672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18391,6 +18430,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: sink
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &1985965125
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18652,6 +18692,14 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   ShowMentalMonologue: 1
+  PositiveAffect:
+    Value: 0.2
+    InitialVariance: 1
+    Lambda: 0.9999
+  NegativeAffect:
+    Value: 0.2
+    InitialVariance: 1
+    Lambda: 0.9999
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -18893,7 +18941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 336774592}
+  Material: {fileID: 1663701024}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
   Rows: 4
@@ -19133,6 +19181,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: appliance
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &2003787084
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20031,6 +20080,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: plant
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!61 &2085652203
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20243,6 +20293,7 @@ MonoBehaviour:
   IsBeverage: 0
   Kind: button
   Adjectives: []
+  TextPosition: {x: 0, y: 0}
 --- !u!1 &2098955290
 GameObject:
   m_ObjectHideFlags: 0

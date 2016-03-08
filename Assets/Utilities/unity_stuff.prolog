@@ -46,6 +46,11 @@ prop_activated(Prop) :-
    component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
    PropComponent.'IsOn'.
 
+set_prop_text(Prop, String) :-
+   is_class(Prop, $'GameObject'),
+   component_of_gameobject_with_type(PropComponent, Prop, $'PropInfo'),
+   PropComponent.settext(String).
+
 %% turned_on(+Appliance)
 %  True is Appliance is turned on.
 turned_on(Appliance) :-
@@ -53,6 +58,15 @@ turned_on(Appliance) :-
 informed_about(_, turned_on(_)).
 closed(turned_on(_)).
 
+%% on_activation_changed(+Prop, +NewActivation)
+%  Called by C# code when Prop's activation state changes.  Success is ignored.
+
+:- external on_activation_changed/2.
+
+on_activation_changed($radio, true) :-
+   set_prop_text($radio, "On").
+on_activation_changed($radio, false) :-
+   set_prop_text($radio, "Off").
 
 :- public fkey_command/1, fkey_command/2.
 :- external fkey_command/2.

@@ -27,10 +27,35 @@ public class Sonifier : MonoBehaviour
     {
         if (pc != gameObject)
         {
-            var offset = gameObject.Position() - pc.Position();
-            var volume = Math.Min(1, 5/offset.sqrMagnitude);
-            audioSource.panStereo = offset.normalized.x;
-            audioSource.volume = volume;
+            UpdateVolumePan();
+        }
+    }
+
+    private void UpdateVolumePan()
+    {
+        var offset = gameObject.Position() - pc.Position();
+        var volume = Math.Min(1, 5/offset.sqrMagnitude);
+        audioSource.panStereo = offset.normalized.x;
+        audioSource.volume = volume;
+    }
+
+    int heartBeatPhase;
+    System.Random random = new System.Random();
+    void AddHeartBeat(float[] data)
+    {
+        int HeartBeatPeriod = 5000;
+        double variability = 1;
+        if (HeartBeatPeriod == 0)
+            heartBeatPhase = 0;
+        else
+        {
+            while (heartBeatPhase < data.Length - 1)
+            {
+                data[heartBeatPhase] = data[heartBeatPhase + 1] = 1;
+                int spacing = (int)((1+((random.NextDouble() - 0.5)*variability))*HeartBeatPeriod);
+                heartBeatPhase += 2*spacing;
+;            }
+            heartBeatPhase -= data.Length;
         }
     }
 
@@ -55,6 +80,8 @@ public class Sonifier : MonoBehaviour
                 syn.Reset();
             }
         }
+
+        AddHeartBeat(data);
     }
 }
 

@@ -34,6 +34,9 @@ public class SimController : PhysicalObject
     /// If true, the things the character says to themselves are displayed
     /// </summary>
     public bool ShowMentalMonologue;
+
+    public RLSEstimator PositiveAffect = new RLSEstimator(0.2f, 1, .99f);
+    public RLSEstimator NegativeAffect = new RLSEstimator(0.2f, 1, 0.99f);
     #endregion
 
     #region Constants
@@ -297,6 +300,8 @@ public class SimController : PhysicalObject
 
     internal void Update()
     {
+        PositiveAffect.Update(0, 1000);
+        NegativeAffect.Update(0, 1000);
         var t = Time.time;
         if (t < flashEndTime)
         {

@@ -49,7 +49,43 @@ public class PropInfo : PhysicalObject
     /// <summary>
     /// For appliances and other active objects: is the device on?
     /// </summary>
-    public bool IsOn;
+    public bool IsOn
+    {
+        get { return currentlyOn; }
+        set
+        {
+            if (currentlyOn != value)
+            {
+                try
+                {
+                    var call = new Structure(OnActivationChanged, gameObject, value);
+                    if (gameObject.GetComponent<KB>() != null)
+                        gameObject.IsTrue(call);
+                    else
+                        KnowledgeBase.Global.IsTrue(call);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e, gameObject);
+                }
+            }
+            currentlyOn = value;
+        }
+    }
+
+    public static readonly Symbol OnActivationChanged = Symbol.Intern("on_activation_changed");
+
+    bool currentlyOn;
+
+    /// <summary>
+    /// Position for the text relative to sprite
+    /// </summary>
+    public Vector2 TextPosition;
+
+    /// <summary>
+    /// Text to be displayed, if any
+    /// </summary>
+    string outputText;
 
     public override void Awake()
     {
@@ -79,6 +115,17 @@ public class PropInfo : PhysicalObject
             var bubbleRect = new Rect(topLeft.x, topLeft.y, size.x, size.y);
             GUI.Label(bubbleRect, name);
         }
+
+        if (outputText != null)
+        {
+            var pos = gameObject.GUIScreenPosition()+TextPosition;
+            GUI.Label(new Rect(pos.x, pos.y, 100, 30), outputText);
+        }
+    }
+
+    public void SetText(string newText)
+    {
+        outputText = newText;
     }
 
     #region Container operations
