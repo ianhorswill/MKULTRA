@@ -187,3 +187,5 @@ release_captive :-
    maybe_remember_event(captive_released).
 
 
+
+:- consult("Script/radio").
