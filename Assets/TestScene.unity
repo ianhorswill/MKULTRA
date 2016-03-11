@@ -1129,34 +1129,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!21 &134035425
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &139442441
 GameObject:
   m_ObjectHideFlags: 0
@@ -3364,14 +3336,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   ShowMentalMonologue: 1
-  PositiveAffect:
-    Value: 0.2
-    InitialVariance: 1
-    Lambda: 0.99
-  NegativeAffect:
-    Value: 0.2
-    InitialVariance: 1
-    Lambda: 0.99
+  PositiveAffect: 0
+  NegativeAffect: 0
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -3471,7 +3437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 961669904}
+  Material: {fileID: 1918991719}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
   Rows: 4
@@ -9268,34 +9234,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!21 &961669904
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &971914859
 GameObject:
   m_ObjectHideFlags: 0
@@ -9702,6 +9640,34 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!21 &1001212173
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &1004844948
 GameObject:
   m_ObjectHideFlags: 0
@@ -13840,7 +13806,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -13862,7 +13828,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!114 &1477267617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13874,7 +13840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 134035425}
+  Material: {fileID: 2074521612}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
   Rows: 4
@@ -13971,14 +13937,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   ShowMentalMonologue: 1
-  PositiveAffect:
-    Value: 0.2
-    InitialVariance: 1
-    Lambda: 0.99
-  NegativeAffect:
-    Value: 0.2
-    InitialVariance: 1
-    Lambda: 0.99
+  PositiveAffect: 0
+  NegativeAffect: 0
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -15586,34 +15546,6 @@ MonoBehaviour:
     Bottom: 10
     Width: 1
     Height: 1
---- !u!21 &1663701024
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &1666547248
 GameObject:
   m_ObjectHideFlags: 0
@@ -17642,6 +17574,34 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!21 &1918991719
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &1923086307
 GameObject:
   m_ObjectHideFlags: 0
@@ -18692,14 +18652,8 @@ MonoBehaviour:
   Exists: 1
   ContentsVisible: 0
   ShowMentalMonologue: 1
-  PositiveAffect:
-    Value: 0.2
-    InitialVariance: 1
-    Lambda: 0.9999
-  NegativeAffect:
-    Value: 0.2
-    InitialVariance: 1
-    Lambda: 0.9999
+  PositiveAffect: 0
+  NegativeAffect: 0
   LogActions: 0
   DecisionCycleCount: 0
   DecisionCycleAlloc: 0
@@ -18816,7 +18770,7 @@ AudioSource:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1989881525}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
@@ -18941,7 +18895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 1663701024}
+  Material: {fileID: 1001212173}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
   Rows: 4
@@ -19735,6 +19689,7 @@ MonoBehaviour:
   - Concerns/conversation
   - Concerns/roles
   - Concerns/player_interaction
+  - Concerns/affect_manager
   - Problem solver/everyday_life
   - NL/interface
   - NL/lf
@@ -19968,6 +19923,34 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!21 &2074521612
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &2082896821
 GameObject:
   m_ObjectHideFlags: 0

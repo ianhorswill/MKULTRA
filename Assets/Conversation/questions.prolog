@@ -71,9 +71,10 @@ strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
 	        true:speech(["I couldn't speculate."])])).
 
 default_strategy(generate_unique_answer(Asker, _Answer, Core, Constraint),
-		 if(admitted_truth_value(Asker, Constraint, true),
-		    question_answer($me, Partner, Core, present, simple),
-		    speech(["Don't know"]))) :-
+		 let(admitted_truth_value(Asker, Constraint, TruthValue),
+		     if(TruthValue=true,
+			question_answer($me, Partner, Core, present, simple),
+			speech(["Don't know"])))) :-
    nonvar(Constraint),
    $task/partner/Partner.
 

@@ -181,10 +181,15 @@ admitted_truth_value($me, P, Value) :-
    !,
    truth_value(P, Value).
 admitted_truth_value(Listener, P, Value) :-
-   pretend_truth_value(Listener, P , Value).
+   pretend_truth_value(Listener, P , Value),
+   !,
+   emit_grain("lie", 100),
+   affective_reaction(0, 0, 1, 0.2).
 admitted_truth_value(Listener, P, Value) :-
    truth_value(P, Value),
    consistent_with_pretend_truth_value(Listener, P, Value).
+
+:- trace(admitted_truth_value/3).
 
 consistent_with_pretend_truth_value(Listener, P, Value) :-
    pretend_truth_value(Listener, P, PretendValue) ->

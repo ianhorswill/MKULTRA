@@ -78,4 +78,19 @@ construals(Event, ConstrualList) :-
 %  Construal is a possible construal of Event.
 construal(Event, Event).
 construal(Event, Construal) :-
-    construe(Event, C), construal(C, Construal).
+   construe(Event, C), construal(C, Construal).
+
+construe(assertion(_, _, LF, _, _), mention(C)) :-
+   mentions(LF, C).
+construe(question(_, _, LF, _, _), mention(Concept)) :-
+   mentions(LF, Concept).
+construe(command(_, _, Command), mention(Concept)) :-
+   mentions(Command, Concept).
+
+mentions(Concept, Concept) :-
+   nonvar(Concept).
+mentions(Term, Subterm) :-
+   compound(Term),
+   Term =.. List,
+   member(Sub, List),
+   mentions(Sub, Subterm).

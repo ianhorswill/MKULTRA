@@ -1,3 +1,8 @@
+hot_button_topic($macguffin).
+hot_button_topic($bedroom).
+hot_button_topic($bookshelf).
+hot_button_topic(illuminati).
+
 % Keep intruders out of bedroom
 /goals/maintain/bedroom_empty.
 

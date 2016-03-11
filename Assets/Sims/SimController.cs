@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Prolog;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 /*
  * WORKING MEMORY INTERFACE
@@ -35,8 +36,8 @@ public class SimController : PhysicalObject
     /// </summary>
     public bool ShowMentalMonologue;
 
-    public RLSEstimator PositiveAffect = new RLSEstimator(0.2f, 1, .99f);
-    public RLSEstimator NegativeAffect = new RLSEstimator(0.2f, 1, 0.99f);
+    public float PositiveAffect;
+    public float NegativeAffect;
     #endregion
 
     #region Constants
@@ -298,10 +299,36 @@ public class SimController : PhysicalObject
 
     private float flashPeriod;
 
+    public void AffectiveEvent(float positive, float pWeight, float negative, float nWeight)
+    {
+        PositiveAffect = positive*pWeight + PositiveAffect*(1 - pWeight);
+        NegativeAffect = negative*nWeight + NegativeAffect*(1 - nWeight);
+        if (float.IsNaN(PositiveAffect))
+        {
+            Debug.Log(gameObject.name+": positive Affect is not a number: "+Time.time);
+            PositiveAffect = 0;
+        }
+
+        if (float.IsNaN(NegativeAffect))
+        {
+            Debug.Log(gameObject.name+": negative Affect is not a number: "+Time.time);
+            NegativeAffect = 0;
+        }
+    }
+
+    public float Arousal
+    {
+        get { return 0.5f*(PositiveAffect + NegativeAffect); }
+    }
+
+    public float Valence
+    {
+        get { return PositiveAffect - NegativeAffect; }
+    }
+
     internal void Update()
     {
-        PositiveAffect.Update(0, 1000);
-        NegativeAffect.Update(0, 1000);
+        AffectiveEvent(0, 0.001f, 0, 0.001f);
         var t = Time.time;
         if (t < flashEndTime)
         {

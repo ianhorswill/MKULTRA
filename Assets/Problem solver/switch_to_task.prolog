@@ -85,6 +85,7 @@ fail_task(Why, FailedTask) :-
 	 emote(frustration),
 	 asserta($global::failed_task($me, (TopLevelTask-> FailedTask))),
 	 emit_grain("task fail", 100),
+	 affective_reaction(0,0, 1, 0.1),
 	 restart_or_kill_task,
 	 throw(task_failed($me, Why, (TopLevelTask->FailedTask)))).
 

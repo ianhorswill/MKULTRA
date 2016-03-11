@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class Sonifier : MonoBehaviour
+public class Sonifier : BindingBehaviour
 {
     public bool Mute;
     public FMSynthesizer[] Patches;
@@ -14,6 +14,8 @@ public class Sonifier : MonoBehaviour
 
     AudioSource audioSource;
     GameObject pc;
+    [Bind] SimController simController;
+    bool running;
 
     internal void Start()
     {
@@ -25,6 +27,7 @@ public class Sonifier : MonoBehaviour
 
     internal void Update()
     {
+        running = true;
         if (pc != gameObject)
         {
             UpdateVolumePan();
@@ -34,29 +37,30 @@ public class Sonifier : MonoBehaviour
     private void UpdateVolumePan()
     {
         var offset = gameObject.Position() - pc.Position();
-        var volume = Math.Min(1, 5/offset.sqrMagnitude);
+        var dist = offset.sqrMagnitude;
+        dist *= dist;
+        var volume = Math.Min(1, 10/dist);
         audioSource.panStereo = offset.normalized.x;
         audioSource.volume = volume;
     }
 
     int heartBeatPhase;
     System.Random random = new System.Random();
+
     void AddHeartBeat(float[] data)
     {
-        int HeartBeatPeriod = 5000;
-        double variability = 1;
-        if (HeartBeatPeriod == 0)
-            heartBeatPhase = 0;
-        else
+        int heartBeatPeriod = (int) (3000/(0.1f + 20*simController.Arousal));
+        double variability = Math.Max(0, -simController.Valence);
+
+        while (heartBeatPhase < data.Length - 1)
         {
-            while (heartBeatPhase < data.Length - 1)
-            {
-                data[heartBeatPhase] = data[heartBeatPhase + 1] = 1;
-                int spacing = (int)((1+((random.NextDouble() - 0.5)*variability))*HeartBeatPeriod);
-                heartBeatPhase += 2*spacing;
-;            }
-            heartBeatPhase -= data.Length;
+            data[heartBeatPhase] = data[heartBeatPhase + 1] = 1;
+            int spacing = (int) ((1 + ((random.NextDouble() - 0.5)*variability*2))*heartBeatPeriod);
+            //int spacing = heartBeatPeriod;
+            heartBeatPhase += 2*spacing;
+            ;
         }
+        heartBeatPhase -= data.Length;
     }
 
     public void EmitGrain(string patchName, int ms)
@@ -70,18 +74,21 @@ public class Sonifier : MonoBehaviour
 
     internal void OnAudioFilterRead(float[] data, int channels)
     {
-        // Can't do this until syn has been set up in the Start() routine
-        if (syn != null)
+        if (running)
         {
-            if (!syn.IsEmpty)
-                syn.WriteBuffer(data);
-            if (syn.IsEmpty)
+            // Can't do this until syn has been set up in the Start() routine
+            if (syn != null)
             {
-                syn.Reset();
+                if (!syn.IsEmpty)
+                    syn.WriteBuffer(data);
+                if (syn.IsEmpty)
+                {
+                    syn.Reset();
+                }
             }
-        }
 
-        AddHeartBeat(data);
+            AddHeartBeat(data);
+        }
     }
 }
 
