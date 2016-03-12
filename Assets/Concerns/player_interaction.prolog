@@ -61,6 +61,7 @@ propose_action(A, player_interaction, C) :-
 :- public player_input_task/2.
 
 player_input_task(Concern, Input) :-
+   kill_current_everyday_life_task,
    kill_children(Concern),
    start_task(Concern, Input, 100, T, [T/partner/player]),
    restart_everyday_life_task.
