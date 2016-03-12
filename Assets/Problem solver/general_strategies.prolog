@@ -242,8 +242,13 @@ nearest_unsearched(Container, Contents) :-
 
 unsearched(Container, Contents) :-
    location(Contents, Container),
-   \+ character(Contents), % Don't search characters
+   \+ implausible_search_location(Contents),
    \+ /searched/Contents.
+
+implausible_search_location(X) :-
+   is_a(X, exit).
+implausible_search_location(X) :-
+   character(X).
 
 :- public reveal_hidden_item/1.
 
