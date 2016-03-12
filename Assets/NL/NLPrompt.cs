@@ -326,20 +326,32 @@ public class NLPrompt : BindingBehaviour
             TryCompletion();
         else
         {
-            var lastSpace = input.LastIndexOf(' ');
-            var lastWord = lastSpace < 0 ? input : input.Substring(lastSpace + 1);
-            lastWord = lastWord.Trim('(', ')', '.', ',', '?', '!', ';', ':', '\'', '"');
+            var lastWord = LastWordOfInput;
 
             if (Prolog.Prolog.IsLexicalItem(lastWord))
             {
                 TryCompletion();
+            } else if (!Prolog.Prolog.IsPrefixOfDistinctLexicalItem(lastWord))
+            {
+                FormatRejectionOfInput();
             }
         }
 
         if (formatted == null)
         {
-            formatted = input;
-            dialogAct = null;
+            
+            FormatInputWithoutColorCoding();
+        }
+    }
+
+    private string LastWordOfInput
+    {
+        get
+        {
+            var lastSpace = input.LastIndexOf(' ');
+            var lastWord = lastSpace < 0 ? input : input.Substring(lastSpace + 1);
+            lastWord = lastWord.Trim('(', ')', '.', ',', '?', '!', ';', ':', '\'', '"');
+            return lastWord;
         }
     }
 
@@ -374,12 +386,15 @@ public class NLPrompt : BindingBehaviour
                                       || !char.IsLetterOrDigit(completion[0])) 
                                     ? "" : " ",
                                     completion);
+
                 var da = dialogAct as Structure;
                 if (da != null && da.Arity > 1)
                 {
                     var a = da.Argument<GameObject>(1);
-                    commentary = string.Format("{0} to {1}\n{2}", da.Functor, (a == this) ? "myself" : a.name,
+                    var addressee = (a == gameObject) ? "myself" : a.name;
+                    commentary = string.Format("{0} to {1}\n{2}", da.Functor, addressee,
                                                     ISOPrologWriter.WriteToString(dialogActVar.Value));
+                    formatted = string.Format("{1} (speaking to {0})", addressee, formatted);
                 }
                 else
                 {
@@ -408,10 +423,32 @@ public class NLPrompt : BindingBehaviour
         }
         else
         {
-            formatted = string.Format("<color=red>{0}</color>", input);
-            commentary = "Sorry; I don't understand any sentences beginning with those words.";
+            var lastWordOfInput = LastWordOfInput;
+            if (lastWordOfInput != "" && Prolog.Prolog.IsPrefixOfDistinctLexicalItem(lastWordOfInput))
+            {
+                FormatInputWithoutColorCoding();
+            }
+            else
+            {
+                FormatRejectionOfInput();
+            }
         }
     }
+
+    private void FormatInputWithoutColorCoding()
+    {
+        formatted = input;
+        commentary = "";
+        dialogAct = null;
+    }
+
+    private void FormatRejectionOfInput()
+    {
+        formatted = string.Format("<color=red>{0}</color>   (sorry, I don't understand; hit backspace)", input);
+        commentary = "Sorry; I don't understand any sentences beginning with those words.";
+        dialogAct = null;
+    }
+
     #endregion
 
     #region Mouse handling
