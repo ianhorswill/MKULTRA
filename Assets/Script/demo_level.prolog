@@ -186,6 +186,17 @@ release_captive :-
    set_property(Renderer, visible, true),
    maybe_remember_event(captive_released).
 
+%%%
+%%% End of the game
+%%%
 
+beat(exit_house,
+     {
+      priority:100,
+      reaction_to($pc, arrived_at($exit)),
+      $pc:["I made it!", end_game]
+     }).
+
+strategy(end_game, call(pause_game)).
 
 :- consult("Script/radio").

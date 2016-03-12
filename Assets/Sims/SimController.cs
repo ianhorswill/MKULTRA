@@ -967,6 +967,11 @@ public class SimController : PhysicalObject
                     bubbleRect.yMin -= size.y;
                 }
             }
+
+            var vovershoot = bubbleRect.yMax - Screen.height;
+            if (vovershoot > 0)
+                bubbleRect.yMin -= vovershoot;
+
             GUI.Box(bubbleRect, GreyOutTexture);
             GUI.Label(bubbleRect, currentSpeechBubbleText, SpeechBubbleStyle);
         }
