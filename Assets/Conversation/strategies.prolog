@@ -35,7 +35,14 @@ strategy(ask_about($me, $addressee, $addressee),
 strategy(ask_about($me, $addressee, Topic),
 	 command($me, $addressee,
 		 tell_about($addressee, $me, Topic))) :-
-   Topic \= $addressee.
+   Topic \= $addressee,
+   Topic \= question(_).
+strategy(ask_about($me, $addressee, question(Q)),
+	 question($me, $addressee, Q, present, simple)).
 strategy(ask_about($me, Who, Topic),
 	 add_conversation_topic(Who, Topic)) :-
+   Who \= $addressee.
+
+strategy(ask_value($me, Who, Question),
+	 add_conversation_topic(Who, question(Question))) :-
    Who \= $addressee.

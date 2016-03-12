@@ -84,7 +84,7 @@ content_clause(Object:(be(Subject, Object), is_a(Subject, Kind)), _, Interrogati
    whpron(Kind),
    np((Subject^S)^S, subject, Agreement, nogap, nogap),
    aux_be(present, Agreement).
-content_clause(Container:location(Subject, Container), _, InterrogativePredicate, InterrogativePredicate) -->
+content_clause(Container:contained_in(Subject, Container), _, InterrogativePredicate, InterrogativePredicate) -->
    { InterrogativePredicate \= null },
    [where],
    np((Subject^S)^S, subject, Agreement, nogap, nogap),
@@ -153,7 +153,7 @@ s(be(S, O), indicative, Polarity, Tense, simple) -->
    np((O^_)^_, object, _, nogap, nogap).
 
 % NP is [not] in NP
-s(location(S, Container), indicative, Polarity, Tense, simple) -->
+s(contained_in(S, Container), indicative, Polarity, Tense, simple) -->
    np((S^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -162,7 +162,7 @@ s(location(S, Container), indicative, Polarity, Tense, simple) -->
    { is_a(Container, enclosing_container) }.
 
 % NP is [not] on NP
-s(location(S, Container), indicative, Polarity, Tense, simple) -->
+s(contained_in(S, Container), indicative, Polarity, Tense, simple) -->
    np((S^_)^_, subject, Agreement, nogap, nogap),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -171,7 +171,7 @@ s(location(S, Container), indicative, Polarity, Tense, simple) -->
    { is_a(Container, work_surface) }.
 
 % Character has  NP
-s(location(Object, Character), indicative, Polarity, Tense, simple) -->
+s(contained_in(Object, Character), indicative, Polarity, Tense, simple) -->
    np((Character^_)^_, subject, Agreement, nogap, nogap),
    { character(Character) },
    aux_have(Tense, Agreement),
@@ -385,7 +385,7 @@ s(X:explanation(S, X), interrogative, Polarity, Tense, Aspect) -->
 :- register_lexical_item(why).
 
 % where is NP
-s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
+s(Container:contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    [where],
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -394,14 +394,14 @@ s(Container:location(S, Container), interrogative, Polarity, Tense, simple) -->
 :- register_lexical_item(where).
 
 % Who has  NP
-s((Character:location(Object, Character), is_a(Character, person)), interrogative, Polarity, Tense, simple) -->
+s((Character:contained_in(Object, Character), is_a(Character, person)), interrogative, Polarity, Tense, simple) -->
    [who],
    aux_have(Tense, third:singular),
    opt_not(Polarity),
    np((Object^S)^S, object, _, nogap, nogap).
 
 % what is on the X
-s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
+s(S:contained_in(S, Container), interrogative, Polarity, Tense, simple) -->
    [what],
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -411,7 +411,7 @@ s(S:location(S, Container), interrogative, Polarity, Tense, simple) -->
    { is_a(Container, work_surface) }.
 
 % Who/what is in the X
-s(S:(location(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, simple) -->
+s(S:(contained_in(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, simple) -->
    whpron(Kind),
    aux_be(Tense, Agreement),
    opt_not(Polarity),
@@ -421,7 +421,7 @@ s(S:(location(S, Container), is_a(S, Kind)), interrogative, Polarity, Tense, sim
    { is_a(Container, enclosing_container), \+ character(Container) }.
 
 % what does Character have?
-s(S:location(S, Character), interrogative, Polarity, Tense, simple) -->
+s(S:contained_in(S, Character), interrogative, Polarity, Tense, simple) -->
    [what],
    aux_do(Tense, Agreement),
    opt_not(Polarity),

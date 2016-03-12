@@ -32,6 +32,9 @@ default_strategy(answer_wh(Asker, Answer, Core, Constraint),
 		    generate_unique_answer(Asker, Answer, Core, Constraint),
 		    enumerate_answers(Asker, Answer, Core, Constraint))).
 
+strategy(answer_wh(Asker, Answer, contained_in(Object, Answer), Constraint),
+	 answer_wh(Asker, Answer, location(Object, Answer), Constraint)).
+
 strategy(answer_wh(_Asker, Identity, _,
 		   (be(Person, Identity), is_a(Person, person))),
 	 introduce_person(Person)) :-
