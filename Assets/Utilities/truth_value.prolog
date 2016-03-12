@@ -189,8 +189,6 @@ admitted_truth_value(Listener, P, Value) :-
    truth_value(P, Value),
    consistent_with_pretend_truth_value(Listener, P, Value).
 
-:- trace(admitted_truth_value/3).
-
 consistent_with_pretend_truth_value(Listener, P, Value) :-
    pretend_truth_value(Listener, P, PretendValue) ->
        (Value=PretendValue)

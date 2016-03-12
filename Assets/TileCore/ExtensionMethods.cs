@@ -46,7 +46,7 @@ public static class TileCoreExtensionMethods
         var position = go.GUIScreenPosition();
 
         var sr = go.GetComponent<SpriteRenderer>();
-        if (sr != null)
+        if (sr != null && sr.sprite != null)
         {
             var height = sr.sprite.bounds.size.y*sr.sprite.pixelsPerUnit;
             return new Rect(position.x, position.y - height,
@@ -61,7 +61,7 @@ public static class TileCoreExtensionMethods
             var width = Tile.TileSizeInPixels;
             return new Rect(position.x-0.5f*width, position.y-height, width, height);
         }
-
+        
         return null;
     }
 

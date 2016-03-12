@@ -466,6 +466,10 @@ public class NLPrompt : BindingBehaviour
         if (MouseSelection != null)
         {
             var screenPosition = MouseSelection.GUIScreenPosition();
+            if (screenPosition.y < 0)
+                screenPosition.y = 0;
+            if (screenPosition.y > Screen.height-30)
+                screenPosition.y = Screen.height - 30;
             var bubbleRect = new Rect(screenPosition.x, screenPosition.y, captionSize.x, captionSize.y);
             GUI.Box(bubbleRect, SimController.GreyOutTexture);
             GUI.Label(

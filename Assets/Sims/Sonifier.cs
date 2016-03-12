@@ -14,7 +14,9 @@ public class Sonifier : BindingBehaviour
 
     AudioSource audioSource;
     GameObject pc;
+#pragma warning disable 649
     [Bind] SimController simController;
+#pragma warning restore 649
     bool running;
 
     internal void Start()

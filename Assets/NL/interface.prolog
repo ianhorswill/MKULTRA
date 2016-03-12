@@ -107,7 +107,7 @@ caption(GameObject, Name) :-
    proper_name(GameObject, Words),
    word_list(Name, Words).
 caption(GameObject, Description) :-
-   property_value(GameObject, property, Description).
+   property_value(GameObject, caption, Description).
 caption(GameObject, Description) :-
    base_kind(GameObject, Kind),
    kind_noun(Kind, singular, Words, []),

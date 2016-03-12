@@ -2,9 +2,9 @@
 %%% Finding and testing Unity GameObjects
 %%%
 
-:- public prop/1, character/1, world_object/1, nearest/2, docked_with/1, after_time/1.
+:- public prop/1, character/1, door/1, world_object/1, nearest/2, docked_with/1, after_time/1.
 
-:- public register_room/2, register_prop/3, register_character/1.
+:- public register_room/2, register_prop/3, register_character/1, register_door/1.
 
 %% register_room(*Room, *CommonNoun, *Plural)
 %  IMPERATIVE
@@ -26,6 +26,10 @@ register_prop(Prop, Kind, Adjectives) :-
    forall(member(A, Adjectives), ensure([A, Prop])),
    forall(is_a(Prop, K),
 	  ignore(initialize_prop(Prop, K))).
+
+register_door(Door) :-
+   ensure(base_kind(Door, door)),
+   ensure(door(Door)).
 
 %% register_character(*Character)
 %  IMPERATIVE
@@ -113,6 +117,13 @@ existing(Kind, Object) :-
 kill(Character) :-
    component_of_gameobject_with_type(SimController, Character, $'SimController'),
    call_method(SimController, destroy, _).
+
+%% destroy(+GameObject)
+%  Destroys (destroys) the game object.
+:- public destroy/1.
+destroy(GameObject) :-
+   component_of_gameobject_with_type(P, GameObject, $'PhysicalObject'),
+   call_method(P, destroy, _).
 
 :- public dead/1, alive/1.
 

@@ -37,6 +37,9 @@ action,"turn_on(actor, appliance)"
 action,"turn_off(actor, appliance)"
 action,"believes(actor, condition)"
 action,"watch(actor, physical_object)"
+action,"leave(actor, container)"
+action,flee(actor)
+action,"flush(actor, toilet)"
 % Conditions,
 condition,can(action)
 condition,would(condition)

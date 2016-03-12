@@ -483,7 +483,10 @@ public class SimController : PhysicalObject
                     if (n == null || !n.ExclusiveKeyValue<GameObject>().GetComponent<Room>().Contains(o))
                     {
                         var r = TileMap.TheTileMap.TileRoom(o);
-                        ELNode.Store(locationRoot / o % (r.gameObject));
+                        var location = r!=null?(r.gameObject):null;
+                        if (location == null && p is Door)
+                            location = ((Door) p).ForceRoom;
+                        ELNode.Store(locationRoot / o % location);
                         if (o == gameObject)
                         {
                             myCurrentRoom = r;

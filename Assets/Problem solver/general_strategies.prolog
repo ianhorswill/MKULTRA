@@ -91,7 +91,7 @@ strategy(achieve(docked_with(WorldObject)),
 	 goto(WorldObject)).
 
 %%
-%% goto
+%% locomotion
 %%
 :- external know/1.
 precondition(goto(Object),
@@ -108,7 +108,9 @@ strategy(goto(PropOrCharacter),
 	 unless(docked_with(Place),
 		goto_internal(Place))) :-
    once(( prop(PropOrCharacter)
-	  ;
+	;
+	  door(PropOrCharacter)
+	;
 	  character(PropOrCharacter))),
    top_level_container(PropOrCharacter, Place).
 
@@ -121,6 +123,17 @@ strategy(goto_internal(Place),
 after(goto_internal(Person),
       greet($me, Person)) :-
    character(Person).
+
+strategy(leave($me, Building),
+	 goto(Exit)) :-
+   is_a(Building, building),
+   property_value(Building, exit, Exit).
+
+strategy(flee($me),
+	 leave($me, Building)) :-
+   % Leave whatever building I'm in.
+   contained_in($me, Building),
+   is_a(Building, building).
 
 %%
 %% Getting things
@@ -355,6 +368,19 @@ precondition(turn_off($me, X),
 	     ready_to_hand(X)).
 default_strategy(turn_off($me, X),
 		 call(deactivate_prop(X))).
+
+%%
+%% Misc mechanical operations
+%%
+
+strategy(flush($me, Toilet),
+	 call(flush(Toilet))) :-
+   is_a(Toilet, toilet).
+
+:- public flush/1.
+flush(Toilet) :-
+   forall(contained_in(X, Toilet),
+	  destroy(X)).
 
 
 %%

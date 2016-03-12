@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using Prolog;
+using UnityEngine;
 
 [AddComponentMenu("Tile/Door")]
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
-class Door : MonoBehaviour
+class Door : PhysicalObject
 {
 #pragma warning disable 0649
     public Sprite ClosedSprite;
@@ -10,6 +12,7 @@ class Door : MonoBehaviour
     public bool InitiallyOpen;
     public bool LeaveClosed;
     public bool Locked;
+    public GameObject ForceRoom;
 #pragma warning restore 0649
 
     public bool Open
@@ -35,9 +38,16 @@ class Door : MonoBehaviour
         this.GetComponent<Collider2D>().isTrigger = !Locked;
     }
 
-    internal void Awake()
+    public override void Awake()
     {
         this.ForceDoorState(InitiallyOpen);
+        base.Awake();
+    }
+
+    public void Start()
+    {
+        if (!KnowledgeBase.Global.IsTrue(new Structure("register_door", gameObject)))
+            throw new Exception("Can't register door " + name);
     }
 
     internal void OnTriggerEnter2D(Collider2D enterer)

@@ -8,3 +8,5 @@ search,searches,searched,searched,searching,for,"search_for(Agent, _Location, _T
 check,checks,checked,checked,checking,for,"search_for(Agent, _Location, _Target)"
 look around,looks around,looked around,looked around,looking around,for,"search_for(Agent, _Location, _Target)"
 sleep,sleeps,slept,slept,sleeping,,"sleep(Agent, _OnWhat)"
+run away,runs away,runs away,ran away,running away,,flee(Patient)
+flee,flees,fled,fled,fleeing,,flee(Patient)
