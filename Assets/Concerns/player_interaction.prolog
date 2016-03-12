@@ -25,6 +25,14 @@ reject_player_dialog_act(hypno_command(_, _, P, _, _),
    recursive_modal(P).
 reject_player_dialog_act(hypno_command(_, $pc, _, _, _),
 			 "I wish I could hypnotize myself, but I can't.").
+reject_player_dialog_act(command($pc, Partner, Command),
+			 "You're in conversation with them; just say it directly.") :-
+   in_conversation_with(Partner),
+   misdirected_ask_or_tell_command(Partner, Command).
+
+misdirected_ask_or_tell_command(Partner, ask_about(Partner, Partner, _)).
+misdirected_ask_or_tell_command(Partner, ask_value(Partner, Partner, _)).
+misdirected_ask_or_tell_command(Partner, tell_about(Partner, Partner, _)).
 
 modal_payload(wants(_, P), P).
 modal_payload(needs(_, P), P).
