@@ -21,6 +21,18 @@ character_debug_display(Character, line("Topics:\t", Person:Topic)) :-
 % Preamble is used for housekeeping, e.g. to remove Task
 % from a queue of pending tasks. 
 
+todo(Task, Priority) :-
+   personal_todo(Task, Priority).
+
+%% personal_todo(-Task/-Preamble, -Priority)
+% Like todo/2, but is specific to one character's KB.
+% Character wants/need to do Task with specified Priority.
+% When executing this task, it should first run Preamble
+% Preamble is used for housekeeping, e.g. to remove Task
+% from a queue of pending tasks. 
+
+:- external personal_todo/2.
+
 strategy(everyday_life,
 	 work_on_everyday_life_task(Task)) :-
    arg_max(Task, Priority, todo(Task, Priority)).
