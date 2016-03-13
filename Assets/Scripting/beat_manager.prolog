@@ -34,6 +34,37 @@
    clue/1, clue_flavor_text/2, objective_description/2.
 
 %%%
+%%% Foreground/background relations on characters
+%%%
+%%% Currently a character is foreground iff they have dialog/monolog.
+%%%
+
+%% foreground_character(?Beat, ?Character)
+%  Character is involved in the action of Beat.
+foreground_character(Beat, Character) :-
+   beat_dialog(Beat, Character, _, _).
+foreground_character(Beat, Character) :-
+   beat_monolog(Beat, Character, _).
+
+%% background_character(?Beat, ?Character)
+%  Character is not involved in the action of Beat.
+background_character(Beat, Character) :-
+   \+ foreground_character(Beat, Character).
+
+:- public foreground_character_in_current_beat/0, background_character_in_current_beat/0.
+%% foreground_character_in_current_beat
+%  Current character ($me) is involved in the action of current beat.
+foreground_character_in_current_beat :-
+   current_beat(Beat),
+   once(foreground_character(Beat, $me)).
+
+%% background_character_in_current_beat
+%  Current character ($me) is not involved in the action of current beat.
+background_character_in_current_beat :-
+   current_beat(Beat),
+   background_character(Beat, $me).
+
+%%%
 %%% Task generation based on beat
 %%%
 %%% This code gets called by characters when they're idle to find out
@@ -105,7 +136,7 @@ beat_dialog_with(Beat, Partner, TaskList) :-
 %%% Beat background tasks
 %%%
 
-todo(BeatIdleTask, 0) :-
+todo(BeatIdleTask, 0.5) :-
    my_beat_idle_task(BeatIdleTask).
 
 %% my_beat_idle_task(-Task)
@@ -331,6 +362,10 @@ beat_declaration_assertions(BeatName,
 beat_declaration_assertions(BeatName,
 			   Character: Monolog,
 			   [beat_monolog(BeatName, Character, Monolog)]) :-
+   character(Character).
+beat_declaration_assertions(BeatName,
+			    idle_task(Character): Task,
+			   [beat_idle_task(BeatName, Character, Task)]) :-
    character(Character).
 beat_declaration_assertions(BeatName,
 			   sequel_to: Beat,
