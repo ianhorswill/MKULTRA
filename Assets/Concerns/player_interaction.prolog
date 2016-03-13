@@ -49,12 +49,16 @@ player_input_response(X, C, assert(C/propose_action:X)).
 
 da_normal_form(assertion($pc, NPC, knows(NPC, Proposition), present, simple),
 	       hypno_command($pc, NPC, Proposition, present, simple)).
+da_normal_form(assertion($pc, NPC, believes(NPC, Proposition), present, simple),
+	       hypno_command($pc, NPC, Proposition, present, simple)).
+da_normal_form(assertion($pc, NPC, thinks(NPC, Proposition), present, simple),
+	       hypno_command($pc, NPC, Proposition, present, simple)).
 da_normal_form(command($pc, NPC, knows(NPC, Proposition)),
 	       hypno_command($pc, NPC, Proposition, present, simple)).
 da_normal_form(command($pc, NPC, believes(NPC, Proposition)),
 	       hypno_command($pc, NPC, Proposition, present, simple)).
-da_normal_form(command(player, Who, believes(Who, Proposition)),
-	       hypno_command($pc, Who, Proposition, present, simple)).
+da_normal_form(command($pc, NPC, thinks(NPC, Proposition)),
+	       hypno_command($pc, NPC, Proposition, present, simple)).
 
 on_event(DialogAct,
 	 player_interaction,

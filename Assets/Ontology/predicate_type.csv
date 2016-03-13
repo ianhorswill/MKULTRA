@@ -40,6 +40,7 @@ action,"watch(actor, physical_object)"
 action,"leave(actor, container)"
 action,flee(actor)
 action,"flush(actor, toilet)"
+action,"thinks(actor, condition)"
 % Conditions,
 condition,can(action)
 condition,would(condition)

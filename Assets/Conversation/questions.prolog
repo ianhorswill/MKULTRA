@@ -5,10 +5,20 @@
 % Dispatch on question type
 strategy(respond_to_dialog_act(question(Asker, $me, Question,
 					_Tense, _Aspect)),
-	 if((Question = Answer:Constraint),
+	 if((Canon = Answer:Constraint),
 	    let(lf_main_predicate(Constraint, Core),
 		answer_wh(Asker, Answer, Core, Constraint)),
-	    answer_yes_no(Asker, Question))).
+	    answer_yes_no(Asker, Canon))) :-
+   canonicalize_question(Question, Canon).
+
+canonicalize_question(Q, C) :-
+   reduce_question(Q, Reduced),
+   !,
+   canonicalize_question(Reduced, C).
+canonicalize_question(Q, Q).
+
+reduce_question(X:manner(be(C), X),
+		X:wellbeing(C, X)).
 
 %% Yes/no quetsions
 strategy(answer_yes_no(Asker, Q),
@@ -83,9 +93,7 @@ strategy(answer_wh(Asker,
 		   Answer, location(Answer, Container),
 		   (contained_in(Answer, Container), is_a(Answer, Type)))).
 
-strategy(answer_wh(M, _,
-		   manner(be(Who), M),
-		   _),
+strategy(answer_wh(_Asker, X, wellbeing(Who, X), _),
 	 say_answer(okay(Who))).
 
 strategy(answer_wh(Asker, Explanation, explanation(P, Explanation), _),
