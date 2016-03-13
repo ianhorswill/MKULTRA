@@ -31,7 +31,8 @@ np(NP, Case, Agreement, Gap, Gap) -->
 np((E^S)^S, _Case, third:singular, Gap, Gap) -->
    { var(E) },
    [ Demonstrative ],
-   { demonstrative_pronoun(Demonstrative),
+   { input_from_player,
+     demonstrative_pronoun(Demonstrative),
      /perception/mouse_selection:E }.
 
 % Proper names

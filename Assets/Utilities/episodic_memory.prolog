@@ -13,6 +13,7 @@ maybe_remember_event(Event) :-
    !,
    forall(on_memorable_event(Event),
 	  true).
+maybe_remember_event(_).
 
 %% past_event(?Event)
 %  Event is in current character's episodic memory.

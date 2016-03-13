@@ -264,6 +264,24 @@ allocate_UID(UID) :-
 fkey_command(alt-i, "Display inventory") :-
    display_status_screen(inventory).
 
+display_status_screen(sample_commands) :-
+   generate_unsorted_overlay("Some useful things to say",
+			     sample_command(Command),
+			     line(Command),
+			     "Nothing").
+
+sample_command("go to the kitchen").
+sample_command("go here (while pointing at something)").
+sample_command("look at the plant").
+sample_command("take the plant").
+sample_command("talk to kavi").
+sample_command("search the house").
+sample_command("search the desk").
+sample_command("search this (while pointing at something)").
+sample_command("where is the macguffin?").
+sample_command("believe you're an orange").
+sample_command("you know you're an orange").
+
 display_status_screen(inventory) :-
    generate_unsorted_overlay("Inventory",
 			     ( location(Item, $me),

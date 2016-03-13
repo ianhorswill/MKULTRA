@@ -40,18 +40,40 @@ strategy(answer_wh(_Asker, Identity, _,
 	 introduce_person(Person)) :-
    character(Person).
 
-strategy(answer_wh(Asker, Identity, _,
+strategy(answer_wh(player, Answer,
+		   should(do(player, Answer)),
+		   _),
+	 show_status(notebook)).
+
+strategy(answer_wh(Asker, Identity,
+		   be(Entity, Identity),
 		   (be(Entity, Identity), is_a(Entity, entity))),
 	 tell_about($me, Asker, Entity)).
 
-strategy(answer_wh(_Asker, Identity, _,
+strategy(answer_wh(_Asker, Identity,
+		   be(player, Identity),
 		   (be(player, Identity), is_a(player, person))),
 	 say_answer(be(player, $me))).
 
-strategy(answer_wh(_Asker, Answer, can(Action), Constraint),
-	 answer_with_list(List, "or", Type,
-			  (can(Action), is_a(Answer, Type)))) :-
+strategy(answer_wh(Asker, Answer, can(Action), Constraint),
+	 answer_can_wh(Asker, Answer, can(Action), Constraint)).
+
+default_strategy(answer_can_wh(_Asker, Answer, can(Action), Constraint),
+		 answer_with_list(List, "or", Type,
+				  (can(Action), is_a(Answer, Type)))) :-
    possible_types_given_constraint(Answer, Constraint, List).
+
+strategy(answer_can_wh(player, Answer,
+		       can(type(player, Answer)),
+		       _),
+	 show_status(sample_commands)).
+
+strategy(answer_can_wh(player, Answer,
+		       can(do(Who, Answer)),
+		       _),
+	 show_status(sample_commands)) :-
+   member(Who, [player, $pc]).
+
 
 % Change what is in X queries from location queries to contained_in queries.
 strategy(answer_wh(Asker,

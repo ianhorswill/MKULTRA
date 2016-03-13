@@ -148,8 +148,21 @@ stock_phrase(show_status(player, $me, What)) -->
    [ show, me ],
    status_display_term_with_determiner(What).
 
-:- register_lexical_items([show, inventory, notebook]).
+stock_phrase(show_status(player, $me, What)) -->
+   [ check ],
+   status_display_term_with_determiner(What).
 
+stock_phrase(show_status(player, $me, What)) -->
+   [ look, at ],
+   status_display_term_with_determiner(What).
+
+stock_phrase(show_status(player, $me, What)) -->
+   [ examine ],
+   status_display_term_with_determiner(What).
+
+:- register_lexical_items([examine, look, at, show, check, inventory, notebook]).
+
+:- randomizable status_display_term/3.
 status_display_term(inventory) -->
    [ inventory ].
 status_display_term(notebook) -->
