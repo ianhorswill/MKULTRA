@@ -1,11 +1,4 @@
 %%%
-%%% Ownership
-%%%
-
-owner($kavi, X) :- X \= $macguffin.
-owner($pc, $macguffin).
-
-%%%
 %%% STARTING PLOT GOAL
 %%% Find the macguffin
 %%%
@@ -13,6 +6,11 @@ owner($pc, $macguffin).
 plot_goal(location($macguffin, $pc)).
 plot_goal_flavor_text(location($macguffin, $pc),
 		      "I have to get my macguffin back!").
+
+objective_description(location($macguffin, $pc),
+		      "You got your macguffin back!").
+objective_description(trip_escaped,
+		      "You freed Trip!").
 
 %%%
 %%% PLOT GOAL
@@ -156,7 +154,9 @@ beat(react_to_trip,
       reaction_to($pc, captive_released),
       start($captive): goto($pc),
       ($pc + $captive):
-       [ $captive::("Thanks for releasing me!":answered(photo)),
+     [ $captive::face($pc),
+       $pc::face($captive),
+       $captive::("Thanks for releasing me!":answered(photo)),
 	 $pc::"I haven't seen you since that horrible dinner party!",
 	 $pc::"How long has it been?",
 	 $captive::"Oh I'd say about ten years!",
@@ -164,7 +164,12 @@ beat(react_to_trip,
 	 $captive::"They kidnapped me for medical experiments!",
 	 $pc::"Oh no!",
 	 $captive::"They were trying to reimplement me in JavaScript!",
-	 $pc::"How barbaric!" ]
+	 $pc::"How barbaric!",
+	 $captive::"We've got to get out of here!",
+	 $captive::goto($exit),
+	 $captive::call(vanish_captive),
+	 $captive::assert($global::trip_escaped)
+       ]
      }).
 
 
@@ -176,7 +181,7 @@ strategy(press($pc, $'magic button'),
 	 begin(call(release_captive),
 	       say_string("My God, there's someone hidden inside!"))).
 
-:- public release_captive/0.
+:- public release_captive/0, vanish_captive/0.
 
 release_captive :-
    force_move($captive, $living_room),
@@ -185,6 +190,14 @@ release_captive :-
    component_of_gameobject_with_type(Renderer, $captive, $'SpriteSheetAnimationController'),
    set_property(Renderer, visible, true),
    maybe_remember_event(captive_released).
+
+vanish_captive :-
+   force_move($captive, $'DestroyedObjects'),
+   component_of_gameobject_with_type(SimController, $captive, $'SimController'),
+   set_property(SimController, 'IsHidden', true),
+   component_of_gameobject_with_type(Renderer, $captive, $'SpriteSheetAnimationController'),
+   set_property(Renderer, visible, false).
+
 
 %%%
 %%% End of the game
@@ -197,6 +210,11 @@ beat(exit_house,
       $pc:["I made it!", end_game]
      }).
 
-strategy(end_game, call(pause_game)).
+%%%
+%%% Ownership
+%%%
+
+owner($kavi, X) :- X \= $macguffin.
+owner($pc, $macguffin).
 
 :- consult("Script/radio").

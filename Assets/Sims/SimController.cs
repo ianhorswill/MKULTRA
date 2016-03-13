@@ -931,7 +931,7 @@ public class SimController : PhysicalObject
         var guiScreenPosition = gameObject.GUIScreenPosition();
 
         var statusText = GetStatusText();
-        if (!string.IsNullOrEmpty(statusText))
+        if (!IsHidden && !string.IsNullOrEmpty(statusText))
         {
             var status = new GUIContent(statusText);
             var style = GUIStyle.none;

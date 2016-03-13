@@ -12,7 +12,10 @@ normalize_task(respond_to_dialog_act(show_status(player, $me, What)),
 	       show_status(What)).
 
 strategy(show_status(What),
-	 call(display_status_screen(What))).
+	 {
+	  pause_game,
+	  call(display_status_screen(What))
+	 }).
 
 strategy(if_navigation_command,
 	 monolog(["Just say what to go to.",

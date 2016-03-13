@@ -397,6 +397,17 @@ normalize_task(on_behalf_of(Person, Task),
 		     Task)).
 retract_on_restart(Task, Task/on_behalf_of).
 
+%%
+%% Ending and pausing the game
+%%
+
+normalize_task(pause_game,
+	       call(pause_game)).
+
+strategy(end_game,
+	 show_status(game_over)).
+
+
 %%%
 %%% Parallel processing
 %%% We just have a simplistic fork/join system.

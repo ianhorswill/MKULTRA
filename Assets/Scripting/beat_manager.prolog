@@ -23,7 +23,7 @@
 :- external plot_relevant_assertion/4.
 :- higher_order beat_precondition(0, 1).
 :- external plot_goal/1, plot_subgoal/2.
-:- plot_goal(1).
+:- higher_order plot_goal(1).
 :- higher_order plot_subgoal(1,1).
 :- public dialog_task_advances_current_beat/1, my_beat_idle_task/1.
 
@@ -31,7 +31,7 @@
    plot_question_answered/1,
    revealed/1,
    plot_goal/1, plot_goal_flavor_text/2,
-   clue/1, clue_flavor_text/2.
+   clue/1, clue_flavor_text/2, objective_description/2.
 
 %%%
 %%% Task generation based on beat
@@ -120,7 +120,9 @@ my_beat_idle_task(Task) :-
 
 beat_is_idle :-
    \+ $global_root/configuration/inhibit_beat_system,
-   \+ in_conversation_with(_),  % we're not idle if we aren't in conversation
+   \+ in_conversation_with(_), % we're not idle if we aren't in conversation
+   current_beat(B),
+   \+ beat_dialog(B, $me, _, _),
    \+ beat_waiting_for_timeout.
 
 %%%
@@ -390,6 +392,17 @@ terminal_beat(B) :-
 terminal_beat(B) :-
    bad_ending(B).
 
+%%%
+%%% Objectives
+%%%
+
+objective_achieved(Objective) :-
+   objective_description(Objective, _),
+   Objective.
+
+unachieved_objective(Objective) :-
+   objective_description(Objective, _),
+   \+ Objective.
 
 %%%
 %%% Debugging display

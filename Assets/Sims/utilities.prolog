@@ -264,6 +264,34 @@ allocate_UID(UID) :-
 fkey_command(alt-i, "Display inventory") :-
    display_status_screen(inventory).
 
+display_status_screen(game_over) :-
+   game_over_header(H),
+   generate_unsorted_overlay(H,
+			     game_over_status_line(Line),
+			     line(Line),
+			     "'Nuff said.").
+
+game_over_header("You died...") :-
+   \+ exists($pc),
+   !.
+game_over_header("Game over") :-
+   objectives_achieved(0).
+game_over_header("Game over: objective achieved") :-
+   objectives_achieved(1).
+game_over_header("Game over: objectives achieved") :-
+   objectives_achieved(N),
+   N>1.
+
+objectives_achieved(N) :-
+   findall(O, objective_achieved(O), L),
+   length(L, N).
+
+game_over_status_line(Description) :-
+   objective_achieved(Objective),
+   objective_description(Objective, Description).
+game_over_status_line("But you didn't achieve all the objectives!") :-
+   once(unachieved_objective(_)).
+
 display_status_screen(sample_commands) :-
    generate_unsorted_overlay("Some useful things to say",
 			     sample_command(Command),

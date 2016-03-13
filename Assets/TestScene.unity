@@ -2449,7 +2449,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1541256199}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!114 &266788633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3438,7 +3438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 1279414041}
+  Material: {fileID: 1177872333}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
   Rows: 4
@@ -5072,7 +5072,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1541256199}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!114 &470051337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7853,6 +7853,34 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!21 &775381614
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &791286592
 GameObject:
   m_ObjectHideFlags: 0
@@ -9235,34 +9263,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!21 &961998589
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &971914859
 GameObject:
   m_ObjectHideFlags: 0
@@ -11118,6 +11118,34 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!21 &1177872333
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &1187509233
 GameObject:
   m_ObjectHideFlags: 0
@@ -11903,34 +11931,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!21 &1279414041
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: e3e154506053952478eaa0dadad6bbeb, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &1296297188
 GameObject:
   m_ObjectHideFlags: 0
@@ -12190,7 +12190,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1541256199}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!114 &1330954389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13731,11 +13731,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1477267613}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.5, y: -0.87305784, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1541256199}
-  m_RootOrder: 0
+  m_RootOrder: 4
 --- !u!114 &1477267615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13869,7 +13869,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 1855326698}
+  Material: {fileID: 775381614}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
   Rows: 4
@@ -14476,11 +14476,11 @@ Transform:
   m_LocalPosition: {x: 14, y: 6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1477267614}
   - {fileID: 470051336}
   - {fileID: 266788632}
   - {fileID: 1330954388}
   - {fileID: 2097529039}
+  - {fileID: 1477267614}
   m_Father: {fileID: 1036973645}
   m_RootOrder: 11
 --- !u!1 &1541784522
@@ -16719,6 +16719,34 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!21 &1811989035
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Unlit/Transparent Cutout
+  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+      data:
+        first:
+          name: _MainTex
+        second:
+          m_Texture: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+    m_Floats:
+      data:
+        first:
+          name: _Cutoff
+        second: 0.5
+    m_Colors: {}
 --- !u!1 &1814254762
 GameObject:
   m_ObjectHideFlags: 0
@@ -17283,34 +17311,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!21 &1855326698
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Unlit/Transparent Cutout
-  m_Shader: {fileID: 10751, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  m_SavedProperties:
-    serializedVersion: 2
-    m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: 63caab22bb6027549a97500e163f8420, type: 3}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-    m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: 0.5
-    m_Colors: {}
 --- !u!1 &1866433513
 GameObject:
   m_ObjectHideFlags: 0
@@ -19031,7 +19031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657c001a8764f3f43919f61735e81ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Material: {fileID: 961998589}
+  Material: {fileID: 1811989035}
   Color: {r: 1, g: 1, b: 1, a: 1}
   SpriteSheet: {fileID: 2800000, guid: 0a08b824907484a1ab3bbbbf8ea3b59c, type: 3}
   Rows: 4
@@ -20359,7 +20359,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1541256199}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!114 &2097529040
 MonoBehaviour:
   m_ObjectHideFlags: 0
