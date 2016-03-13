@@ -53,8 +53,14 @@ strategy(explain_failure(~know(X:location(Object, X))),
 strategy(explain_failure(~ready_to_hand(Object)),
 	 speech([np(Object), "isn't ready to hand."])).
 
-strategy(tell_about($me, _, Topic),
-	 describe(Topic, general, null)).
+default_strategy(tell_about($me, _, Topic),
+		 describe(Topic, general, null)).
+strategy(tell_about($me, Who, Topic),
+	 add_conversation_task(Who, tell_about($me, Who, Topic))) :-
+   Who \= $addressee.
+
+strategy(tell($me, Who, What),
+	 add_conversation_task(Who, assertion($me, Who, What, present, simple))).
 
 normalize_task(go($me, Location),
 	       goto(Location)).
@@ -86,4 +92,7 @@ strategy(add_conversation_topic(Person, Topic),
 	 tell(/pending_conversation_topics/Person/ask_about($me,
 							    Person,
 							    Topic))) :-
+   var(Topic) -> Topic = Person ; true.
+strategy(add_conversation_task(Person, Task),
+	 tell(/pending_conversation_topics/Person/Task)) :-
    var(Topic) -> Topic = Person ; true.
