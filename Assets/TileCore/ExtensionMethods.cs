@@ -9,6 +9,10 @@ public static class TileCoreExtensionMethods
 {
     public static Vector2 ScreenPosition(this GameObject gameObject)
     {
+        if (gameObject == null)
+            throw new ArgumentNullException("Attempt to get screen position of null object");
+        if (Camera.main == null)
+            throw new InvalidOperationException("Camera.main null during call to ScreenPosition()");
         return Camera.main.WorldToScreenPoint(gameObject.transform.position);
     }
 

@@ -118,7 +118,7 @@ public class NLPrompt : BindingBehaviour
                 break;
 
             case EventType.MouseUp:
-                if (contextMenu != null)
+                if (contextMenu != null && MouseSelection != null)
                 {
                     var guiScreenRect = MouseSelection.GUIScreenRect();
                     if (guiScreenRect.HasValue)
@@ -192,7 +192,7 @@ public class NLPrompt : BindingBehaviour
         GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
         GUI.Label(ResponseRect, characterResponse, InputGUIStyle);
         GUI.depth = 0;
-        if (contextMenu != null)
+        if (contextMenu != null && MouseSelection != null)
         {
             var guiScreenRect = MouseSelection.GUIScreenRect();
             if (guiScreenRect.HasValue)
