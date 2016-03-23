@@ -90,3 +90,23 @@ strategy(do_hypnotically_believe(LF),
 default_strategy(do_hypnotically_believe(_LF),
 		 % No effect
 		 null).
+
+%%
+%% Offers
+%%
+
+strategy(respond_to_dialog_act(offer(Offerer, $me, TheirAct, MyAct)),
+	 Response) :-
+   acceptable_offer(Offerer, TheirAct, MyAct) ->
+   Response = (acceptance($me, Offerer, TheirAct, MyAct),
+	       call(add_pending_task(on_behalf_of(Offerer, MyAct))))
+      ;
+      Response = rejection($me, Offerer, TheirAct, MyAct).
+
+acceptable_offer(_, _, _).
+
+strategy(respond_to_dialog_act(acceptance(Acceptor, $me, MyAct, _TheirAct)),
+	 call(add_pending_task(on_behalf_of(Acceptor, MyAct)))).
+
+strategy(respond_to_dialog_act(rejection(_Acceptor, $me, _MyAct, _TheirAct)),
+	 null).

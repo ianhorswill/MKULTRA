@@ -35,6 +35,45 @@ utterance(hypno_command(Speaker, Addressee, LF, T, A)) -->
    s(LF, indicative, affirmative, T, A),
    { current_dialog_pair(Speaker, Addressee) }.
 
+%%
+%% THREATS AND OFFERS
+%%
+%% An offer is a suggestion that each party perform an action
+%% A threat is a an offer to not do an action, provided the reciprocal
+%% action is taken.
+%%
+
+utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
+   s(AddresseeAct, imperative, affirmative, _, _),
+   [ and ],
+   s(SpeakerAct, indicative, affirmative, future, simple),
+   { current_dialog_pair(Speaker, Addressee) },
+   opt_stop(conditional).
+utterance(offer(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
+   [ if ],
+   s(AddresseeAct, indicative, affirmative, _, _),
+   opt_comma,
+   s(SpeakerAct, indicative, affirmative, future, simple),
+   { current_dialog_pair(Speaker, Addressee) },
+   opt_stop(conditional).
+
+utterance(threat(Speaker, Addressee, SpeakerAct, AddresseeAct)) -->
+   s(AddresseeAct, imperative, affirmative, _, _),
+   [ or ],
+   s(SpeakerAct, indicative, affirmative, future, simple),
+   { current_dialog_pair(Speaker, Addressee) },
+   opt_stop(conditional).
+
+utterance(acceptance(Speaker, Addressee, _, _)) -->
+   [ okay ],
+   { current_dialog_pair(Speaker, Addressee) },
+   opt_stop(agreement).
+
+opt_comma --> [].
+opt_comma --> [ '.' ].
+
+
+:- register_lexical_items([and, or, if, okay]).
 
 current_dialog_pair($speaker, $addressee).
 
@@ -141,22 +180,22 @@ nsew_nav_command -->
    [X],
    { nsew(X) }.
 
-stock_phrase(show_status(player, $me, What)) -->
-   status_display_term(What).
-
-stock_phrase(show_status(player, $me, What)) -->
-   [ show, me ],
-   status_display_term_with_determiner(What).
-
-stock_phrase(show_status(player, $me, What)) -->
+stock_phrase(show_status(player, $pc, What)) -->
    [ check ],
    status_display_term_with_determiner(What).
 
-stock_phrase(show_status(player, $me, What)) -->
+stock_phrase(show_status(player, $pc, What)) -->
+   status_display_term(What).
+
+stock_phrase(show_status(player, $pc, What)) -->
+   [ show, me ],
+   status_display_term_with_determiner(What).
+
+stock_phrase(show_status(player, $pc, What)) -->
    [ look, at ],
    status_display_term_with_determiner(What).
 
-stock_phrase(show_status(player, $me, What)) -->
+stock_phrase(show_status(player, $pc, What)) -->
    [ examine ],
    status_display_term_with_determiner(What).
 
