@@ -12,6 +12,14 @@ generate_text(SpeechAct, Text) :-
    contracted_form(Words, Contracted),
    word_list(Text, Contracted).
 
+generate_text_for_menu(SpeechAct, Text) :-
+   bind_dialog_indexicals_for_output(SpeechAct),
+   step_limit(10000),
+   utterance(SpeechAct, Words, [ ]),
+   contracted_form(Words, Contracted),
+   word_list(Text, Contracted).
+
+
 %% input_completion(+InputText, -CompletionText, -SpeechAct)
 %  InputText followed by CompletionText is a possible realization of SpeechAct.
 input_completion(InputText, CompletionText, SpeechAct) :-
@@ -26,6 +34,7 @@ input_completion(InputText, CompletionText, SpeechAct) :-
    word_list(CompletionText, CompletionWords).
 
 :- public well_formed_dialog_act/1.
+well_formed_dialog_act(acceptance(_, _)).
 well_formed_dialog_act(general_help(_,_)).
 well_formed_dialog_act(how_do_i(_,_,_)).
 well_formed_dialog_act(objective_query(_,_)).
@@ -39,6 +48,16 @@ well_formed_dialog_act(command(_, _, LF)) :-
    well_typed(LF, action).
 well_formed_dialog_act(assertion(_, _, LF, _, _)) :-
    well_typed(LF, condition).
+well_formed_dialog_act(offer(S, A, SAction, AAction)) :-
+   agent(SAction, S),
+   agent(AAction, A),
+   well_typed(SAction, action),
+   well_typed(AAction, action).
+well_formed_dialog_act(threat(S, A, SAction, AAction)) :-
+   agent(SAction, S),
+   agent(AAction, A),
+   well_typed(SAction, action),
+   well_typed(AAction, action).
 well_formed_dialog_act(hypno_command(_, Target, _, _, _)) :-
    Target \= $me.
 well_formed_dialog_act(show_status(_,_,_)).

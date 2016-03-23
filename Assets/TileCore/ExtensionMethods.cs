@@ -72,4 +72,9 @@ public static class TileCoreExtensionMethods
             throw new ArgumentNullException("ThumbNailImage() called on game object with not SpriteSheetAnimationController");
         ss.DrawThumbNail(screenLocation);
     }
+
+    public static Vector2 Center(this Rect r)
+    {
+        return new Vector2(0.5f*(r.xMax + r.xMin), 0.5f*(r.yMax + r.yMin));
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Prolog;
 using UnityEngine;
+using System.Collections.Generic;
 
 // ReSharper disable once InconsistentNaming
 public class NLPrompt : BindingBehaviour
@@ -26,6 +27,8 @@ public class NLPrompt : BindingBehaviour
     /// Font, color, etc. for displaying the decoded dialog act
     /// </summary>
     public GUIStyle CommentaryGUIStyle = new GUIStyle();
+
+    public GUIStyle MenuGUIStyle = new GUIStyle();
     #endregion
 
     #region Private fields
@@ -73,6 +76,8 @@ public class NLPrompt : BindingBehaviour
 
     private float typingPromptStartTime;
 #pragma warning restore 649
+
+    private PieMenu contextMenu;
     #endregion
 
     internal void Start()
@@ -83,6 +88,7 @@ public class NLPrompt : BindingBehaviour
         haloElNode = elRoot/Symbol.Intern("halo");
         mouseSelectionELNode = elRoot/ Symbol.Intern("perception") / Symbol.Intern("mouse_selection");
         talkingToElNode = elRoot/Symbol.Intern("social_state")/Symbol.Intern("talking_to");
+        MouseSelection = null;
     }
 
     /// <summary>
@@ -96,12 +102,34 @@ public class NLPrompt : BindingBehaviour
 
     internal void OnGUI()
     {
+
+        // You'd want this to be called by a MouseMove event, but it's not supported in game,
+        // and in any case, we probably need to keep updating because of potential object movement.
+        if (contextMenu == null)
+            UpdateMouseSelection();
+
         GUI.depth = 0;
         var e = Event.current;
         switch (e.type)
         {
             case EventType.MouseDown:
-                typingPromptStartTime = Time.time;
+                //typingPromptStartTime = Time.time;
+                contextMenu = MakeMenu(MouseSelection);
+                break;
+
+            case EventType.MouseUp:
+                if (contextMenu != null)
+                {
+                    var guiScreenRect = MouseSelection.GUIScreenRect();
+                    if (guiScreenRect.HasValue)
+                    {
+                        var selection = contextMenu.SelectedAction(guiScreenRect.Value.Center());
+                        if (selection != null)
+                            simController.QueueEvent("player_input", selection);
+                    }
+                }
+
+                contextMenu = null;
                 break;
 
             case EventType.KeyDown:
@@ -119,15 +147,31 @@ public class NLPrompt : BindingBehaviour
         }
     }
 
+    PieMenu MakeMenu(GameObject selection)
+    {
+        var tags = new List<string>();
+        var actions = new List<object>();
+        var stringVar = new LogicVariable("Tag");
+        var actionVar = new LogicVariable("Action");
+        var goal = new Structure("menu_item", selection, stringVar, actionVar);
+
+        // ReSharper disable once UnusedVariable
+        foreach (var ignore in gameObject.KnowledgeBase().Prove(goal))
+        {
+            tags.Add((string)stringVar.Value);
+            actions.Add(Term.CopyInstantiation(actionVar));
+        }
+
+        return new PieMenu(tags, actions, MenuGUIStyle, 50, SimController.GreyOutTexture);
+    }
+
     #region Drawing the screen
     private void DrawGUI()
     {
         var arrowActive = typingPromptStartTime > Time.time - 3;
 
-        // You'd want this to be called by a MouseMove event, but it's not supported in game,
-        // and in any case, we probably need to keep updating because of potential object movement.
-        UpdateMouseSelection();
-        ShowMouseSelectionCaption();
+        if (contextMenu == null)
+            ShowMouseSelectionCaption();
 
         if (!string.IsNullOrEmpty(input) || arrowActive  || Time.time > haloOnset + 2f)
         {
@@ -147,6 +191,13 @@ public class NLPrompt : BindingBehaviour
         GUI.Label(InputRect, text, InputGUIStyle);
         GUI.Label(CommentaryRect, commentary, CommentaryGUIStyle);
         GUI.Label(ResponseRect, characterResponse, InputGUIStyle);
+        GUI.depth = 0;
+        if (contextMenu != null)
+        {
+            var guiScreenRect = MouseSelection.GUIScreenRect();
+            if (guiScreenRect.HasValue)
+                contextMenu.Draw(guiScreenRect.Value.Center(), 50);
+        }
     }
 
     public Material OutlineMaterial;
@@ -177,6 +228,7 @@ public class NLPrompt : BindingBehaviour
         }
     }
 
+    // ReSharper disable once InconsistentNaming
     private static void GLDrawRect(Color lineColor, Rect rect)
     {
         GL.Begin(GL.LINES);
@@ -310,6 +362,7 @@ public class NLPrompt : BindingBehaviour
                 && !char.IsLetterOrDigit(input[input.Length-1]))
                 return true;
             // Check for cases like "who're"
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var e in Prolog.Prolog.EnglishEnclitics)
             {
                 if (input.EndsWith(e) && input.Length > e.Length && input[input.Length - 1 - e.Length] == '\'')
@@ -463,9 +516,12 @@ public class NLPrompt : BindingBehaviour
         foreach (var physob in FindObjectsOfType<PhysicalObject>())
         {
             var go = physob.gameObject;
-            var rect = go.GUIScreenRect();
-            if (rect.HasValue && rect.Value.Contains(Event.current.mousePosition))
-                newSelection = go;
+            if (!physob.IsHidden)
+            {
+                var rect = go.GUIScreenRect();
+                if (rect.HasValue && rect.Value.Contains(Event.current.mousePosition))
+                    newSelection = go;
+            }
         }
         if (newSelection == null)
         {

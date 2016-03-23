@@ -10,7 +10,10 @@ normalize_task(respond_to_dialog_act(if_navigation_command(player, $me)),
 	       if_navigation_command).
 normalize_task(respond_to_dialog_act(show_status(player, $me, What)),
 	       show_status(What)).
-
+before(show_status(notebook),
+       { speech(["I should check my notebook",
+		 "to take stock of the situation"]),
+	 pause(1) }).
 strategy(show_status(What),
 	 {
 	  pause_game,

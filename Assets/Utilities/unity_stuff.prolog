@@ -145,3 +145,39 @@ generate_character_debug_overlay(Character) :-
 %% character_debug_display(+Character, -Line) is nondet
 %  When displaying character debug data for Character, display Line.
 :- external character_debug_display/2.
+
+:- public menu_item/3.
+menu_item(GameObject, String, Command) :-
+   menu_command(GameObject, Command),
+   once(generate_text_for_menu(Command, String)).
+
+menu_command(GameObject, command(player, $pc, Action)) :-
+   menu_action(GameObject, Action).
+menu_command($pc, show_status(player, $pc, notebook)).
+menu_command($pc, show_status(player, $pc, inventory)).
+
+menu_action($pc, stop($pc)) :-
+   everyday_life_task_busy.
+
+menu_action(X, go($pc, X)) :-
+   X \= $pc.
+menu_action(X, examine($pc, X)) :-
+   \+ character(X),
+   \+ is_a(X, container),
+   \+ examined(X).
+menu_action(X, search_for($pc, X, _)) :-
+   \+ character(X),
+   is_a(X, container),
+   \+ /searched/X.
+menu_action(X, talk($pc, X, _)) :-
+   character(X),
+   X \= $pc,
+   \+ in_conversation_with(X).
+menu_action(X, sleep($pc, X)) :-
+   is_a(X, layable).
+menu_action(X, turn_on($pc, X)) :-
+   once(is_a(X, appliance)),
+   \+ prop_activated(X).
+menu_action(X, turn_off($pc, X)) :-
+   once(is_a(X, appliance)),
+   prop_activated(X).

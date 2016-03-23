@@ -78,6 +78,8 @@ vp(_Form, Predicate^Modal, Subject^S, Tense, Agreement, GapInfo) -->
 turn_verb(_, present) --> [turn].
 turn_verb(_, past) --> [turned].
 
+:- register_lexical_items([turn, turned]).
+
 turn_phrasal_verb(on, S, O, turn_on(S, O)).
 turn_phrasal_verb(off, S, O, turn_off(S, O)).
 

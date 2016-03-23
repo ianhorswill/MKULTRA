@@ -119,8 +119,8 @@ $kavi::personal_strategy(patrol_kitchen,
    % Sigh.  I can't believe I didn't implement random_integer.
    once(random_member(Time, [2, 3, 5, 7, 8])).
 
-$kavi::personal_todo(patrol_kitchen, -100) :-
-   background_character_in_current_beat.
+%$kavi::personal_todo(patrol_kitchen, -100) :-
+%   background_character_in_current_beat.
 
 %%%
 %%% Good ending
