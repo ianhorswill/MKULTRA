@@ -42,7 +42,7 @@ fkey_command(alt-l, "Display crash log") :-
 update_crash_log_display :-
    begin(current_log_character(C),
 	 if(( current_log_uid(UID),
-	      ((/logs/C/UID)>>Log) ),
+	      (($global_root/logs/C/UID)>>Log) ),
 	    generate_unsorted_overlay("Logs",
 				      task_log_line(C, UID, Log, Line),
 				      Line),
@@ -68,14 +68,14 @@ fkey_command(alt-rightarrow, "Show logs for next character") :-
    all(X, character(X), Characters),
    adjacent_in_list_circular(C, New, Characters),
    assert($global_root/gui_state/current_log_character:New),
-   retract($global_root/gui_state/current_log_uid),
+   ignore(retract($global_root/gui_state/current_log_uid)),
    update_crash_log_display.
 fkey_command(alt-leftarrow, "Show logs for previous character") :-
    current_log_character(C),
    all(X, character(X), Characters),
    adjacent_in_list_circular(New, C, Characters),
    assert($global_root/gui_state/current_log_character:New),
-   retract($global_root/gui_state/current_log_uid),
+   ignore(retract($global_root/gui_state/current_log_uid)),
    update_crash_log_display.
 
 current_log_character(C) :-
@@ -106,6 +106,7 @@ current_log_uid(U) :-
 current_log_uid(U) :-
    current_log_character(C),
    $global_root/logs/C/U,
+   !,
    assert($global_root/gui_state/current_log_uid:U).
 
 adjacent_in_list_circular(Before, After, [After | Tail]) :-
