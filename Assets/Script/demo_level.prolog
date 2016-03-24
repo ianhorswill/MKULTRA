@@ -80,8 +80,12 @@ beat(search_house,
       leads_to($pc, pickup($report)),
       leads_to($pc, captive_released),
       leads_to($pc, examine($pc, $photo)),
-      leads_to($kavi, ingest($pc))
-      }).
+      leads_to($kavi, ingest($pc)),
+      menu_hypno_command($kavi):related($pc, member_of, illuminati),
+      menu_hypno_command($kavi):hungry($kavi),
+      menu_hypno_command($kavi):is_a($kavi, orange),
+      menu_question($kavi):(X:contained_in($macguffin, X))
+     }).
 
 after(pickup($report),
       describe($report)).

@@ -333,6 +333,32 @@ maybe_interrupt_current_beat :-
 maybe_interrupt_current_beat.
 
 %%%
+%%% Context menu support
+%%%
+
+:- external beat_menu_action/3,
+   beat_menu_assertion/3, beat_menu_command/3, beat_menu_question/3, beat_menu_hypno_command/3.
+menu_action(Object, DialogAct) :-
+   current_beat(Beat),
+   beat_menu_action(Beat, Object, DialogAct).
+
+menu_question(Object, DialogAct) :-
+   current_beat(Beat),
+   beat_menu_question(Beat, Object, DialogAct).
+
+menu_assertion(Object, DialogAct) :-
+   current_beat(Beat),
+   beat_menu_assertion(Beat, Object, DialogAct).
+
+menu_command(Object, DialogAct) :-
+   current_beat(Beat),
+   beat_menu_command(Beat, Object, DialogAct).
+
+menu_hypno_command(Object, DialogAct) :-
+   current_beat(Beat),
+   beat_menu_hypno_command(Beat, Object, DialogAct).
+
+%%%
 %%% Beat declaration language
 %%%
 
@@ -412,9 +438,27 @@ beat_declaration_assertions(BeatName,
 beat_declaration_assertions(BeatName,
 			   bad_ending,
 			   [bad_ending(BeatName)]).
+
 beat_declaration_assertions(BeatName,
 			   player_achieves:Task,
-			   [player_achieves_task_during_beat(BeatName, Task)]).
+			    [player_achieves_task_during_beat(BeatName, Task)]).
+
+beat_declaration_assertions(BeatName,
+			   menu_action(Object):DialogAct,
+			   [beat_menu_action(BeatName, Object, DialogAct)]).
+beat_declaration_assertions(BeatName,
+			   menu_command(Character):DialogAct,
+			   [beat_menu_command(BeatName, Character, DialogAct)]).
+beat_declaration_assertions(BeatName,
+			   menu_assertion(Character):DialogAct,
+			   [beat_menu_assertion(BeatName, Character, DialogAct)]).
+beat_declaration_assertions(BeatName,
+			   menu_hypno_command(Character):DialogAct,
+			   [beat_menu_hypno_command(BeatName, Character, DialogAct)]).
+beat_declaration_assertions(BeatName,
+			   menu_question(Character):DialogAct,
+			   [beat_menu_question(BeatName, Character, DialogAct)]).
+
 beat_declaration_assertions(BeatName, Declaration, []) :-
    log(BeatName:unknown_beat_declaration(Declaration)).
 
