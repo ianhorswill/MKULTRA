@@ -62,6 +62,7 @@ public class Room : BindingBehaviour
     {
         if (!KB.Global.IsTrue("register_room", gameObject, Symbol.Intern(name)))
             throw new Exception("Can't register prop " + name);
+        transform.position = new Vector3(Left, Bottom, 0);
     }
 
     /// <summary>

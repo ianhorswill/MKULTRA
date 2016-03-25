@@ -128,6 +128,11 @@ caption(GameObject, Name) :-
 caption(GameObject, Description) :-
    property_value(GameObject, caption, Description).
 caption(GameObject, Description) :-
+   is_a(GameObject, room),
+   base_kind(GameObject, Kind),
+   kind_noun(Kind, singular, Words, []),
+   word_list(Description, Words).
+caption(GameObject, Description) :-
    base_kind(GameObject, Kind),
    kind_noun(Kind, singular, Words, []),
    contracted_form([a | Words], Contracted),
