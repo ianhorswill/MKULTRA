@@ -70,3 +70,4 @@ UnityVS.*.sln.DotSettings
 #!Library/unity editor resources
 #!Library/metadata/
 *.stackdump
+TAGS

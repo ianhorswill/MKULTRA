@@ -115,6 +115,7 @@ public class NLPrompt : BindingBehaviour
             case EventType.MouseDown:
                 //typingPromptStartTime = Time.time;
                 contextMenu = MakeMenu(MouseSelection);
+                lastPlayerActivity.StoreExclusive(Time.time, true);
                 break;
 
             case EventType.MouseUp:
@@ -129,6 +130,7 @@ public class NLPrompt : BindingBehaviour
                     }
                 }
 
+                lastPlayerActivity.StoreExclusive(Time.time, true);
                 contextMenu = null;
                 break;
 
@@ -156,7 +158,9 @@ public class NLPrompt : BindingBehaviour
         var goal = new Structure("menu_item", selection, stringVar, actionVar);
 
         // ReSharper disable once UnusedVariable
+#pragma warning disable 168
         foreach (var ignore in gameObject.KnowledgeBase().Prove(goal))
+#pragma warning restore 168
         {
             tags.Add((string)stringVar.Value);
             actions.Add(Term.CopyInstantiation(actionVar));

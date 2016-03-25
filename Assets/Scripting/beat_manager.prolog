@@ -57,11 +57,14 @@ background_character(Beat, Character) :-
 foreground_character_in_current_beat :-
    current_beat(Beat),
    once(foreground_character(Beat, $me)).
-
+foreground_character_in_current_beat :-
+   in_conversation_with($pc).
+   
 %% background_character_in_current_beat
 %  Current character ($me) is not involved in the action of current beat.
 background_character_in_current_beat :-
    current_beat(Beat),
+   \+ in_conversation_with($pc),
    background_character(Beat, $me).
 
 %%%
