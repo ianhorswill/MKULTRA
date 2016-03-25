@@ -26,6 +26,7 @@ da_normal_form(assertion(Speaker, Addressee, would(likes(Speaker, Command)),
 	       command(Speaker, Addressee, Command)) :-
    agent(Command, Addressee).
 
+% Indirect questions
 da_normal_form(command(Speaker, Addressee, Command),
 	       question(Speaker, Addressee, Question, present, simple)) :-
    imperative_indirect_question(Speaker, Addressee, Command, Question).
@@ -38,6 +39,7 @@ da_normal_form(assertion(Speaker, Addressee, Assertion, _, _),
 
 declarative_indirect_question(S, _, want(S, knows_value(S, Question)), Question).
 
+% Assertion normalization
 da_normal_form(assertion(Speaker, Addressee, Assertion, T, A),
 	       assertion(Speaker, Addressee, Normalized, T, A)) :-
    normalized_assertion(Speaker, Addressee, Assertion, Normalized).
@@ -46,4 +48,3 @@ normalized_assertion(S, _, likes(S, thinks(S, A)), A).
 normalized_assertion(S, _, thinks(S, A), A).
 normalized_assertion(S, _, knows(S, A), A).
 normalized_assertion(S, _, believes(S, A), A).
-
