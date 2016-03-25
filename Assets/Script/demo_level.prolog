@@ -13,20 +13,6 @@ objective_description(trip_escaped,
 		      "You freed Trip!").
 
 %%%
-%%% Context menu stuff
-%%%
-
-menu_action(X, examine($pc, X)) :-
-   \+ character(X),
-   \+ is_a(X, container),
-   \+ examined(X).
-
-menu_action(X, search_for($pc, X, _)) :-
-   \+ character(X),
-   is_a(X, container),
-   \+ /searched/X.
-
-%%%
 %%% PLOT GOAL
 %%% Search the house
 %%%
@@ -98,8 +84,7 @@ beat(search_house,
       menu_hypno_command($kavi):related($pc, member_of, illuminati),
       menu_hypno_command($kavi):hungry($kavi),
       menu_hypno_command($kavi):is_a($kavi, orange),
-      menu_question($kavi):(X:contained_in($macguffin, X)),
-      menu_command($kavi):bring($kavi, $pc, $macguffin)
+      menu_question($kavi):(X:contained_in($macguffin, X))
      }).
 
 after(pickup($report),
@@ -138,8 +123,8 @@ $kavi::personal_strategy(patrol_kitchen,
    % Sigh.  I can't believe I didn't implement random_integer.
    once(random_member(Time, [2, 3, 5, 7, 8])).
 
-$kavi::personal_todo(patrol_kitchen, -100) :-
-   background_character_in_current_beat.
+%$kavi::personal_todo(patrol_kitchen, -100) :-
+%   background_character_in_current_beat.
 
 %%%
 %%% Good ending

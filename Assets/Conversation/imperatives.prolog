@@ -74,18 +74,9 @@ strategy(talk($me, $addressee, Topic),
 	 describe(Topic, introduction, null)) :-
    nonvar(Topic).
 
-strategy(talk($me, $addressee, Unspecified),
-	 say_string("Okay.  What do you want to talk about?")) :-
-   var(Unspecified).
-
-strategy(talk($me, player, Unspecified),
-	 say_string("Okay.  What do you want to talk about?")) :-
-   var(Unspecified).
-
 strategy(talk($me, ConversationalPartner, Topic),
 	 add_conversation_topic(ConversationalPartner, Topic)) :-
-   ConversationalPartner \= $addressee,
-   ConversationalPartner \= player.
+   ConversationalPartner \= $addressee.
 
 strategy(end_game(_,_), end_game(null)).
 

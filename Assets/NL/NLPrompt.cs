@@ -115,7 +115,6 @@ public class NLPrompt : BindingBehaviour
             case EventType.MouseDown:
                 //typingPromptStartTime = Time.time;
                 contextMenu = MakeMenu(MouseSelection);
-                lastPlayerActivity.StoreExclusive(Time.time, true);
                 break;
 
             case EventType.MouseUp:
@@ -129,7 +128,6 @@ public class NLPrompt : BindingBehaviour
                             simController.QueueEvent("player_input", selection);
                     }
                 }
-                lastPlayerActivity.StoreExclusive(Time.time, true);
 
                 contextMenu = null;
                 break;
