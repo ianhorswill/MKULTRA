@@ -12,6 +12,7 @@ menu_dialog_act(GameObject, command(player, $pc, Action)) :-
    menu_action(GameObject, Action).
 menu_dialog_act($pc, show_status(player, $pc, notebook)).
 menu_dialog_act($pc, show_status(player, $pc, inventory)).
+menu_dialog_act($pc, show_status(player, $pc, vocabulary)).
 menu_dialog_act(Character, DialogAct) :-
    character(Character),
    in_conversation_with(Character),

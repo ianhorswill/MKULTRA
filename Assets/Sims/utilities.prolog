@@ -310,6 +310,67 @@ sample_command("where is the macguffin?").
 sample_command("believe you're an orange").
 sample_command("you know you're an orange").
 
+fkey_command(alt-v, "Display vocabulary") :-
+   display_status_screen(inventory).
+
+display_status_screen(vocabulary) :-
+   generate_unsorted_overlay("Vocabulary",
+			     vocabulary_entry(E),
+			     line(E),
+			     null).
+
+vocabulary_entry([line(bold(Type)), line(Items), line("")]) :-
+   vocabulary_type(Type, Item^Predicate),
+   all(String, (Predicate, word_list(String, Item)), Items).
+
+:- public verb_list_element/1, noun_list_element/1, proper_name_list_element/1,
+   adjective_list_element/1, preposition_list_element/1, other_words_list_element/1.
+vocabulary_type("Verbs", V^verb_list_element(V)).
+
+verb_list_element(V) :-
+   iv(base, _, _, _, _, V, [", "]).
+verb_list_element(V) :-
+   tv(base, _, _, _, _, V, [", "]).
+verb_list_element(V) :-
+   dtv(base, _, _, _, _, V, [", "]).
+verb_list_element(V) :-
+   verb_with_clausal_complement(present, singular, _, _, _, _, V, [", "]).
+verb_list_element(V) :-
+   verb_with_object_and_clausal_complement(present, singular, _, _, _, _, _, V, [", "]).
+
+vocabulary_type("Common nouns", N^noun_list_element(N)).
+
+noun_list_element(N) :-
+   kind_noun(_, singular, N, [", "]).
+
+vocabulary_type("Proper names", N^proper_name_list_element(N)).
+
+proper_name_list_element(N) :-
+   proper_name(_, _, N, [", "]).
+
+vocabulary_type("Adjectives", N^adjective_list_element(N)).
+
+adjective_list_element(A) :-
+   adjective(_, A, [", "]).
+
+vocabulary_type("Prepositions", N^preposition_list_element(N)).
+
+preposition_list_element([P, ", "]) :-
+   preposition(P).
+
+vocabulary_type("Other", N^other_words_list_element(N)).
+
+other_words_list_element([W, ", "]) :-
+   whpron(W, _).
+other_words_list_element([W, ", "]) :-
+   here_there_adverb(W).
+other_words_list_element([W, ", "]) :-
+   pronoun_word(W, _, _, _, _).
+other_words_list_element([W, ", "]) :-
+   demonstrative_pronoun(W).
+other_words_list_element([the, ", "]).
+other_words_list_element([if, ", "]).
+
 display_status_screen(inventory) :-
    generate_unsorted_overlay("Inventory",
 			     ( location(Item, $me),
