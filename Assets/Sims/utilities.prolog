@@ -371,6 +371,79 @@ other_words_list_element([W, ", "]) :-
 other_words_list_element([the, ", "]).
 other_words_list_element([if, ", "]).
 
+fkey_command(alt-g, "Display grammar") :-
+   generate_unsorted_overlay("Grammar rules",
+			     grammar_entry(E),
+			     line(E),
+			     null).
+
+:- public grammar_entry/1.
+
+grammar_entry([Functor, " --> " | FormattedBody]) :-
+   important_nonterminal(Functor, Arity),
+   functor(Head, Functor, Arity),
+   clause(Head, Body),
+   grammar_subgoal_dissection(Head, Functor, In, _),
+   once(format_grammar_rule_body(Body, In, FormattedBody)).
+
+format_grammar_rule_body((A, B), In, [Name, " " | BForm]) :-
+   grammar_subgoal_dissection(A, Name, In, Out),
+   format_grammar_rule_body(B, Out, BForm).
+format_grammar_rule_body((_, Rest), In, Formatted) :-
+   format_grammar_rule_body(Rest, In, Formatted).
+format_grammar_rule_body(LastElt, In, [Name]) :-
+   grammar_subgoal_dissection(LastElt, Name, In, _).
+format_grammar_rule_body(_, _, []).
+
+grammar_subgoal_dissection(X, _, _, _) :-
+   suppress_grammar_goal_in_pretty_print(X),
+   !,
+   fail.
+grammar_subgoal_dissection('C'(Head, Name, Tail), word, Head, Tail) :-
+   var(Name).
+grammar_subgoal_dissection('C'(Head, Name, Tail), NameString, Head, Tail) :-
+   word_list(NameString, ["'", Name, "'"]).
+grammar_subgoal_dissection(Goal, Name, Head, Tail) :-
+   functor(Goal, Functor, Arity),
+   Arity >= 2,
+   HeadArg is Arity-1,
+   arg(HeadArg, Goal, Head),
+   arg(Arity, Goal, Tail),
+   nonterminal_pretty_name(Functor, Name).
+
+suppress_grammar_goal_in_pretty_print(lf_subject(_, _)).
+suppress_grammar_goal_in_pretty_print(lf_core_predicate(_, _)).
+suppress_grammar_goal_in_pretty_print(resolve_definite_description(_, _)).
+suppress_grammar_goal_in_pretty_print(impose_selectional_constraint(_, _)).
+suppress_grammar_goal_in_pretty_print(not_generating_or_completing(_, _)).
+suppress_grammar_goal_in_pretty_print(not_completing(_, _, _)).
+suppress_grammar_goal_in_pretty_print(';'(_, _)).
+
+nonterminal_pretty_name(aux_be, "'is'").
+nonterminal_pretty_name(copula, "'is'").
+nonterminal_pretty_name(aux_have, "'has'").
+nonterminal_pretty_name(opt_not, "[not]").
+nonterminal_pretty_name(opt_pp, "[pp]").
+nonterminal_pretty_name(opt_genetive, "['s]").
+nonterminal_pretty_name(N, N).
+
+space_out([], []).
+space_out([X], [X]) :- !.
+space_out([X | Rest], [X, " ", SpacedRest]) :-
+   space_out(Rest, SpacedRest).
+
+important_nonterminal(s, 7).
+important_nonterminal(aux_vp, 7).
+important_nonterminal(vp, 8).
+important_nonterminal(np, 7).
+
+:- public nonterminal/2.
+
+nonterminal(ap, 3).
+nonterminal(kind_noun, 4).
+nonterminal(F, A) :-
+   important_nonterminal(F, A).
+
 display_status_screen(inventory) :-
    generate_unsorted_overlay("Inventory",
 			     ( location(Item, $me),

@@ -19,6 +19,7 @@
    good_ending/1, bad_ending/1, player_achieves_task_during_beat/2,
    beat_is_character_reaction/3,
    beat_leads_to_event/3, plot_event/1.
+:- external plot_goal_idle_task/2, plot_goal_achieves/2.
 :- external beat_expected_during/2, beat_excursion/2.
 :- external plot_relevant_assertion/4.
 :- higher_order beat_precondition(0, 1).

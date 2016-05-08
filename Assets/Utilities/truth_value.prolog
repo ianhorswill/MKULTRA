@@ -134,6 +134,8 @@ know_false(P) :-
 % truth_value(P, false) :-
 %    \+ P.
 
+know_whether(_) :-
+   $global_root/configuration/omniscent_characters.
 know_whether(is_a(_, entity)).
 know_whether(is_a(Object, _Kind)) :-
    !,
@@ -180,6 +182,9 @@ admitted_truth_value(Listener, (P1, P2), Value) :-
 admitted_truth_value($me, P, Value) :-
    !,
    truth_value(P, Value).
+admitted_truth_value(player, P, Value) :-
+   !,
+   admitted_truth_value($pc, P, Value).
 admitted_truth_value(Listener, P, Value) :-
    pretend_truth_value(Listener, P , Value),
    !,
