@@ -109,16 +109,18 @@ load_special_csv_row(_RowNumber,
 			       SingularForm,
 			       PluralForm,
 			       Generalizations,
-			       Inverse)) :-
-   assert(declare_kind(Name, relation)),
-   assert(visibility(Name, Visibility)),
-   assert(relation_type(Name, ObjectType, ValueType)),
-   assert_copular_form(Name, CopularForm),
-   assert_genitive_form(Name, singular, SingularForm),
-   assert_genitive_form(Name, plural, PluralForm),
-   forall(member(Gen, Generalizations),
-	  assert(implies_relation(Name, Gen))),
-   (Inverse \= null -> assert(inverse_relation(Name, Inverse)) ; true).
+			       Inverse,
+			       Symmetric)) :-
+   begin(assert(declare_kind(Name, relation)),
+	 assert(visibility(Name, Visibility)),
+	 assert(relation_type(Name, ObjectType, ValueType)),
+	 assert_copular_form(Name, CopularForm),
+	 assert_genitive_form(Name, singular, SingularForm),
+	 assert_genitive_form(Name, plural, PluralForm),
+	 forall(member(Gen, Generalizations),
+		assert(implies_relation(Name, Gen))),
+	 (Inverse \= null -> assert(inverse_relation(Name, Inverse)) ; true),
+	 (Symmetric \= null -> assert(symmetric(Name)) ; true)).
 
 assert_copular_form(_Name, [ ]).
 assert_copular_form(Name, [be | CopularForm]) :-

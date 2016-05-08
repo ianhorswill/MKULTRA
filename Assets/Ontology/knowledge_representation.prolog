@@ -10,7 +10,7 @@
 :- public property_type/3, relation_type/3.
 :- public kind_lub/3, kind_glb/3.
 :- public implies_relation/2, inverse_relation/2.
-:- external declare_value/3, default_value/3, declare_related/3.
+:- external declare_value/3, default_value/3, declare_related/3, symmatric/1.
 
 test_file(integrity(_), "Ontology/integrity_checks").
 
@@ -252,7 +252,13 @@ valid_property_value(P, V) :-
 %  Object and Relatum are related by Relation through an explicit declaration.
 related_nondefault(Object, Relation, Relatum) :-
    decendant_relation(D, Relation),
+   related_nondefault_aux(Object, D, Relatum).
+
+related_nondefault_aux(Object, D, Relatum) :-
    declare_related(Object, D, Relatum).
+related_nondefault_aux(Object, D, Relatum) :-
+   symmetric(D),
+   declare_related(Relatum, D, Object).
 
 %% related(?Object, ?Relation, ?Relatum)
 %  Object and Relatum are related by Relation.
@@ -266,8 +272,7 @@ related(Object, Relation, Relatum) :-
    nonvar(Relation),
    % This relation has no inverse or is the canonical form.
    \+ inverse_relation(Relation, _Inverse),
-   decendant_relation(D, Relation),
-   declare_related(Object, D, Relatum).
+   related_nondefault(Object, Relation, Relatum).
 related(Object, Relation, Relatum) :-
    var(Relation),
    declare_related(Object, D, Relatum),
