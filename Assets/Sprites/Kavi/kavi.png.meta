@@ -1,73 +1,171 @@
 fileFormatVersion: 2
 guid: e3e154506053952478eaa0dadad6bbeb
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: kavi_0
-    21300002: kavi_1
-    21300004: kavi_2
-    21300006: kavi_3
-    21300008: kavi_4
-    21300010: kavi_5
-    21300012: kavi_6
-    21300014: kavi_7
-    21300016: kavi_8
-    21300018: kavi_9
-    21300020: kavi_10
-    21300022: kavi_11
-    21300024: kavi_12
-    21300026: kavi_13
-    21300028: kavi_14
-    21300030: kavi_15
-  serializedVersion: 2
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: kavi_0
+  - first:
+      213: 21300002
+    second: kavi_1
+  - first:
+      213: 21300004
+    second: kavi_2
+  - first:
+      213: 21300006
+    second: kavi_3
+  - first:
+      213: 21300008
+    second: kavi_4
+  - first:
+      213: 21300010
+    second: kavi_5
+  - first:
+      213: 21300012
+    second: kavi_6
+  - first:
+      213: 21300014
+    second: kavi_7
+  - first:
+      213: 21300016
+    second: kavi_8
+  - first:
+      213: 21300018
+    second: kavi_9
+  - first:
+      213: 21300020
+    second: kavi_10
+  - first:
+      213: 21300022
+    second: kavi_11
+  - first:
+      213: 21300024
+    second: kavi_12
+  - first:
+      213: 21300026
+    second: kavi_13
+  - first:
+      213: 21300028
+    second: kavi_14
+  - first:
+      213: 21300030
+    second: kavi_15
+  externalObjects: {}
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
+    sRGBTexture: 1
     linearTexture: 0
-    correctGamma: 0
     fadeOut: 0
     borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
     mipMapFadeDistanceStart: 1
     mipMapFadeDistanceEnd: 3
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: .25
+    heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
-  generateCubemap: 0
+  generateCubemap: 6
   cubemapConvolution: 0
-  cubemapConvolutionSteps: 8
-  cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
   maxTextureSize: 1024
   textureSettings:
+    serializedVersion: 2
     filterMode: 0
     aniso: 1
-    mipBias: -1
-    wrapMode: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
-  rGBM: 0
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-  spritePivot: {x: .5, y: .5}
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
-  buildTargetSettings:
-  - buildTarget: iPhone
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
     maxTextureSize: 1024
-    textureFormat: -2
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
     compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: 2
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: kavi_0
+    - serializedVersion: 2
+      name: kavi_0
       rect:
         serializedVersion: 2
         x: 0
@@ -75,9 +173,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_1
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02305410000000000800000000000000
+      internalID: 21300000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_1
       rect:
         serializedVersion: 2
         x: 32
@@ -85,9 +194,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_2
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22305410000000000800000000000000
+      internalID: 21300002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_2
       rect:
         serializedVersion: 2
         x: 64
@@ -95,9 +215,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_3
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42305410000000000800000000000000
+      internalID: 21300004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_3
       rect:
         serializedVersion: 2
         x: 96
@@ -105,9 +236,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_4
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62305410000000000800000000000000
+      internalID: 21300006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_4
       rect:
         serializedVersion: 2
         x: 0
@@ -115,9 +257,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_5
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82305410000000000800000000000000
+      internalID: 21300008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_5
       rect:
         serializedVersion: 2
         x: 32
@@ -125,9 +278,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_6
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2305410000000000800000000000000
+      internalID: 21300010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_6
       rect:
         serializedVersion: 2
         x: 64
@@ -135,9 +299,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_7
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2305410000000000800000000000000
+      internalID: 21300012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_7
       rect:
         serializedVersion: 2
         x: 96
@@ -145,9 +320,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_8
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2305410000000000800000000000000
+      internalID: 21300014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_8
       rect:
         serializedVersion: 2
         x: 0
@@ -155,9 +341,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_9
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03305410000000000800000000000000
+      internalID: 21300016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_9
       rect:
         serializedVersion: 2
         x: 32
@@ -165,9 +362,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_10
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23305410000000000800000000000000
+      internalID: 21300018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_10
       rect:
         serializedVersion: 2
         x: 64
@@ -175,9 +383,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_11
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43305410000000000800000000000000
+      internalID: 21300020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_11
       rect:
         serializedVersion: 2
         x: 96
@@ -185,9 +404,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_12
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63305410000000000800000000000000
+      internalID: 21300022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_12
       rect:
         serializedVersion: 2
         x: 0
@@ -195,9 +425,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_13
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83305410000000000800000000000000
+      internalID: 21300024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_13
       rect:
         serializedVersion: 2
         x: 32
@@ -205,9 +446,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_14
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3305410000000000800000000000000
+      internalID: 21300026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_14
       rect:
         serializedVersion: 2
         x: 64
@@ -215,9 +467,20 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: kavi_15
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3305410000000000800000000000000
+      internalID: 21300028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kavi_15
       rect:
         serializedVersion: 2
         x: 96
@@ -225,9 +488,48 @@ TextureImporter:
         width: 32
         height: 48
       alignment: 9
-      pivot: {x: .5, y: .100000001}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3305410000000000800000000000000
+      internalID: 21300030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      kavi_12: 21300024
+      kavi_1: 21300002
+      kavi_5: 21300010
+      kavi_11: 21300022
+      kavi_2: 21300004
+      kavi_9: 21300018
+      kavi_14: 21300028
+      kavi_7: 21300014
+      kavi_8: 21300016
+      kavi_4: 21300008
+      kavi_6: 21300012
+      kavi_0: 21300000
+      kavi_10: 21300020
+      kavi_13: 21300026
+      kavi_15: 21300030
+      kavi_3: 21300006
   spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

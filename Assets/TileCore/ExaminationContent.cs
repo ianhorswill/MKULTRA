@@ -69,7 +69,7 @@ public class ExaminationContent : MonoBehaviour
         switch (Event.current.type)
         {
             case EventType.Repaint:
-            case EventType.layout:
+            case EventType.Layout:
                 GUI.depth = -1;
 
                 var screenRect = new Rect(0, 0, Screen.width, Screen.height);
